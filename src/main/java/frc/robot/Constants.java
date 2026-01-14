@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -66,4 +67,7 @@ public final class Constants {
     public static final Distance BETA_XTRACK_WIDTH = Inches.of(24.5);
     public static final Distance BETA_YTRACK_WIDTH = Inches.of(26.5);
   }
+
+  public static record Pose(String name, Pose2d pose) {}
+  public static class PoseConstants {}
 }
