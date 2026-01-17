@@ -11,7 +11,7 @@ public class SwerveModulePlacebo implements SwerveModuleIO {
     }
 
     @Override
-    public void setDesiredDriveSpeedMPS(double speed) {
+    public void setDesiredDriveSpeedMPS(double speed, boolean isFlipped) {
     }
 
     @Override
