@@ -50,6 +50,8 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final SparkMaxConfig sparkMaxConfigTurning = new SparkMaxConfig();
     private static final ClosedLoopConfig sparkMaxClosedLoopConfigTurning = new ClosedLoopConfig();
 
+    private boolean isOptimizedBackwards = false;
+
     // drivings are NEO Vortex, turnings are NEO 550s
     private static final int DRIVING_MOTOR_PINION_TEETH = 12;
 
@@ -174,9 +176,10 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
     };
 
-    public void setDesiredDriveSpeedMPS(double speed) {
+    public void setDesiredDriveSpeedMPS(double speed, boolean isFlipped) {
         drivingPidController.setSetpoint(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
         this.driveDesiredVelocity = speed;
+        this.isOptimizedBackwards = isFlipped;
     };
 
     public double getDriveEncoderSpeedMPS() {
@@ -235,13 +238,20 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     public void updateStates(SwerveModuleIOStates states) {
                 states.desiredAngle = Units.radiansToDegrees(MathUtil.angleModulus(this.desiredAngle));
                 states.turnAngle = Units.radiansToDegrees(MathUtil.angleModulus(getTurnEncoderPosition()));
-                states.driveDesiredVelocity = this.driveDesiredVelocity;
-                states.driveVelocity = getDriveEncoderSpeedMPS();
                 states.driveEncoderPos = getDriveEncoderPosition();
                 states.driveVoltage = drivingSparkFlex.getBusVoltage() * drivingSparkFlex.getAppliedOutput();
                 states.turnVoltage = turningSparkMax.getBusVoltage() * turningSparkMax.getAppliedOutput();
                 states.driveCurrent = drivingSparkFlex.getOutputCurrent();
                 states.turnCurrent = turningSparkMax.getOutputCurrent();
+
+                states.driveDesiredVelocity = this.driveDesiredVelocity;
+                if (isOptimizedBackwards){
+                    states.driveVelocity = getDriveEncoderSpeedMPS() * -1;
+                    states.turnAngle = states.desiredAngle + Math.PI;
+
+                } else {
+                    states.driveVelocity = getDriveEncoderSpeedMPS();
+                }
 
                 SmartDashboard.putNumber("Swerve/module " + name + "/turn desired angle(deg)", states.desiredAngle);
                 SmartDashboard.putNumber("Swerve/module " + name + "/turn angle(deg)",
