@@ -208,25 +208,6 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         this.desiredAngle = angle;
     };
 
-    public double getDriveBusVoltage() {
-        return drivingSparkFlex.getBusVoltage();
-    }
-
-    public double getDriveOutput() {
-        return drivingSparkFlex.getAppliedOutput();
-    }
-
-    public double getTurnBusVoltage() {
-        return turningSparkMax.getBusVoltage();
-    }
-
-    public double getTurnOutput() {
-        return turningSparkMax.getAppliedOutput();
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public double getChassisAngularOffset() {
         return chassisAngularOffset;
