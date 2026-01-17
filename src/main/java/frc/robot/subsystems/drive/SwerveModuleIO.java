@@ -19,7 +19,7 @@ public interface SwerveModuleIO {
 
     public void setDriveEncoderPosition(double position);
 
-    public void setDesiredDriveSpeedMPS(double speed);
+    public void setDesiredDriveSpeedMPS(double speed, boolean isFlipped);
 
     public double getDriveEncoderSpeedMPS();
 

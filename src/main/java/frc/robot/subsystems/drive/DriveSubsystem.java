@@ -230,7 +230,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         gyro.setYaw(Radians.of(lastAngle.getRadians()));
                 }
 
-                logAndUpdateDriveSubsystemStates();
                 alert.set(gyro.hasFault());
 
                 frontLeft.updateStates();

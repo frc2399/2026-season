@@ -77,7 +77,7 @@ public class SwerveModule {
         // Optimize the reference state to avoid spinning further than 90 degrees.
 
         correctedDesiredState.optimize(new Rotation2d(getTurnEncoderPosition()));
-        io.setDesiredDriveSpeedMPS(correctedDesiredState.speedMetersPerSecond);
+        io.setDesiredDriveSpeedMPS(correctedDesiredState.speedMetersPerSecond, correctedDesiredState.angle != newDesiredState.angle);
         io.setDesiredTurnAngle(correctedDesiredState.angle.getRadians());
         desiredState = newDesiredState;
     }
