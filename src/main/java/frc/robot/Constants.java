@@ -69,5 +69,11 @@ public final class Constants {
   }
 
   public static record Pose(String name, Pose2d pose) {}
-  public static class PoseConstants {}
+  public static class PoseConstants {
+    public static final Pose HUB_MIDDLE = new Pose("hubMiddle", new Pose2d(x, y, Rotation2d.fromDegrees(90)));
+    public static final Pose DEPOT = new Pose("depot", new Pose2d(x, y, Rotation2d.fromDegrees(270)));
+    public static final Pose TOWER_L1 = new Pose("towerL1", new Pose2d(x, y, Rotation2d.fromDegrees(270)));
+    public static final Pose NEUTRAL_ZONE_BORDER = new Pose("neutralZoneBorder", new Pose2d(x, y, Rotation2d.fromDegrees(90)));
+    public static final Pose BUMP_STARTING_LINE = new Pose("bumpStartingLine", new Pose2d(x, y, Rotation2d.fromDegrees(90)));
+  }
 }
