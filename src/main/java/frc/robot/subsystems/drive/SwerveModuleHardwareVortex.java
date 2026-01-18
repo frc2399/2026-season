@@ -29,6 +29,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorConstants;
+import frc.robot.util.TunableNumber;
 
 public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
@@ -89,15 +90,23 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final double DRIVING_P = 0.4;
     private static final double DRIVING_I = 0;
     private static final double DRIVING_D = 0;
-    private static final double DRIVING_KS = 0.128;
+    private static final double DRIVING_KS = 0.0;
     private static final double DRIVING_KV = 0;
     private static final double DRIVING_KA = 0;
     private static final double DRIVING_MIN_OUTPUT = -1;
     private static final double DRIVING_MAX_OUTPUT = 1;
 
-    private static final double TURNING_P = 1.0;
-    private static final double TURNING_I = 0;
-    private static final double TURNING_D = 0.001;
+    private static final double DEFAULT_TURNING_P = 1.75;
+    private static final double DEFAULT_TURNING_I = 0;
+    private static final double DEFAULT_TURNING_D = 0.016;
+
+    private static final TunableNumber TUNABLE_TURNING_P = 
+        new TunableNumber("Swerve/turning_p", DEFAULT_TURNING_P, true);
+    private static final TunableNumber TUNABLE_TURNING_I = 
+        new TunableNumber("Swerve/turning_i", DEFAULT_TURNING_I, true);
+    private static final TunableNumber TUNABLE_TURNING_D = 
+        new TunableNumber("Swerve/turning_d", DEFAULT_TURNING_D, true);
+
     private static final double TURNING_FF = 0;
     private static final double TURNING_MIN_OUTPUT = -1;
     private static final double TURNING_MAX_OUTPUT = 1;
@@ -142,8 +151,11 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                         TURNING_ENCODER_POSITION_PID_MAX_INPUT);
         sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
 
-        sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D)
+        sparkMaxClosedLoopConfigTurning.pid(TUNABLE_TURNING_P.get(), TUNABLE_TURNING_I.get(), TUNABLE_TURNING_D.get())
                                         .feedForward.sva(0,TURNING_FF,0);
+
+        sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
+        sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
 
         drivingSparkFlex.configure(sparkFlexConfigDriving, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
@@ -233,6 +245,16 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     }
 
     public void updateStates(SwerveModuleIOStates states) {
+        // if tuning a value, update this chunk for that motor's p, i, OR d
+        // attempting to have this logic running with multiple causes a loop overrun :)
+                if (TUNABLE_TURNING_D.hasChanged()) {
+                    sparkMaxClosedLoopConfigTurning.d(TUNABLE_TURNING_D.get());
+                    sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
+                    drivingSparkFlex.configure(sparkFlexConfigDriving, ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
+                }
+
+
                 states.desiredAngle = Units.radiansToDegrees(MathUtil.angleModulus(this.desiredAngle));
                 states.turnAngle = Units.radiansToDegrees(MathUtil.angleModulus(getTurnEncoderPosition()));
                 states.driveDesiredVelocity = this.driveDesiredVelocity;

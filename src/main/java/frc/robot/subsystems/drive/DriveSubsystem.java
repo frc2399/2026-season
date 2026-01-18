@@ -54,6 +54,7 @@ import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
+        
         // for drivetopose
         private boolean atGoal = true;
         private BooleanSupplier isBlueAlliance;
@@ -86,6 +87,15 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         private final Distance TRACK_WIDTH;
         private final Distance WHEEL_BASE;
+
+        // this next line comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+        // Copyright (c) 2021-2026 Littleton Robotics
+        // http://github.com/Mechanical-Advantage
+        //
+        // Use of this source code is governed by a BSD
+        // license that can be found in the LICENSE file
+        // at the root directory of this project.
+        public final double DRIVE_BASE_RADIUS;
 
         // Distance between front and back wheels on robot
 
@@ -145,6 +155,15 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                 TRACK_WIDTH = trackWidth;
                 WHEEL_BASE = wheelBase;
+
+                // this next line comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+                // Copyright (c) 2021-2026 Littleton Robotics
+                // http://github.com/Mechanical-Advantage
+                //
+                // Use of this source code is governed by a BSD
+                // license that can be found in the LICENSE file
+                // at the root directory of this project.
+                DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH.in(Meters) / 2.0, WHEEL_BASE.in(Meters) / 2.0);
 
                 FRONT_LEFT_OFFSET = new Translation2d(WHEEL_BASE.in(Meters) / 2,
                                 TRACK_WIDTH.in(Meters) / 2);
@@ -508,4 +527,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
                 SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
         }
+
+        // the rest of this file comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+        // Copyright (c) 2021-2026 Littleton Robotics
+        // http://github.com/Mechanical-Advantage
+        //
+        // Use of this source code is governed by a BSD
+        // license that can be found in the LICENSE file
+        // at the root directory of this project.
 }

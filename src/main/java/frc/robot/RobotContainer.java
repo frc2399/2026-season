@@ -25,6 +25,10 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
+import frc.robot.util.*;
+
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 
 
 public class RobotContainer {
@@ -37,6 +41,15 @@ public class RobotContainer {
   public CommandFactory commandFactory = new CommandFactory(drive, gyro);
 
   private static SendableChooser<Command> autoChooser;
+  // this next line comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+    // Copyright (c) 2021-2026 Littleton Robotics
+    // http://github.com/Mechanical-Advantage
+    //
+    // Use of this source code is governed by a BSD
+    // license that can be found in the LICENSE file
+    // at the root directory of this project.
+    private final LoggedDashboardChooser<Command> tuningAutoChooser;
+
 
 
   private static final CommandXboxController driverController = new CommandXboxController(
@@ -45,6 +58,16 @@ public class RobotContainer {
       DriveControlConstants.OPERATOR_CONTROLLER_PORT);
 
   public RobotContainer() {
+    // next chunk comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+    // Copyright (c) 2021-2026 Littleton Robotics
+    // http://github.com/Mechanical-Advantage
+    //
+    // Use of this source code is governed by a BSD
+    // license that can be found in the LICENSE file
+    // at the root directory of this project.
+    // Set up auto routines
+    tuningAutoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDefaultCommands();
     configureButtonBindingsDriver();
@@ -76,6 +99,19 @@ public class RobotContainer {
   private void setUpAuton() {
     // autoChooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData("Autos/Selector", autoChooser);
+
+    // next chunk comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+    // Copyright (c) 2021-2026 Littleton Robotics
+    // http://github.com/Mechanical-Advantage
+    //
+    // Use of this source code is governed by a BSD
+    // license that can be found in the LICENSE file
+    // at the root directory of this project.
+    // Set up SysId routines
+    tuningAutoChooser.addOption(
+        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    tuningAutoChooser.addOption(
+        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
 
     SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
     SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());
