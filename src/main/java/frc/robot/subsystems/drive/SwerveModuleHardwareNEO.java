@@ -139,6 +139,10 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
                 sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D)
                                                 .feedForward.sva(0, TURNING_FF, 0);
 
+                sparkMaxConfigDriving.apply(sparkMaxClosedLoopConfigDriving);
+
+                sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
+
                 drivingSparkMax.configure(sparkMaxConfigDriving, ResetMode.kResetSafeParameters,
                                 PersistMode.kNoPersistParameters);
                 turningSparkMax.configure(sparkMaxConfigTurning, ResetMode.kResetSafeParameters,

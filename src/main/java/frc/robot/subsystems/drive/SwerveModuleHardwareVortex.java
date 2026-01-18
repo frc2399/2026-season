@@ -125,8 +125,6 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
 
-     //  ClosedLoopConfig.feedForward();
-
         sparkMaxConfigTurning.inverted(TURNING_MOTOR_INVERTED).idleMode(TURNING_MOTOR_IDLE_MODE)
                 .smartCurrentLimit(
                         (int) MotorConstants.NEO550_CURRENT_LIMIT.in(Amps))
