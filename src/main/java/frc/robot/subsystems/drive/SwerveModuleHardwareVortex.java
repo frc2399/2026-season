@@ -89,7 +89,9 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final double DRIVING_P = 0.4;
     private static final double DRIVING_I = 0;
     private static final double DRIVING_D = 0;
-    private static final double DRIVING_FF = 1 / (DRIVE_WHEEL_FREE_SPEED.in(MetersPerSecond));
+    private static final double DRIVING_KS = 0.128;
+    private static final double DRIVING_KV = 0;
+    private static final double DRIVING_KA = 0;
     private static final double DRIVING_MIN_OUTPUT = -1;
     private static final double DRIVING_MAX_OUTPUT = 1;
 
@@ -121,7 +123,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 .outputRange(DRIVING_MIN_OUTPUT, DRIVING_MAX_OUTPUT);
 
        sparkFlexClosedLoopConfigDriving.pid(DRIVING_P,DRIVING_I,DRIVING_D)
-                                    .feedForward.sva(0, DRIVING_FF,0);
+                                    .feedForward.sva(DRIVING_KS, DRIVING_KV, DRIVING_KA);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
 

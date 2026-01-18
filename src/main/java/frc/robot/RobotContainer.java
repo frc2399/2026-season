@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 // import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.auto.NamedCommands;
 
@@ -72,7 +74,8 @@ public class RobotContainer {
   }
 
   private void setUpAuton() {
-    SmartDashboard.putData("Autos/Selector", autoChooser);
+    // autoChooser = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Autos/Selector", autoChooser);
 
     SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
     SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());
