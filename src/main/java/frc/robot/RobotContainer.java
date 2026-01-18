@@ -86,9 +86,8 @@ public class RobotContainer {
       // ground intaking command from depot
       commandFactory.buildPath(Constants.PoseConstants.HUB_MIDDLE),
       // move into shooting position while driving
-      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition());
+      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()));
       // shooting command
-      )
 
     Command hubDepotTowerL1 = Commands.sequence(
       commandFactors.buildPath(Constants.PoseConstants.DEPOT),
@@ -101,12 +100,11 @@ public class RobotContainer {
       // shooting command
       commandFactory.buildPath(Constants.PoseConstants.TOWER_L1),
       // move into climbing position while driving
-      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition());
+      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()));
       // climbing command
-    )
 
     Command bumpDepotTowerL1 = Commands.sequence(
-      commandFactors.buildPath(Constants.PoseConstants.DEPOT),
+      commandFactory.buildPath(Constants.PoseConstants.DEPOT),
       // move into intake position while driving
       drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()),
       // ground intaking command from depot
@@ -116,9 +114,8 @@ public class RobotContainer {
       // shooting command
       commandFactory.buildPath(Constants.PoseConstants.TOWER_L1),
       // move into climbing position while driving
-      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition());
+      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()));
       // climbing command
-    )
 
     Command depotHubTowerL1 = Commands.sequence(
       // get into intake position while driving
@@ -129,9 +126,8 @@ public class RobotContainer {
       // shooting command
       commandFactory.buildPath(Constants.PoseConstants.TOWER_L1),
       // move into climbing position while driving
-      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition());
+      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()));
       // climbing command
-    )
 
     Command bumpNeutralZone = Commands.sequence(
       commandFactory.buildPath(Constants.PoseConstants.NEUTRAL_ZONE_BORDER),
@@ -140,9 +136,8 @@ public class RobotContainer {
       // intaking command from neutral zone
       commandFactory.buildPath(Constants.PoseConstants.BUMP_STARTING_LINE),
       // get into shooting position while driving
-      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition());
+      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()));
       // shooting command
-    )
 
     Command bumpNeutralZoneTowerL1 = Commands.sequence(
       commandFactory.buildPath(Constants.PoseConstants.NEUTRAL_ZONE_BORDER),
@@ -155,9 +150,8 @@ public class RobotContainer {
       // shooting command
       commandFactory.buildPath(Constants.PoseConstants.TOWER_L1),
       // get into climbing position while driving
-      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition());
+      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()));
       // climbing command
-    )
 
     Command bumpTowerL1 = Commands.sequence(
       commandFactory.buildPath(Constants.PoseConstants.NEUTRAL_ZONE_BORDER),
@@ -166,9 +160,8 @@ public class RobotContainer {
       // intaking command from neutral zone
       commandFactory.buildPath(Constants.PoseConstants.TOWER_L1),
       // get into climbing position while driving
-      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition());
+      drive.driveToPoseOnExecute(() -> commandFactory.getRobotPosition()));
       // climbing command
-    )
   }
 
   public Command getAutonomousCommand() {

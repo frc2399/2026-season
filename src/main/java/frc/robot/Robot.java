@@ -51,10 +51,10 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     if (DriverStation.getAlliance().get() == Alliance.Red) {
-      drive.gyro.setYaw(0);
+      gyro.setYaw(0);
     }
     else {
-      drive.gyro.setYaw(180);
+      gyro.setYaw(180);
     }
   }
 
