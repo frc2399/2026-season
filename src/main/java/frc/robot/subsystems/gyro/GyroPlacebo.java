@@ -8,10 +8,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public class GyroPlacebo implements GyroIO {
-    public Angle getYaw() {
-        return Degrees.of(0.0);
-    }
-
     public Angle getYaw(boolean refresh) {
         return Degrees.of(0);
     }

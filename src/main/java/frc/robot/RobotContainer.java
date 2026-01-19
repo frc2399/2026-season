@@ -93,7 +93,7 @@ public class RobotContainer {
           var poseEstimate = visionPoseEstimator.getPoseEstimate();
           poseEstimate.ifPresent((PoseEstimate pose) -> {
             var poseCopy = pose.pose;
-            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw())));
+            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw(false))));
           });
 
         }).ignoringDisable(true));
@@ -110,7 +110,7 @@ public class RobotContainer {
           var poseEstimate = visionPoseEstimator.getPoseEstimate();
           poseEstimate.ifPresent((PoseEstimate pose) -> {
             var poseCopy = pose.pose;
-            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw())));
+            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw(false))));
           });
 
         }).ignoringDisable(true));
