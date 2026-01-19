@@ -8,9 +8,9 @@ import frc.robot.subsystems.drive.SwerveModule;
 import frc.robot.subsystems.drive.SwerveModuleHardwareNEO;
 import frc.robot.subsystems.drive.SwerveModuleHardwareVortex;
 import frc.robot.subsystems.drive.SwerveModulePlacebo;
-import frc.robot.subsystems.gyro.Gyro;
-import frc.robot.subsystems.gyro.GyroHardware;
-import frc.robot.subsystems.gyro.GyroPlacebo;
+import frc.robot.subsystems.drive.gyro.Gyro;
+import frc.robot.subsystems.drive.gyro.GyroHardware;
+import frc.robot.subsystems.drive.gyro.GyroPlacebo;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
