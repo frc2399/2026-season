@@ -39,8 +39,6 @@ public class RobotContainer {
 
   private static final CommandXboxController driverController = new CommandXboxController(
       DriveControlConstants.DRIVER_CONTROLLER_PORT);
-  private static final CommandXboxController operatorController = new CommandXboxController(
-      DriveControlConstants.OPERATOR_CONTROLLER_PORT);
 
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
