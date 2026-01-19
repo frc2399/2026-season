@@ -6,8 +6,10 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 
 import static edu.wpi.first.units.Units.Amps;
@@ -19,6 +21,8 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -74,8 +78,8 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
         private static final Distance DRIVING_ENCODER_POSITION_FACTOR = (WHEEL_DIAMETER.times(Math.PI))
                         .div(DRIVING_MOTOR_REDUCTION).div((260.0 / 254)); // meters
         private static final Distance DRIVING_ENCODER_VELOCITY_FACTOR = DRIVING_ENCODER_POSITION_FACTOR.div(60); // meters
-                                                                                                                    // per
-                                                                                                                    // second
+                                                                                                                 // per
+                                                                                                                 // second
 
         private static final double TURNING_ENCODER_POSITION_FACTOR = Units.rotationsToRadians(1);
         private static final double TURNING_ENCODER_VELOCITY_FACTOR = Units.rotationsToRadians(1) / 60.0;
@@ -87,6 +91,8 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
         private static final double DRIVING_P = 0.2;
         private static final double DRIVING_I = 0;
         private static final double DRIVING_D = 0;
+        private static final double DRIVING_KS = 0;
+        private static final double DRIVING_KV = 0;
         private static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED.in(RotationsPerSecond);
         private static final double DRIVING_MIN_OUTPUT = -1;
         private static final double DRIVING_MAX_OUTPUT = 1;
@@ -118,9 +124,8 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
                                 .velocityConversionFactor(DRIVING_ENCODER_VELOCITY_FACTOR.in(Meters));
                 sparkMaxConfigDriving.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .outputRange(DRIVING_MIN_OUTPUT, DRIVING_MAX_OUTPUT);
-                
-                sparkMaxClosedLoopConfigDriving.pid(DRIVING_P, DRIVING_I, DRIVING_D)
-                                                .feedForward.sva(0, DRIVING_FF, 0);
+
+                sparkMaxClosedLoopConfigDriving.pid(DRIVING_P, DRIVING_I, DRIVING_D).feedForward.sva(0, DRIVING_FF, 0);
 
                 sparkMaxConfigTurning.inverted(TURNING_MOTOR_INVERTED).idleMode(TURNING_MOTOR_IDLE_MODE)
                                 .smartCurrentLimit(
@@ -136,8 +141,7 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
                                                 TURNING_ENCODER_POSITION_PID_MIN_INPUT,
                                                 TURNING_ENCODER_POSITION_PID_MAX_INPUT);
 
-                sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D)
-                                                .feedForward.sva(0, TURNING_FF, 0);
+                sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D).feedForward.sva(0, TURNING_FF, 0);
 
                 sparkMaxConfigDriving.apply(sparkMaxClosedLoopConfigDriving);
 
@@ -185,6 +189,14 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
                 return drivingRelativeEncoder.getPosition();
         }
 
+        public Distance getWheelDiameter() {
+                return WHEEL_DIAMETER;
+        }
+
+        public double getTurnAngleCharacterization() {
+                return getTurnEncoderPosition() - chassisAngularOffset;
+        }
+
         public void updateStates(SwerveModuleIOStates states) {
                 states.desiredAngle = Units.radiansToDegrees(this.desiredAngle);
                 states.turnAngle = Units.radiansToDegrees(turningAbsoluteEncoder.getPosition());
@@ -208,5 +220,41 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
                 SmartDashboard.putNumber("Swerve/module " + name + "/turn voltage(volt)", states.turnVoltage);
                 SmartDashboard.putNumber("Swerve/module " + name + "/drive current(amps)", states.driveCurrent);
                 SmartDashboard.putNumber("Swerve/module " + name + "/turn current(amps)", states.turnCurrent);
+        }
+
+        // the rest of this file comes from AdvantageKit's SparkSwerveTemplate; per the
+        // license, here is their disclaimer
+        // Copyright (c) 2021-2026 Littleton Robotics
+        // http://github.com/Mechanical-Advantage
+        //
+        // Use of this source code is governed by a BSD
+        // license that can be found in the LICENSE file
+        // at the root directory of this project.
+        @Override
+        public void setDriveOpenLoop(double output) {
+                drivingSparkMax.setVoltage(output);
+        }
+
+        @Override
+        public void setTurnOpenLoop(double output) {
+                turningSparkMax.setVoltage(output);
+        }
+
+        @Override
+        public void setDriveVelocity(double velocityRadPerSec) {
+                double ffVolts = DRIVING_KS * Math.signum(velocityRadPerSec) + DRIVING_KV * velocityRadPerSec;
+                drivingPidController.setSetpoint(
+                                velocityRadPerSec,
+                                ControlType.kVelocity,
+                                ClosedLoopSlot.kSlot0,
+                                ffVolts,
+                                ArbFFUnits.kVoltage);
+        }
+
+        @Override
+        public void setTurnPosition(Rotation2d rotation) {
+                double setpoint = MathUtil.inputModulus(
+                                rotation.plus(Rotation2d.fromRadians(chassisAngularOffset)).getRadians(), TURNING_ENCODER_POSITION_PID_MIN_INPUT, TURNING_ENCODER_POSITION_PID_MAX_INPUT);
+                turningPidController.setSetpoint(setpoint, ControlType.kPosition);
         }
 }

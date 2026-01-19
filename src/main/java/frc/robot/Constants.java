@@ -65,5 +65,6 @@ public final class Constants {
     // we got the 2 below numbers from blake at 6:57 bon 03/13
     public static final Distance BETA_XTRACK_WIDTH = Inches.of(24.5);
     public static final Distance BETA_YTRACK_WIDTH = Inches.of(26.5);
+
   }
 }

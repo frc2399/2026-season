@@ -47,14 +47,24 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.SpeedConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
+import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
-        
+
         // for drivetopose
         private boolean atGoal = true;
         private BooleanSupplier isBlueAlliance;
@@ -67,7 +77,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
 
-        //private RobotConfig config;
+        // private RobotConfig config;
 
         // debouncer for turning
         private double ROTATION_DEBOUNCE_TIME = 0.5;
@@ -88,7 +98,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         private final Distance TRACK_WIDTH;
         private final Distance WHEEL_BASE;
 
-        // this next line comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+        // these next two lines comes from AdvantageKit's SparkSwerveTemplate; per the
+        // license, here is their disclaimer
         // Copyright (c) 2021-2026 Littleton Robotics
         // http://github.com/Mechanical-Advantage
         //
@@ -96,6 +107,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // license that can be found in the LICENSE file
         // at the root directory of this project.
         public final double DRIVE_BASE_RADIUS;
+        private final SwerveModule[] modules = new SwerveModule[4]; // FL, FR, BL, BR
 
         // Distance between front and back wheels on robot
 
@@ -103,6 +115,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         private final Translation2d REAR_LEFT_OFFSET;
         private final Translation2d FRONT_RIGHT_OFFSET;
         private final Translation2d REAR_RIGHT_OFFSET;
+
+        private static final double HOLONOMIC_P = 5.0;
+        private static final double HOLONOMIC_I = 0.0;
+        private static final double HOLONOMIC_D = 0.0;
 
         private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
@@ -156,7 +172,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 TRACK_WIDTH = trackWidth;
                 WHEEL_BASE = wheelBase;
 
-                // this next line comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+                // this next chunk comes from AdvantageKit's SparkSwerveTemplate; per the
+                // license, here is their disclaimer
                 // Copyright (c) 2021-2026 Littleton Robotics
                 // http://github.com/Mechanical-Advantage
                 //
@@ -164,6 +181,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 // license that can be found in the LICENSE file
                 // at the root directory of this project.
                 DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH.in(Meters) / 2.0, WHEEL_BASE.in(Meters) / 2.0);
+                modules[0] = frontLeft;
+                modules[1] = frontRight;
+                modules[2] = rearLeft;
+                modules[3] = rearRight;
 
                 FRONT_LEFT_OFFSET = new Translation2d(WHEEL_BASE.in(Meters) / 2,
                                 TRACK_WIDTH.in(Meters) / 2);
@@ -190,7 +211,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 frontRight.getPosition(),
                                                 rearLeft.getPosition(),
                                                 rearRight.getPosition() },
-                                new Pose2d(0, 0, new Rotation2d(gyro.getYaw()))); 
+                                new Pose2d(0, 0, new Rotation2d(gyro.getYaw())));
                 // file rather than
                 // free-floating numbers
                 posePublisher = NetworkTableInstance.getDefault()
@@ -298,7 +319,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
          */
         public Command driveCommand(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotRate,
                         Boolean fieldRelative) {
-                return this.run(() -> {                   
+                return this.run(() -> {
                         double currentAngle = gyro.getYaw(false).in(Radians);
                         if (DriverStation.getAlliance().isPresent()
                                         && DriverStation.getAlliance().get() == Alliance.Red) {
@@ -380,17 +401,17 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         }
 
         // private void configurePathPlannerLogging() {
-        //         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-        //                 field2d.setRobotPose(pose);
-        //         });
+        // PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+        // field2d.setRobotPose(pose);
+        // });
 
-        //         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-        //                 field2d.getObject("ROBOT target pose").setPose(pose);
-        //         });
+        // PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+        // field2d.getObject("ROBOT target pose").setPose(pose);
+        // });
 
-        //         PathPlannerLogging.setLogActivePathCallback((poses) -> {
-        //                 field2d.getObject("ROBOT path").setPoses(poses);
-        //         });
+        // PathPlannerLogging.setLogActivePathCallback((poses) -> {
+        // field2d.getObject("ROBOT path").setPoses(poses);
+        // });
         // }
 
         private double getHeadingCorrectionRotRate(double currentAngle, double rotRate, double polarXSpeed,
@@ -441,15 +462,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         return;
                 }
                 var poseEstimate = poseEstimator.getEstimatedPosition();
-                if(Double.isNaN(poseEstimate.getX()) || (poseEstimate.getX() == 0))
-                {
-                        poseEstimator.resetPose(pose);   
+                if (Double.isNaN(poseEstimate.getX()) || (poseEstimate.getX() == 0)) {
+                        poseEstimator.resetPose(pose);
                 } else {
                         poseEstimator.addVisionMeasurement(pose, timestampSeconds, visionMeasurementStdDevs);
                 }
         }
 
-        //new method workflow:
+        // new method workflow:
         // 1. calculate the trapezoid
         // 2. periodically yoink the next trapezoid
         // 3. move the robot
@@ -470,7 +490,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 return this.run(() -> {
                         atGoal = false;
 
-                        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+                        if (DriverStation.getAlliance().isPresent()
+                                        && DriverStation.getAlliance().get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                         } else {
                                 isBlueAlliance = () -> false;
@@ -483,16 +504,18 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         SmartDashboard.putNumber("Swerve/vision/goalTheta", goalPose.get().getRotation().getDegrees());
 
                         Supplier<ChassisSpeeds> alignmentSpeeds = DriveToPoseUtil.getDriveToPoseVelocities(
-                                () -> robotPose, goalPose);
+                                        () -> robotPose, goalPose);
 
                         // tolerances were accounted for in getDriveToPoseVelocities
-                        atGoal = alignmentSpeeds.get().vxMetersPerSecond == 0 && alignmentSpeeds.get().vyMetersPerSecond == 0
+                        atGoal = alignmentSpeeds.get().vxMetersPerSecond == 0
+                                        && alignmentSpeeds.get().vyMetersPerSecond == 0
                                         && alignmentSpeeds.get().omegaRadiansPerSecond == 0;
 
-                       ChassisSpeeds finalAlignmentSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(alignmentSpeeds.get(), robotPose.getRotation());
+                        ChassisSpeeds finalAlignmentSpeeds = ChassisSpeeds
+                                        .fromFieldRelativeSpeeds(alignmentSpeeds.get(), robotPose.getRotation());
 
                         setRobotRelativeSpeeds(finalAlignmentSpeeds);
-               }).until(() -> atGoal);
+                }).until(() -> atGoal);
         }
 
         public Command disableDriveToPose() {
@@ -528,11 +551,56 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
         }
 
-        // the rest of this file comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+        // the rest of this file comes from AdvantageKit's SparkSwerveTemplate; per the
+        // license, here is their disclaimer
         // Copyright (c) 2021-2026 Littleton Robotics
         // http://github.com/Mechanical-Advantage
         //
         // Use of this source code is governed by a BSD
         // license that can be found in the LICENSE file
         // at the root directory of this project.
+
+        /** Runs the drive in a straight line with the specified drive output. */
+        public void runCharacterization(double output) {
+                for (int i = 0; i < 4; i++) {
+                        modules[i].runCharacterization(output);
+                }
+        }
+
+        /** Returns the average velocity of the modules in rad/sec. */
+        public double getFFCharacterizationVelocity() {
+                double output = 0.0;
+                for (int i = 0; i < 4; i++) {
+                        output += modules[i].getFFCharacterizationVelocity() / 4.0;
+                }
+                return output;
+        }
+
+        public void runVelocity(ChassisSpeeds speeds) {
+                // Calculate module setpoints
+                ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+                SwerveModuleState[] setpointStates = DRIVE_KINEMATICS.toSwerveModuleStates(discreteSpeeds);
+                SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
+
+                // Log unoptimized setpoints
+                Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
+                Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
+
+                // Send setpoints to modules
+                for (int i = 0; i < 4; i++) {
+                        modules[i].setDesiredState(setpointStates[i]);
+                }
+
+                // Log optimized setpoints (runSetpoint mutates each state)
+                Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
+        }
+
+        /** Returns the position of each module in radians. */
+        public double[] getWheelRadiusCharacterizationPositions() {
+                double[] values = new double[4];
+                for (int i = 0; i < 4; i++) {
+                        values[i] = modules[i].getWheelRadiusCharacterizationPosition();
+                }
+                return values;
+        }
 }

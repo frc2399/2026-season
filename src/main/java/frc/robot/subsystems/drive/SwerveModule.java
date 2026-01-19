@@ -1,8 +1,11 @@
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.subsystems.drive.SwerveModuleIO.SwerveModuleIOStates;
 
 public class SwerveModule {
@@ -80,5 +83,49 @@ public class SwerveModule {
         io.setDesiredDriveSpeedMPS(correctedDesiredState.speedMetersPerSecond);
         io.setDesiredTurnAngle(correctedDesiredState.angle.getRadians());
         desiredState = newDesiredState;
+    }
+
+    public Distance getWheelRadius() {
+        return io.getWheelDiameter().div(2.0);
+    }
+
+    // the rest of this file comes from AdvantageKit's SparkSwerveTemplate; per the
+    // license, here is their disclaimer
+    // Copyright (c) 2021-2026 Littleton Robotics
+    // http://github.com/Mechanical-Advantage
+    //
+    // Use of this source code is governed by a BSD
+    // license that can be found in the LICENSE file
+    // at the root directory of this project.
+    /**
+     * Runs the module with the specified output while controlling to zero degrees.
+     */
+    public void runCharacterization(double output) {
+        io.setDriveOpenLoop(output);
+        io.setTurnPosition(Rotation2d.kZero);
+    }
+
+    /**
+     * Runs the module with the specified setpoint state. Mutates the state to
+     * optimize it.
+     */
+    public void runSetpoint(SwerveModuleState state) {
+        // Optimize velocity setpoint
+        state.optimize(Rotation2d.fromRadians(io.getTurnAngleCharacterization()));
+        state.cosineScale(Rotation2d.fromRadians(io.getTurnEncoderPosition()));
+
+        // Apply setpoints
+        io.setDriveVelocity(state.speedMetersPerSecond / (io.getWheelDiameter().in(Meters) / 2.0));
+        io.setTurnPosition(state.angle);
+    }
+
+    /** Returns the module velocity in rad/sec. */
+    public double getFFCharacterizationVelocity() {
+        return io.getDriveEncoderSpeedMPS() * Math.PI;
+    }
+
+    /** Returns the module position in radians. */
+    public double getWheelRadiusCharacterizationPosition() {
+        return io.getDriveEncoderPosition() * Math.PI;
     }
 }

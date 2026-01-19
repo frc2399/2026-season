@@ -28,7 +28,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
    */
     public class DriveCommands {
         private static final double FF_START_DELAY = 2.0; // Secs
-        private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
+        private static final double FF_RAMP_RATE = 1.5; // Volts/Sec
         private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
         private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
 
@@ -88,6 +88,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
                         System.out.println("********** Drive FF Characterization Results **********");
                         System.out.println("\tkS: " + formatter.format(kS));
                         System.out.println("\tkV: " + formatter.format(kV));
+                        System.out.println("\tmaxVoltage: " + formatter.format(voltageSamples.get(voltageSamples.size() - 1)));
                         }));
         }
 

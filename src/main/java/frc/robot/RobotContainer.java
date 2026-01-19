@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,17 +41,7 @@ public class RobotContainer {
   public VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
   public CommandFactory commandFactory = new CommandFactory(drive, gyro);
 
-  private static SendableChooser<Command> autoChooser;
-  // this next line comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
-    // Copyright (c) 2021-2026 Littleton Robotics
-    // http://github.com/Mechanical-Advantage
-    //
-    // Use of this source code is governed by a BSD
-    // license that can be found in the LICENSE file
-    // at the root directory of this project.
-    private final LoggedDashboardChooser<Command> tuningAutoChooser;
-
-
+  private static SendableChooser<Command> autoChooserChar = new SendableChooser<>();
 
   private static final CommandXboxController driverController = new CommandXboxController(
       DriveControlConstants.DRIVER_CONTROLLER_PORT);
@@ -66,7 +57,7 @@ public class RobotContainer {
     // license that can be found in the LICENSE file
     // at the root directory of this project.
     // Set up auto routines
-    tuningAutoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // tuningAutoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDefaultCommands();
@@ -97,7 +88,6 @@ public class RobotContainer {
   }
 
   private void setUpAuton() {
-    // autoChooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData("Autos/Selector", autoChooser);
 
     // next chunk comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
@@ -108,17 +98,19 @@ public class RobotContainer {
     // license that can be found in the LICENSE file
     // at the root directory of this project.
     // Set up SysId routines
-    tuningAutoChooser.addOption(
+    autoChooserChar.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    tuningAutoChooser.addOption(
+    autoChooserChar.addOption(
         "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+
+    SmartDashboard.putData("Auto Chooser (char)", autoChooserChar);
 
     SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
     SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return autoChooserChar.getSelected();
   }
 
   public Command resetOdometryRed() {
