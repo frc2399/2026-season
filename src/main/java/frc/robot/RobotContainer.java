@@ -68,7 +68,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindingsDriver() {
-    
+    driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
   }
 
   private void setUpAuton() {
