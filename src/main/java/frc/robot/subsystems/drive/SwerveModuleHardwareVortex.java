@@ -163,15 +163,6 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
     public double getDriveEncoderPosition() {
         double driveEncoderPosition = drivingRelativeEncoder.getPosition();
-        if(Double.isNaN(driveEncoderPosition))
-        {
-            return 0.0; 
-        }
-        else
-        {
-            return driveEncoderPosition; 
-        }
-
     };
 
     public void setDesiredDriveSpeedMPS(double speed) {
