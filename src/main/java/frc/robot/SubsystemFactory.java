@@ -5,7 +5,6 @@ import frc.robot.Constants.MotorIdConstants;
 
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
-import frc.robot.subsystems.drive.SwerveModuleHardwareNEO;
 import frc.robot.subsystems.drive.SwerveModuleHardwareVortex;
 import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.gyro.Gyro;
@@ -21,7 +20,6 @@ public class SubsystemFactory {
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
-    private static final String ALPHA_SERIAL_NUMBER = "";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
 
@@ -29,7 +27,6 @@ public class SubsystemFactory {
         MOZART,
         BUBBLES,
         SIM,
-      //  ALPHA,
         BETA,
         COMP
     }

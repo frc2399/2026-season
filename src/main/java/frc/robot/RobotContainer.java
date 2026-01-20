@@ -6,15 +6,9 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
-// import com.pathplanner.lib.auto.AutoBuilder;
-// import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,10 +21,6 @@ import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
 import frc.robot.util.*;
-
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
-
 
 public class RobotContainer {
   private SubsystemFactory subsystemFactory = new SubsystemFactory();

@@ -47,21 +47,13 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.SpeedConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.gyro.Gyro;
+import frc.robot.util.TunableNumber;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import org.littletonrobotics.junction.Logger;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
@@ -72,10 +64,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         private DriveSubsystemStates states = new DriveSubsystemStates();
 
         // correction PID
-        private double DRIVE_P = 1.1;
-        private double DRIVE_D = 0.05;
+        private double DEFAULT_CORRECTION_DRIVE_P = 1.1;
+        private double DEFAULT_CORRECTION_DRIVE_D = 0.05;
+        private TunableNumber TUNABLE_CORRECTION_DRIVE_P = new TunableNumber("Swerve/heading p", DEFAULT_CORRECTION_DRIVE_P, true);
+        private TunableNumber TUNABLE_CORRECTION_DRIVE_D = new TunableNumber("Swerve/heading d", DEFAULT_CORRECTION_DRIVE_D, true);
 
-        private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
+        private PIDController drivePIDController = new PIDController(TUNABLE_CORRECTION_DRIVE_P.get(), 0, TUNABLE_CORRECTION_DRIVE_D.get());
 
         // private RobotConfig config;
 
@@ -115,10 +109,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         private final Translation2d REAR_LEFT_OFFSET;
         private final Translation2d FRONT_RIGHT_OFFSET;
         private final Translation2d REAR_RIGHT_OFFSET;
-
-        private static final double HOLONOMIC_P = 5.0;
-        private static final double HOLONOMIC_I = 0.0;
-        private static final double HOLONOMIC_D = 0.0;
 
         private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
@@ -221,6 +211,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         @Override
         public void periodic() {
+                // ONLY HAVE ONE OF THESE ACTIVE AT A TIME!
+                // if (TUNABLE_CORRECTION_DRIVE_P.hasChanged()) {
+                //         drivePIDController.setP(TUNABLE_CORRECTION_DRIVE_P.get());
+                // }
+                
                 SmartDashboard.putBoolean("/drive/atGoal", atGoal);
                 // This will get the simulated sensor readings that we set
                 // in the previous article while in simulation, but will use
