@@ -145,6 +145,9 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D)
                                         .feedForward.sva(0,TURNING_FF,0);
 
+        sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
+        sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
+
         drivingSparkFlex.configure(sparkFlexConfigDriving, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         turningSparkMax.configure(sparkMaxConfigTurning, ResetMode.kResetSafeParameters,
