@@ -90,13 +90,14 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final double TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0; // radians
     private static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
-    private static final double DEFAULT_DRIVING_P = 0.4;
+    private static final double DEFAULT_DRIVING_P = 0;
     private static final double DEFAULT_DRIVING_I = 0;
     private static final double DEFAULT_DRIVING_D = 0;
     private static final TunableNumber TUNABLE_DRIVING_P = new TunableNumber("Swerve/driving_p", DEFAULT_DRIVING_P, true);
     private static final TunableNumber TUNABLE_DRIVING_D = new TunableNumber("Swerve/driving_d", DEFAULT_DRIVING_D, true);
-    private static final double DRIVING_KS = 0.08; // averaged from: 0.34271,0.32715,0.32961,0.34130
-    private static final double DRIVING_KV = 0.73309525; // averaged from: 0.73863,0.74100,0.74368,0.74233
+    private static final double DRIVING_KS = 0.1;
+    // private static final double DRIVING_KS = (0.35944 + 0.36478 + 0.36578 + 0.34661)/4;
+    private static final double DRIVING_KV = (2.29053 + 2.28747 + 2.28556 + 2.29925)/4; 
     private static final double DRIVING_KA = 0;
     private static final double DRIVING_MIN_OUTPUT = -1;
     private static final double DRIVING_MAX_OUTPUT = 1;

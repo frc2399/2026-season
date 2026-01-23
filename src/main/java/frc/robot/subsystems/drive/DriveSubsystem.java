@@ -53,7 +53,6 @@ import frc.robot.Robot;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.util.TunableNumber;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
-import org.littletonrobotics.junction.Logger;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
@@ -577,17 +576,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 SwerveModuleState[] setpointStates = DRIVE_KINEMATICS.toSwerveModuleStates(discreteSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
 
-                // Log unoptimized setpoints
-                Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
-                Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
-
                 // Send setpoints to modules
                 for (int i = 0; i < 4; i++) {
                         modules[i].setDesiredState(setpointStates[i]);
                 }
-
-                // Log optimized setpoints (runSetpoint mutates each state)
-                Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
         }
 
         /** Returns the position of each module in radians. */

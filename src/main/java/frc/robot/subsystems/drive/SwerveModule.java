@@ -121,11 +121,11 @@ public class SwerveModule {
 
     /** Returns the module velocity in rad/sec. */
     public double getFFCharacterizationVelocity() {
-        return io.getDriveEncoderSpeedMPS() * Math.PI;
+        return io.getDriveEncoderSpeedMPS();
     }
 
     /** Returns the module position in radians. */
     public double getWheelRadiusCharacterizationPosition() {
-        return io.getDriveEncoderPosition() * Math.PI;
+        return io.getDriveEncoderPosition();
     }
 }
