@@ -115,6 +115,27 @@ public class RobotContainer {
 
         }).ignoringDisable(true));
   }
-
-
+  public Boolean shouldTargetHub(Pose2d robotLocation){
+  var alliance = DriverStation.getAlliance();
+  double poseX = robotLocation.getX();
+  if (alliance.isPresent()) {
+    if (alliance.get() == DriverStation.Alliance.Blue) {
+      if (0 <= poseX && poseX <= 3.98) {
+        return true;
+      }
+      else {
+        return false;
+    }
+    }
+    if (alliance.get() == DriverStation.Alliance.Red) {
+      if (12.56 <= poseX && poseX <= 16.54) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  }
+  return false;
+  }
 }
