@@ -103,7 +103,6 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
         private static final SparkBaseConfig.IdleMode DRIVING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
         private static final SparkBaseConfig.IdleMode TURNING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
 
-        private boolean isFlipped;
         private boolean isOptimizedBackwards = false;
 
         public SwerveModuleHardwareNEO(int drivingCanId, int turningCanId, double chassisAngularOffset, String name) {
@@ -161,12 +160,12 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
         public void setDesiredDriveSpeedMPS(double speed, boolean isFlipped) {
                 drivingPidController.setSetpoint(speed, ControlType.kVelocity);
                 this.driveDesiredVelocity = speed;
+                this.isOptimizedBackwards = isFlipped;
         };
 
         public void setDesiredTurnAngle(double angle) {
                 turningPidController.setSetpoint(angle, ControlType.kPosition);
                 this.desiredAngle = angle;
-                this.isOptimizedBackwards = isFlipped;
         };
 
         public double getChassisAngularOffset() {
@@ -188,7 +187,6 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
         public void updateStates(SwerveModuleIOStates states) {
                 states.desiredAngle = Units.radiansToDegrees(this.desiredAngle);
                 states.turnAngle = Units.radiansToDegrees(turningAbsoluteEncoder.getPosition());
-                states.driveDesiredVelocity = this.driveDesiredVelocity;
                 states.driveVelocity = drivingRelativeEncoder.getVelocity();
                 states.driveEncoderPos = drivingRelativeEncoder.getPosition();
                 states.driveVoltage = drivingSparkMax.getBusVoltage() * drivingSparkMax.getAppliedOutput();
