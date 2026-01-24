@@ -5,7 +5,6 @@ import frc.robot.Constants.MotorIdConstants;
 
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
-import frc.robot.subsystems.drive.SwerveModuleHardwareNEO;
 import frc.robot.subsystems.drive.SwerveModuleHardwareVortex;
 import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.gyro.Gyro;
@@ -105,26 +104,7 @@ public class SubsystemFactory {
             return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
                     Constants.DriveControlConstants.BETA_XTRACK_WIDTH,
                     Constants.DriveControlConstants.BETA_YTRACK_WIDTH);
-        } else if (robotType == RobotType.MOZART) {
-            frontLeft = new SwerveModule(new SwerveModuleHardwareNEO(
-                    MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
-                    MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
-                    FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left"));
-            frontRight = new SwerveModule(new SwerveModuleHardwareNEO(
-                    MotorIdConstants.FRONT_RIGHT_DRIVING_CAN_ID,
-                    MotorIdConstants.FRONT_RIGHT_TURNING_CAN_ID,
-                    FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right"));
-            rearLeft = new SwerveModule(new SwerveModuleHardwareNEO(
-                    MotorIdConstants.REAR_LEFT_DRIVING_CAN_ID,
-                    MotorIdConstants.REAR_LEFT_TURNING_CAN_ID,
-                    REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left"));
-            rearRight = new SwerveModule(new SwerveModuleHardwareNEO(
-                    MotorIdConstants.REAR_RIGHT_DRIVING_CAN_ID,
-                    MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
-                    REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
-            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-                    Constants.DriveControlConstants.MOZART_TRACK_WIDTH,
-                    Constants.DriveControlConstants.MOZART_TRACK_WIDTH);
+         
         } else {
             frontLeft = new SwerveModule(new SwerveModulePlacebo());
             frontRight = new SwerveModule(new SwerveModulePlacebo());
