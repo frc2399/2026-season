@@ -4,7 +4,13 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -42,6 +48,36 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+  }
+
+  @Override
+  public void robotInit() {
+    Map<String, Integer> commandCounts = new HashMap<>();
+    BiConsumer<Command, Boolean> logCommandFunction =
+        (Command command, Boolean active) -> {
+          String name = command.getName();
+          int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+          commandCounts.put(name, count);
+          SmartDashboard.putBoolean(
+              "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
+          SmartDashboard.putBoolean("CommandsAll/" + name, count > 0);
+        };
+    CommandScheduler.getInstance()
+        .onCommandInitialize((Command command) -> {
+          logCommandFunction.accept(command, true);
+          DataLogManager.log(command.getName() + " : Init");
+        });
+    CommandScheduler.getInstance()
+        .onCommandFinish((Command command) -> {
+          logCommandFunction.accept(command, false);
+          DataLogManager.log(command.getName() + ": End");
+        });
+    CommandScheduler.getInstance()
+        .onCommandInterrupt((interrupted, interrupting) -> {
+          logCommandFunction.accept(interrupted, false);
+          DataLogManager.log(interrupted.getName() + " Interrupted by "
+             + (!interrupting.isEmpty() ? interrupting.get().getName() : "nothing"));
+        });
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
