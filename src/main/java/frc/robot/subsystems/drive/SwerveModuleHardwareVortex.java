@@ -245,11 +245,10 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 states.driveDesiredVelocity = this.driveDesiredVelocity;
 
                 if (isOptimizedBackwards){
+                    states.turnAngle = states.desiredAngle + Math.PI;
                     states.driveVelocity = getDriveEncoderSpeedMPS() * -1;
-
                 } else {
                     states.turnAngle = Units.radiansToDegrees(MathUtil.angleModulus(getTurnEncoderPosition()));
-                    states.turnAngle = states.desiredAngle + Math.PI;
                     states.driveVelocity = getDriveEncoderSpeedMPS();
                 }
 

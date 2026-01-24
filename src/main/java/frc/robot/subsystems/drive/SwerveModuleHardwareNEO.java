@@ -194,10 +194,10 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
                 states.driveDesiredVelocity = this.driveDesiredVelocity;
         
                 if (isOptimizedBackwards){
+                    states.turnAngle = states.desiredAngle + Math.PI;
                     states.driveVelocity = drivingRelativeEncoder.getVelocity() * -1;
                 } else {
                         states.turnAngle = Units.radiansToDegrees(turningAbsoluteEncoder.getPosition());
-                        states.turnAngle = states.desiredAngle + Math.PI;
                         states.driveVelocity = drivingRelativeEncoder.getVelocity();
                 }
 
