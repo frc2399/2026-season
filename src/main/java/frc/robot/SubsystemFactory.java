@@ -29,7 +29,6 @@ public class SubsystemFactory {
         MOZART,
         BUBBLES,
         SIM,
-      //  ALPHA,
         BETA,
         COMP
     }
@@ -86,7 +85,7 @@ public class SubsystemFactory {
         //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH,
         //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH);
         // } else
-        if (robotType == RobotType.BETA || robotType == RobotType.BUBBLES) {
+        if (robotType == RobotType.BETA || robotType == RobotType.BUBBLES || robotType == RobotType.MOZART) {
             frontLeft = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
                     MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
