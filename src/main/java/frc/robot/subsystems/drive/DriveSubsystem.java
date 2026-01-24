@@ -157,7 +157,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 this.frontRight = frontRight;
                 this.rearLeft = rearLeft;
                 this.rearRight = rearRight;
-
+                      
                 TRACK_WIDTH = trackWidth;
                 WHEEL_BASE = wheelBase;
 
@@ -191,7 +191,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                 REAR_RIGHT_OFFSET);
 
                 SmartDashboard.putData(field2d);
-
+                SmartDashboard.putData("DriveTrain/Drivetrain Commands" , this);
                 poseEstimator = new SwerveDrivePoseEstimator(
                                 DRIVE_KINEMATICS,
                                 Rotation2d.fromDegrees(gyro.getYaw(false).in(Degrees)),

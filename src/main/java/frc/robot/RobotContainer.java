@@ -31,7 +31,8 @@ public class RobotContainer {
   public VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
   public CommandFactory commandFactory = new CommandFactory(drive, gyro);
 
-  private static SendableChooser<Command> autoChooserChar = new SendableChooser<>();
+  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+
 
   private static final CommandXboxController driverController = new CommandXboxController(
       DriveControlConstants.DRIVER_CONTROLLER_PORT);
@@ -88,19 +89,19 @@ public class RobotContainer {
     // license that can be found in the LICENSE file
     // at the root directory of this project.
     // Set up SysId routines
-    autoChooserChar.addOption(
+    autoChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooserChar.addOption(
+    autoChooser.addOption(
         "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
 
-    SmartDashboard.putData("Auto Chooser (char)", autoChooserChar);
+    SmartDashboard.putData("Auto Chooser (char)", autoChooser);
 
     SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
     SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());
   }
 
   public Command getAutonomousCommand() {
-    return autoChooserChar.getSelected();
+    return autoChooser.getSelected();
   }
 
   public Command resetOdometryRed() {

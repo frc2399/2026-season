@@ -163,6 +163,9 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
         sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
 
+        sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
+        sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
+
         drivingSparkFlex.configure(sparkFlexConfigDriving, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         turningSparkMax.configure(sparkMaxConfigTurning, ResetMode.kResetSafeParameters,
@@ -222,25 +225,6 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         // turningPidController.setSetpoint(setpoint, ControlType.kPosition);
     };
 
-    public double getDriveBusVoltage() {
-        return drivingSparkFlex.getBusVoltage();
-    }
-
-    public double getDriveOutput() {
-        return drivingSparkFlex.getAppliedOutput();
-    }
-
-    public double getTurnBusVoltage() {
-        return turningSparkMax.getBusVoltage();
-    }
-
-    public double getTurnOutput() {
-        return turningSparkMax.getAppliedOutput();
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public double getChassisAngularOffset() {
         return chassisAngularOffset;
