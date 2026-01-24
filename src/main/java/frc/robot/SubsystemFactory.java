@@ -46,6 +46,7 @@ public class SubsystemFactory {
         //     robotType = RobotType.ALPHA;
         // } else
         if (RobotBase.isSimulation()){
+            robotType = RobotType.SIM;
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
