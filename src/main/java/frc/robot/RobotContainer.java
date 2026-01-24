@@ -119,24 +119,55 @@ public class RobotContainer {
   public boolean isAllianceHubActive () {
 String gameData;
 gameData = DriverStation.getGameSpecificMessage();
+double timeRemaining;
+timeRemaining = DriverStation.getMatchTime();
 if (gameData.length() > 0){
   if (DriverStation.getAlliance().isPresent()
     && DriverStation.getAlliance().get() == Alliance.Red) {
       if (gameData.equals('R')) {
-        return true;
-      }
-       else {
+        if ((105.0 >= timeRemaining && timeRemaining >= 80.0) 
+        || (55.0 >= timeRemaining && timeRemaining >= 30.0) ) {
+          return true;
+        }
+        else{
           return false;
         }
-  }
+      }
+       else if (gameData.equals('B')) {
+          if ((130.0 >= timeRemaining && timeRemaining >= 105.0) 
+        || (80.0 >= timeRemaining && timeRemaining >= 55.0) ) {
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      else {
+        return true;
+      }
    if (DriverStation.getAlliance().isPresent()
     && DriverStation.getAlliance().get() == Alliance.Blue) {
-      if (gameData.equals('B')) {
-        return true;
-      }
-       else {
+        if (gameData.equals('B')) {
+        if ((105.0 >= timeRemaining && timeRemaining >= 80.0) 
+        || (55.0 >= timeRemaining && timeRemaining >= 30.0) ) {
+          return true;
+        }
+        else{
           return false;
         }
+      }
+       else if (gameData.equals('R')) {
+          if ((130.0 >= timeRemaining && timeRemaining >= 105.0) 
+        || (80.0 >= timeRemaining && timeRemaining >= 55.0) ) {
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      else {
+        return true;
+      }
 }
   }
 return true;
