@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import java.util.Optional;
+
 // import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.auto.NamedCommands;
 
@@ -13,6 +15,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -115,6 +118,27 @@ public class RobotContainer {
 
         }).ignoringDisable(true));
   }
-
-
+  public Boolean shouldTargetHub(Pose2d robotLocation){
+  Optional<Alliance> alliance = DriverStation.getAlliance();
+  double poseX = robotLocation.getX();
+  if (alliance.isPresent()) {
+    if (alliance.get() == DriverStation.Alliance.Blue) {
+      if (0 <= poseX && poseX <= 3.98) {
+        return true;
+      }
+      else {
+        return false;
+    }
+    }
+    if (alliance.get() == DriverStation.Alliance.Red) {
+      if (12.56 <= poseX && poseX <= 16.54) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  }
+  return false;
+  }
 }
