@@ -187,19 +187,18 @@ public class SwerveModuleHardwareNEO implements SwerveModuleIO {
         public void updateStates(SwerveModuleIOStates states) {
                 states.desiredAngle = Units.radiansToDegrees(this.desiredAngle);
                 states.turnAngle = Units.radiansToDegrees(turningAbsoluteEncoder.getPosition());
-                states.driveVelocity = drivingRelativeEncoder.getVelocity();
                 states.driveEncoderPos = drivingRelativeEncoder.getPosition();
                 states.driveVoltage = drivingSparkMax.getBusVoltage() * drivingSparkMax.getAppliedOutput();
                 states.turnVoltage = turningSparkMax.getBusVoltage() * turningSparkMax.getAppliedOutput();
                 states.driveCurrent = drivingSparkMax.getOutputCurrent();
                 states.turnCurrent = turningSparkMax.getOutputCurrent();
-
                 states.driveDesiredVelocity = this.driveDesiredVelocity;
+        
                 if (isOptimizedBackwards){
                     states.driveVelocity = drivingRelativeEncoder.getVelocity() * -1;
-                    states.turnAngle = states.desiredAngle + Math.PI;
                 } else {
                     states.driveVelocity = drivingRelativeEncoder.getVelocity();
+                    states.turnAngle = states.desiredAngle + Math.PI;
                 }
 
                 SmartDashboard.putNumber("Swerve/module " + name + "/turn desired angle(deg)", states.desiredAngle);

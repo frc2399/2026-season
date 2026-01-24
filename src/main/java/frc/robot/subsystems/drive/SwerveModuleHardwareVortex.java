@@ -243,13 +243,13 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 states.turnVoltage = turningSparkMax.getBusVoltage() * turningSparkMax.getAppliedOutput();
                 states.driveCurrent = drivingSparkFlex.getOutputCurrent();
                 states.turnCurrent = turningSparkMax.getOutputCurrent();
-
                 states.driveDesiredVelocity = this.driveDesiredVelocity;
+
                 if (isOptimizedBackwards){
                     states.driveVelocity = getDriveEncoderSpeedMPS() * -1;
-                    states.turnAngle = states.desiredAngle + Math.PI;
 
                 } else {
+                    states.turnAngle = states.desiredAngle + Math.PI;
                     states.driveVelocity = getDriveEncoderSpeedMPS();
                 }
 
