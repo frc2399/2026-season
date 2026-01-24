@@ -34,7 +34,7 @@ public class RobotContainer {
   public VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
   public CommandFactory commandFactory = new CommandFactory(drive, gyro);
 
-  private static SendableChooser<Command> autoChooser;
+  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
 
 
   private static final CommandXboxController driverController = new CommandXboxController(
@@ -68,7 +68,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindingsDriver() {
-    
+    driverController.x().whileTrue(drive.setX());
   }
 
   private void setUpAuton() {
