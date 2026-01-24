@@ -196,7 +196,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                 robotPose = getPose();
                 field2d.setRobotPose(robotPose);
-                logAndUpdateDriveSubsystemStates();
 
                 frontLeftField2dModule.setPose(robotPose.transformBy(new Transform2d(
                                 FRONT_LEFT_OFFSET,
