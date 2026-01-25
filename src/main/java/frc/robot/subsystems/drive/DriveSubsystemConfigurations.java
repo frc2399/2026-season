@@ -62,12 +62,7 @@ public final class DriveSubsystemConfigurations {
      * (e.g. mozartDriveConfig.kS();)
      */
     public record DriveConfig(
-            double kS,
-            double kV,
-            double driveP,
-            double driveD,
-            double turnP,
-            double turnD,
+            ModuleConfig moduleConfig,
             double headingP,
             double headingD,
             Distance trackWidth, // distance from robot left to robot right
@@ -77,14 +72,23 @@ public final class DriveSubsystemConfigurations {
             AngularAcceleration maxAngularAccel) {
     }
 
-    public static final DriveConfig mozartDriveConfig = new DriveConfig(MozartConstants.KS, MozartConstants.KV,
-            MozartConstants.DRIVE_P, MozartConstants.DRIVE_D, MozartConstants.TURN_P, MozartConstants.TURN_D,
+    public record ModuleConfig(
+            double kS,
+            double kV,
+            double driveP,
+            double driveD,
+            double turnP,
+            double turnD) {
+    }
+
+    public static final DriveConfig mozartDriveConfig = new DriveConfig(new ModuleConfig(MozartConstants.KS, MozartConstants.KV,
+            MozartConstants.DRIVE_P, MozartConstants.DRIVE_D, MozartConstants.TURN_P, MozartConstants.TURN_D),
             MozartConstants.HEADING_P, MozartConstants.HEADING_D, MozartConstants.TRACK_WIDTH,
             MozartConstants.TRACK_LENGTH, MozartConstants.MAX_ACCELERATION, MozartConstants.MAX_SPEED,
             MozartConstants.MAX_ANGULAR_ACCELERATION);
 
-    public static final DriveConfig bubblesDriveConfig = new DriveConfig(BubblesConstants.KS, BubblesConstants.KV,
-            BubblesConstants.DRIVE_P, BubblesConstants.DRIVE_D, BubblesConstants.TURN_P, BubblesConstants.TURN_D,
+    public static final DriveConfig bubblesDriveConfig = new DriveConfig(new ModuleConfig(BubblesConstants.KS, BubblesConstants.KV,
+            BubblesConstants.DRIVE_P, BubblesConstants.DRIVE_D, BubblesConstants.TURN_P, BubblesConstants.TURN_D),
             BubblesConstants.HEADING_P, BubblesConstants.HEADING_D, BubblesConstants.TRACK_WIDTH,
             BubblesConstants.TRACK_LENGTH, BubblesConstants.MAX_ACCELERATION, BubblesConstants.MAX_SPEED,
             BubblesConstants.MAX_ANGULAR_ACCELERATION);
