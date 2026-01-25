@@ -103,8 +103,6 @@ public class SubsystemFactory {
                     REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right",
                     DriveSubsystemConfigurations.bubblesDriveConfig.moduleConfig()));
             return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-                    Constants.DriveControlConstants.BETA_XTRACK_WIDTH,
-                    Constants.DriveControlConstants.BETA_YTRACK_WIDTH,
                     DriveSubsystemConfigurations.bubblesDriveConfig);
         } else if (robotType == RobotType.MOZART) {
             frontLeft = new SwerveModule(new SwerveModuleHardwareVortex(
@@ -128,18 +126,14 @@ public class SubsystemFactory {
                     REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right",
                     DriveSubsystemConfigurations.mozartDriveConfig.moduleConfig()));
             return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-                    Constants.DriveControlConstants.MOZART_TRACK_WIDTH,
-                    Constants.DriveControlConstants.MOZART_TRACK_WIDTH,
                     DriveSubsystemConfigurations.mozartDriveConfig);
         } else {
             frontLeft = new SwerveModule(new SwerveModulePlacebo());
             frontRight = new SwerveModule(new SwerveModulePlacebo());
             rearLeft = new SwerveModule(new SwerveModulePlacebo());
             rearRight = new SwerveModule(new SwerveModulePlacebo());
-            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro, Inches.of(10), Inches.of(10), DriveSubsystemConfigurations.placeboDriveConfig);
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro, DriveSubsystemConfigurations.placeboDriveConfig);
         }
-
-        // 10 is a default value for sim lol
     }
 
     public Gyro buildGyro() {

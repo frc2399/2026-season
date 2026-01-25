@@ -3,9 +3,11 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
 
 import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -31,7 +33,7 @@ public final class DriveSubsystemConfigurations {
         private static final Distance TRACK_LENGTH = Inches.of(26 - (2 * 1.75));
         private static final LinearAcceleration MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
         private static final LinearVelocity MAX_SPEED = MetersPerSecond.of(0);
-        private static final AngularAcceleration MAX_ANGULAR_ACCELERATION = RadiansPerSecondPerSecond.of(0);
+        private static final AngularVelocity MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(0);
     }
 
     private static final class BubblesConstants {
@@ -48,7 +50,7 @@ public final class DriveSubsystemConfigurations {
         private static final Distance TRACK_LENGTH = Inches.of(26.5);
         private static final LinearAcceleration MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
         private static final LinearVelocity MAX_SPEED = MetersPerSecond.of(4.8);
-        private static final AngularAcceleration MAX_ANGULAR_ACCELERATION = RadiansPerSecondPerSecond.of(2 * Math.PI);
+        private static final AngularVelocity MAX_ANGULAR_ACCELERATION = RadiansPerSecond.of(2 * Math.PI);
     }
 
     // architecture for creating a DriveConfig
@@ -70,8 +72,8 @@ public final class DriveSubsystemConfigurations {
             Distance trackWidth, // distance from robot left to robot right
             Distance trackLength, // distance from robot front to robot back
             LinearAcceleration maxAccel,
-            LinearVelocity maxlLinearSpeed,
-            AngularAcceleration maxAngularAccel) {
+            LinearVelocity maxLinearSpeed,
+            AngularVelocity maxAngularVelocity) {
     }
 
     public record ModuleConfig(
@@ -90,7 +92,7 @@ public final class DriveSubsystemConfigurations {
                     MozartConstants.PINION_TEETH),
             MozartConstants.HEADING_P, MozartConstants.HEADING_D, MozartConstants.TRACK_WIDTH,
             MozartConstants.TRACK_LENGTH, MozartConstants.MAX_ACCELERATION, MozartConstants.MAX_SPEED,
-            MozartConstants.MAX_ANGULAR_ACCELERATION);
+            MozartConstants.MAX_ANGULAR_VELOCITY);
 
     public static final DriveConfig bubblesDriveConfig = new DriveConfig(
             new ModuleConfig(BubblesConstants.KS, BubblesConstants.KV,

@@ -36,7 +36,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearAcceleration;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -62,8 +65,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         private DriveSubsystemStates states = new DriveSubsystemStates();
 
         // correction PID
-        private double DRIVE_P = 1.1;
-        private double DRIVE_D = 0.05;
+        private double DRIVE_P;
+        private double DRIVE_D;
 
         private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
 
@@ -87,6 +90,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         private final Distance TRACK_WIDTH;
         private final Distance WHEEL_BASE;
+        public final LinearVelocity MAX_LINEAR_SPEED; // public because used elsewhere
+        public final AngularVelocity MAX_ANGULAR_VELOCITY; // public because used elsewhere
 
         // Distance between front and back wheels on robot
 
@@ -137,15 +142,20 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         /** Creates a new DriveSubsystem. */
         public DriveSubsystem(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule rearLeft,
-                        SwerveModule rearRight, Gyro gyro, Distance trackWidth, Distance wheelBase, DriveConfig config) {
+                        SwerveModule rearRight, Gyro gyro, DriveConfig config) {
                 this.gyro = gyro;
                 this.frontLeft = frontLeft;
                 this.frontRight = frontRight;
                 this.rearLeft = rearLeft;
                 this.rearRight = rearRight;
-                      
-                TRACK_WIDTH = trackWidth;
-                WHEEL_BASE = wheelBase;
+
+                // unpack the config!
+                DRIVE_P = config.headingP();
+                DRIVE_D = config.headingD();
+                MAX_LINEAR_SPEED = config.maxLinearSpeed();
+                MAX_ANGULAR_VELOCITY = config.maxAngularVelocity();   
+                TRACK_WIDTH = config.trackWidth();
+                WHEEL_BASE = config.trackLength();
 
                 FRONT_LEFT_OFFSET = new Translation2d(WHEEL_BASE.in(Meters) / 2,
                                 TRACK_WIDTH.in(Meters) / 2);
