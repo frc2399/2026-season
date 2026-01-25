@@ -1,5 +1,8 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Distance;
+
 public interface SwerveModuleIO {
 
     public static class SwerveModuleIOStates {
@@ -32,5 +35,16 @@ public interface SwerveModuleIO {
     public void updateStates(SwerveModuleIOStates states);
 
     public double getChassisAngularOffset();
+    
+    public void setDriveOpenLoop(double output);
 
+    public void setTurnOpenLoop(double output);
+
+    public void setDriveVelocity(double velocityRadPerSec);
+
+    public void setTurnPosition(Rotation2d rotation);
+
+    public Distance getWheelDiameter();
+
+    public double getTurnAngleCharacterization();
 }

@@ -6,9 +6,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-// import com.pathplanner.lib.auto.AutoBuilder;
-// import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,7 +20,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
-
+import frc.robot.util.*;
 
 public class RobotContainer {
   private SubsystemFactory subsystemFactory = new SubsystemFactory();
@@ -43,6 +40,16 @@ public class RobotContainer {
       DriveControlConstants.OPERATOR_CONTROLLER_PORT);
 
   public RobotContainer() {
+    // next chunk comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+    // Copyright (c) 2021-2026 Littleton Robotics
+    // http://github.com/Mechanical-Advantage
+    //
+    // Use of this source code is governed by a BSD
+    // license that can be found in the LICENSE file
+    // at the root directory of this project.
+    // Set up auto routines
+    // tuningAutoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDefaultCommands();
     configureButtonBindingsDriver();
@@ -72,7 +79,22 @@ public class RobotContainer {
   }
 
   private void setUpAuton() {
-    SmartDashboard.putData("Autos/Selector", autoChooser);
+    // SmartDashboard.putData("Autos/Selector", autoChooser);
+
+    // next chunk comes from AdvantageKit's SparkSwerveTemplate; per the license, here is their disclaimer
+    // Copyright (c) 2021-2026 Littleton Robotics
+    // http://github.com/Mechanical-Advantage
+    //
+    // Use of this source code is governed by a BSD
+    // license that can be found in the LICENSE file
+    // at the root directory of this project.
+    // Set up SysId routines
+    autoChooser.addOption(
+        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    autoChooser.addOption(
+        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+
+    SmartDashboard.putData("Auto Chooser (char)", autoChooser);
 
     SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
     SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());

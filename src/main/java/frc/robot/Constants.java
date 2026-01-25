@@ -45,7 +45,7 @@ public final class Constants {
     public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
     public static final AngularVelocity ALGAE_INTAKE_SPEED = MotorConstants.NEO550_FREE_SPEED.times(1);
     public static final AngularVelocity ALGAE_OUTAKE_SPEED = MotorConstants.NEO550_FREE_SPEED.times(-0.50);
-    public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.8;
+    public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.4;
     public static final double DRIVETRAIN_MAX_ANGULAR_SPEED_RPS = 2 * Math.PI;
   }
 
@@ -65,5 +65,6 @@ public final class Constants {
     // we got the 2 below numbers from blake at 6:57 bon 03/13
     public static final Distance BETA_XTRACK_WIDTH = Inches.of(24.5);
     public static final Distance BETA_YTRACK_WIDTH = Inches.of(26.5);
+
   }
 }
