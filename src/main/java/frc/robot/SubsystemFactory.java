@@ -6,7 +6,6 @@ import frc.robot.Constants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemConfigurations;
 import frc.robot.subsystems.drive.SwerveModule;
-import frc.robot.subsystems.drive.SwerveModuleHardwareNEO;
 import frc.robot.subsystems.drive.SwerveModuleHardwareVortex;
 import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.gyro.Gyro;
@@ -22,7 +21,6 @@ public class SubsystemFactory {
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
-    private static final String ALPHA_SERIAL_NUMBER = "";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
 
@@ -39,9 +37,6 @@ public class SubsystemFactory {
     private String serialNum = System.getenv("serialnum");
 
     public SubsystemFactory() {
-        // if (serialNum.equals(ALPHA_SERIAL_NUMBER)) {
-        // robotType = RobotType.ALPHA;
-        // } else
         if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
@@ -135,14 +130,13 @@ public class SubsystemFactory {
             return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
                     Constants.DriveControlConstants.MOZART_TRACK_WIDTH,
                     Constants.DriveControlConstants.MOZART_TRACK_WIDTH,
-                    ,
                     DriveSubsystemConfigurations.mozartDriveConfig);
         } else {
             frontLeft = new SwerveModule(new SwerveModulePlacebo());
             frontRight = new SwerveModule(new SwerveModulePlacebo());
             rearLeft = new SwerveModule(new SwerveModulePlacebo());
             rearRight = new SwerveModule(new SwerveModulePlacebo());
-            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro, Inches.of(10), Inches.of(10), DriveSubsystemConfigurations.placebo);
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro, Inches.of(10), Inches.of(10), DriveSubsystemConfigurations.placeboDriveConfig);
         }
 
         // 10 is a default value for sim lol

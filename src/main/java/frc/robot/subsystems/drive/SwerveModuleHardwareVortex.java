@@ -29,6 +29,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorConstants;
+import frc.robot.subsystems.drive.DriveSubsystemConfigurations.ModuleConfig;
 
 public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
@@ -105,7 +106,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final SparkBaseConfig.IdleMode DRIVING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
     private static final SparkBaseConfig.IdleMode TURNING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
 
-    public SwerveModuleHardwareVortex(int drivingCanId, int turningCanId, double chassisAngularOffset, String name) {
+    public SwerveModuleHardwareVortex(int drivingCanId, int turningCanId, double chassisAngularOffset, String name, ModuleConfig config) {
         this.chassisAngularOffset = chassisAngularOffset;
         this.name = name;
         drivingSparkFlex = new SparkFlex(drivingCanId, MotorType.kBrushless);
@@ -124,8 +125,6 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                                     .feedForward.sva(0, DRIVING_FF,0);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
-
-     //  ClosedLoopConfig.feedForward();
 
         sparkMaxConfigTurning.inverted(TURNING_MOTOR_INVERTED).idleMode(TURNING_MOTOR_IDLE_MODE)
                 .smartCurrentLimit(

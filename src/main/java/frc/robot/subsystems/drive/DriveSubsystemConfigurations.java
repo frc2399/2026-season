@@ -26,6 +26,7 @@ public final class DriveSubsystemConfigurations {
         private static final double TURN_D = 0.001;
         private static final double HEADING_P = 1.1;
         private static final double HEADING_D = 0.05;
+        private static final int PINION_TEETH = 12;
         private static final Distance TRACK_WIDTH = Inches.of(26 - (2 * 1.75));
         private static final Distance TRACK_LENGTH = Inches.of(26 - (2 * 1.75));
         private static final LinearAcceleration MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
@@ -42,6 +43,7 @@ public final class DriveSubsystemConfigurations {
         private static final double TURN_D = 0.001;
         private static final double HEADING_P = 1.1;
         private static final double HEADING_D = 0.05;
+        private static final int PINION_TEETH = 12;
         private static final Distance TRACK_WIDTH = Inches.of(24.5);
         private static final Distance TRACK_LENGTH = Inches.of(26.5);
         private static final LinearAcceleration MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
@@ -78,17 +80,22 @@ public final class DriveSubsystemConfigurations {
             double driveP,
             double driveD,
             double turnP,
-            double turnD) {
+            double turnD,
+            int pinionTeeth) {
     }
 
-    public static final DriveConfig mozartDriveConfig = new DriveConfig(new ModuleConfig(MozartConstants.KS, MozartConstants.KV,
-            MozartConstants.DRIVE_P, MozartConstants.DRIVE_D, MozartConstants.TURN_P, MozartConstants.TURN_D),
+    public static final DriveConfig mozartDriveConfig = new DriveConfig(
+            new ModuleConfig(MozartConstants.KS, MozartConstants.KV,
+                    MozartConstants.DRIVE_P, MozartConstants.DRIVE_D, MozartConstants.TURN_P, MozartConstants.TURN_D,
+                    MozartConstants.PINION_TEETH),
             MozartConstants.HEADING_P, MozartConstants.HEADING_D, MozartConstants.TRACK_WIDTH,
             MozartConstants.TRACK_LENGTH, MozartConstants.MAX_ACCELERATION, MozartConstants.MAX_SPEED,
             MozartConstants.MAX_ANGULAR_ACCELERATION);
 
-    public static final DriveConfig bubblesDriveConfig = new DriveConfig(new ModuleConfig(BubblesConstants.KS, BubblesConstants.KV,
-            BubblesConstants.DRIVE_P, BubblesConstants.DRIVE_D, BubblesConstants.TURN_P, BubblesConstants.TURN_D),
+    public static final DriveConfig bubblesDriveConfig = new DriveConfig(
+            new ModuleConfig(BubblesConstants.KS, BubblesConstants.KV,
+                    BubblesConstants.DRIVE_P, BubblesConstants.DRIVE_D, BubblesConstants.TURN_P,
+                    BubblesConstants.TURN_D, BubblesConstants.PINION_TEETH),
             BubblesConstants.HEADING_P, BubblesConstants.HEADING_D, BubblesConstants.TRACK_WIDTH,
             BubblesConstants.TRACK_LENGTH, BubblesConstants.MAX_ACCELERATION, BubblesConstants.MAX_SPEED,
             BubblesConstants.MAX_ANGULAR_ACCELERATION);
