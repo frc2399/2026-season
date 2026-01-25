@@ -18,35 +18,35 @@ public final class DriveSubsystemConfigurations {
     // since the constant will never be called inside its own class
     // thus making putting the robot name before every constant redundant
     private static final class MozartConstants {
-        private static final double KS = 0;
-        private static final double KV = 0;
-        private static final double DRIVE_P = 0;
+        private static final double KS = 0.1;
+        private static final double KV = 2.29;
+        private static final double DRIVE_P = 0.4;
         private static final double DRIVE_D = 0;
-        private static final double TURN_P = 0;
-        private static final double TURN_D = 0;
-        private static final double HEADING_P = 0;
-        private static final double HEADING_D = 0;
-        private static final Distance TRACK_WIDTH = Inches.of(0);
-        private static final Distance TRACK_LENGTH = Inches.of(0);
+        private static final double TURN_P = 1.0;
+        private static final double TURN_D = 0.001;
+        private static final double HEADING_P = 1.1;
+        private static final double HEADING_D = 0.05;
+        private static final Distance TRACK_WIDTH = Inches.of(26 - (2 * 1.75));
+        private static final Distance TRACK_LENGTH = Inches.of(26 - (2 * 1.75));
         private static final LinearAcceleration MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
         private static final LinearVelocity MAX_SPEED = MetersPerSecond.of(0);
         private static final AngularAcceleration MAX_ANGULAR_ACCELERATION = RadiansPerSecondPerSecond.of(0);
     }
 
     private static final class BubblesConstants {
-        private static final double KS = 0;
-        private static final double KV = 0;
-        private static final double DRIVE_P = 0;
+        private static final double KS = 0.1;
+        private static final double KV = 2.29;
+        private static final double DRIVE_P = 0.4;
         private static final double DRIVE_D = 0;
-        private static final double TURN_P = 0;
-        private static final double TURN_D = 0;
-        private static final double HEADING_P = 0;
-        private static final double HEADING_D = 0;
-        private static final Distance TRACK_WIDTH = Inches.of(0);
-        private static final Distance TRACK_LENGTH = Inches.of(0);
+        private static final double TURN_P = 1.0;
+        private static final double TURN_D = 0.001;
+        private static final double HEADING_P = 1.1;
+        private static final double HEADING_D = 0.05;
+        private static final Distance TRACK_WIDTH = Inches.of(24.5);
+        private static final Distance TRACK_LENGTH = Inches.of(26.5);
         private static final LinearAcceleration MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
-        private static final LinearVelocity MAX_SPEED = MetersPerSecond.of(0);
-        private static final AngularAcceleration MAX_ANGULAR_ACCELERATION = RadiansPerSecondPerSecond.of(0);
+        private static final LinearVelocity MAX_SPEED = MetersPerSecond.of(4.8);
+        private static final AngularAcceleration MAX_ANGULAR_ACCELERATION = RadiansPerSecondPerSecond.of(2 * Math.PI);
     }
 
     // architecture for creating a DriveConfig
@@ -70,8 +70,8 @@ public final class DriveSubsystemConfigurations {
             double turnD,
             double headingP,
             double headingD,
-            Distance trackWidth,
-            Distance trackLength,
+            Distance trackWidth, // distance from robot left to robot right
+            Distance trackLength, // distance from robot front to robot back
             LinearAcceleration maxAccel,
             LinearVelocity maxlLinearSpeed,
             AngularAcceleration maxAngularAccel) {
