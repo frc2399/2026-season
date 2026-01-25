@@ -92,4 +92,6 @@ public final class DriveSubsystemConfigurations {
             BubblesConstants.HEADING_P, BubblesConstants.HEADING_D, BubblesConstants.TRACK_WIDTH,
             BubblesConstants.TRACK_LENGTH, BubblesConstants.MAX_ACCELERATION, BubblesConstants.MAX_SPEED,
             BubblesConstants.MAX_ANGULAR_ACCELERATION);
+
+    public static final DriveConfig placeboDriveConfig = new DriveConfig(null, 0, 0, null, null, null, null, null);
 }

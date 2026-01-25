@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SpeedConstants;
 import frc.robot.Robot;
+import frc.robot.subsystems.drive.DriveSubsystemConfigurations.DriveConfig;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
@@ -136,7 +137,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         /** Creates a new DriveSubsystem. */
         public DriveSubsystem(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule rearLeft,
-                        SwerveModule rearRight, Gyro gyro, Distance trackWidth, Distance wheelBase) {
+                        SwerveModule rearRight, Gyro gyro, Distance trackWidth, Distance wheelBase, DriveConfig config) {
                 this.gyro = gyro;
                 this.frontLeft = frontLeft;
                 this.frontRight = frontRight;
