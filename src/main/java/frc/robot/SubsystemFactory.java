@@ -5,7 +5,7 @@ import static edu.wpi.first.units.Units.Inches;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.DriveSubsystemConfigurations;
+import frc.robot.subsystems.drive.DriveConfig;
 import frc.robot.subsystems.drive.SwerveModule;
 import frc.robot.subsystems.drive.SwerveModuleHardwareVortex;
 import frc.robot.subsystems.drive.SwerveModulePlacebo;
@@ -33,7 +33,7 @@ public class SubsystemFactory {
         COMP
     }
 
-    private RobotType robotType;
+    private static RobotType robotType;
 
     private String serialNum = System.getenv("serialnum");
 
@@ -51,7 +51,7 @@ public class SubsystemFactory {
         }
     }
 
-    public RobotType getRobotType() {
+    public static RobotType getRobotType() {
         return robotType;
     }
 
@@ -86,54 +86,44 @@ public class SubsystemFactory {
             frontLeft = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
                     MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
-                    FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left",
-                    DriveSubsystemConfigurations.bubblesDriveConfig.moduleConfig()));
+                    FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left"));
             frontRight = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.FRONT_RIGHT_DRIVING_CAN_ID,
                     MotorIdConstants.FRONT_RIGHT_TURNING_CAN_ID,
-                    FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right",
-                    DriveSubsystemConfigurations.bubblesDriveConfig.moduleConfig()));
+                    FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right"));
             rearLeft = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.REAR_LEFT_DRIVING_CAN_ID,
                     MotorIdConstants.REAR_LEFT_TURNING_CAN_ID,
-                    REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left",
-                    DriveSubsystemConfigurations.bubblesDriveConfig.moduleConfig()));
+                    REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left"));
             rearRight = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.REAR_RIGHT_DRIVING_CAN_ID,
                     MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
-                    REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right",
-                    DriveSubsystemConfigurations.bubblesDriveConfig.moduleConfig()));
-            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-                    DriveSubsystemConfigurations.bubblesDriveConfig);
+                    REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
         } else if (robotType == RobotType.MOZART) {
             frontLeft = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
                     MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
-                    FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left",
-                    DriveSubsystemConfigurations.mozartDriveConfig.moduleConfig()));
+                    FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left"));
             frontRight = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.FRONT_RIGHT_DRIVING_CAN_ID,
                     MotorIdConstants.FRONT_RIGHT_TURNING_CAN_ID,
-                    FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right",
-                    DriveSubsystemConfigurations.mozartDriveConfig.moduleConfig()));
+                    FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right"));
             rearLeft = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.REAR_LEFT_DRIVING_CAN_ID,
                     MotorIdConstants.REAR_LEFT_TURNING_CAN_ID,
-                    REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left",
-                    DriveSubsystemConfigurations.mozartDriveConfig.moduleConfig()));
+                    REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left"));
             rearRight = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.REAR_RIGHT_DRIVING_CAN_ID,
                     MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
-                    REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right",
-                    DriveSubsystemConfigurations.mozartDriveConfig.moduleConfig()));
-            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-                    DriveSubsystemConfigurations.mozartDriveConfig);
+                    REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
         } else {
             frontLeft = new SwerveModule(new SwerveModulePlacebo());
             frontRight = new SwerveModule(new SwerveModulePlacebo());
             rearLeft = new SwerveModule(new SwerveModulePlacebo());
             rearRight = new SwerveModule(new SwerveModulePlacebo());
-            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro, DriveSubsystemConfigurations.placeboDriveConfig);
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
         }
     }
 

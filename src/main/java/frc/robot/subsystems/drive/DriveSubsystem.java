@@ -55,7 +55,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.SpeedConstants;
-import frc.robot.subsystems.drive.DriveSubsystemConfigurations.DriveConfig;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
@@ -144,20 +143,20 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         /** Creates a new DriveSubsystem. */
         public DriveSubsystem(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule rearLeft,
-                        SwerveModule rearRight, Gyro gyro, DriveConfig config) {
+                        SwerveModule rearRight, Gyro gyro) {
                 this.gyro = gyro;
                 this.frontLeft = frontLeft;
                 this.frontRight = frontRight;
                 this.rearLeft = rearLeft;
                 this.rearRight = rearRight;
 
-                // unpack the config!
-                DRIVE_P = config.headingP();
-                DRIVE_D = config.headingD();
-                MAX_LINEAR_SPEED = config.maxLinearSpeed();
-                MAX_ANGULAR_VELOCITY = config.maxAngularVelocity();   
-                TRACK_WIDTH = config.trackWidth();
-                WHEEL_BASE = config.trackLength();
+                // get from config!
+                DRIVE_P = DriveConfig.HEADING_P;
+                DRIVE_D = DriveConfig.HEADING_D;
+                MAX_LINEAR_SPEED = DriveConfig.MAX_SPEED;
+                MAX_ANGULAR_VELOCITY = DriveConfig.MAX_ANGULAR_VELOCITY;   
+                TRACK_WIDTH = DriveConfig.TRACK_WIDTH;
+                WHEEL_BASE = DriveConfig.TRACK_LENGTH;
 
                 FRONT_LEFT_OFFSET = new Translation2d(WHEEL_BASE.in(Meters) / 2,
                                 TRACK_WIDTH.in(Meters) / 2);

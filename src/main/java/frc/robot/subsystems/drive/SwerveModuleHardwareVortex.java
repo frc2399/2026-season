@@ -29,7 +29,6 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
-import frc.robot.subsystems.drive.DriveSubsystemConfigurations.ModuleConfig;
 
 public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
@@ -104,21 +103,20 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final SparkBaseConfig.IdleMode DRIVING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
     private static final SparkBaseConfig.IdleMode TURNING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
 
-    public SwerveModuleHardwareVortex(int drivingCanId, int turningCanId, double chassisAngularOffset, String name,
-            ModuleConfig config) {
+    public SwerveModuleHardwareVortex(int drivingCanId, int turningCanId, double chassisAngularOffset, String name) {
         this.chassisAngularOffset = chassisAngularOffset;
         this.name = name;
         drivingSparkFlex = new SparkFlex(drivingCanId, MotorType.kBrushless);
         turningSparkMax = new SparkMax(turningCanId, MotorType.kBrushless);
 
-        // unpack the module config!
-        DRIVING_KS = config.kS();
-        DRIVING_KV = config.kV();
-        DRIVING_P = config.driveP();
-        DRIVING_D = config.driveD();
-        TURNING_P = config.turnP();
-        TURNING_D = config.turnD();
-        DRIVING_MOTOR_PINION_TEETH = config.pinionTeeth();
+        // get from config!
+        DRIVING_KS = DriveConfig.kS;
+        DRIVING_KV = DriveConfig.kV;
+        DRIVING_P = DriveConfig.DRIVE_P;
+        DRIVING_D = DriveConfig.DRIVE_D;
+        TURNING_P = DriveConfig.TURN_P;
+        TURNING_D = DriveConfig.TURN_D;
+        DRIVING_MOTOR_PINION_TEETH = DriveConfig.PINION_TEETH;
         // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
         // teeth on the bevel pinion
         // This is also the gear ratio (14T)
