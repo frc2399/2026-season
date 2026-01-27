@@ -183,13 +183,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     };
 
     public double getDriveEncoderPosition() {
-        double driveEncoderPosition = drivingRelativeEncoder.getPosition();
-        if (Double.isNaN(driveEncoderPosition)) {
-            return 0.0;
-        } else {
-            return driveEncoderPosition;
-        }
-
+        return drivingRelativeEncoder.getPosition();
     };
 
     public void setDesiredDriveSpeedMPS(double speed) {
@@ -198,22 +192,11 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     };
 
     public double getDriveEncoderSpeedMPS() {
-        double driveVelocity = drivingRelativeEncoder.getVelocity();
-        if (Double.isNaN(driveVelocity)) {
-            return 0.0;
-        } else {
-            return driveVelocity;
-        }
+        return drivingRelativeEncoder.getVelocity();
     };
 
     public double getTurnEncoderPosition() {
-        double drivePosition = turningAbsoluteEncoder.getPosition();
-
-        if (Double.isNaN(drivePosition)) {
-            return 0.0;
-        } else {
-            return drivePosition;
-        }
+        return turningAbsoluteEncoder.getPosition();
     };
 
     public void setDesiredTurnAngle(double angle) {
