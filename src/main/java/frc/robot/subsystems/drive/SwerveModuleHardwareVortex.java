@@ -27,8 +27,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.robot.Constants.MotorConstants;
+import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.subsystems.drive.DriveSubsystemConfigurations.ModuleConfig;
 
 public class SwerveModuleHardwareVortex implements SwerveModuleIO {
@@ -161,7 +161,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 .positionWrappingInputRange(
                         TURNING_ENCODER_POSITION_PID_MIN_INPUT,
                         TURNING_ENCODER_POSITION_PID_MAX_INPUT);
-        sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
+        sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
 
         sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D).feedForward.sva(0, TURNING_FF, 0);
 

@@ -23,8 +23,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
-import frc.robot.Constants.SpeedConstants;
 import frc.robot.SubsystemFactory.RobotType;
+import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 
 public final class VisionPoseEstimator {

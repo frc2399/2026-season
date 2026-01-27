@@ -1,8 +1,9 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
-import frc.robot.Constants.MotorIdConstants;
 
+import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemConfigurations;
 import frc.robot.subsystems.drive.SwerveModule;
