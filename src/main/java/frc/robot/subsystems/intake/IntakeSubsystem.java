@@ -11,7 +11,7 @@ public class IntakeSubsystem extends SubsystemBase {
         this.io = io;
     }
     
-    public Command intake() {
-        return this.run(() -> io.runIntake()).withName("run intake");
+    public Command runIntake() {
+        return this.run(() -> io.runIntake()).withName("runIntake");
     }
 }

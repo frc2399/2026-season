@@ -12,6 +12,9 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.gyro.GyroHardware;
 import frc.robot.subsystems.gyro.GyroPlacebo;
+import frc.robot.subsystems.intake.IntakeHardware;
+import frc.robot.subsystems.intake.IntakePlacebo;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -142,6 +145,14 @@ public class SubsystemFactory {
             return new Gyro(new GyroHardware());
         } else {
             return new Gyro(new GyroPlacebo());
+        }
+    }
+
+    public IntakeSubsystem buildIntake() {
+        if (robotType == RobotType.MOZART) {
+            return new IntakeSubsystem(new IntakeHardware());
+        } else {
+            return new IntakeSubsystem(new IntakePlacebo());
         }
     }
 }
