@@ -49,7 +49,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.RobotConstants.SpeedConstants;
+import frc.robot.constants.RobotConstants.*;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
@@ -277,7 +277,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
          *                      field.
          */
         public Command driveCommand(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotRate,
-                        Boolean fieldRelative) {
+                        Boolean fieldRelative, BooleanSupplier shouldAutoalign) {
                 return this.run(() -> {                   
                         double currentAngle = gyro.getYaw(false).in(Radians);
                         if (DriverStation.getAlliance().isPresent()
@@ -296,9 +296,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                 desiredAngle = 0;
                         }
 
-                        double newRotRate = getHeadingCorrectionRotRate(currentAngle,
+                        double newRotRate = getRotRate(currentAngle,
                                         Math.pow(rotRate.getAsDouble(), 5),
-                                        polarXSpeed, polarYSpeed);
+                                        polarXSpeed, polarYSpeed, shouldAutoalign);
 
                         // Convert the commanded speeds into the correct units for the drivetrain
                         double xSpeedDelivered = polarXSpeed * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS;
@@ -372,6 +372,15 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         //                 field2d.getObject("ROBOT path").setPoses(poses);
         //         });
         // }
+        private double getRotRate(double currentAngle, double rotRate, double polarXSpeed, double polarYSpeed, 
+                        BooleanSupplier shouldAutoalign) {
+                if (shouldAutoalign.getAsBoolean()) {
+                        return DriveToPoseUtil.getAutoOrientRotRate(() -> robotPose, RebuiltVisionUtil.getHubPose(), 
+                                TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM); //TODO: replace kzero
+                } else {
+                        return getHeadingCorrectionRotRate(currentAngle, rotRate, polarXSpeed, polarYSpeed); 
+                }
+        }
 
         private double getHeadingCorrectionRotRate(double currentAngle, double rotRate, double polarXSpeed,
                         double polarYSpeed) {

@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -116,5 +117,18 @@ public class DriveToPoseUtil {
                                 thetaDesired.in(RadiansPerSecond));
 
                 return () -> alignmentSpeeds;
+        }
+
+        // offset pose is not necessarily a requirement, but necessary if trying to align an off-center mechanism (eg a shooter) to a pose
+        public static double getAutoOrientRotRate(Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform) {
+                // default: do not turn
+                double desiredRotRate = 0;
+                if (robotPose.get() == null) {
+                        return desiredRotRate;
+                } else {
+                Transform2d targetToRobotTransform = robotPose.get().plus(offsetTransform).minus(orientTargetPose);
+                Angle desiredAngle = Radians.of(Math.atan2(targetToRobotTransform.getY(), targetToRobotTransform.getX())); // note: not sure if this value does wrapping correctly? may need if angle < 0 += pi
+                desiredRotRate = driveToPoseThetaAltPid.calculate(robotPose.get().getRotation().getRadians(), desiredAngle.in(Radians));
+                return desiredRotRate;}
         }
 }

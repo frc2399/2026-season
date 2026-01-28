@@ -6,6 +6,8 @@ package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -65,5 +67,10 @@ public final class RobotConstants {
     // we got the 2 below numbers from blake at 6:57 bon 03/13
     public static final Distance BETA_XTRACK_WIDTH = Inches.of(24.5);
     public static final Distance BETA_YTRACK_WIDTH = Inches.of(26.5);
+  }
+
+  public static class TransformConstants {
+    //these values should be edited once we have our robot to shooter transform
+    public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM = new Transform2d(0, 0, new Rotation2d(0));
   }
 }
