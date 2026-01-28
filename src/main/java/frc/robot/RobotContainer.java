@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.DriveControlConstants;
+import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator;
@@ -31,7 +31,7 @@ public class RobotContainer {
   public VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
   public CommandFactory commandFactory = new CommandFactory(drive, gyro);
 
-  private static SendableChooser<Command> autoChooser;
+  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
 
 
   private static final CommandXboxController driverController = new CommandXboxController(
@@ -70,48 +70,9 @@ public class RobotContainer {
 
   private void setUpAuton() {
     SmartDashboard.putData("Autos/Selector", autoChooser);
-
-    SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
-    SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());
   }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
-
-  public Command resetOdometryRed() {
-    return (gyro.setYaw(Degrees.of(0))).ignoringDisable(true).andThen(
-
-        Commands.runOnce(() ->
-
-        {
-
-          SmartDashboard.putBoolean("reseting odometry red", true);
-          var poseEstimate = visionPoseEstimator.getPoseEstimate();
-          poseEstimate.ifPresent((PoseEstimate pose) -> {
-            var poseCopy = pose.pose;
-            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw())));
-          });
-
-        }).ignoringDisable(true));
-  }
-
-  public Command resetOdometryBlue() {
-
-    return (gyro.setYaw(Degrees.of(180)).ignoringDisable(true)).andThen(
-        Commands.runOnce(() ->
-
-        {
-
-          SmartDashboard.putBoolean("reseting odometry blue", true);
-          var poseEstimate = visionPoseEstimator.getPoseEstimate();
-          poseEstimate.ifPresent((PoseEstimate pose) -> {
-            var poseCopy = pose.pose;
-            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw())));
-          });
-
-        }).ignoringDisable(true));
-  }
-
-
 }

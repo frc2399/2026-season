@@ -47,10 +47,10 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.SpeedConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.Robot;
+import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
@@ -142,7 +142,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 this.frontRight = frontRight;
                 this.rearLeft = rearLeft;
                 this.rearRight = rearRight;
-
+                      
                 TRACK_WIDTH = trackWidth;
                 WHEEL_BASE = wheelBase;
 
@@ -162,7 +162,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                 REAR_RIGHT_OFFSET);
 
                 SmartDashboard.putData(field2d);
-
+                SmartDashboard.putData("DriveTrain/Drivetrain Commands" , this);
                 poseEstimator = new SwerveDrivePoseEstimator(
                                 DRIVE_KINEMATICS,
                                 Rotation2d.fromDegrees(gyro.getYaw(false).in(Degrees)),
@@ -196,7 +196,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                 robotPose = getPose();
                 field2d.setRobotPose(robotPose);
-                logAndUpdateDriveSubsystemStates();
 
                 frontLeftField2dModule.setPose(robotPose.transformBy(new Transform2d(
                                 FRONT_LEFT_OFFSET,
@@ -225,7 +224,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 if (Robot.isSimulation()) {
                         double angleChange = DRIVE_KINEMATICS
                                         .toChassisSpeeds(swerveModuleStates).omegaRadiansPerSecond
-                                        * (1 / Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+                                        * (1 / RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
                         lastAngle = lastAngle.plus(Rotation2d.fromRadians(angleChange));
                         gyro.setYaw(Radians.of(lastAngle.getRadians()));
                 }
