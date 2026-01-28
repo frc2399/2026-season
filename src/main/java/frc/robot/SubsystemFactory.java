@@ -2,7 +2,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
 
-import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.MotorIdConstants;
 
