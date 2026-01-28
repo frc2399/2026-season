@@ -55,7 +55,7 @@ public class SubsystemFactory {
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
             robotType = RobotType.MOZART;
         } else {
-            robotType = RobotType.SIM;
+            throw new RuntimeException("UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: " + serialNum); 
         }
     }
 
