@@ -14,7 +14,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.units.measure.Angle;
-import frc.robot.Constants;
+import frc.robot.constants.RobotConstants;
 
 /** IO implementation for Pigeon2 */
 public class GyroHardware implements GyroIO {
@@ -23,13 +23,13 @@ public class GyroHardware implements GyroIO {
 
     public GyroHardware() {
         canBus = new CANBus("rio");
-        pigeon = new Pigeon2(Constants.MotorIdConstants.GYRO_CAN_ID, canBus);
+        pigeon = new Pigeon2(RobotConstants.MotorIdConstants.GYRO_CAN_ID, canBus);
         // these three lines disable all status signal readings off the pigeon except
         // for the three we need (the three directly below). this reduces CAN network
         // utilization
-        pigeon.getYaw().setUpdateFrequency(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
-        pigeon.getAngularVelocityZDevice().setUpdateFrequency(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
-        pigeon.getFault_Hardware().setUpdateFrequency(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getYaw().setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getAngularVelocityZDevice().setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getFault_Hardware().setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
         pigeon.optimizeBusUtilization();
     }
 
