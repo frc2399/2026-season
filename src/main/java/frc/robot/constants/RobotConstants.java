@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -10,7 +10,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 
-public final class Constants {
+public final class RobotConstants {
 
   public static class MotorIdConstants {
     public static final int FRONT_LEFT_DRIVING_CAN_ID = 11;
