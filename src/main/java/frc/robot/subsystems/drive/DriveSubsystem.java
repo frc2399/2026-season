@@ -47,10 +47,10 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.SpeedConstants;
-import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
