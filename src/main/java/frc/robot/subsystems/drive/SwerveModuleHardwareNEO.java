@@ -23,7 +23,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.MotorConstants;
+import frc.robot.constants.RobotConstants.MotorConstants;
 
 public class SwerveModuleHardwareNEO implements SwerveModuleIO {
 

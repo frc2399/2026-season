@@ -1,8 +1,11 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
-import frc.robot.Constants.MotorIdConstants;
 
+import edu.wpi.first.wpilibj.RobotBase;
+
+import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
 import frc.robot.subsystems.drive.SwerveModuleHardwareNEO;
@@ -41,7 +44,9 @@ public class SubsystemFactory {
         // if (serialNum.equals(ALPHA_SERIAL_NUMBER)) {
         //     robotType = RobotType.ALPHA;
         // } else
-        if (serialNum.equals(BETA_SERIAL_NUMBER)) {
+        if (RobotBase.isSimulation()){
+            robotType = RobotType.SIM;
+        } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType  = RobotType.COMP;
@@ -50,7 +55,7 @@ public class SubsystemFactory {
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
             robotType = RobotType.MOZART;
         } else {
-            robotType = RobotType.SIM;
+            throw new RuntimeException("UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: " + serialNum); 
         }
     }
 
@@ -103,8 +108,8 @@ public class SubsystemFactory {
                     MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
                     REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
             return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-                    Constants.DriveControlConstants.BETA_XTRACK_WIDTH,
-                    Constants.DriveControlConstants.BETA_YTRACK_WIDTH);
+                    RobotConstants.DriveControlConstants.BETA_XTRACK_WIDTH,
+                    RobotConstants.DriveControlConstants.BETA_YTRACK_WIDTH);
         } else if (robotType == RobotType.MOZART) {
             frontLeft = new SwerveModule(new SwerveModuleHardwareNEO(
                     MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
@@ -123,8 +128,8 @@ public class SubsystemFactory {
                     MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
                     REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
             return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-                    Constants.DriveControlConstants.MOZART_TRACK_WIDTH,
-                    Constants.DriveControlConstants.MOZART_TRACK_WIDTH);
+                    RobotConstants.DriveControlConstants.MOZART_TRACK_WIDTH,
+                    RobotConstants.DriveControlConstants.MOZART_TRACK_WIDTH);
         } else {
             frontLeft = new SwerveModule(new SwerveModulePlacebo());
             frontRight = new SwerveModule(new SwerveModulePlacebo());
