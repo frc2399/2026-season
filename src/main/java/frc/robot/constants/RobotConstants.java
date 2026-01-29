@@ -52,8 +52,5 @@ public final class RobotConstants {
     public static final int OPERATOR_CONTROLLER_PORT = 1;
     public static final double DRIVE_DEADBAND = 0.1;
     public static final boolean FIELD_ORIENTED_DRIVE = true;
-
-    public static final double SLOW_DRIVE_FACTOR = 0.25;
-    public static final double DRIVE_FACTOR = 1.0;
   }
 }
