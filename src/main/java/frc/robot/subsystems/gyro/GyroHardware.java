@@ -27,9 +27,9 @@ public class GyroHardware implements GyroIO {
         // these three lines disable all status signal readings off the pigeon except
         // for the three we need (the three directly below). this reduces CAN network
         // utilization
-        pigeon.getYaw(false).setUpdateFrequency(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
-        pigeon.getAngularVelocityZDevice().setUpdateFrequency(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
-        pigeon.getFault_Hardware().setUpdateFrequency(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getYaw(false).setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getAngularVelocityZDevice().setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getFault_Hardware().setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
         pigeon.optimizeBusUtilization();
     }
 
