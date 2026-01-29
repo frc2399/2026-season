@@ -2,6 +2,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
 
+import edu.wpi.first.wpilibj.RobotBase;
+
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -42,7 +44,9 @@ public class SubsystemFactory {
         // if (serialNum.equals(ALPHA_SERIAL_NUMBER)) {
         //     robotType = RobotType.ALPHA;
         // } else
-        if (serialNum.equals(BETA_SERIAL_NUMBER)) {
+        if (RobotBase.isSimulation()){
+            robotType = RobotType.SIM;
+        } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType  = RobotType.COMP;
@@ -51,7 +55,7 @@ public class SubsystemFactory {
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
             robotType = RobotType.MOZART;
         } else {
-            robotType = RobotType.SIM;
+            throw new RuntimeException("UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: " + serialNum); 
         }
     }
 
