@@ -72,6 +72,7 @@ public class RobotContainer {
   }
 
   private void setUpAuton() {
+    autoChooser.setDefaultOption("do nothing", Commands.none());
     SmartDashboard.putData("Autos/Selector", autoChooser);
 
     SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
