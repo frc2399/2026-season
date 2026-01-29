@@ -64,6 +64,7 @@ public class RobotContainer {
             driverController.getRightX(),
             DriveControlConstants.DRIVE_DEADBAND)),
         true));
+    intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
   }
 
   private void configureButtonBindingsDriver() {

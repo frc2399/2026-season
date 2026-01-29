@@ -14,4 +14,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command runIntake() {
         return this.run(() -> io.runIntake()).withName("runIntake");
     }
+
+    public Command defaultBehavior(){
+        return this.run(() -> io.setZero()).withName("defaultBehavior");
+    }
 }
