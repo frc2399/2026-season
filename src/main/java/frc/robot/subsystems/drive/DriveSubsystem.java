@@ -171,7 +171,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 frontRight.getPosition(),
                                                 rearLeft.getPosition(),
                                                 rearRight.getPosition() },
-                                new Pose2d(0, 0, new Rotation2d(gyro.getYaw()))); 
+                                new Pose2d(0, 0, new Rotation2d(gyro.getYaw(false)))); 
                 // file rather than
                 // free-floating numbers
                 posePublisher = NetworkTableInstance.getDefault()
