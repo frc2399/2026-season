@@ -39,11 +39,11 @@ public final class DriveConfig {
                                 HEADING_P = 1.1;
                                 HEADING_D = 0.05;
                                 PINION_TEETH = 12;
-                                TRACK_WIDTH = Inches.of(26 - (2 * 1.75));
-                                TRACK_LENGTH = Inches.of(26 - (2 * 1.75));
-                                MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
-                                MAX_SPEED = MetersPerSecond.of(0);
-                                MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(0);
+                                TRACK_WIDTH = Inches.of(24.5);
+                                TRACK_LENGTH = Inches.of(26.5);
+                                MAX_ACCELERATION = MetersPerSecondPerSecond.of(9.81);
+                                MAX_SPEED = MetersPerSecond.of(4.3);
+                                MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(2 * Math.PI);
                                 break;
                         case MOZART:
                                 kS = 0.1;
