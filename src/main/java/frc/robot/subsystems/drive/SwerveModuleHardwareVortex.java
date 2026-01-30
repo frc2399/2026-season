@@ -89,16 +89,20 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final double DRIVING_P = 0.4;
     private static final double DRIVING_I = 0;
     private static final double DRIVING_D = 0;
-    private static final double DRIVING_FF = 1 / (DRIVE_WHEEL_FREE_SPEED.in(MetersPerSecond));
     private static final double DRIVING_MIN_OUTPUT = -1;
     private static final double DRIVING_MAX_OUTPUT = 1;
 
     private static final double TURNING_P = 1.0;
     private static final double TURNING_I = 0;
     private static final double TURNING_D = 0.001;
-    private static final double TURNING_FF = 0;
+    private static final double DRIVING_KS = 0.1;
+    private static final double DRIVING_KV = (2.29053 + 2.28747 + 2.28556 + 2.29925)/4; 
+    private static final double DRIVING_KA = 0;
     private static final double TURNING_MIN_OUTPUT = -1;
     private static final double TURNING_MAX_OUTPUT = 1;
+    private static final double TURNING_KS = 0;
+    private static final double TURNING_KV = 0; 
+    private static final double TURNING_KA = 0;
 
     private static final double VOLTAGE_COMPENSATION = 12;
 
@@ -121,7 +125,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 .outputRange(DRIVING_MIN_OUTPUT, DRIVING_MAX_OUTPUT);
 
        sparkFlexClosedLoopConfigDriving.pid(DRIVING_P,DRIVING_I,DRIVING_D)
-                                    .feedForward.sva(0, DRIVING_FF,0);
+                                    .feedForward.sva(DRIVING_KS, DRIVING_KV, DRIVING_KA);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
 
@@ -143,7 +147,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
 
         sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D)
-                                        .feedForward.sva(0,TURNING_FF,0);
+                                        .feedForward.sva(TURNING_KS, TURNING_KV, TURNING_KA);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
         sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
