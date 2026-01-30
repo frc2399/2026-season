@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -10,7 +10,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 
-public final class Constants {
+public final class RobotConstants {
 
   public static class MotorIdConstants {
     public static final int FRONT_LEFT_DRIVING_CAN_ID = 11;
@@ -43,8 +43,6 @@ public final class Constants {
     public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
     public static final double LOGGING_FREQUENCY_HZ = 10;
     public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
-    public static final AngularVelocity ALGAE_INTAKE_SPEED = MotorConstants.NEO550_FREE_SPEED.times(1);
-    public static final AngularVelocity ALGAE_OUTAKE_SPEED = MotorConstants.NEO550_FREE_SPEED.times(-0.50);
     public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.8;
     public static final double DRIVETRAIN_MAX_ANGULAR_SPEED_RPS = 2 * Math.PI;
   }
@@ -54,9 +52,6 @@ public final class Constants {
     public static final int OPERATOR_CONTROLLER_PORT = 1;
     public static final double DRIVE_DEADBAND = 0.1;
     public static final boolean FIELD_ORIENTED_DRIVE = true;
-
-    public static final double SLOW_DRIVE_FACTOR = 0.25;
-    public static final double DRIVE_FACTOR = 1.0;
 
     public static final Distance ALPHA_TRACK_WIDTH = Meters.of(0.4954);
     public static final Distance MOZART_TRACK_WIDTH = Inches.of(26 - (2 * 1.75));
