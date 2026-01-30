@@ -4,9 +4,7 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
 
-import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
@@ -59,9 +57,9 @@ public final class DriveConfig {
                                 PINION_TEETH = 12;
                                 TRACK_WIDTH = Inches.of(26 - (2 * 1.75));
                                 TRACK_LENGTH = Inches.of(26 - (2 * 1.75));
-                                MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
-                                MAX_SPEED = MetersPerSecond.of(0);
-                                MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(0);
+                                MAX_ACCELERATION = MetersPerSecondPerSecond.of(9.81); //TODO: characterize
+                                MAX_SPEED = MetersPerSecond.of(4.3);
+                                MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(2 * Math.PI);
                                 break;
                         case BETA:
                                 kS = 0;

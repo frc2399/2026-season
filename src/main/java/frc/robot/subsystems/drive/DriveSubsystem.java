@@ -5,6 +5,7 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
@@ -40,12 +41,11 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -54,7 +54,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
@@ -157,7 +156,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 MAX_ANGULAR_VELOCITY = DriveConfig.MAX_ANGULAR_VELOCITY;   
                 TRACK_WIDTH = DriveConfig.TRACK_WIDTH;
                 WHEEL_BASE = DriveConfig.TRACK_LENGTH;
+                SmartDashboard.putNumber("drive/config/heading_p", DRIVE_P);
+                SmartDashboard.putNumber("drive/config/heading_d", DRIVE_D);
+                SmartDashboard.putNumber("drive/config/max_linear_speed", MAX_LINEAR_SPEED.in(MetersPerSecond));
+                SmartDashboard.putNumber("drive/config/max_angular_vel", MAX_ANGULAR_VELOCITY.in(RadiansPerSecond));
+                SmartDashboard.putNumber("drive/config/trackwidth", TRACK_WIDTH.in(Inches));
+                SmartDashboard.putNumber("drive/config/tracklength", WHEEL_BASE.in(Inches));
 
+                
                 FRONT_LEFT_OFFSET = new Translation2d(WHEEL_BASE.in(Meters) / 2,
                                 TRACK_WIDTH.in(Meters) / 2);
                 REAR_LEFT_OFFSET = new Translation2d(-WHEEL_BASE.in(Meters) / 2,

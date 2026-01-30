@@ -117,6 +117,15 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         TURNING_P = DriveConfig.TURN_P;
         TURNING_D = DriveConfig.TURN_D;
         DRIVING_MOTOR_PINION_TEETH = DriveConfig.PINION_TEETH;
+
+        SmartDashboard.putNumber("drive/config/ks", DRIVING_KS);
+        SmartDashboard.putNumber("drive/config/kv", DRIVING_KV);
+        SmartDashboard.putNumber("drive/config/swervedrivep", DRIVING_P);
+        SmartDashboard.putNumber("drive/config/swervedrived", DRIVING_D);
+        SmartDashboard.putNumber("drive/config/turnp", TURNING_P);
+        SmartDashboard.putNumber("drive/config/turnd", TURNING_D);
+        SmartDashboard.putNumber("drive/config/pinion", DRIVING_MOTOR_PINION_TEETH);
+
         // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
         // teeth on the bevel pinion
         // This is also the gear ratio (14T)
