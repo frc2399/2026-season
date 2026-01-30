@@ -78,25 +78,7 @@ public class SubsystemFactory {
         //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH,
         //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH);
         // } else
-        if (robotType == RobotType.BETA || robotType == RobotType.BUBBLES) {
-            frontLeft = new SwerveModule(new SwerveModuleHardwareVortex(
-                    MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
-                    MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
-                    FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left"));
-            frontRight = new SwerveModule(new SwerveModuleHardwareVortex(
-                    MotorIdConstants.FRONT_RIGHT_DRIVING_CAN_ID,
-                    MotorIdConstants.FRONT_RIGHT_TURNING_CAN_ID,
-                    FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right"));
-            rearLeft = new SwerveModule(new SwerveModuleHardwareVortex(
-                    MotorIdConstants.REAR_LEFT_DRIVING_CAN_ID,
-                    MotorIdConstants.REAR_LEFT_TURNING_CAN_ID,
-                    REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left"));
-            rearRight = new SwerveModule(new SwerveModuleHardwareVortex(
-                    MotorIdConstants.REAR_RIGHT_DRIVING_CAN_ID,
-                    MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
-                    REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
-            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
-        } else if (robotType == RobotType.MOZART) {
+        if (robotType == RobotType.BETA || robotType == RobotType.BUBBLES || robotType == RobotType.MOZART) {
             frontLeft = new SwerveModule(new SwerveModuleHardwareVortex(
                     MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
                     MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
