@@ -25,7 +25,6 @@ import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
 
-
 public class RobotContainer {
   private SubsystemFactory subsystemFactory = new SubsystemFactory();
   private Gyro gyro = subsystemFactory.buildGyro();
@@ -36,7 +35,6 @@ public class RobotContainer {
   public CommandFactory commandFactory = new CommandFactory(drive, gyro);
 
   private static SendableChooser<Command> autoChooser = new SendableChooser<>();
-
 
   private static final CommandXboxController driverController = new CommandXboxController(
       DriveControlConstants.DRIVER_CONTROLLER_PORT);
@@ -69,7 +67,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindingsDriver() {
-    
+
   }
 
   private void setUpAuton() {
@@ -115,60 +113,67 @@ public class RobotContainer {
           });
 
         }).ignoringDisable(true));
-  }
+    }
+
   public boolean isAllianceHubActive () {
-String gameData;
-gameData = DriverStation.getGameSpecificMessage();
-double timeRemaining;
-timeRemaining = DriverStation.getMatchTime();
-if (gameData.length() > 0){
-  if (DriverStation.getAlliance().isPresent()
-    && DriverStation.getAlliance().get() == Alliance.Red) {
-      if (gameData.equals('R')) {
-        if ((105.0 >= timeRemaining && timeRemaining >= 80.0) 
-        || (55.0 >= timeRemaining && timeRemaining >= 30.0) ) {
+    String gameData;
+    gameData = DriverStation.getGameSpecificMessage();
+    
+    double timeRemaining;
+    timeRemaining = DriverStation.getMatchTime();
+
+    if (gameData.length() > 0){
+      if (DriverStation.getAlliance().isPresent()
+      && DriverStation.getAlliance().get() == Alliance.Red) {
+        if (gameData.equals('R')) {
+          if ((105.0 >= timeRemaining && timeRemaining >= 80.0) 
+          || (55.0 >= timeRemaining && timeRemaining >= 30.0) ) {
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+        else if (gameData.equals('B')) {
+            if ((130.0 >= timeRemaining && timeRemaining >= 105.0) 
+          || (80.0 >= timeRemaining && timeRemaining >= 55.0) ) {
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+        else {
           return true;
         }
-        else{
-          return false;
-        }
       }
-       else if (gameData.equals('B')) {
-          if ((130.0 >= timeRemaining && timeRemaining >= 105.0) 
-        || (80.0 >= timeRemaining && timeRemaining >= 55.0) ) {
+    if (DriverStation.getAlliance().isPresent()
+      && DriverStation.getAlliance().get() == Alliance.Blue) {
+          if (gameData.equals('B')) {
+          if ((105.0 >= timeRemaining && timeRemaining >= 80.0) 
+          || (55.0 >= timeRemaining && timeRemaining >= 30.0) ) {
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+        else if (gameData.equals('R')) {
+            if ((130.0 >= timeRemaining && timeRemaining >= 105.0) 
+          || (80.0 >= timeRemaining && timeRemaining >= 55.0) ) {
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+        else {
           return true;
         }
-        else{
-          return false;
-        }
       }
-      else {
-        return true;
-      }
-   if (DriverStation.getAlliance().isPresent()
-    && DriverStation.getAlliance().get() == Alliance.Blue) {
-        if (gameData.equals('B')) {
-        if ((105.0 >= timeRemaining && timeRemaining >= 80.0) 
-        || (55.0 >= timeRemaining && timeRemaining >= 30.0) ) {
-          return true;
-        }
-        else{
-          return false;
-        }
-      }
-       else if (gameData.equals('R')) {
-          if ((130.0 >= timeRemaining && timeRemaining >= 105.0) 
-        || (80.0 >= timeRemaining && timeRemaining >= 55.0) ) {
-          return true;
-        }
-        else{
-          return false;
-        }
-      }
-      else {
-        return true;
-      }
+    
+    }
+    return true;
+
 }
-  }
-return true;
 }
