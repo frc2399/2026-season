@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -12,7 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.gyro.Gyro;
+import frc.robot.subsystems.drive.gyro.Gyro;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
 
 
@@ -20,6 +23,7 @@ public class RobotContainer {
   private SubsystemFactory subsystemFactory = new SubsystemFactory();
   private Gyro gyro = subsystemFactory.buildGyro();
   private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
+  private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
   // this is public because we need to run the visionPoseEstimator periodic from
   // Robot
   public VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
@@ -56,10 +60,12 @@ public class RobotContainer {
             driverController.getRightX(),
             DriveControlConstants.DRIVE_DEADBAND)),
         true));
+    intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
   }
 
   private void configureButtonBindingsDriver() {
-    
+    driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
+    driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
   }
 
   private void setUpAuton() {
