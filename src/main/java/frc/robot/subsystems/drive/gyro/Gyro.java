@@ -19,10 +19,6 @@ public class Gyro {
         io.setYaw(Degrees.of(0));
     }
 
-    public Angle getYaw() {
-        return io.getYaw();
-    }
-
     public Angle getYaw(boolean refresh) {
         return io.getYaw(refresh);
     }

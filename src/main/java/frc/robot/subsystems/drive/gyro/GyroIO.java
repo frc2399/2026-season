@@ -12,9 +12,6 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.units.measure.Angle;
 
 public interface GyroIO {
-
-    public Angle getYaw();
-
     public Angle getYaw(boolean refresh);
 
     public void setYaw(Angle yaw);
