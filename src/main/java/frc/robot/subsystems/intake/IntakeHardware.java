@@ -5,18 +5,22 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import frc.robot.constants.RobotConstants;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
 public class IntakeHardware implements IntakeIO {
@@ -26,9 +30,18 @@ public class IntakeHardware implements IntakeIO {
     
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2*Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2*Math.PI/60);
+    private final int MIN_OUTPUT_RANGE = -1;
+    private final int MAX_OUTPUT_RANGE = 1;
+    private final double INTAKE_P = 0;
+    private final double INTAKE_D = 0;
+    private final double INTAKE_KS = 0.1;
+    private final double INTAKE_KV = 12/RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+
+    private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
+    private final RelativeEncoder intakeEncoder;
 
     public IntakeHardware(){
-        SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+        SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
         intakeMotorConfig.idleMode(IdleMode.kBrake);
         intakeMotorConfig.inverted(true);
@@ -38,22 +51,33 @@ public class IntakeHardware implements IntakeIO {
         intakeMotorConfig.encoder.velocityConversionFactor(ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
         intakeMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        intakeMotorConfig.closedLoop.pid(1, 0, 0);
-        intakeMotorConfig.closedLoop.outputRange(-1,1);
+        intakeMotorConfig.closedLoop.pid(INTAKE_P, 0,INTAKE_D);
+        intakeMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE,MAX_OUTPUT_RANGE);
 
+        closedLoopConfigIntake.feedForward.sva(INTAKE_KS, INTAKE_KV, 0);
 
-        intakeSparkFlex = new SparkFlex(6, MotorType.kBrushless);
+        intakeMotorConfig.apply(closedLoopConfigIntake);
+
+        intakeSparkFlex = new SparkFlex(RobotConstants.MotorIdConstants.INTAKE_CAN_ID, MotorType.kBrushless);
         intakeSparkFlex.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         intakePidController = intakeSparkFlex.getClosedLoopController();
+
+        intakeEncoder = intakeSparkFlex.getEncoder();
 
     }
 
     public void runIntake(){
         intakePidController.setSetpoint(0.5*MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
+
+        SmartDashboard.putNumber("Intake/desiredspeed", 0.5*MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+        SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
     }
 
     public void setZero(){
         intakePidController.setSetpoint(0, ControlType.kVelocity);
+
+        SmartDashboard.putNumber("Intake/desiredspeed", 0);
+        SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
     }
 }
