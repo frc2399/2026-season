@@ -110,3 +110,18 @@ tasks.withType(JavaCompile) {
 spotbugs {
     ignoreFailures = false
 }
+project.compileJava.dependsOn(spotlessApply)
+spotless {
+    java {
+        target fileTree(".") {
+            include "**/*.java"
+            exclude "**/build/**", "**/build-*/**"
+        }
+        toggleOffOn()
+        googleJavaFormat('1.19.2')  // Specify version explicitly
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    // ... rest of config
+}
