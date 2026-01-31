@@ -1,4 +1,4 @@
-package frc.robot.subsystems.gyro;
+package frc.robot.subsystems.drive.gyro;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -17,10 +17,6 @@ public class Gyro {
         // usually don't have comms at boot, so we can't trust a
         // DriverStation.getAlliance() to not be empty.
         io.setYaw(Degrees.of(0));
-    }
-
-    public Angle getYaw() {
-        return io.getYaw();
     }
 
     public Angle getYaw(boolean refresh) {
