@@ -22,7 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.PoseConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.gyro.Gyro;
+import frc.robot.subsystems.drive.gyro.Gyro;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
 
@@ -31,6 +32,7 @@ public class RobotContainer {
   private SubsystemFactory subsystemFactory = new SubsystemFactory();
   private Gyro gyro = subsystemFactory.buildGyro();
   private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
+  private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
   // this is public because we need to run the visionPoseEstimator periodic from
   // Robot
   public VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
@@ -67,10 +69,12 @@ public class RobotContainer {
             driverController.getRightX(),
             RobotConstants.DriveControlConstants.DRIVE_DEADBAND)),
         true));
+    intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
   }
 
   private void configureButtonBindingsDriver() {
-    
+    driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
+    driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
   }
 
   private void setUpAuton() {
