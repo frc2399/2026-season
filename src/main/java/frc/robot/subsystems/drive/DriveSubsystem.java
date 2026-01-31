@@ -40,6 +40,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -51,6 +52,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.SpeedConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.gyro.Gyro;
+import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
@@ -182,6 +184,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         @Override
         public void periodic() {
                 SmartDashboard.putBoolean("/drive/atGoal", atGoal);
+                SmartDashboard.putBoolean("/drive/isHubActive", GameState.isHubActive());
+                SmartDashboard.putNumber("/drive/matchTime", DriverStationSim.getMatchTime());
                 // This will get the simulated sensor readings that we set
                 // in the previous article while in simulation, but will use
                 // real values on the robot itself.
