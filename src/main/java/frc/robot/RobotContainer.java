@@ -47,6 +47,9 @@ public class RobotContainer {
 private final Alert lowBatteryAlert =
 new Alert("Battery voltage is very low, turn off the robot or replace the battery to avoid damage.", AlertType.kWarning);
 
+private final Alert driverDisconnected =
+new Alert("Driver controller disconnected!", AlertType.kWarning);
+
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDefaultCommands();
@@ -88,5 +91,6 @@ new Alert("Battery voltage is very low, turn off the robot or replace the batter
 
   public void setAlerts() {
     lowBatteryAlert.set((RobotController.getBatteryVoltage() > 0.0 && RobotController.getBatteryVoltage() <= RobotConstants.LOW_BATTERY_VOLTAGE));
+    driverDisconnected.set(!DriverStation.isJoystickConnected(driverController.getHID().getPort()));ß
   }
 }
