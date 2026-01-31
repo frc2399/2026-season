@@ -79,6 +79,9 @@ public class RobotContainer {
 
   private void setUpAuton() {
 
+    drive.resetOdometry(new Pose2d(0.2,0.2, Rotation2d.fromDegrees(0)));
+    System.out.println("reset odometry to (0.2,0.2)");
+
     autoChooser = new SendableChooser<>();
 
     Command driveStraight = commandFactory.buildPath(PoseConstants.DRIVE_STRAIGHT);
