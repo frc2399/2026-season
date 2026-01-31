@@ -61,4 +61,5 @@ public final class RobotConstants {
     public static final Distance BETA_XTRACK_WIDTH = Inches.of(24.5);
     public static final Distance BETA_YTRACK_WIDTH = Inches.of(26.5);
   }
+  public static final double LOW_BATTERY_VOLTAGE = 11.0;
 }

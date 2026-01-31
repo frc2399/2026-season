@@ -9,7 +9,10 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +24,7 @@ import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
-
+import frc.robot.constants.RobotConstants;
 
 public class RobotContainer {
   private SubsystemFactory subsystemFactory = new SubsystemFactory();
@@ -40,6 +43,9 @@ public class RobotContainer {
       DriveControlConstants.DRIVER_CONTROLLER_PORT);
   private static final CommandXboxController operatorController = new CommandXboxController(
       DriveControlConstants.OPERATOR_CONTROLLER_PORT);
+
+private final Alert lowBatteryAlert =
+new Alert("Battery voltage is very low, turn off the robot or replace the battery to avoid damage.", AlertType.kWarning);
 
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -78,5 +84,9 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+
+  public void setAlerts() {
+    lowBatteryAlert.set((RobotController.getBatteryVoltage() > 0.0 && RobotController.getBatteryVoltage() <= RobotConstants.LOW_BATTERY_VOLTAGE));
   }
 }
