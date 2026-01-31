@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -57,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // for drivetopose
         private boolean atGoal = true;
         private BooleanSupplier isBlueAlliance;
-
+        private Optional<Alliance> alliance = DriverStation.getAlliance();
         private DriveSubsystemStates states = new DriveSubsystemStates();
 
         // correction PID
@@ -280,8 +281,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         Boolean fieldRelative) {
                 return this.run(() -> {                   
                         double currentAngle = gyro.getYaw(false).in(Radians);
-                        if (DriverStation.getAlliance().isPresent()
-                                        && DriverStation.getAlliance().get() == Alliance.Red) {
+                        if (alliance.isPresent()
+                                        && alliance.get() == Alliance.Red) {
                                 currentAngle += Math.PI;
                         }
 
@@ -317,6 +318,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                         SmartDashboard.putNumber("x speed delivered", xSpeedDelivered);
                         SmartDashboard.putNumber("y speed delivered", ySpeedDelivered);
+                        SmartDashboard.putNumber("polarAngle", polarAngle);
 
                         var swerveModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
                         SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -450,7 +452,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 return this.run(() -> {
                         atGoal = false;
 
-                        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+                        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                         } else {
                                 isBlueAlliance = () -> false;
