@@ -2,6 +2,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
 
+import edu.wpi.first.wpilibj.RobotBase;
+
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -9,9 +11,12 @@ import frc.robot.subsystems.drive.SwerveModule;
 import frc.robot.subsystems.drive.SwerveModuleHardwareNEO;
 import frc.robot.subsystems.drive.SwerveModuleHardwareVortex;
 import frc.robot.subsystems.drive.SwerveModulePlacebo;
-import frc.robot.subsystems.gyro.Gyro;
-import frc.robot.subsystems.gyro.GyroHardware;
-import frc.robot.subsystems.gyro.GyroPlacebo;
+import frc.robot.subsystems.drive.gyro.Gyro;
+import frc.robot.subsystems.drive.gyro.GyroHardware;
+import frc.robot.subsystems.drive.gyro.GyroPlacebo;
+import frc.robot.subsystems.intake.IntakeHardware;
+import frc.robot.subsystems.intake.IntakePlacebo;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -42,7 +47,9 @@ public class SubsystemFactory {
         // if (serialNum.equals(ALPHA_SERIAL_NUMBER)) {
         //     robotType = RobotType.ALPHA;
         // } else
-        if (serialNum.equals(BETA_SERIAL_NUMBER)) {
+        if (RobotBase.isSimulation()){
+            robotType = RobotType.SIM;
+        } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType  = RobotType.COMP;
@@ -51,7 +58,7 @@ public class SubsystemFactory {
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
             robotType = RobotType.MOZART;
         } else {
-            robotType = RobotType.SIM;
+            throw new RuntimeException("UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: " + serialNum); 
         }
     }
 
@@ -142,6 +149,14 @@ public class SubsystemFactory {
             return new Gyro(new GyroHardware());
         } else {
             return new Gyro(new GyroPlacebo());
+        }
+    }
+
+    public IntakeSubsystem buildIntake() {
+        if (robotType == RobotType.MOZART) {
+            return new IntakeSubsystem(new IntakeHardware());
+        } else {
+            return new IntakeSubsystem(new IntakePlacebo());
         }
     }
 }

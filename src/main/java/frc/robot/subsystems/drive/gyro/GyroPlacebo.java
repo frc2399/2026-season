@@ -1,4 +1,4 @@
-package frc.robot.subsystems.gyro;
+package frc.robot.subsystems.drive.gyro;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -8,10 +8,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public class GyroPlacebo implements GyroIO {
-    public Angle getYaw() {
-        return Degrees.of(0.0);
-    }
-
     public Angle getYaw(boolean refresh) {
         return Degrees.of(0);
     }
