@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
@@ -73,10 +74,152 @@ public class RobotContainer {
   }
 
   private void setUpAuton() {
+    autoChooser = new SendableChooser<>();
+
+   Command hubDepot = Commands.sequence(
+     Commands.runOnce(() -> drive.resetOdometry(RobotConstants.PoseConstants.HUB_MIDDLE.pose())),
+     commandFactory.buildPath(RobotConstants.PoseConstants.DEPOT),
+     // move into intake position while driving
+     drive.driveToPoseOnExecute(),
+     intakeSubsystem.runIntake(),
+     commandFactory.buildPath(RobotConstants.PoseConstants.HUB_MIDDLE),
+     // move into shooting position while driving
+     drive.driveToPoseOnExecute());
+     // shooting command
+
+
+   Command hubDepotTowerL1 = Commands.sequence(
+     Commands.runOnce(() -> drive.resetOdometry(RobotConstants.PoseConstants.HUB_MIDDLE.pose())),
+     commandFactory.buildPath(RobotConstants.PoseConstants.DEPOT),
+     // move into intake position while driving
+     drive.driveToPoseOnExecute(),
+     intakeSubsystem.runIntake(),
+     commandFactory.buildPath(RobotConstants.PoseConstants.HUB_MIDDLE),
+     // move into shooting position while driving
+     drive.driveToPoseOnExecute(),
+     // shooting command
+     commandFactory.buildPath(RobotConstants.PoseConstants.TOWER_L1),
+     // move into climbing position while driving
+     drive.driveToPoseOnExecute());
+     // climbing command
+
+
+   Command bumpDepotTowerL1 = Commands.sequence(
+     Commands.runOnce(() -> drive.resetOdometry(RobotConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+     commandFactory.buildPath(RobotConstants.PoseConstants.DEPOT),
+     // move into intake position while driving
+     drive.driveToPoseOnExecute(),
+     intakeSubsystem.runIntake(),
+     commandFactory.buildPath(RobotConstants.PoseConstants.BUMP_STARTING_LINE),
+     // move into shooting position while driving
+     drive.driveToPoseOnExecute(),
+     // shooting command
+     commandFactory.buildPath(RobotConstants.PoseConstants.TOWER_L1),
+     // move into climbing position while driving
+     drive.driveToPoseOnExecute());
+     // climbing command
+
+
+   Command depotHubTowerL1 = Commands.sequence(
+     Commands.runOnce(() -> drive.resetOdometry(RobotConstants.PoseConstants.DEPOT.pose())),
+     intakeSubsystem.runIntake(),
+     commandFactory.buildPath(RobotConstants.PoseConstants.HUB_MIDDLE),
+     // move into shooting position while driving
+     drive.driveToPoseOnExecute(),
+     // shooting command
+     commandFactory.buildPath(RobotConstants.PoseConstants.TOWER_L1),
+     // move into climbing position while driving
+     drive.driveToPoseOnExecute());
+     // climbing command
+
+
+   Command bumpNeutralZone = Commands.sequence(
+     Commands.runOnce(() -> drive.resetOdometry(RobotConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+     commandFactory.buildPath(RobotConstants.PoseConstants.NEUTRAL_ZONE_BORDER),
+     // move into intaking position while driving
+     drive.driveToPoseOnExecute(),
+     intakeSubsystem.runIntake(),
+     commandFactory.buildPath(RobotConstants.PoseConstants.BUMP_STARTING_LINE),
+     // get into shooting position while driving
+     drive.driveToPoseOnExecute());
+     // shooting command
+
+
+   Command bumpNeutralZoneTowerL1 = Commands.sequence(
+     Commands.runOnce(() -> drive.resetOdometry(RobotConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+     commandFactory.buildPath(RobotConstants.PoseConstants.NEUTRAL_ZONE_BORDER),
+     // move into intaking position while driving
+     drive.driveToPoseOnExecute(),
+     intakeSubsystem.runIntake(),
+     commandFactory.buildPath(RobotConstants.PoseConstants.BUMP_STARTING_LINE),
+     // get into shooting position while driving
+     drive.driveToPoseOnExecute(),
+     // shooting command
+     commandFactory.buildPath(RobotConstants.PoseConstants.TOWER_L1),
+     // get into climbing position while driving
+     drive.driveToPoseOnExecute());
+     // climbing command
+
+
+   Command bumpTowerL1 = Commands.sequence(
+     Commands.runOnce(() -> drive.resetOdometry(RobotConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+     commandFactory.buildPath(RobotConstants.PoseConstants.NEUTRAL_ZONE_BORDER),
+     // move into intaking position while driving
+     drive.driveToPoseOnExecute(),
+     intakeSubsystem.runIntake(),
+     commandFactory.buildPath(RobotConstants.PoseConstants.TOWER_L1),
+     // get into climbing position while driving
+     drive.driveToPoseOnExecute());
+     // climbing command
+
+    autoChooser.addOption("hubDepot", hubDepot);
+    autoChooser.addOption("hubDepotTowerL1", hubDepotTowerL1);
+    autoChooser.addOption("bumpDepotTowerL1", bumpDepotTowerL1);
+    autoChooser.addOption("depotHubTowerL1", depotHubTowerL1);
+    autoChooser.addOption("bumpNeutralZone", bumpNeutralZone);
+    autoChooser.addOption("bumpNeutralZoneTowerL1", bumpNeutralZoneTowerL1);
+    autoChooser.addOption("bumpTowerL1", bumpTowerL1);
+
     SmartDashboard.putData("Autos/Selector", autoChooser);
+
+    SmartDashboard.putData("reset odometry for facing red wall", resetOdometryRed());
+    SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());
   }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+
+  public Command resetOdometryRed() {
+    return (gyro.setYaw(Degrees.of(0))).ignoringDisable(true).andThen(
+
+        Commands.runOnce(() ->
+        {
+
+          SmartDashboard.putBoolean("reseting odometry red", true);
+          var poseEstimate = visionPoseEstimator.getPoseEstimate();
+          poseEstimate.ifPresent((PoseEstimate pose) -> {
+            var poseCopy = pose.pose;
+            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw(false))));
+          });
+
+        }).ignoringDisable(true));
+  }
+
+  public Command resetOdometryBlue() {
+
+    return (gyro.setYaw(Degrees.of(180)).ignoringDisable(true)).andThen(
+        Commands.runOnce(() ->
+
+        {
+
+          SmartDashboard.putBoolean("reseting odometry blue", true);
+          var poseEstimate = visionPoseEstimator.getPoseEstimate();
+          poseEstimate.ifPresent((PoseEstimate pose) -> {
+            var poseCopy = pose.pose;
+            drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw(false))));
+          });
+
+        }).ignoringDisable(true));
   }
 }
