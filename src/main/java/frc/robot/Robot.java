@@ -61,8 +61,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void driverStationConnected() {
+    // support for starting on either red or blue alliance for auton
     if (DriverStation.getAlliance().get() == Alliance.Red) {
-     m_robotContainer.getGyro().setYaw(Degrees.of(67));
+     m_robotContainer.getGyro().setYaw(Degrees.of(0));
    }
    else {
      m_robotContainer.getGyro().setYaw(Degree.of(180));
