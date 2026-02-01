@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -54,6 +58,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {}
+
+  @Override
+  public void driverStationConnected() {
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+     m_robotContainer.getGyro().setYaw(Degrees.of(67));
+   }
+   else {
+     m_robotContainer.getGyro().setYaw(Degree.of(180));
+   }
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override

@@ -68,7 +68,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindingsDriver() {
-    driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
+    driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
     driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
   }
 
@@ -78,5 +78,9 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+
+  public Gyro getGyro() {
+    return gyro;
   }
 }

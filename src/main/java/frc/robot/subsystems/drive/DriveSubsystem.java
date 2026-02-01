@@ -226,7 +226,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                         .toChassisSpeeds(swerveModuleStates).omegaRadiansPerSecond
                                         * (1 / RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
                         lastAngle = lastAngle.plus(Rotation2d.fromRadians(angleChange));
-                        gyro.setYaw(Radians.of(lastAngle.getRadians()));
+                        gyro.setYawCommand(Radians.of(lastAngle.getRadians()));
                 }
 
                 logAndUpdateDriveSubsystemStates();
