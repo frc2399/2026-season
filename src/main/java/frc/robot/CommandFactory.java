@@ -3,6 +3,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants.Pose;
@@ -22,6 +24,6 @@ public class CommandFactory {
     }
 
     public Command buildPath(Pose pose) {
-        return AutoBuilder.pathfindToPose(pose.pose(), constraints, 0).withName(pose.name());
+        return AutoBuilder.pathfindToPose(new Pose2d(2,0,Rotation2d.fromDegrees(90)), constraints, 0).withName(pose.name());
     }
 }
