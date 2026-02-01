@@ -24,6 +24,6 @@ public class CommandFactory {
     }
 
     public Command buildPath(Pose pose) {
-        return AutoBuilder.pathfindToPose(new Pose2d(2,0,Rotation2d.fromDegrees(90)), constraints, 0).withName(pose.name());
+        return AutoBuilder.pathfindToPose(pose.pose(), constraints, 0).withName(pose.name());
     }
 }
