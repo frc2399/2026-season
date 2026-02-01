@@ -69,7 +69,8 @@ public class RobotContainer {
   }
 
   private void configureButtonBindingsDriver() {
-    driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
+    driverController.b().onTrue(gyro.setYaw(Degrees.of(180)));
+      driverController.x().onTrue(gyro.setYaw(Degrees.of(0)));
     driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
   }
 

@@ -277,13 +277,15 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
          *                      field.
          */
         public Command driveCommand(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotRate,
-                        Boolean fieldRelative, BooleanSupplier shouldAutoalign) {
+                        Boolean fieldRelative, BooleanSupplier shouldAutoOrient) {
                 return this.run(() -> {                   
                         double currentAngle = gyro.getYaw(false).in(Radians);
                         if (DriverStation.getAlliance().isPresent()
                                         && DriverStation.getAlliance().get() == Alliance.Red) {
                                 currentAngle += Math.PI;
                         }
+
+                        SmartDashboard.putBoolean("vision/orient/shouldAutoOrient", shouldAutoOrient.getAsBoolean());
 
                         double r = Math.hypot(xSpeed.getAsDouble(),
                                         ySpeed.getAsDouble());
@@ -298,7 +300,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                         double newRotRate = getRotRate(currentAngle,
                                         Math.pow(rotRate.getAsDouble(), 5),
-                                        polarXSpeed, polarYSpeed, shouldAutoalign);
+                                        polarXSpeed, polarYSpeed, shouldAutoOrient);
 
                         // Convert the commanded speeds into the correct units for the drivetrain
                         double xSpeedDelivered = polarXSpeed * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS;
@@ -376,7 +378,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         BooleanSupplier shouldAutoalign) {
                 if (shouldAutoalign.getAsBoolean()) {
                         return DriveToPoseUtil.getAutoOrientRotRate(() -> robotPose, RebuiltVisionUtil.getHubPose(), 
-                                TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM); //TODO: replace kzero
+                                TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
                 } else {
                         return getHeadingCorrectionRotRate(currentAngle, rotRate, polarXSpeed, polarYSpeed); 
                 }
@@ -425,7 +427,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 // (negative? before robot boot?) that then causes the poseEstimator to try to
                 // replay odometry measurements that it doesn't have. This try-catch fixes the
                 // issue, and who wants vision updates to crash their robot code anyway?
-
                 if (timestampSeconds <= 0) {
                         return;
                 }

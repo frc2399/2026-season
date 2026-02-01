@@ -121,14 +121,23 @@ public class DriveToPoseUtil {
 
         // offset pose is not necessarily a requirement, but necessary if trying to align an off-center mechanism (eg a shooter) to a pose
         public static double getAutoOrientRotRate(Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform) {
+                SmartDashboard.putNumber("vision/hub/x", orientTargetPose.getX());
+                SmartDashboard.putNumber("vision/hub/y", orientTargetPose.getY());
+                SmartDashboard.putNumber("vision/hub/theta", orientTargetPose.getRotation().getDegrees());
+
                 // default: do not turn
                 double desiredRotRate = 0;
                 if (robotPose.get() == null) {
                         return desiredRotRate;
                 } else {
-                Transform2d targetToRobotTransform = robotPose.get().plus(offsetTransform).minus(orientTargetPose);
-                Angle desiredAngle = Radians.of(Math.atan2(targetToRobotTransform.getY(), targetToRobotTransform.getX())); // note: not sure if this value does wrapping correctly? may need if angle < 0 += pi
-                desiredRotRate = driveToPoseThetaAltPid.calculate(robotPose.get().getRotation().getRadians(), desiredAngle.in(Radians));
-                return desiredRotRate;}
+                        Transform2d targetToRobotTransform = robotPose.get().plus(offsetTransform).minus(orientTargetPose);
+                        SmartDashboard.putNumber("vision/ttr/x", targetToRobotTransform.getX());
+                        SmartDashboard.putNumber("vision/ttr/y", targetToRobotTransform.getY());
+                        Angle desiredAngle = Radians.of(Math.atan2(targetToRobotTransform.getY(), targetToRobotTransform.getX())); // note: not sure if this value does wrapping correctly? may need if angle < 0 += pi
+                        SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
+                        SmartDashboard.putNumber("vision/current angle", robotPose.get().getRotation().getDegrees());
+                        desiredRotRate = driveToPoseThetaAltPid.calculate(robotPose.get().getRotation().getRadians(), desiredAngle.in(Radians));
+                        return desiredRotRate;
+                }
         }
 }
