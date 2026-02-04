@@ -37,14 +37,14 @@ public final class RobotConstants {
         public static final AngularVelocity VORTEX_FREE_SPEED = RPM.of(6784);
     }
 
-    public static class SpeedConstants {
-        public static final double MAIN_LOOP_FREQUENCY_HZ = 50;
-        public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
-        public static final double LOGGING_FREQUENCY_HZ = 10;
-        public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
-        public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.8;
-        public static final double DRIVETRAIN_MAX_ANGULAR_SPEED_RPS = 2 * Math.PI;
-    }
+  public static class SpeedConstants {
+    public static final double MAIN_LOOP_FREQUENCY_HZ = 50;
+    public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
+    public static final double LOGGING_FREQUENCY_HZ = 10;
+    public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
+    public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.4;
+    public static final double DRIVETRAIN_MAX_ANGULAR_SPEED_RPS = 2 * Math.PI;
+  }
 
     public static class DriveControlConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
