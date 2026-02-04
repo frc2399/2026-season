@@ -134,7 +134,7 @@ spotless {
             exclude "**/build/**", "**/build-*/**"
         }
         toggleOffOn()
-        googleJavaFormat('1.19.2').aosp()  // Specify version explicitly
+        googleJavaFormat('1.28.0').aosp()  // Specify version explicitly
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
