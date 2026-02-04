@@ -51,13 +51,13 @@ public class DriveToPoseUtil {
         private static final Distance XY_MAX_ALIGN_DISTANCE = Meters.of(3);
         private static final Angle THETA_MAX_ALIGN_ANGLE = Degrees.of(90);
 
-        public static Supplier<ChassisSpeeds> getDriveToPoseVelocities(Supplier<Pose2d> robotPose,
+        public static ChassisSpeeds getDriveToPoseVelocities(Supplier<Pose2d> robotPose,
                         Supplier<Pose2d> goalPose) {
 
                 // if there is no robot pose, don't move
                 if (robotPose.get() == null) {
                         ChassisSpeeds nullReturn = new ChassisSpeeds(0, 0, 0);
-                        return () -> nullReturn;
+                        return nullReturn;
                 }
 
                 
@@ -115,6 +115,6 @@ public class DriveToPoseUtil {
                                 yDesired.in(MetersPerSecond),
                                 thetaDesired.in(RadiansPerSecond));
 
-                return () -> alignmentSpeeds;
+                return alignmentSpeeds;
         }
 }

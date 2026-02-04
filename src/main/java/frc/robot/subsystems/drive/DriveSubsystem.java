@@ -462,14 +462,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         SmartDashboard.putNumber("Swerve/vision/goalPosex", goalPose.get().getX());
                         SmartDashboard.putNumber("Swerve/vision/goalTheta", goalPose.get().getRotation().getDegrees());
 
-                        Supplier<ChassisSpeeds> alignmentSpeeds = DriveToPoseUtil.getDriveToPoseVelocities(
+                        ChassisSpeeds alignmentSpeeds = DriveToPoseUtil.getDriveToPoseVelocities(
                                 () -> robotPose, goalPose);
 
                         // tolerances were accounted for in getDriveToPoseVelocities
-                        atGoal = alignmentSpeeds.get().vxMetersPerSecond == 0 && alignmentSpeeds.get().vyMetersPerSecond == 0
-                                        && alignmentSpeeds.get().omegaRadiansPerSecond == 0;
+                        atGoal = alignmentSpeeds.vxMetersPerSecond == 0 && alignmentSpeeds.vyMetersPerSecond == 0
+                                        && alignmentSpeeds.omegaRadiansPerSecond == 0;
 
-                       ChassisSpeeds finalAlignmentSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(alignmentSpeeds.get(), robotPose.getRotation());
+                       ChassisSpeeds finalAlignmentSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(alignmentSpeeds, robotPose.getRotation());
 
                         setRobotRelativeSpeeds(finalAlignmentSpeeds);
                }).until(() -> atGoal);
