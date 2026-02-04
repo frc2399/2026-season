@@ -1,8 +1,8 @@
 package frc.robot.util;
 
-import java.util.Optional;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import java.util.Optional;
 
 public class GameState {
     public static Alliance getAlliance() {
@@ -35,7 +35,14 @@ public class GameState {
     }
 
     public enum Period {
-        AUTO, TRANSITION, SHIFT_1, SHIFT_2, SHIFT_3, SHIFT_4, ENDGAME, UNDEFINED;
+        AUTO,
+        TRANSITION,
+        SHIFT_1,
+        SHIFT_2,
+        SHIFT_3,
+        SHIFT_4,
+        ENDGAME,
+        UNDEFINED;
     }
 
     public static Period getPeriod() {

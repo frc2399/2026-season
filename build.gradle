@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2026.2.1"
     id "com.peterabeles.gversion" version "1.10.3"
+    id 'com.diffplug.spotless' version '8.1.0'
 }
 
 java {
@@ -122,3 +123,20 @@ gversion {
 }
    project.compileJava.dependsOn(createVersionFile)
   
+//Configure Spotless to use google aosp standards
+//Style Guide: https://source.android.com/docs/setup/contribute/code-style#java-style-rules
+
+project.compileJava.dependsOn(spotlessApply)
+spotless {
+    java {
+        target fileTree(".") {
+            include "**/*.java"
+            exclude "**/build/**", "**/build-*/**"
+        }
+        toggleOffOn()
+        googleJavaFormat('1.28.0').aosp()  // Specify version explicitly
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
