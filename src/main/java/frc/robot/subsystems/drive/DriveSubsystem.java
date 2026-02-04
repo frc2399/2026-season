@@ -58,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // for drivetopose
         private boolean atGoal = true;
         private BooleanSupplier isBlueAlliance;
-        private Optional<Alliance> alliance = DriverStation.getAlliance();
+        private Alliance alliance;
         private DriveSubsystemStates states = new DriveSubsystemStates();
 
         // correction PID
@@ -281,8 +281,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         Boolean fieldRelative) {
                 return this.run(() -> {                   
                         double currentAngle = gyro.getYaw(false).in(Radians);
-                        if (alliance.isPresent()
-                                        && alliance.get() == Alliance.Red) {
+                        if (alliance == Alliance.Red) {
                                 currentAngle += Math.PI;
                         }
 
@@ -452,7 +451,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 return this.run(() -> {
                         atGoal = false;
 
-                        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
+                        if (alliance == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                         } else {
                                 isBlueAlliance = () -> false;
@@ -508,5 +507,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
                 SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
                 SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
+        }
+
+        public void setAlliance(Alliance allianceColor) {
+                alliance = allianceColor;
         }
 }
