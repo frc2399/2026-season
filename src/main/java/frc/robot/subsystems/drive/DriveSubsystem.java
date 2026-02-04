@@ -48,11 +48,10 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.SpeedConstants;
+import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.Robot;
-import frc.robot.subsystems.gyro.Gyro;
-import frc.robot.util.GameState;
+import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
@@ -144,7 +143,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 this.frontRight = frontRight;
                 this.rearLeft = rearLeft;
                 this.rearRight = rearRight;
-
+                      
                 TRACK_WIDTH = trackWidth;
                 WHEEL_BASE = wheelBase;
 
@@ -164,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                 REAR_RIGHT_OFFSET);
 
                 SmartDashboard.putData(field2d);
-
+                SmartDashboard.putData("DriveTrain/Drivetrain Commands" , this);
                 poseEstimator = new SwerveDrivePoseEstimator(
                                 DRIVE_KINEMATICS,
                                 Rotation2d.fromDegrees(gyro.getYaw(false).in(Degrees)),
@@ -173,7 +172,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 frontRight.getPosition(),
                                                 rearLeft.getPosition(),
                                                 rearRight.getPosition() },
-                                new Pose2d(0, 0, new Rotation2d(gyro.getYaw()))); 
+                                new Pose2d(0, 0, new Rotation2d(gyro.getYaw(false)))); 
                 // file rather than
                 // free-floating numbers
                 posePublisher = NetworkTableInstance.getDefault()
@@ -200,7 +199,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                 robotPose = getPose();
                 field2d.setRobotPose(robotPose);
-                logAndUpdateDriveSubsystemStates();
 
                 frontLeftField2dModule.setPose(robotPose.transformBy(new Transform2d(
                                 FRONT_LEFT_OFFSET,
@@ -229,7 +227,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 if (Robot.isSimulation()) {
                         double angleChange = DRIVE_KINEMATICS
                                         .toChassisSpeeds(swerveModuleStates).omegaRadiansPerSecond
-                                        * (1 / Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+                                        * (1 / RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
                         lastAngle = lastAngle.plus(Rotation2d.fromRadians(angleChange));
                         gyro.setYaw(Radians.of(lastAngle.getRadians()));
                 }
@@ -467,14 +465,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         SmartDashboard.putNumber("Swerve/vision/goalPosex", goalPose.get().getX());
                         SmartDashboard.putNumber("Swerve/vision/goalTheta", goalPose.get().getRotation().getDegrees());
 
-                        Supplier<ChassisSpeeds> alignmentSpeeds = DriveToPoseUtil.getDriveToPoseVelocities(
+                        ChassisSpeeds alignmentSpeeds = DriveToPoseUtil.getDriveToPoseVelocities(
                                 () -> robotPose, goalPose);
 
                         // tolerances were accounted for in getDriveToPoseVelocities
-                        atGoal = alignmentSpeeds.get().vxMetersPerSecond == 0 && alignmentSpeeds.get().vyMetersPerSecond == 0
-                                        && alignmentSpeeds.get().omegaRadiansPerSecond == 0;
+                        atGoal = alignmentSpeeds.vxMetersPerSecond == 0 && alignmentSpeeds.vyMetersPerSecond == 0
+                                        && alignmentSpeeds.omegaRadiansPerSecond == 0;
 
-                       ChassisSpeeds finalAlignmentSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(alignmentSpeeds.get(), robotPose.getRotation());
+                       ChassisSpeeds finalAlignmentSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(alignmentSpeeds, robotPose.getRotation());
 
                         setRobotRelativeSpeeds(finalAlignmentSpeeds);
                }).until(() -> atGoal);

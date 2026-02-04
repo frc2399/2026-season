@@ -27,8 +27,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.robot.Constants.MotorConstants;
+import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.MotorConstants;
 
 public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
@@ -86,19 +86,24 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final double TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0; // radians
     private static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
-    private static final double DRIVING_P = 0.4;
+    private static final double DRIVING_P = 0.15;
     private static final double DRIVING_I = 0;
-    private static final double DRIVING_D = 0;
-    private static final double DRIVING_FF = 1 / (DRIVE_WHEEL_FREE_SPEED.in(MetersPerSecond));
+    private static final double DRIVING_D = 0.1;
     private static final double DRIVING_MIN_OUTPUT = -1;
+
     private static final double DRIVING_MAX_OUTPUT = 1;
 
     private static final double TURNING_P = 1.0;
-    private static final double TURNING_I = 0;
+    private static final double TURNING_I = 0;                                                                                                                                        
     private static final double TURNING_D = 0.001;
-    private static final double TURNING_FF = 0;
+    private static final double DRIVING_KS = 0.05;
+    private static final double DRIVING_KV = 2.4; 
+    private static final double DRIVING_KA = 0;
     private static final double TURNING_MIN_OUTPUT = -1;
     private static final double TURNING_MAX_OUTPUT = 1;
+    private static final double TURNING_KS = 0;
+    private static final double TURNING_KV = 0; 
+    private static final double TURNING_KA = 0;
 
     private static final double VOLTAGE_COMPENSATION = 12;
 
@@ -121,7 +126,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 .outputRange(DRIVING_MIN_OUTPUT, DRIVING_MAX_OUTPUT);
 
        sparkFlexClosedLoopConfigDriving.pid(DRIVING_P,DRIVING_I,DRIVING_D)
-                                    .feedForward.sva(0, DRIVING_FF,0);
+                                    .feedForward.sva(DRIVING_KS, DRIVING_KV, DRIVING_KA);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
 
@@ -140,10 +145,13 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 .positionWrappingInputRange(
                         TURNING_ENCODER_POSITION_PID_MIN_INPUT,
                         TURNING_ENCODER_POSITION_PID_MAX_INPUT);
-        sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(Constants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
+        sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
 
         sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D)
-                                        .feedForward.sva(0,TURNING_FF,0);
+                                        .feedForward.sva(TURNING_KS, TURNING_KV, TURNING_KA);
+
+        sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
+        sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
 
         drivingSparkFlex.configure(sparkFlexConfigDriving, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
@@ -162,16 +170,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     };
 
     public double getDriveEncoderPosition() {
-        double driveEncoderPosition = drivingRelativeEncoder.getPosition();
-        if(Double.isNaN(driveEncoderPosition))
-        {
-            return 0.0; 
-        }
-        else
-        {
-            return driveEncoderPosition; 
-        }
-
+        return drivingRelativeEncoder.getPosition();
     };
 
     public void setDesiredDriveSpeedMPS(double speed) {
@@ -180,27 +179,11 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     };
 
     public double getDriveEncoderSpeedMPS() {
-        double driveVelocity = drivingRelativeEncoder.getVelocity();
-        if(Double.isNaN(driveVelocity))
-        {
-            return 0.0; 
-        }
-        else
-        {
-            return driveVelocity; 
-        }
+        return drivingRelativeEncoder.getVelocity();
     };
 
     public double getTurnEncoderPosition() {
-    double drivePosition = turningAbsoluteEncoder.getPosition();
-
-        if(Double.isNaN(drivePosition))
-        {
-            return 0.0; 
-        }
-        else{
-            return drivePosition; 
-        }
+        return turningAbsoluteEncoder.getPosition();
     };
 
     public void setDesiredTurnAngle(double angle) {
@@ -208,25 +191,6 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         this.desiredAngle = angle;
     };
 
-    public double getDriveBusVoltage() {
-        return drivingSparkFlex.getBusVoltage();
-    }
-
-    public double getDriveOutput() {
-        return drivingSparkFlex.getAppliedOutput();
-    }
-
-    public double getTurnBusVoltage() {
-        return turningSparkMax.getBusVoltage();
-    }
-
-    public double getTurnOutput() {
-        return turningSparkMax.getAppliedOutput();
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public double getChassisAngularOffset() {
         return chassisAngularOffset;
