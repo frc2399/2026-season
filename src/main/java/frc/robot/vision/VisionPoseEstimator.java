@@ -125,7 +125,7 @@ public final class VisionPoseEstimator {
         }
         var est = Optional.ofNullable(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName));
         // Reject poses where we can see no tags or are at the "uh oh something went
-        // wrong" 0,0 coordinate
+        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not possible
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
 
