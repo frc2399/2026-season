@@ -51,7 +51,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final ClosedLoopConfig sparkMaxClosedLoopConfigTurning = new ClosedLoopConfig();
 
     // drivings are NEO Vortex, turnings are NEO 550s
-    private static int DRIVING_MOTOR_PINION_TEETH;
+    private static final int DRIVING_MOTOR_PINION_TEETH;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of the steering motor in the MAXSwerve Module.

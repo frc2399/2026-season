@@ -61,7 +61,7 @@ public final class VisionPoseEstimator {
     // reject new poses if spinning too fast
     private static final AngularVelocity MAX_ROTATIONS_PER_SECOND = RotationsPerSecond.of(2);
     private static final LinearVelocity MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE = MetersPerSecond
-            .of(0.8 * DriveSubsystem.MAX_LINEAR_SPEED.in(MetersPerSecond));
+            .of(0.8 * DriveConfig.MAX_LINEAR_SPEED.in(MetersPerSecond));
 
     private final StructPublisher<Pose2d> mt2Publisher;
     private final DriveBase driveBase;

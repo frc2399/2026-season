@@ -90,8 +90,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         private final Distance TRACK_WIDTH;
         private final Distance WHEEL_BASE;
-        public static LinearVelocity MAX_LINEAR_SPEED; // public because used elsewhere
-        public static AngularVelocity MAX_ANGULAR_VELOCITY; // public because used elsewhere
+        private static final LinearVelocity MAX_LINEAR_SPEED; 
+        private static final AngularVelocity MAX_ANGULAR_VELOCITY; 
 
         // Distance between front and back wheels on robot
 
