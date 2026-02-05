@@ -6,12 +6,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase {
     private IntakeIO io;
 
-
     public IntakeSubsystem(IntakeIO io) {
         this.io = io;
     }
-    
-    public Command intake() {
-        return this.run(() -> io.runIntake()).withName("run intake");
+
+    public Command runIntake() {
+        return this.run(() -> io.runIntake()).withName("runIntake");
+    }
+
+    public Command defaultBehavior() {
+        return this.run(() -> io.setZero()).withName("defaultBehavior");
     }
 }
