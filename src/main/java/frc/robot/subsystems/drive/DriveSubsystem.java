@@ -98,9 +98,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
-        private static final double HOLONOMIC_P = 5.0;
-        private static final double HOLONOMIC_I = 0.0;
-        private static final double HOLONOMIC_D = 0.0;
+        private static final double PATHPLANNER_P = 5.0;
+        private static final double PATHPLANNER_I = 0.0;
+        private static final double PATHPLANNER_D = 0.0;
 
         // Slew rate filter variables for controlling lateral acceleration
         private double desiredAngle = 0;
@@ -186,17 +186,16 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                 try {
                         config = RobotConfig.fromGUISettings();
-
                         AutoBuilder.configure(
                                         this::getPose,
                                         this::resetOdometry,
                                         this::getRobotRelativeSpeeds,
                                         (speeds, feedforwards) -> setRobotRelativeSpeeds(speeds),
                                         new PPHolonomicDriveController(
-                                                        new PIDConstants(HOLONOMIC_P, HOLONOMIC_I,
-                                                                        HOLONOMIC_D),
-                                                        new PIDConstants(HOLONOMIC_P, HOLONOMIC_I,
-                                                                        HOLONOMIC_D)),
+                                                        new PIDConstants(PATHPLANNER_P, PATHPLANNER_I,
+                                                                        PATHPLANNER_D),
+                                                        new PIDConstants(PATHPLANNER_P, PATHPLANNER_I,
+                                                                        PATHPLANNER_D)),
                                         config, // The robot configuration
                                         () -> {
 
