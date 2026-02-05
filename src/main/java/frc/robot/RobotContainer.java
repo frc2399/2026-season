@@ -69,12 +69,13 @@ public class RobotContainer {
         driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
     }
-  private void setUpAuton() {
-    autoChooser.setDefaultOption("do nothing", Commands.none());
-    SmartDashboard.putData("Autos/Selector", autoChooser);
-  }
 
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+    private void setUpAuton() {
+        autoChooser.setDefaultOption("do nothing", Commands.none());
+        SmartDashboard.putData("Autos/Selector", autoChooser);
+    }
+
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
+    }
 }
