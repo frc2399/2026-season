@@ -6,9 +6,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-// import com.pathplanner.lib.auto.AutoBuilder;
-// import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -73,19 +70,18 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
     }
 
-  private void setUpAuton() {
+    private void setUpAuton() {
 
-    autoChooser = new SendableChooser<>();
+        autoChooser = new SendableChooser<>();
 
-    Command driveStraight = commandFactory.buildPath(FieldConstants.PoseConstants.DRIVE_STRAIGHT);
+        Command driveStraight =
+                commandFactory.buildPath(FieldConstants.PoseConstants.DRIVE_STRAIGHT);
 
-    autoChooser.addOption("driveStraight", driveStraight);
+        autoChooser.addOption("driveStraight", driveStraight);
+        SmartDashboard.putData("Autos/Selector", autoChooser);
+    }
 
-    SmartDashboard.putData("Autos/Selector", autoChooser);
-  }
-
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
+    }
 }
-

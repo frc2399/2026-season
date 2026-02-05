@@ -8,16 +8,11 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.PathPlannerLogging;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -52,6 +47,7 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -69,7 +65,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
 
-        private RobotConfig config;
+    private RobotConfig config;
 
     // debouncer for turning
     private double ROTATION_DEBOUNCE_TIME = 0.5;
@@ -99,14 +95,15 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
-        private static final double PATHPLANNER_P = 5.0;
-        private static final double PATHPLANNER_I = 0.0;
-        private static final double PATHPLANNER_D = 0.0;
+    private static final double PATHPLANNER_P = 5.0;
+    private static final double PATHPLANNER_I = 0.0;
+    private static final double PATHPLANNER_D = 0.0;
 
-        // Slew rate filter variables for controlling lateral acceleration
-        private double desiredAngle = 0;
-        private Gyro gyro;
+    private Optional<Alliance> alliance = DriverStation.getAlliance();
 
+    // Slew rate filter variables for controlling lateral acceleration
+    private double desiredAngle = 0;
+    private Gyro gyro;
 
     Alert alert = new Alert("Fault detected on pigeon", AlertType.kError);
 
@@ -148,97 +145,102 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // Useful pose debugging
     private final StructPublisher<Pose2d> posePublisher;
 
-        /** Creates a new DriveSubsystem. */
-        public DriveSubsystem(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule rearLeft,
-                        SwerveModule rearRight, Gyro gyro, Distance trackWidth, Distance wheelBase) {
-                this.gyro = gyro;
-                this.frontLeft = frontLeft;
-                this.frontRight = frontRight;
-                this.rearLeft = rearLeft;
-                this.rearRight = rearRight;
-                      
-                TRACK_WIDTH = trackWidth;
-                WHEEL_BASE = wheelBase;
+    /** Creates a new DriveSubsystem. */
+    public DriveSubsystem(
+            SwerveModule frontLeft,
+            SwerveModule frontRight,
+            SwerveModule rearLeft,
+            SwerveModule rearRight,
+            Gyro gyro,
+            Distance trackWidth,
+            Distance wheelBase) {
+        this.gyro = gyro;
+        this.frontLeft = frontLeft;
+        this.frontRight = frontRight;
+        this.rearLeft = rearLeft;
+        this.rearRight = rearRight;
 
-                FRONT_LEFT_OFFSET = new Translation2d(WHEEL_BASE.in(Meters) / 2,
-                                TRACK_WIDTH.in(Meters) / 2);
-                REAR_LEFT_OFFSET = new Translation2d(-WHEEL_BASE.in(Meters) / 2,
-                                TRACK_WIDTH.in(Meters) / 2);
-                FRONT_RIGHT_OFFSET = new Translation2d(WHEEL_BASE.in(Meters) / 2,
-                                -TRACK_WIDTH.in(Meters) / 2);
-                REAR_RIGHT_OFFSET = new Translation2d(-WHEEL_BASE.in(Meters) / 2,
-                                -TRACK_WIDTH.in(Meters) / 2);
+        TRACK_WIDTH = trackWidth;
+        WHEEL_BASE = wheelBase;
 
-                DRIVE_KINEMATICS = new SwerveDriveKinematics(
-                                FRONT_LEFT_OFFSET,
-                                FRONT_RIGHT_OFFSET,
-                                REAR_LEFT_OFFSET,
-                                REAR_RIGHT_OFFSET);
+        FRONT_LEFT_OFFSET =
+                new Translation2d(WHEEL_BASE.in(Meters) / 2, TRACK_WIDTH.in(Meters) / 2);
+        REAR_LEFT_OFFSET =
+                new Translation2d(-WHEEL_BASE.in(Meters) / 2, TRACK_WIDTH.in(Meters) / 2);
+        FRONT_RIGHT_OFFSET =
+                new Translation2d(WHEEL_BASE.in(Meters) / 2, -TRACK_WIDTH.in(Meters) / 2);
+        REAR_RIGHT_OFFSET =
+                new Translation2d(-WHEEL_BASE.in(Meters) / 2, -TRACK_WIDTH.in(Meters) / 2);
 
-                SmartDashboard.putData(field2d);
-                SmartDashboard.putData("DriveTrain/Drivetrain Commands" , this);
-                poseEstimator = new SwerveDrivePoseEstimator(
-                                DRIVE_KINEMATICS,
-                                Rotation2d.fromDegrees(gyro.getYaw(false).in(Degrees)),
-                                new SwerveModulePosition[] {
-                                                frontLeft.getPosition(),
-                                                frontRight.getPosition(),
-                                                rearLeft.getPosition(),
-                                                rearRight.getPosition() },
-                                new Pose2d(0, 0, new Rotation2d(gyro.getYaw(false)))); 
-                // file rather than
-                // free-floating numbers
-                posePublisher = NetworkTableInstance.getDefault()
-                                .getStructTopic("DriveSubsystem/EstimatedPose", Pose2d.struct).publish();
-                posePublisher.setDefault(new Pose2d());
+        DRIVE_KINEMATICS =
+                new SwerveDriveKinematics(
+                        FRONT_LEFT_OFFSET, FRONT_RIGHT_OFFSET, REAR_LEFT_OFFSET, REAR_RIGHT_OFFSET);
 
-                try {
-                        config = RobotConfig.fromGUISettings();
-                        AutoBuilder.configure(
-                                        this::getPose,
-                                        this::resetOdometry,
-                                        this::getRobotRelativeSpeeds,
-                                        (speeds, feedforwards) -> setRobotRelativeSpeeds(speeds),
-                                        new PPHolonomicDriveController(
-                                                        new PIDConstants(PATHPLANNER_P, PATHPLANNER_I,
-                                                                        PATHPLANNER_D),
-                                                        new PIDConstants(PATHPLANNER_P, PATHPLANNER_I,
-                                                                        PATHPLANNER_D)),
-                                        config, // The robot configuration
-                                        () -> {
+        SmartDashboard.putData(field2d);
+        SmartDashboard.putData("DriveTrain/Drivetrain Commands", this);
+        poseEstimator =
+                new SwerveDrivePoseEstimator(
+                        DRIVE_KINEMATICS,
+                        Rotation2d.fromDegrees(gyro.getYaw(false).in(Degrees)),
+                        new SwerveModulePosition[] {
+                            frontLeft.getPosition(),
+                            frontRight.getPosition(),
+                            rearLeft.getPosition(),
+                            rearRight.getPosition()
+                        },
+                        new Pose2d(0, 0, new Rotation2d(gyro.getYaw(false))));
+        // file rather than
+        // free-floating numbers
+        posePublisher =
+                NetworkTableInstance.getDefault()
+                        .getStructTopic("DriveSubsystem/EstimatedPose", Pose2d.struct)
+                        .publish();
+        posePublisher.setDefault(new Pose2d());
 
-                                                var alliance = DriverStation.getAlliance();
-                                                if (alliance.isPresent()) {
-                                                        return alliance.get() == DriverStation.Alliance.Red;
-                                                }
-                                                return false;
-                                        },
-                                        this);
-                } catch (Exception e) {
-                        DriverStation.reportError("Failed to load Pathplanner config and configure Autobuilder",
-                                        e.getStackTrace());
-                }
-                configurePathPlannerLogging();
+        try {
+            config = RobotConfig.fromGUISettings();
+            AutoBuilder.configure(
+                    this::getPose,
+                    this::resetOdometry,
+                    this::getRobotRelativeSpeeds,
+                    (speeds, feedforwards) -> setRobotRelativeSpeeds(speeds),
+                    new PPHolonomicDriveController(
+                            new PIDConstants(PATHPLANNER_P, PATHPLANNER_I, PATHPLANNER_D),
+                            new PIDConstants(PATHPLANNER_P, PATHPLANNER_I, PATHPLANNER_D)),
+                    config, // The robot configuration
+                    () -> {
+                        if (alliance.isPresent()) {
+                            return alliance.get() == DriverStation.Alliance.Red;
+                        }
+                        return false;
+                    },
+                    this);
+        } catch (Exception e) {
+            DriverStation.reportError(
+                    "Failed to load Pathplanner config and configure Autobuilder",
+                    e.getStackTrace());
         }
+        configurePathPlannerLogging();
+    }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("/drive/atGoal", atGoal);
+        // This will get the simulated sensor readings that we set
+        // in the previous article while in simulation, but will use
+        // real values on the robot itself.
+        poseEstimator.updateWithTime(
+                Timer.getFPGATimestamp(),
+                Rotation2d.fromRadians(gyro.getYaw(true).in(Radians)),
+                new SwerveModulePosition[] {
+                    frontLeft.getPosition(),
+                    frontRight.getPosition(),
+                    rearLeft.getPosition(),
+                    rearRight.getPosition()
+                });
 
-        @Override
-        public void periodic() {
-                SmartDashboard.putBoolean("/drive/atGoal", atGoal);
-                // This will get the simulated sensor readings that we set
-                // in the previous article while in simulation, but will use
-                // real values on the robot itself.
-                poseEstimator.updateWithTime(Timer.getFPGATimestamp(),
-                                Rotation2d.fromRadians(gyro.getYaw(true).in(Radians)),
-                                new SwerveModulePosition[] {
-                                                frontLeft.getPosition(),
-                                                frontRight.getPosition(),
-                                                rearLeft.getPosition(),
-                                                rearRight.getPosition()
-                                });
-
-                robotPose = getPose();
-                field2d.setRobotPose(robotPose);
+        robotPose = getPose();
+        field2d.setRobotPose(robotPose);
 
         frontLeftField2dModule.setPose(
                 robotPose.transformBy(
@@ -429,75 +431,77 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         swerveModuleDesiredStatePublisher.set(swerveModuleStates);
     }
 
-     private void configurePathPlannerLogging() {
-                PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-                        field2d.setRobotPose(pose);
+    private void configurePathPlannerLogging() {
+        PathPlannerLogging.setLogCurrentPoseCallback(
+                (pose) -> {
+                    field2d.setRobotPose(pose);
                 });
 
-                PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-                        field2d.getObject("ROBOT target pose").setPose(pose);
+        PathPlannerLogging.setLogTargetPoseCallback(
+                (pose) -> {
+                    field2d.getObject("ROBOT target pose").setPose(pose);
                 });
 
-                PathPlannerLogging.setLogActivePathCallback((poses) -> {
-                        field2d.getObject("ROBOT path").setPoses(poses);
+        PathPlannerLogging.setLogActivePathCallback(
+                (poses) -> {
+                    field2d.getObject("ROBOT path").setPoses(poses);
                 });
-        }
+    }
 
-     private double getHeadingCorrectionRotRate(double currentAngle, double rotRate, double polarXSpeed,
-                        double polarYSpeed) {
-                // Debouncer ensures that there is no back-correction immediately after turning
-                // Deadband for small movements - they are so slight they do not need correction
-                // and correction causes robot to spasm
-                double newRotRate = 0;
-                if (rotationDebouncer.calculate(rotRate == 0)
-                                && (Math.abs(polarXSpeed) >= MIN_STRAFE_SPEED
-                                                || Math.abs(polarYSpeed) >= MIN_STRAFE_SPEED)) {
-                        newRotRate = newRotRate + drivePIDController.calculate(currentAngle, desiredAngle);
-                } else {
-                        newRotRate = rotRate;
-                        desiredAngle = currentAngle;
-                }
-                return newRotRate;
+    private double getHeadingCorrectionRotRate(
+            double currentAngle, double rotRate, double polarXSpeed, double polarYSpeed) {
+        // Debouncer ensures that there is no back-correction immediately after turning
+        // Deadband for small movements - they are so slight they do not need correction
+        // and correction causes robot to spasm
+        double newRotRate = 0;
+        if (rotationDebouncer.calculate(rotRate == 0)
+                && (Math.abs(polarXSpeed) >= MIN_STRAFE_SPEED
+                        || Math.abs(polarYSpeed) >= MIN_STRAFE_SPEED)) {
+            newRotRate = newRotRate + drivePIDController.calculate(currentAngle, desiredAngle);
+        } else {
+            newRotRate = rotRate;
+            desiredAngle = currentAngle;
         }
+        return newRotRate;
+    }
 
-     @Override
-     public Rotation2d getYaw() {
-                return new Rotation2d(gyro.getYaw(false));
+    @Override
+    public Rotation2d getYaw() {
+        return new Rotation2d(gyro.getYaw(false));
+    }
+
+    @Override
+    public Rotation2d getYawPerSecond() {
+        return new Rotation2d(gyro.getAngularVelocity().getValueAsDouble());
+    }
+
+    @Override
+    public double getLinearSpeed() {
+        double velocityXMPS = getRobotRelativeSpeeds().vxMetersPerSecond;
+        double velocityYMPS = getRobotRelativeSpeeds().vyMetersPerSecond;
+        return Math.hypot(velocityXMPS, velocityYMPS);
+    }
+
+    @Override
+    public void addVisionMeasurement(
+            Pose2d pose, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs) {
+        // Something cursed happens here where the robot code crashes in a loop on first
+        // boot, complaining about doing a Rotation2d.exp on a Rotation2d with x = y =
+        // 0. I (Will) _think_ it has to do with an invalid timestamp value passed here
+        // (negative? before robot boot?) that then causes the poseEstimator to try to
+        // replay odometry measurements that it doesn't have. This try-catch fixes the
+        // issue, and who wants vision updates to crash their robot code anyway?
+
+        if (timestampSeconds <= 0) {
+            return;
         }
-
-     @Override
-     public Rotation2d getYawPerSecond() {
-                return new Rotation2d(gyro.getAngularVelocity().getValueAsDouble());
+        var poseEstimate = poseEstimator.getEstimatedPosition();
+        if (Double.isNaN(poseEstimate.getX()) || (poseEstimate.getX() == 0)) {
+            poseEstimator.resetPose(pose);
+        } else {
+            poseEstimator.addVisionMeasurement(pose, timestampSeconds, visionMeasurementStdDevs);
         }
-
-     @Override
-     public double getLinearSpeed() {
-                double velocityXMPS = getRobotRelativeSpeeds().vxMetersPerSecond;
-                double velocityYMPS = getRobotRelativeSpeeds().vyMetersPerSecond;
-                return Math.hypot(velocityXMPS, velocityYMPS);
-        }
-
-     @Override
-     public void addVisionMeasurement(Pose2d pose, double timestampSeconds,
-                        Matrix<N3, N1> visionMeasurementStdDevs) {
-                // Something cursed happens here where the robot code crashes in a loop on first
-                // boot, complaining about doing a Rotation2d.exp on a Rotation2d with x = y =
-                // 0. I (Will) _think_ it has to do with an invalid timestamp value passed here
-                // (negative? before robot boot?) that then causes the poseEstimator to try to
-                // replay odometry measurements that it doesn't have. This try-catch fixes the
-                // issue, and who wants vision updates to crash their robot code anyway?
-
-                if (timestampSeconds <= 0) {
-                        return;
-                }
-                var poseEstimate = poseEstimator.getEstimatedPosition();
-                if(Double.isNaN(poseEstimate.getX()) || (poseEstimate.getX() == 0))
-                {
-                        poseEstimator.resetPose(pose);   
-                } else {
-                        poseEstimator.addVisionMeasurement(pose, timestampSeconds, visionMeasurementStdDevs);
-                }
-        }
+    }
 
     // new method workflow:
     // 1. calculate the trapezoid

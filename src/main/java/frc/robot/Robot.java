@@ -3,12 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-import edu.wpi.first.wpilibj.DriverStation;
+
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
-
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -26,21 +26,21 @@ public class Robot extends TimedRobot {
 
     private final RobotContainer m_robotContainer;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-    DataLogManager.start();
-    DriverStation.startDataLog(DataLogManager.getLog());
-    FollowPathCommand.warmupCommand();
-    PathfindingCommand.warmupCommand();
-    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-  }
-  
+    /**
+     * This function is run when the robot is first started up and should be used for any
+     * initialization code.
+     */
+    public Robot() {
+        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+        // autonomous chooser on the dashboard.
+        m_robotContainer = new RobotContainer();
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
+        FollowPathCommand.warmupCommand();
+        PathfindingCommand.warmupCommand();
+        WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    }
+
     /**
      * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
      * that you want ran during disabled, autonomous, teleoperated and test.

@@ -6,8 +6,6 @@ package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -39,14 +37,14 @@ public final class RobotConstants {
         public static final AngularVelocity VORTEX_FREE_SPEED = RPM.of(6784);
     }
 
-  public static class SpeedConstants {
-    public static final double MAIN_LOOP_FREQUENCY_HZ = 50;
-    public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
-    public static final double LOGGING_FREQUENCY_HZ = 10;
-    public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
-    public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.4;
-    public static final double DRIVETRAIN_MAX_ANGULAR_SPEED_RPS = 2 * Math.PI;
-  }
+    public static class SpeedConstants {
+        public static final double MAIN_LOOP_FREQUENCY_HZ = 50;
+        public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
+        public static final double LOGGING_FREQUENCY_HZ = 10;
+        public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
+        public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.4;
+        public static final double DRIVETRAIN_MAX_ANGULAR_SPEED_RPS = 2 * Math.PI;
+    }
 
     public static class DriveControlConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
@@ -57,9 +55,8 @@ public final class RobotConstants {
         public static final Distance MOZART_TRACK_WIDTH = Inches.of(26 - (2 * 1.75));
         // replace if needed
 
-    // we got the 2 below numbers from blake at 6:57 bon 03/13
-    public static final Distance BETA_XTRACK_WIDTH = Inches.of(24.5);
-    public static final Distance BETA_YTRACK_WIDTH = Inches.of(26.5);
-  }
+        // we got the 2 below numbers from blake at 6:57 bon 03/13
+        public static final Distance BETA_XTRACK_WIDTH = Inches.of(24.5);
+        public static final Distance BETA_YTRACK_WIDTH = Inches.of(26.5);
+    }
 }
-
