@@ -62,15 +62,14 @@ public class IntakeHardware implements IntakeIO {
         intakeSparkFlex.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         intakePidController = intakeSparkFlex.getClosedLoopController();
-
         intakeEncoder = intakeSparkFlex.getEncoder();
 
     }
 
     public void runIntake(){
-        intakePidController.setSetpoint(0.5*MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
+        intakePidController.setSetpoint(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
 
-        SmartDashboard.putNumber("Intake/desiredspeed", 0.5*MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+        SmartDashboard.putNumber("Intake/desiredspeed", 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
     }
 
