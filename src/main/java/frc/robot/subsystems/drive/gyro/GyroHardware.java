@@ -12,7 +12,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.constants.RobotConstants;
 
@@ -27,9 +26,12 @@ public class GyroHardware implements GyroIO {
         // these three lines disable all status signal readings off the pigeon except
         // for the three we need (the three directly below). this reduces CAN network
         // utilization
-        pigeon.getYaw(false).setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
-        pigeon.getAngularVelocityZDevice().setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
-        pigeon.getFault_Hardware().setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getYaw(false)
+                .setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getAngularVelocityZDevice()
+                .setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+        pigeon.getFault_Hardware()
+                .setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
         pigeon.optimizeBusUtilization();
     }
 
@@ -47,7 +49,8 @@ public class GyroHardware implements GyroIO {
         return this.getAngularVelocity(false);
     }
 
-    public StatusSignal<edu.wpi.first.units.measure.AngularVelocity> getAngularVelocity(boolean refresh) {
+    public StatusSignal<edu.wpi.first.units.measure.AngularVelocity> getAngularVelocity(
+            boolean refresh) {
         return pigeon.getAngularVelocityZDevice(refresh);
     }
 
