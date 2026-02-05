@@ -1,5 +1,8 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public final class FieldConstants {
     public static record Pose(String name, Pose2d pose) {}
     public static class PoseConstants {
