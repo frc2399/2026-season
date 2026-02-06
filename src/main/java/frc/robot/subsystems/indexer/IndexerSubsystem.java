@@ -7,17 +7,15 @@ public class IndexerSubsystem extends SubsystemBase {
 
     private IndexerIO io;
 
-
     public IndexerSubsystem(IndexerIO io) {
         this.io = io;
     }
 
-    
     public Command indexer() {
         return this.run(() -> io.runIndexer()).withName("runIndexer");
     }
 
-    public Command defaultBehavior(){
+    public Command defaultBehavior() {
         return this.run(() -> io.defaultBehavior()).withName("defaultBehavior");
     }
 }
