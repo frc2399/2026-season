@@ -42,9 +42,17 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
+
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
@@ -59,7 +67,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
 
-    // private RobotConfig config;
+    private RobotConfig config;
 
     // debouncer for turning
     private double ROTATION_DEBOUNCE_TIME = 0.5;
@@ -88,6 +96,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private final Translation2d REAR_RIGHT_OFFSET;
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
+
+    private static final double PATHPLANNER_P = 5.0;
+    private static final double PATHPLANNER_I = 0.0;
+    private static final double PATHPLANNER_D = 0.0;
+
+    private Optional<Alliance> alliance = DriverStation.getAlliance();
 
     // Slew rate filter variables for controlling lateral acceleration
     private double desiredAngle = 0;
@@ -184,6 +198,31 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         .getStructTopic("DriveSubsystem/EstimatedPose", Pose2d.struct)
                         .publish();
         posePublisher.setDefault(new Pose2d());
+
+        try {
+            config = RobotConfig.fromGUISettings();
+            AutoBuilder.configure(
+                    this::getPose,
+                    this::resetOdometry,
+                    this::getRobotRelativeSpeeds,
+                    (speeds, feedforwards) -> setRobotRelativeSpeeds(speeds),
+                    new PPHolonomicDriveController(
+                            new PIDConstants(PATHPLANNER_P, PATHPLANNER_I, PATHPLANNER_D),
+                            new PIDConstants(PATHPLANNER_P, PATHPLANNER_I, PATHPLANNER_D)),
+                    config, // The robot configuration
+                    () -> {
+                        if (alliance.isPresent()) {
+                            return alliance.get() == DriverStation.Alliance.Red;
+                        }
+                        return false;
+                    },
+                    this);
+        } catch (Exception e) {
+            DriverStation.reportError(
+                    "Failed to load Pathplanner config and configure Autobuilder",
+                    e.getStackTrace());
+        }
+        configurePathPlannerLogging();
     }
 
     @Override
@@ -394,19 +433,19 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         swerveModuleDesiredStatePublisher.set(swerveModuleStates);
     }
 
-    // private void configurePathPlannerLogging() {
-    //         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-    //                 field2d.setRobotPose(pose);
-    //         });
+    private void configurePathPlannerLogging() {
+            PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+                    field2d.setRobotPose(pose);
+            });
 
-    //         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-    //                 field2d.getObject("ROBOT target pose").setPose(pose);
-    //         });
+            PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+                    field2d.getObject("ROBOT target pose").setPose(pose);
+            });
 
-    //         PathPlannerLogging.setLogActivePathCallback((poses) -> {
-    //                 field2d.getObject("ROBOT path").setPoses(poses);
-    //         });
-    // }
+            PathPlannerLogging.setLogActivePathCallback((poses) -> {
+                    field2d.getObject("ROBOT path").setPoses(poses);
+            });
+    }
 
     private double getHeadingCorrectionRotRate(
             double currentAngle, double rotRate, double polarXSpeed, double polarYSpeed) {
