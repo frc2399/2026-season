@@ -10,6 +10,6 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public Command climber () {
-        return this.run(() -> io.defaultBehavior().withName("defaultBeavhior"));
+        return this.run(() -> io.climberDefaultBehavior().withName("climberDefaultBeavhior"));
     }
 }
