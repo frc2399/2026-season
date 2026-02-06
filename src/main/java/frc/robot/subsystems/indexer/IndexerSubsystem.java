@@ -16,6 +16,6 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     public Command defaultBehavior() {
-        return this.run(() -> io.defaultBehavior()).withName("defaultBehavior");
+        return this.run(() -> io.defaultBehavior()).withName("indexerDefaultBehavior");
     }
 }
