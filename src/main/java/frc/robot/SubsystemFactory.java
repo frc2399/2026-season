@@ -37,7 +37,7 @@ public class SubsystemFactory {
         COMP
     }
 
-    private RobotType robotType;
+    private static RobotType robotType;
 
     private String serialNum = System.getenv("serialnum");
 
@@ -62,7 +62,7 @@ public class SubsystemFactory {
         }
     }
 
-    public RobotType getRobotType() {
+    public static RobotType getRobotType() {
         return robotType;
     }
 

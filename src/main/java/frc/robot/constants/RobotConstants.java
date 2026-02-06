@@ -53,4 +53,9 @@ public final class RobotConstants {
         public static final double DRIVE_DEADBAND = 0.1;
         public static final boolean FIELD_ORIENTED_DRIVE = true;
     }
+
+    public static class TransformConstants {
+    //these values should be edited once we have our robot to shooter transform
+    public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM = new Transform2d(0, 0, new Rotation2d(0));
+  }
 }
