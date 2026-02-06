@@ -16,6 +16,8 @@ import frc.robot.subsystems.drive.gyro.GyroPlacebo;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterPlacebo;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -198,6 +200,14 @@ public class SubsystemFactory {
             return new IntakeSubsystem(new IntakeHardware());
         } else {
             return new IntakeSubsystem(new IntakePlacebo());
+        }
+    }
+
+    public ShooterSubsystem buildShooter() {
+        if (robotType == RobotType.MOZART) {
+            return new ShooterSubsystem(new ShooterPlacebo());
+        } else {
+            return null;
         }
     }
 }

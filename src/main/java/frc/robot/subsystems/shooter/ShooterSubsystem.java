@@ -7,7 +7,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
 
     public ShooterSubsystem(ShooterIO io) {
-        this.io = io; 
+        this.io = io;
     }
 
     public Command shoot() {

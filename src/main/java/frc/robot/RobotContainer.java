@@ -17,6 +17,7 @@ import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
@@ -24,6 +25,7 @@ public class RobotContainer {
     private Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
+    private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
@@ -68,6 +70,7 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
+        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
     }
 
     private void setUpAuton() {
