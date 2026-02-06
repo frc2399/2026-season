@@ -7,6 +7,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +23,8 @@ import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
+    private final Alert driverDisconnected =
+            new Alert("Driver controller disconnected!", AlertType.kWarning);
     private Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
@@ -77,5 +81,10 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+
+    public void setAlerts() {
+        driverDisconnected.set(
+                !DriverStation.isJoystickConnected(driverController.getHID().getPort()));
     }
 }
