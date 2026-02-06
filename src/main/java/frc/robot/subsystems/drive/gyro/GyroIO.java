@@ -5,16 +5,12 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.gyro;
+package frc.robot.subsystems.drive.gyro;
 
 import com.ctre.phoenix6.StatusSignal;
-
 import edu.wpi.first.units.measure.Angle;
 
 public interface GyroIO {
-
-    public Angle getYaw();
-
     public Angle getYaw(boolean refresh);
 
     public void setYaw(Angle yaw);
@@ -22,5 +18,4 @@ public interface GyroIO {
     public StatusSignal<edu.wpi.first.units.measure.AngularVelocity> getAngularVelocity();
 
     public boolean hasFault();
-
 }
