@@ -7,8 +7,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.Optional;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,6 +23,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.SubsystemFactory.RobotType;
 import frc.robot.subsystems.drive.DriveConfig;
+import java.util.Optional;
 
 public final class VisionPoseEstimator {
 
@@ -61,8 +60,8 @@ public final class VisionPoseEstimator {
 
     // reject new poses if spinning too fast
     private static final AngularVelocity MAX_ROTATIONS_PER_SECOND = RotationsPerSecond.of(2);
-    private static final LinearVelocity MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE = MetersPerSecond
-            .of(0.8 * DriveConfig.MAX_SPEED.in(MetersPerSecond));
+    private static final LinearVelocity MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE =
+            MetersPerSecond.of(0.8 * DriveConfig.MAX_SPEED.in(MetersPerSecond));
 
     private final StructPublisher<Pose2d> mt2Publisher;
     private final DriveBase driveBase;
@@ -137,7 +136,8 @@ public final class VisionPoseEstimator {
                 Optional.ofNullable(
                         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName));
         // Reject poses where we can see no tags or are at the "uh oh something went
-        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not possible
+        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
+        // possible
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
 

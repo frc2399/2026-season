@@ -1,5 +1,3 @@
 package frc.robot.constants;
 
-public final class FieldConstants {
-    
-}
+public final class FieldConstants {}
