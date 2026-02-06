@@ -13,4 +13,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command shoot() {
         return this.run(() -> io.runShooter()).withName("runShooter");
     }
+
+    public Command defaultBehavior() {
+        return this.run(() -> io.defaultBehavior()).withName("defaultBehavior");
+    }
 }
