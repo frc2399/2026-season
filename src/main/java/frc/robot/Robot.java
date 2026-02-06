@@ -9,17 +9,13 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -27,52 +23,63 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+    private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+    private final RobotContainer m_robotContainer;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-    DataLogManager.start();
-    DriverStation.startDataLog(DataLogManager.getLog());
-    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-  }
+    /**
+     * This function is run when the robot is first started up and should be used for any
+     * initialization code.
+     */
+    public Robot() {
+        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+        // autonomous chooser on the dashboard.
+        m_robotContainer = new RobotContainer();
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
+        WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    }
 
-  @Override
-  public void robotInit() {
-    Map<String, Integer> commandCounts = new HashMap<>();
-    BiConsumer<Command, Boolean> logCommandFunction =
-        (Command command, Boolean active) -> {
-          String name = command.getName();
-          int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
-          commandCounts.put(name, count);
-          SmartDashboard.putBoolean(
-              "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
-          SmartDashboard.putBoolean("CommandsAll/" + name, count > 0);
-        };
-    CommandScheduler.getInstance()
-        .onCommandInitialize((Command command) -> {
-          logCommandFunction.accept(command, true);
-          DataLogManager.log(command.getName() + " : Init");
-        });
-    CommandScheduler.getInstance()
-        .onCommandFinish((Command command) -> {
-          logCommandFunction.accept(command, false);
-          DataLogManager.log(command.getName() + ": End");
-        });
-    CommandScheduler.getInstance()
-        .onCommandInterrupt((interrupted, interrupting) -> {
-          logCommandFunction.accept(interrupted, false);
-          DataLogManager.log(interrupted.getName() + " Interrupted by "
-             + (!interrupting.isEmpty() ? interrupting.get().getName() : "nothing"));
-        });
-  }
+    @Override
+    public void robotInit() {
+        Map<String, Integer> commandCounts = new HashMap<>();
+        BiConsumer<Command, Boolean> logCommandFunction =
+                (Command command, Boolean active) -> {
+                    String name = command.getName();
+                    int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+                    commandCounts.put(name, count);
+                    SmartDashboard.putBoolean(
+                            "CommandsUnique/"
+                                    + name
+                                    + "_"
+                                    + Integer.toHexString(command.hashCode()),
+                            active);
+                    SmartDashboard.putBoolean("CommandsAll/" + name, count > 0);
+                };
+        CommandScheduler.getInstance()
+                .onCommandInitialize(
+                        (Command command) -> {
+                            logCommandFunction.accept(command, true);
+                            DataLogManager.log(command.getName() + " : Init");
+                        });
+        CommandScheduler.getInstance()
+                .onCommandFinish(
+                        (Command command) -> {
+                            logCommandFunction.accept(command, false);
+                            DataLogManager.log(command.getName() + ": End");
+                        });
+        CommandScheduler.getInstance()
+                .onCommandInterrupt(
+                        (interrupted, interrupting) -> {
+                            logCommandFunction.accept(interrupted, false);
+                            DataLogManager.log(
+                                    interrupted.getName()
+                                            + " Interrupted by "
+                                            + (!interrupting.isEmpty()
+                                                    ? interrupting.get().getName()
+                                                    : "nothing"));
+                        });
+    }
 
     /**
      * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
