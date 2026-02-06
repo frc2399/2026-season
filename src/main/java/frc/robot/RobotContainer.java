@@ -75,19 +75,22 @@ public class RobotContainer {
         autoChooser = new SendableChooser<>();
         autoChooser.setDefaultOption("do nothing", Commands.none());
 
+        Command driveStraight =
+                commandFactory.buildPath(FieldConstants.PoseConstants.DRIVE_STRAIGHT);
+
         Command hubDepot =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.DEPOT),
-                        // move into intake position while driving
-                        drive.driveToPoseOnExecute(),
-                        intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.HUB_MIDDLE),
-                        // move into shooting position while driving
-                        drive.driveToPoseOnExecute());
+                // Commands.sequence(
+                // Commands.runOnce(
+                // () ->
+                //         drive.resetOdometry(
+                //                 FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
+                commandFactory.buildPath(FieldConstants.PoseConstants.DEPOT);
+        // move into intake position while driving
+        // drive.driveToPoseOnExecute(),
+        // intakeSubsystem.runIntake(),
+        // commandFactory.buildPath(FieldConstants.PoseConstants.HUB_MIDDLE),
+        // move into shooting position while driving
+        // drive.driveToPoseOnExecute());
         // shooting command
 
         Command hubDepotTowerL1 =
@@ -197,6 +200,7 @@ public class RobotContainer {
                         drive.driveToPoseOnExecute());
         // climbing command
 
+        autoChooser.addOption("driveStraight", driveStraight);
         autoChooser.addOption("hubDepot", hubDepot);
         autoChooser.addOption("hubDepotTowerL1", hubDepotTowerL1);
         autoChooser.addOption("bumpDepotTowerL1", bumpDepotTowerL1);

@@ -7,6 +7,8 @@ public final class FieldConstants {
     public static record Pose(String name, Pose2d pose) {}
 
     public static class PoseConstants {
+        public static final Pose DRIVE_STRAIGHT =
+                new Pose("driveStraight", new Pose2d(5.1, 2, Rotation2d.fromDegrees(0)));
         public static final Pose HUB_MIDDLE =
                 new Pose("hubMiddle", new Pose2d(3.488, 4.021, Rotation2d.fromDegrees(0)));
         public static final Pose DEPOT =

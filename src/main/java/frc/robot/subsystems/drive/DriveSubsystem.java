@@ -8,6 +8,11 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -42,17 +47,10 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
-
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
@@ -434,17 +432,20 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     }
 
     private void configurePathPlannerLogging() {
-            PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+        PathPlannerLogging.setLogCurrentPoseCallback(
+                (pose) -> {
                     field2d.setRobotPose(pose);
-            });
+                });
 
-            PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+        PathPlannerLogging.setLogTargetPoseCallback(
+                (pose) -> {
                     field2d.getObject("ROBOT target pose").setPose(pose);
-            });
+                });
 
-            PathPlannerLogging.setLogActivePathCallback((poses) -> {
+        PathPlannerLogging.setLogActivePathCallback(
+                (poses) -> {
                     field2d.getObject("ROBOT path").setPoses(poses);
-            });
+                });
     }
 
     private double getHeadingCorrectionRotRate(
