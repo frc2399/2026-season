@@ -1,8 +1,8 @@
 package frc.robot.subsystems.indexer;
 
-public interface IndexerPlacebo {
+public class IndexerPlacebo implements IndexerIO {
 
-    public void runIndexer();
+    public void runIndexer() {}
 
-    public void defaultBehavior();
+    public void defaultBehavior() {}
 }
