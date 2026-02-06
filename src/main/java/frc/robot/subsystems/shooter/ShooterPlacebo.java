@@ -4,5 +4,4 @@ public class ShooterPlacebo implements ShooterIO {
     public void runShooter() {}
 
     public void defaultBehavior() {}
-
 }
