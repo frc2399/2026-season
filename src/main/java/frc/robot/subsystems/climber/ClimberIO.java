@@ -1,5 +1,5 @@
 public interface ClimberIO {
-    public void runIndexer();
+    public void runClimber();
 
     public void defaultBehavior();
 }

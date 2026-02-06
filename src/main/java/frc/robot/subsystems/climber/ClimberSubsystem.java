@@ -1,11 +1,15 @@
 public class ClimberSubsystem extends SubsystemBase {
-    private IndexerIO io;
+    private ClimberIO io;
 
-    public ClimberSubsystem(IndexerIO io) {
+    public ClimberSubsystem(ClimberIO io) {
         this.io = io;
     }
 
     public Command climber () {
-        return this.run(() -> io.runIndexer().withName("runIndexer"));
+        return this.run(() -> io.runClimber().withName("runClimber"));
+    }
+
+    public Command climber () {
+        return this.run(() -> io.defaultBehavior().withName("defaultBeavhior"));
     }
 }
