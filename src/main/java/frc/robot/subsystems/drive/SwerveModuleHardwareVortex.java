@@ -6,23 +6,22 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import edu.wpi.first.math.MathUtil;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -67,90 +66,123 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     // teeth on the bevel pinion
     // This is also the gear ratio (14T)
 
-    private static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
+    private static final double DRIVING_MOTOR_REDUCTION =
+            (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
 
-    private static final LinearVelocity DRIVE_WHEEL_FREE_SPEED = MetersPerSecond
-            .of((MotorConstants.VORTEX_FREE_SPEED.in(RotationsPerSecond) *
-                    WHEEL_CIRCUMFERENCE.in(Meters)) / (DRIVING_MOTOR_REDUCTION));
+    private static final LinearVelocity DRIVE_WHEEL_FREE_SPEED =
+            MetersPerSecond.of(
+                    (MotorConstants.VORTEX_FREE_SPEED.in(RotationsPerSecond)
+                                    * WHEEL_CIRCUMFERENCE.in(Meters))
+                            / (DRIVING_MOTOR_REDUCTION));
 
-    private static final Distance DRIVING_ENCODER_POSITION_FACTOR = (WHEEL_DIAMETER.times(Math.PI))
-            .div(DRIVING_MOTOR_REDUCTION); // meters
-    private static final Distance DRIVING_ENCODER_VELOCITY_FACTOR = DRIVING_ENCODER_POSITION_FACTOR.div(60); // meters
-                                                                                                                // per
-                                                                                                                // second
+    private static final Distance DRIVING_ENCODER_POSITION_FACTOR =
+            (WHEEL_DIAMETER.times(Math.PI)).div(DRIVING_MOTOR_REDUCTION); // meters
+    private static final Distance DRIVING_ENCODER_VELOCITY_FACTOR =
+            DRIVING_ENCODER_POSITION_FACTOR.div(60); // meters
+    // per
+    // second
 
     private static final double TURNING_ENCODER_POSITION_FACTOR = Units.rotationsToRadians(1);
-    private static final double TURNING_ENCODER_VELOCITY_FACTOR = Units.rotationsToRadians(1) / 60.0;
+    private static final double TURNING_ENCODER_VELOCITY_FACTOR =
+            Units.rotationsToRadians(1) / 60.0;
 
     private static final boolean TURNING_ENCODER_POSITION_WRAPPING = true;
     private static final double TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0; // radians
-    private static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
+    private static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT =
+            TURNING_ENCODER_POSITION_FACTOR; // radians
 
-    private static final double DRIVING_P = 0.4;
+    private static final double DRIVING_P = 0.15;
     private static final double DRIVING_I = 0;
-    private static final double DRIVING_D = 0;
-    private static final double DRIVING_FF = 1 / (DRIVE_WHEEL_FREE_SPEED.in(MetersPerSecond));
+    private static final double DRIVING_D = 0.1;
     private static final double DRIVING_MIN_OUTPUT = -1;
+
     private static final double DRIVING_MAX_OUTPUT = 1;
 
     private static final double TURNING_P = 1.0;
     private static final double TURNING_I = 0;
     private static final double TURNING_D = 0.001;
-    private static final double TURNING_FF = 0;
+    private static final double DRIVING_KS = 0.05;
+    private static final double DRIVING_KV = 2.4;
+    private static final double DRIVING_KA = 0;
     private static final double TURNING_MIN_OUTPUT = -1;
     private static final double TURNING_MAX_OUTPUT = 1;
+    private static final double TURNING_KS = 0;
+    private static final double TURNING_KV = 0;
+    private static final double TURNING_KA = 0;
 
     private static final double VOLTAGE_COMPENSATION = 12;
 
-    private static final SparkBaseConfig.IdleMode DRIVING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
-    private static final SparkBaseConfig.IdleMode TURNING_MOTOR_IDLE_MODE = SparkBaseConfig.IdleMode.kBrake;
+    private static final SparkBaseConfig.IdleMode DRIVING_MOTOR_IDLE_MODE =
+            SparkBaseConfig.IdleMode.kBrake;
+    private static final SparkBaseConfig.IdleMode TURNING_MOTOR_IDLE_MODE =
+            SparkBaseConfig.IdleMode.kBrake;
 
-    public SwerveModuleHardwareVortex(int drivingCanId, int turningCanId, double chassisAngularOffset, String name) {
+    public SwerveModuleHardwareVortex(
+            int drivingCanId, int turningCanId, double chassisAngularOffset, String name) {
         this.chassisAngularOffset = chassisAngularOffset;
         this.name = name;
         drivingSparkFlex = new SparkFlex(drivingCanId, MotorType.kBrushless);
         turningSparkMax = new SparkMax(turningCanId, MotorType.kBrushless);
 
-        sparkFlexConfigDriving.inverted(DRIVING_MOTOR_INVERTED).idleMode(DRIVING_MOTOR_IDLE_MODE)
-                .smartCurrentLimit(
-                        (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps))
+        sparkFlexConfigDriving
+                .inverted(DRIVING_MOTOR_INVERTED)
+                .idleMode(DRIVING_MOTOR_IDLE_MODE)
+                .smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps))
                 .voltageCompensation(VOLTAGE_COMPENSATION);
-        sparkFlexConfigDriving.encoder.positionConversionFactor(DRIVING_ENCODER_POSITION_FACTOR.in(Meters))
+        sparkFlexConfigDriving
+                .encoder
+                .positionConversionFactor(DRIVING_ENCODER_POSITION_FACTOR.in(Meters))
                 .velocityConversionFactor(DRIVING_ENCODER_VELOCITY_FACTOR.in(Meters));
-        sparkFlexConfigDriving.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)                
+        sparkFlexConfigDriving
+                .closedLoop
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .outputRange(DRIVING_MIN_OUTPUT, DRIVING_MAX_OUTPUT);
 
-       sparkFlexClosedLoopConfigDriving.pid(DRIVING_P,DRIVING_I,DRIVING_D)
-                                    .feedForward.sva(0, DRIVING_FF,0);
+        sparkFlexClosedLoopConfigDriving
+                .pid(DRIVING_P, DRIVING_I, DRIVING_D)
+                .feedForward
+                .sva(DRIVING_KS, DRIVING_KV, DRIVING_KA);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
 
-     //  ClosedLoopConfig.feedForward();
+        //  ClosedLoopConfig.feedForward();
 
-        sparkMaxConfigTurning.inverted(TURNING_MOTOR_INVERTED).idleMode(TURNING_MOTOR_IDLE_MODE)
-                .smartCurrentLimit(
-                        (int) MotorConstants.NEO550_CURRENT_LIMIT.in(Amps))
+        sparkMaxConfigTurning
+                .inverted(TURNING_MOTOR_INVERTED)
+                .idleMode(TURNING_MOTOR_IDLE_MODE)
+                .smartCurrentLimit((int) MotorConstants.NEO550_CURRENT_LIMIT.in(Amps))
                 .voltageCompensation(VOLTAGE_COMPENSATION);
-        sparkMaxConfigTurning.absoluteEncoder.positionConversionFactor(TURNING_ENCODER_POSITION_FACTOR)
+        sparkMaxConfigTurning
+                .absoluteEncoder
+                .positionConversionFactor(TURNING_ENCODER_POSITION_FACTOR)
                 .velocityConversionFactor(TURNING_ENCODER_VELOCITY_FACTOR);
         sparkMaxConfigTurning.absoluteEncoder.inverted(TURNING_ENCODER_INVERTED);
-        sparkMaxConfigTurning.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        sparkMaxConfigTurning
+                .closedLoop
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .outputRange(TURNING_MIN_OUTPUT, TURNING_MAX_OUTPUT)
                 .positionWrappingEnabled(TURNING_ENCODER_POSITION_WRAPPING)
                 .positionWrappingInputRange(
                         TURNING_ENCODER_POSITION_PID_MIN_INPUT,
                         TURNING_ENCODER_POSITION_PID_MAX_INPUT);
-        sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
+        sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(
+                RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
 
-        sparkMaxClosedLoopConfigTurning.pid(TURNING_P, TURNING_I, TURNING_D)
-                                        .feedForward.sva(0,TURNING_FF,0);
+        sparkMaxClosedLoopConfigTurning
+                .pid(TURNING_P, TURNING_I, TURNING_D)
+                .feedForward
+                .sva(TURNING_KS, TURNING_KV, TURNING_KA);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
         sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
 
-        drivingSparkFlex.configure(sparkFlexConfigDriving, ResetMode.kResetSafeParameters,
+        drivingSparkFlex.configure(
+                sparkFlexConfigDriving,
+                ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        turningSparkMax.configure(sparkMaxConfigTurning, ResetMode.kResetSafeParameters,
+        turningSparkMax.configure(
+                sparkMaxConfigTurning,
+                ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
         drivingRelativeEncoder = drivingSparkFlex.getEncoder();
@@ -162,57 +194,69 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
     public void setDriveEncoderPosition(double position) {
         drivingRelativeEncoder.setPosition(position);
-    };
+    }
+    ;
 
     public double getDriveEncoderPosition() {
         return drivingRelativeEncoder.getPosition();
-    };
+    }
+    ;
 
     public void setDesiredDriveSpeedMPS(double speed) {
         drivingPidController.setSetpoint(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
         this.driveDesiredVelocity = speed;
-    };
+    }
+    ;
 
     public double getDriveEncoderSpeedMPS() {
         return drivingRelativeEncoder.getVelocity();
-    };
+    }
+    ;
 
     public double getTurnEncoderPosition() {
         return turningAbsoluteEncoder.getPosition();
-    };
+    }
+    ;
 
     public void setDesiredTurnAngle(double angle) {
         turningPidController.setSetpoint(angle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         this.desiredAngle = angle;
-    };
-
+    }
+    ;
 
     public double getChassisAngularOffset() {
         return chassisAngularOffset;
     }
 
     public void updateStates(SwerveModuleIOStates states) {
-                states.desiredAngle = Units.radiansToDegrees(MathUtil.angleModulus(this.desiredAngle));
-                states.turnAngle = Units.radiansToDegrees(MathUtil.angleModulus(getTurnEncoderPosition()));
-                states.driveDesiredVelocity = this.driveDesiredVelocity;
-                states.driveVelocity = getDriveEncoderSpeedMPS();
-                states.driveEncoderPos = getDriveEncoderPosition();
-                states.driveVoltage = drivingSparkFlex.getBusVoltage() * drivingSparkFlex.getAppliedOutput();
-                states.turnVoltage = turningSparkMax.getBusVoltage() * turningSparkMax.getAppliedOutput();
-                states.driveCurrent = drivingSparkFlex.getOutputCurrent();
-                states.turnCurrent = turningSparkMax.getOutputCurrent();
+        states.desiredAngle = Units.radiansToDegrees(MathUtil.angleModulus(this.desiredAngle));
+        states.turnAngle = Units.radiansToDegrees(MathUtil.angleModulus(getTurnEncoderPosition()));
+        states.driveDesiredVelocity = this.driveDesiredVelocity;
+        states.driveVelocity = getDriveEncoderSpeedMPS();
+        states.driveEncoderPos = getDriveEncoderPosition();
+        states.driveVoltage =
+                drivingSparkFlex.getBusVoltage() * drivingSparkFlex.getAppliedOutput();
+        states.turnVoltage = turningSparkMax.getBusVoltage() * turningSparkMax.getAppliedOutput();
+        states.driveCurrent = drivingSparkFlex.getOutputCurrent();
+        states.turnCurrent = turningSparkMax.getOutputCurrent();
 
-                SmartDashboard.putNumber("Swerve/module " + name + "/turn desired angle(deg)", states.desiredAngle);
-                SmartDashboard.putNumber("Swerve/module " + name + "/turn angle(deg)",
-                                states.turnAngle);
-                SmartDashboard.putNumber("Swerve/module " + name + "/drive desired velocity(mps)",
-                                states.driveDesiredVelocity);
-                SmartDashboard.putNumber("Swerve/module " + name + "/drive velocity(mps)", states.driveVelocity);
-                SmartDashboard.putNumber("Swerve/module " + name + "/drive encoder position(m)",
-                                states.driveEncoderPos);
-                SmartDashboard.putNumber("Swerve/module " + name + "/drive voltage(volt)", states.driveVoltage);
-                SmartDashboard.putNumber("Swerve/module " + name + "/turn voltage(volt)", states.turnVoltage);
-                SmartDashboard.putNumber("Swerve/module " + name + "/drive current(amps)", states.driveCurrent);
-                SmartDashboard.putNumber("Swerve/module " + name + "/turn current(amps)", states.turnCurrent);
-        }
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/turn desired angle(deg)", states.desiredAngle);
+        SmartDashboard.putNumber("Swerve/module " + name + "/turn angle(deg)", states.turnAngle);
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/drive desired velocity(mps)",
+                states.driveDesiredVelocity);
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/drive velocity(mps)", states.driveVelocity);
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/drive encoder position(m)", states.driveEncoderPos);
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/drive voltage(volt)", states.driveVoltage);
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/turn voltage(volt)", states.turnVoltage);
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/drive current(amps)", states.driveCurrent);
+        SmartDashboard.putNumber(
+                "Swerve/module " + name + "/turn current(amps)", states.turnCurrent);
+    }
 }

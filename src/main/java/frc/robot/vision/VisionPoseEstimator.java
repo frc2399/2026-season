@@ -44,9 +44,7 @@ public final class VisionPoseEstimator {
     private static final Distance Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10); // ground plane = 0
     private static final Angle CAMERA_YAW = Degrees.of(153);
 
-    /**
-     * Provides the methods needed to do first-class pose estimation
-     */
+    /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
 
         Rotation2d getYaw();
@@ -63,15 +61,16 @@ public final class VisionPoseEstimator {
          * @param timestampSeconds
          * @param visionMeasurementStdDevs
          */
-        void addVisionMeasurement(Pose2d pose, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs);
+        void addVisionMeasurement(
+                Pose2d pose, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs);
     }
 
     private static Transform3d ROBOT_TO_CAMERA;
 
     // reject new poses if spinning too fast
     private static final AngularVelocity MAX_ROTATIONS_PER_SECOND = RotationsPerSecond.of(2);
-    private static final LinearVelocity MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE = MetersPerSecond
-            .of(0.8 * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
+    private static final LinearVelocity MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE =
+            MetersPerSecond.of(0.8 * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
 
     private final StructPublisher<Pose2d> mt2Publisher;
     private final DriveBase driveBase;
@@ -80,17 +79,19 @@ public final class VisionPoseEstimator {
     /**
      * Create a VisionPoseEstimator
      *
-     * @param driveBase     the robot drive base to estimate the pose of
-     * @param limelightName passed down to calls to LimelightHelpers, useful if you
-     *                      have more than one Limelight on a robot
+     * @param driveBase the robot drive base to estimate the pose of
+     * @param limelightName passed down to calls to LimelightHelpers, useful if you have more than
+     *     one Limelight on a robot
      */
     public VisionPoseEstimator(DriveBase driveBase, String limelightName, RobotType robot) {
         this.driveBase = driveBase;
         this.limelightName = limelightName;
         this.limelightHostname = "limelight" + (limelightName != "" ? "-" + limelightName : "");
 
-        mt2Publisher = NetworkTableInstance.getDefault()
-                .getStructTopic("VisionPoseEstimator/" + this.limelightName, Pose2d.struct).publish();
+        mt2Publisher =
+                NetworkTableInstance.getDefault()
+                        .getStructTopic("VisionPoseEstimator/" + this.limelightName, Pose2d.struct)
+                        .publish();
         mt2Publisher.setDefault(new Pose2d());
 
         if (robot == RobotType.BETA) {
@@ -100,13 +101,19 @@ public final class VisionPoseEstimator {
         }
 
         // meters, radians. Robot origin to camera lens origin
-        ROBOT_TO_CAMERA = new Transform3d(
-                X_ROBOT_TO_CAMERA_OFFSET.in(Meters), Y_ROBOT_TO_CAMERA_OFFSET.in(Meters),
-                Z_ROBOT_TO_CAMERA_OFFSET.in(Meters),
-                new Rotation3d(0, CAMERA_PITCH.in(Radians), CAMERA_YAW.in(Radians)));
+        ROBOT_TO_CAMERA =
+                new Transform3d(
+                        X_ROBOT_TO_CAMERA_OFFSET.in(Meters),
+                        Y_ROBOT_TO_CAMERA_OFFSET.in(Meters),
+                        Z_ROBOT_TO_CAMERA_OFFSET.in(Meters),
+                        new Rotation3d(0, CAMERA_PITCH.in(Radians), CAMERA_YAW.in(Radians)));
 
-        LimelightHelpers.setCameraPose_RobotSpace(limelightName, ROBOT_TO_CAMERA.getX(), ROBOT_TO_CAMERA.getY(),
-                ROBOT_TO_CAMERA.getZ(), Math.toDegrees(ROBOT_TO_CAMERA.getRotation().getX()),
+        LimelightHelpers.setCameraPose_RobotSpace(
+                limelightName,
+                ROBOT_TO_CAMERA.getX(),
+                ROBOT_TO_CAMERA.getY(),
+                ROBOT_TO_CAMERA.getZ(),
+                Math.toDegrees(ROBOT_TO_CAMERA.getRotation().getX()),
                 Math.toDegrees(ROBOT_TO_CAMERA.getRotation().getY()),
                 Math.toDegrees(ROBOT_TO_CAMERA.getRotation().getZ()));
     }
@@ -123,42 +130,49 @@ public final class VisionPoseEstimator {
     /**
      * Get a pose estimate from the configured Limelight, if available
      *
-     * @return An Optional containing MegaTag2 pose estimate from the Limelight, or
-     *         Optional.empty if it is unavailable or untrustworthy
+     * @return An Optional containing MegaTag2 pose estimate from the Limelight, or Optional.empty
+     *     if it is unavailable or untrustworthy
      */
     public Optional<LimelightHelpers.PoseEstimate> getPoseEstimate() {
-        if (Math.abs(driveBase.getYawPerSecond().getRotations()) > MAX_ROTATIONS_PER_SECOND.in(RotationsPerSecond)) {
+        if (Math.abs(driveBase.getYawPerSecond().getRotations())
+                > MAX_ROTATIONS_PER_SECOND.in(RotationsPerSecond)) {
             return Optional.empty();
-        } else if (driveBase.getLinearSpeed() > MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE.in(MetersPerSecond)) {
+        } else if (driveBase.getLinearSpeed()
+                > MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE.in(MetersPerSecond)) {
             return Optional.empty();
         }
-        Optional<PoseEstimate> est = Optional.ofNullable(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName));
-        // SmartDashboard.putNumber, 0)
-        SmartDashboard.putBoolean("vision/debugging/est exist", est.isPresent());
-        if (!est.isEmpty()) {
-            SmartDashboard.putNumber("vision/debugging/est", est.get().pose.getTranslation().getX());
-        }
+        var est =
+                Optional.ofNullable(
+                        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName));
         // Reject poses where we can see no tags or are at the "uh oh something went
-        // wrong" 0,0 coordinate
+        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
+        // possible
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
 
-    /**
-     * Update the limelight's robot orientation
-     */
+    /** Update the limelight's robot orientation */
     public void periodic() {
         // Resist the temptation to rotate this depending on alliance - the coordinate
         // system here _has_ to match the WPILib coordinate system, where Yaw is CCW +
         // and 0 faces the red alliance wall
-        LimelightHelpers.SetRobotOrientation(limelightName, driveBase.getYaw().getDegrees(), 0, 0, 0, 0, 0);
-        getPoseEstimate().ifPresent((pe) -> {
-            mt2Publisher.set(pe.pose);
-            // LimelightHelpers doesn't expose a helper method for these, layout is:
-            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z, MT2roll,
-            // MT2pitch, MT2yaw]
-            var stddevs = LimelightHelpers.getLimelightNTDoubleArray(limelightHostname, "stddevs");
-            driveBase.addVisionMeasurement(pe.pose, pe.timestampSeconds,
-                    VecBuilder.fill(stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
-        });
+        LimelightHelpers.SetRobotOrientation(
+                limelightName, driveBase.getYaw().getDegrees(), 0, 0, 0, 0, 0);
+        getPoseEstimate()
+                .ifPresent(
+                        (pe) -> {
+                            mt2Publisher.set(pe.pose);
+                            // LimelightHelpers doesn't expose a helper method for these, layout is:
+                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
+                            // MT2roll,
+                            // MT2pitch, MT2yaw]
+                            var stddevs =
+                                    LimelightHelpers.getLimelightNTDoubleArray(
+                                            limelightHostname, "stddevs");
+                            driveBase.addVisionMeasurement(
+                                    pe.pose,
+                                    pe.timestampSeconds,
+                                    VecBuilder.fill(
+                                            stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
+                        });
     }
 }
