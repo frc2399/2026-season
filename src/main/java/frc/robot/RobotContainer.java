@@ -73,6 +73,7 @@ public class RobotContainer {
 
   private void setUpAuton() {
     autoChooser = new SendableChooser<>();
+    autoChooser.setDefaultOption("do nothing", Commands.none());
 
    Command hubDepot = Commands.sequence(
      Commands.runOnce(() -> drive.resetOdometry(FieldConstants.PoseConstants.HUB_MIDDLE.pose())),

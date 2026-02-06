@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -35,6 +38,47 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    }
+
+    @Override
+    public void robotInit() {
+        Map<String, Integer> commandCounts = new HashMap<>();
+        BiConsumer<Command, Boolean> logCommandFunction =
+                (Command command, Boolean active) -> {
+                    String name = command.getName();
+                    int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+                    commandCounts.put(name, count);
+                    SmartDashboard.putBoolean(
+                            "CommandsUnique/"
+                                    + name
+                                    + "_"
+                                    + Integer.toHexString(command.hashCode()),
+                            active);
+                    SmartDashboard.putBoolean("CommandsAll/" + name, count > 0);
+                };
+        CommandScheduler.getInstance()
+                .onCommandInitialize(
+                        (Command command) -> {
+                            logCommandFunction.accept(command, true);
+                            DataLogManager.log(command.getName() + " : Init");
+                        });
+        CommandScheduler.getInstance()
+                .onCommandFinish(
+                        (Command command) -> {
+                            logCommandFunction.accept(command, false);
+                            DataLogManager.log(command.getName() + ": End");
+                        });
+        CommandScheduler.getInstance()
+                .onCommandInterrupt(
+                        (interrupted, interrupting) -> {
+                            logCommandFunction.accept(interrupted, false);
+                            DataLogManager.log(
+                                    interrupted.getName()
+                                            + " Interrupted by "
+                                            + (!interrupting.isEmpty()
+                                                    ? interrupting.get().getName()
+                                                    : "nothing"));
+                        });
     }
 
     /**
