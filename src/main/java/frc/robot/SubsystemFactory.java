@@ -204,10 +204,6 @@ public class SubsystemFactory {
     }
 
     public ShooterSubsystem buildShooter() {
-        if (robotType == RobotType.MOZART) {
-            return new ShooterSubsystem(new ShooterPlacebo());
-        } else {
-            return null;
-        }
+        return new ShooterSubsystem(new ShooterPlacebo());
     }
 }
