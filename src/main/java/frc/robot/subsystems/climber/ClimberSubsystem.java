@@ -1,3 +1,6 @@
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 public class ClimberSubsystem extends SubsystemBase {
     private ClimberIO io;
 
@@ -5,11 +8,11 @@ public class ClimberSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command climber () {
-        return this.run(() -> io.runClimber().withName("runClimber"));
+    public Command runClimber() {
+        return this.run(() -> io.runClimber()).withName("runClimber");
     }
 
-    public Command climber () {
-        return this.run(() -> io.climberDefaultBehavior().withName("climberDefaultBeavhior"));
+    public Command runClimberDeafultBehavior() {
+        return this.run(() -> io.climberDefaultBehavior()).withName("runClimberDefaultBeavhior");
     }
 }
