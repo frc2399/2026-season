@@ -5,8 +5,11 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -26,7 +29,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,7 +44,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.RobotConstants.SpeedConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import java.util.function.BooleanSupplier;
@@ -54,8 +58,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private DriveSubsystemStates states = new DriveSubsystemStates();
 
     // correction PID
-    private double DRIVE_P = 1.1;
-    private double DRIVE_D = 0.05;
+    private double DRIVE_P;
+    private double DRIVE_D;
 
     private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
 
@@ -79,6 +83,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private final Distance TRACK_WIDTH;
     private final Distance WHEEL_BASE;
+    private final LinearVelocity MAX_LINEAR_SPEED;
+    private final AngularVelocity MAX_ANGULAR_VELOCITY;
 
     // Distance between front and back wheels on robot
 
@@ -139,17 +145,28 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             SwerveModule frontRight,
             SwerveModule rearLeft,
             SwerveModule rearRight,
-            Gyro gyro,
-            Distance trackWidth,
-            Distance wheelBase) {
+            Gyro gyro) {
         this.gyro = gyro;
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.rearLeft = rearLeft;
         this.rearRight = rearRight;
 
-        TRACK_WIDTH = trackWidth;
-        WHEEL_BASE = wheelBase;
+        // get from config!
+        DRIVE_P = DriveConfig.HEADING_P;
+        DRIVE_D = DriveConfig.HEADING_D;
+        MAX_LINEAR_SPEED = DriveConfig.MAX_SPEED;
+        MAX_ANGULAR_VELOCITY = DriveConfig.MAX_ANGULAR_VELOCITY;
+        TRACK_WIDTH = DriveConfig.TRACK_WIDTH;
+        WHEEL_BASE = DriveConfig.TRACK_LENGTH;
+        SmartDashboard.putNumber("drive/config/heading_p", DRIVE_P);
+        SmartDashboard.putNumber("drive/config/heading_d", DRIVE_D);
+        SmartDashboard.putNumber(
+                "drive/config/max_linear_speed", MAX_LINEAR_SPEED.in(MetersPerSecond));
+        SmartDashboard.putNumber(
+                "drive/config/max_angular_vel", MAX_ANGULAR_VELOCITY.in(RadiansPerSecond));
+        SmartDashboard.putNumber("drive/config/trackwidth", TRACK_WIDTH.in(Inches));
+        SmartDashboard.putNumber("drive/config/tracklength", WHEEL_BASE.in(Inches));
 
         FRONT_LEFT_OFFSET =
                 new Translation2d(WHEEL_BASE.in(Meters) / 2, TRACK_WIDTH.in(Meters) / 2);
@@ -326,11 +343,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             // Convert the commanded speeds into the correct units for the
                             // drivetrain
                             double xSpeedDelivered =
-                                    polarXSpeed * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS;
+                                    polarXSpeed * MAX_LINEAR_SPEED.in(MetersPerSecond);
                             double ySpeedDelivered =
-                                    polarYSpeed * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS;
+                                    polarYSpeed * MAX_LINEAR_SPEED.in(MetersPerSecond);
                             double rotRateDelivered =
-                                    newRotRate * SpeedConstants.DRIVETRAIN_MAX_ANGULAR_SPEED_RPS;
+                                    newRotRate * MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
 
                             if (fieldRelative) {
                                 relativeRobotSpeeds =
@@ -351,7 +368,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             var swerveModuleStates =
                                     DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
                             SwerveDriveKinematics.desaturateWheelSpeeds(
-                                    swerveModuleStates, SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
+                                    swerveModuleStates, MAX_LINEAR_SPEED.in(MetersPerSecond));
                             frontLeft.setDesiredState(swerveModuleStates[0]);
                             frontRight.setDesiredState(swerveModuleStates[1]);
                             rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -386,7 +403,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         speeds = ChassisSpeeds.discretize(speeds, .02);
         var swerveModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
+                swerveModuleStates, MAX_LINEAR_SPEED.in(MetersPerSecond));
         frontLeft.setDesiredState(swerveModuleStates[0]);
         frontRight.setDesiredState(swerveModuleStates[1]);
         rearLeft.setDesiredState(swerveModuleStates[2]);
