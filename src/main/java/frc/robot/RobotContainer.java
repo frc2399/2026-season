@@ -3,9 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
 import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -89,18 +87,19 @@ public class RobotContainer {
                 commandFactory.buildPath(FieldConstants.PoseConstants.DRIVE_STRAIGHT);
 
         Command hubDepot =
-                // Commands.sequence(
-                // Commands.runOnce(
-                // () ->
-                //         drive.resetOdometry(
-                //                 FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                commandFactory.buildPath(FieldConstants.PoseConstants.DEPOT);
+                Commands.sequence(
+                Commands.runOnce(
+                () ->
+                        drive.resetOdometry(
+                                FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
+                commandFactory.buildPath(FieldConstants.PoseConstants.DEPOT.pose()),
         // move into intake position while driving
-        // drive.driveToPoseOnExecute(),
-        // intakeSubsystem.runIntake(),
-        // commandFactory.buildPath(FieldConstants.PoseConstants.HUB_MIDDLE),
+        drive.driveToPoseOnExecute(),
+        Commands.runOnce(() -> drive.resetOdometry(FieldConstants.PoseConstants.DEPOT.pose())),
+        intakeSubsystem.runIntake(),
+        commandFactory.buildPath(FieldConstants.PoseConstants.HUB_MIDDLE.pose()),
         // move into shooting position while driving
-        // drive.driveToPoseOnExecute());
+        drive.driveToPoseOnExecute());
         // shooting command
 
         Command hubDepotTowerL1 =
