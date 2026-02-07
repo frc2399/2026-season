@@ -9,16 +9,7 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
-
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-// import com.pathplanner.lib.auto.AutoBuilder;
-// import com.pathplanner.lib.config.PIDConstants;
-// import com.pathplanner.lib.config.RobotConfig;
-// import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-// import com.pathplanner.lib.util.PathPlannerLogging;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -63,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // for drivetopose
         private boolean atGoal = true;
         private BooleanSupplier isBlueAlliance;
-
+        private Alliance alliance;
         private DriveSubsystemStates states = new DriveSubsystemStates();
 
     // correction PID
@@ -310,24 +301,24 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         poseEstimator.resetRotation(Rotation2d.fromRadians(gyro.getYaw(false).in(Radians)));
     }
 
-        /**
-         * Method to drive the robot using joystick info.
-         *
-         * @param xSpeed        Speed of the robot in the x direction (forward).
-         * @param ySpeed        Speed of the robot in the y direction (sideways).
-         * @param rotRate       Angular rate of the robot.
-         * @param fieldRelative Whether the provided x and y speeds are relative to the
-         *                      field.
-         */
-        public Command driveCommand(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotRate,
-                        Boolean fieldRelative) {
-                return this.run(() -> {                   
-                        double currentAngle = gyro.getYaw(false).in(Radians);
-                        if (DriverStation.getAlliance().isPresent()
-                                        && DriverStation.getAlliance().get() == Alliance.Red) {
+    /**
+     * Method to drive the robot using joystick info.
+     *
+     * @param xSpeed Speed of the robot in the x direction (forward).
+     * @param ySpeed Speed of the robot in the y direction (sideways).
+     * @param rotRate Angular rate of the robot.
+     * @param fieldRelative Whether the provided x and y speeds are relative to the field.
+     */
+    public Command driveCommand(
+            DoubleSupplier xSpeed,
+            DoubleSupplier ySpeed,
+            DoubleSupplier rotRate,
+            Boolean fieldRelative) {
+        return this.run(() -> { 
+                            double currentAngle = gyro.getYaw(false).in(Radians);
+                            if (alliance == Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
-
                             double r = Math.hypot(xSpeed.getAsDouble(), ySpeed.getAsDouble());
                             double polarAngle =
                                     Math.atan2(ySpeed.getAsDouble(), xSpeed.getAsDouble());
@@ -368,8 +359,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 xSpeedDelivered, ySpeedDelivered, rotRateDelivered);
                             }
 
-                        SmartDashboard.putNumber("x speed delivered", xSpeedDelivered);
-                        SmartDashboard.putNumber("y speed delivered", ySpeedDelivered);
+                        SmartDashboard.putNumber("drive/xSpeedDelivered", xSpeedDelivered);
+                        SmartDashboard.putNumber("drive/ySpeedDelivered", ySpeedDelivered);
+                        SmartDashboard.putNumber("drive/PolarAngle", polarAngle);
 
                             var swerveModuleStates =
                                     DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
@@ -508,7 +500,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+                        if (alliance == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
@@ -567,13 +559,17 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // advantagescope
         posePublisher.set(states.pose);
 
-                SmartDashboard.putNumber("drive/Pose X(m)", states.pose.getX());
-                SmartDashboard.putNumber("drive/Pose Y(m)", states.pose.getY());
-                SmartDashboard.putNumber("drive/Pose Theta(deg)", states.poseTheta);
-                SmartDashboard.putNumber("drive/Linear Velocity X(mps)", states.velocityXMPS);
-                SmartDashboard.putNumber("drive/Linear Velocity Y(mps)", states.velocityYMPS);
-                SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
-                SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
-                SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
+        SmartDashboard.putNumber("drive/Pose X(m)", states.pose.getX());
+        SmartDashboard.putNumber("drive/Pose Y(m)", states.pose.getY());
+        SmartDashboard.putNumber("drive/Pose Theta(deg)", states.poseTheta);
+        SmartDashboard.putNumber("drive/Linear Velocity X(mps)", states.velocityXMPS);
+        SmartDashboard.putNumber("drive/Linear Velocity Y(mps)", states.velocityYMPS);
+        SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
+        SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
+        SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
+    }
+
+        public void setAlliance(Alliance allianceColor) {
+                alliance = allianceColor;
         }
 }
