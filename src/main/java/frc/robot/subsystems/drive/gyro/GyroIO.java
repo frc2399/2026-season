@@ -8,7 +8,6 @@
 package frc.robot.subsystems.drive.gyro;
 
 import com.ctre.phoenix6.StatusSignal;
-
 import edu.wpi.first.units.measure.Angle;
 
 public interface GyroIO {
@@ -19,5 +18,4 @@ public interface GyroIO {
     public StatusSignal<edu.wpi.first.units.measure.AngularVelocity> getAngularVelocity();
 
     public boolean hasFault();
-
 }
