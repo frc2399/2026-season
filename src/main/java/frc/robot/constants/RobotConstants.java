@@ -47,5 +47,6 @@ public final class RobotConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final double DRIVE_DEADBAND = 0.1;
         public static final boolean FIELD_ORIENTED_DRIVE = true;
+        public static final double LOW_BATTERY_VOLTAGE = 11.0;
     }
 }

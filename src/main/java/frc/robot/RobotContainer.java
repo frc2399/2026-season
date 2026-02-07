@@ -10,6 +10,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +39,11 @@ public class RobotContainer {
 
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
+
+    private final Alert lowBatteryAlert =
+            new Alert(
+                    "Battery voltage is very low, turn off the robot or replace the battery to avoid damage.",
+                    AlertType.kWarning);
 
     public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -84,6 +90,10 @@ public class RobotContainer {
     }
 
     public void setAlerts() {
+        lowBatteryAlert.set(
+                (RobotController.getBatteryVoltage() > 0.0
+                        && RobotController.getBatteryVoltage()
+                                <= DriveControlConstants.LOW_BATTERY_VOLTAGE));
         driverDisconnected.set(
                 !DriverStation.isJoystickConnected(driverController.getHID().getPort()));
     }
