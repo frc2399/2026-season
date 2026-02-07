@@ -38,6 +38,7 @@ public class IntakeHardware implements IntakeIO {
 
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
     private final RelativeEncoder intakeEncoder;
+    private double desiredSpeed;
 
     public IntakeHardware() {
         SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
@@ -71,10 +72,6 @@ public class IntakeHardware implements IntakeIO {
     public void runIntake() {
         intakePidController.setSetpoint(
                 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
-
-        SmartDashboard.putNumber(
-                "Intake/desiredspeed", 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
-        SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
     }
 
     public void setZero() {
@@ -82,5 +79,20 @@ public class IntakeHardware implements IntakeIO {
 
         SmartDashboard.putNumber("Intake/desiredspeed", 0);
         SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+    }
+
+    public void updateStates(IntakeIOStates states) {
+        states.desiredSpeed = desiredSpeed;
+        states.actualSpeed = intakeEncoder.getVelocity();
+        states.current = intakeSparkFlex.getOutputCurrent();
+        states.appliedVoltage = intakeSparkFlex.getBusVoltage() * intakeSparkFlex.getAppliedOutput();
+
+        SmartDashboard.putNumber(
+                "Intake/desiredSpeed", states.desiredSpeed);
+        SmartDashboard.putNumber("Intake/actualSpeed", states.actualSpeed);
+
+        SmartDashboard.putNumber("Intake/current", states.current);
+
+        SmartDashboard.putNumber("Intake/appliedVoltage", states.appliedVoltage);
     }
 }
