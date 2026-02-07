@@ -8,17 +8,13 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,7 +24,10 @@ import frc.robot.constants.RobotConstants.MotorConstants;
 public class IndexerHardwarePrototype implements IndexerIO {
 
     public void defaultBehavior() {}
-private SparkFlex indexerSparkFlex;
+
+    public void updateStates(IndexerIOState state) {}
+
+    private SparkFlex indexerSparkFlex;
     private final SparkClosedLoopController indexerPidController;
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
@@ -65,7 +64,9 @@ private SparkFlex indexerSparkFlex;
         indexerSparkFlex =
                 new SparkFlex(RobotConstants.MotorIdConstants.INDEXER_CAN_ID, MotorType.kBrushless);
         indexerSparkFlex.configure(
-            indexSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                indexSparkMaxConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
 
         indexerPidController = indexerSparkFlex.getClosedLoopController();
 
@@ -76,8 +77,7 @@ private SparkFlex indexerSparkFlex;
         indexerPidController.setSetpoint(
                 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
 
-        SmartDashboard.putNumber(
-                "Indexer/desiredspeed", 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+        SmartDashboard.putNumber("c", 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         SmartDashboard.putNumber("Indexer/actualspeed", indexerEncoder.getVelocity());
     }
 
