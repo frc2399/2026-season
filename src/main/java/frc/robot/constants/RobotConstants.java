@@ -27,7 +27,6 @@ public final class RobotConstants {
         public static final int GYRO_CAN_ID = 3;
         public static final int SHOOTER_BOTTOM_CAN_ID = 3;
         public static final int SHOOTER_TOP_CAN_ID = 21;
-
     }
 
     public static class SensorIdConstants {}
