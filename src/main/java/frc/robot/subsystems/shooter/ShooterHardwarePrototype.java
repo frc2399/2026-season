@@ -112,4 +112,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         SmartDashboard.putNumber("Intake/desiredspeed", 0);
         SmartDashboard.putNumber("Intake/actualspeed", shooterEncoder.getVelocity());
     }
+
+    @Override
+    public void updateStates(ShooterIOState state) {}
 }
