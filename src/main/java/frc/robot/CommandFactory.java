@@ -12,15 +12,18 @@ public class CommandFactory {
     private final DriveSubsystem drive;
     private final Gyro gyro;
 
-    private final PathConstraints constraints =
-            new PathConstraints(0.5, 5, Units.degreesToRadians(360), Units.degreesToRadians((540)));
+    public final PathConstraints constraints =
+            new PathConstraints(0.4, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
+
+    public final PathConstraints bumpConstraints =
+            new PathConstraints(0.2, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
 
     public CommandFactory(DriveSubsystem drive, Gyro gyro) {
         this.drive = drive;
         this.gyro = gyro;
     }
 
-    public Command buildPath(Pose pose) {
+    public Command buildPath(Pose pose, PathConstraints constraints) {
         return AutoBuilder.pathfindToPose(pose.pose(), constraints, 0).withName(pose.name());
     }
 }

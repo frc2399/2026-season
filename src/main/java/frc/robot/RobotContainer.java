@@ -3,8 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+
 import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -84,22 +88,36 @@ public class RobotContainer {
         autoChooser.setDefaultOption("do nothing", Commands.none());
 
         Command driveStraight =
-                commandFactory.buildPath(FieldConstants.PoseConstants.DRIVE_STRAIGHT);
+                Commands.sequence(
+                        Commands.runOnce(
+                                () ->
+                                        drive.resetOdometry(
+                                                new Pose2d(2, 2, Rotation2d.fromDegrees(0)))),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.DRIVE_STRAIGHT,
+                                commandFactory.constraints));
 
         Command hubDepot =
                 Commands.sequence(
-                Commands.runOnce(
-                () ->
-                        drive.resetOdometry(
-                                FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                commandFactory.buildPath(FieldConstants.PoseConstants.DEPOT.pose()),
-        // move into intake position while driving
-        drive.driveToPoseOnExecute(),
-        Commands.runOnce(() -> drive.resetOdometry(FieldConstants.PoseConstants.DEPOT.pose())),
-        intakeSubsystem.runIntake(),
-        commandFactory.buildPath(FieldConstants.PoseConstants.HUB_MIDDLE.pose()),
-        // move into shooting position while driving
-        drive.driveToPoseOnExecute());
+                        Commands.runOnce(
+                                () ->
+                                        drive.resetOdometry(
+                                                FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.DEPOT, commandFactory.constraints),
+                        // move into intake position while driving
+                        drive.driveToPoseOnExecute(),
+                        Commands.runOnce(
+                                () ->
+                                        drive.resetOdometry(
+                                                FieldConstants.PoseConstants.DEPOT.pose())),
+                        intakeSubsystem.runIntake().withTimeout(3),
+                        intakeSubsystem.defaultBehavior().withTimeout(0.01),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.HUB_MIDDLE,
+                                commandFactory.constraints),
+                        // move into shooting position while driving
+                        drive.driveToPoseOnExecute());
         // shooting command
 
         Command hubDepotTowerL1 =
@@ -108,15 +126,19 @@ public class RobotContainer {
                                 () ->
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.DEPOT),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.DEPOT, commandFactory.constraints),
                         // move into intake position while driving
                         drive.driveToPoseOnExecute(),
                         intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.HUB_MIDDLE),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.HUB_MIDDLE,
+                                commandFactory.constraints),
                         // move into shooting position while driving
                         drive.driveToPoseOnExecute(),
                         // shooting command
-                        commandFactory.buildPath(FieldConstants.PoseConstants.TOWER_L1),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
                         // move into climbing position while driving
                         drive.driveToPoseOnExecute());
         // climbing command
@@ -128,15 +150,19 @@ public class RobotContainer {
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.BUMP_STARTING_LINE
                                                         .pose())),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.DEPOT),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.DEPOT, commandFactory.constraints),
                         // move into intake position while driving
                         drive.driveToPoseOnExecute(),
                         intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.BUMP_STARTING_LINE),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.BUMP_STARTING_LINE,
+                                commandFactory.constraints),
                         // move into shooting position while driving
                         drive.driveToPoseOnExecute(),
                         // shooting command
-                        commandFactory.buildPath(FieldConstants.PoseConstants.TOWER_L1),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
                         // move into climbing position while driving
                         drive.driveToPoseOnExecute());
         // climbing command
@@ -148,11 +174,14 @@ public class RobotContainer {
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.DEPOT.pose())),
                         intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.HUB_MIDDLE),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.HUB_MIDDLE,
+                                commandFactory.constraints),
                         // move into shooting position while driving
                         drive.driveToPoseOnExecute(),
                         // shooting command
-                        commandFactory.buildPath(FieldConstants.PoseConstants.TOWER_L1),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
                         // move into climbing position while driving
                         drive.driveToPoseOnExecute());
         // climbing command
@@ -164,12 +193,38 @@ public class RobotContainer {
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.BUMP_STARTING_LINE
                                                         .pose())),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.OVER_THE_BUMP,
+                                commandFactory.bumpConstraints),
                         // move into intaking position while driving
                         drive.driveToPoseOnExecute(),
-                        intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.BUMP_STARTING_LINE),
+                        Commands.runOnce(
+                                () ->
+                                        drive.resetOdometry(
+                                                FieldConstants.PoseConstants.OVER_THE_BUMP.pose())),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
+                                commandFactory.constraints),
+                        intakeSubsystem.runIntake().withTimeout(1),
+                        intakeSubsystem.defaultBehavior().withTimeout(0.01),
+                        Commands.runOnce(
+                                () ->
+                                        drive.resetOdometry(
+                                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER
+                                                        .pose())),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.OVER_THE_BUMP,
+                                commandFactory.constraints),
                         // get into shooting position while driving
+                        drive.driveToPoseOnExecute(),
+                        Commands.runOnce(
+                                () ->
+                                        drive.resetOdometry(
+                                                FieldConstants.PoseConstants.BUMP_STARTING_LINE
+                                                        .pose())),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.BUMP_STARTING_LINE,
+                                commandFactory.bumpConstraints),
                         drive.driveToPoseOnExecute());
         // shooting command
 
@@ -180,15 +235,20 @@ public class RobotContainer {
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.BUMP_STARTING_LINE
                                                         .pose())),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
+                                commandFactory.bumpConstraints),
                         // move into intaking position while driving
                         drive.driveToPoseOnExecute(),
                         intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.BUMP_STARTING_LINE),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.BUMP_STARTING_LINE,
+                                commandFactory.bumpConstraints),
                         // get into shooting position while driving
                         drive.driveToPoseOnExecute(),
                         // shooting command
-                        commandFactory.buildPath(FieldConstants.PoseConstants.TOWER_L1),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
                         // get into climbing position while driving
                         drive.driveToPoseOnExecute());
         // climbing command
@@ -200,11 +260,15 @@ public class RobotContainer {
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.BUMP_STARTING_LINE
                                                         .pose())),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
+                                commandFactory.bumpConstraints),
                         // move into intaking position while driving
                         drive.driveToPoseOnExecute(),
                         intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(FieldConstants.PoseConstants.TOWER_L1),
+                        commandFactory.buildPath(
+                                FieldConstants.PoseConstants.TOWER_L1,
+                                commandFactory.bumpConstraints),
                         // get into climbing position while driving
                         drive.driveToPoseOnExecute());
         // climbing command

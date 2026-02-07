@@ -101,9 +101,13 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
-    private static final double PATHPLANNER_P = 5.0;
-    private static final double PATHPLANNER_I = 0.0;
-    private static final double PATHPLANNER_D = 0.0;
+    private static final double TRANSLATION_P = 1.0;
+    private static final double TRANSLATION_I = 0.0;
+    private static final double TRANSLATION_D = 0.0;
+
+    private static final double ROTATION_P = 5.0;
+    private static final double ROTATION_I = 0.0;
+    private static final double ROTATION_D = 0.0;
 
     private Optional<Alliance> alliance = DriverStation.getAlliance();
 
@@ -222,8 +226,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                     this::getRobotRelativeSpeeds,
                     (speeds, feedforwards) -> setRobotRelativeSpeeds(speeds),
                     new PPHolonomicDriveController(
-                            new PIDConstants(PATHPLANNER_P, PATHPLANNER_I, PATHPLANNER_D),
-                            new PIDConstants(PATHPLANNER_P, PATHPLANNER_I, PATHPLANNER_D)),
+                            new PIDConstants(TRANSLATION_P, TRANSLATION_I, TRANSLATION_D),
+                            new PIDConstants(ROTATION_P, ROTATION_I, ROTATION_D)),
                     config, // The robot configuration
                     () -> {
                         if (alliance.isPresent()) {
