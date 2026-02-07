@@ -25,7 +25,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.SubsystemFactory.RobotType;
-import frc.robot.constants.RobotConstants.SpeedConstants;
+import frc.robot.subsystems.drive.DriveConfig;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
 
 public final class VisionPoseEstimator {
@@ -46,7 +46,6 @@ public final class VisionPoseEstimator {
 
     /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
-
         Rotation2d getYaw();
 
         Rotation2d getYawPerSecond();
@@ -70,7 +69,7 @@ public final class VisionPoseEstimator {
     // reject new poses if spinning too fast
     private static final AngularVelocity MAX_ROTATIONS_PER_SECOND = RotationsPerSecond.of(2);
     private static final LinearVelocity MAX_DRIVETRAIN_SPEED_FOR_VISION_UPDATE =
-            MetersPerSecond.of(0.8 * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
+            MetersPerSecond.of(0.8 * DriveConfig.MAX_SPEED.in(MetersPerSecond));
 
     private final StructPublisher<Pose2d> mt2Publisher;
     private final DriveBase driveBase;

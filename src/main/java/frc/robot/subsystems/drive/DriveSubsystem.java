@@ -60,8 +60,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private DriveSubsystemStates states = new DriveSubsystemStates();
 
     // correction PID
-    private double DRIVE_P = 1.1;
-    private double DRIVE_D = 0.05;
+    private double DRIVE_P;
+    private double DRIVE_D;
 
     private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
 
@@ -146,12 +146,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             SwerveModule rearLeft,
             SwerveModule rearRight,
             Gyro gyro) {
-        this.gyro = gyro;
-        this.frontLeft = frontLeft;
-        this.frontRight = frontRight;
-        this.rearLeft = rearLeft;
-        this.rearRight = rearRight;
-
         this.gyro = gyro;
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
@@ -348,11 +342,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             // Convert the commanded speeds into the correct units for the
                             // drivetrain
                             double xSpeedDelivered =
-                                    polarXSpeed * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS;
+                                    polarXSpeed * MAX_LINEAR_SPEED.in(MetersPerSecond);
                             double ySpeedDelivered =
-                                    polarYSpeed * SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS;
+                                    polarYSpeed * MAX_LINEAR_SPEED.in(MetersPerSecond);
                             double rotRateDelivered =
-                                    newRotRate * SpeedConstants.DRIVETRAIN_MAX_ANGULAR_SPEED_RPS;
+                                    newRotRate * MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
 
                             if (fieldRelative) {
                                 relativeRobotSpeeds =
@@ -373,7 +367,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             var swerveModuleStates =
                                     DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
                             SwerveDriveKinematics.desaturateWheelSpeeds(
-                                    swerveModuleStates, SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
+                                    swerveModuleStates, MAX_LINEAR_SPEED.in(MetersPerSecond));
                             frontLeft.setDesiredState(swerveModuleStates[0]);
                             frontRight.setDesiredState(swerveModuleStates[1]);
                             rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -408,7 +402,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         speeds = ChassisSpeeds.discretize(speeds, .02);
         var swerveModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, SpeedConstants.DRIVETRAIN_MAX_SPEED_MPS);
+                swerveModuleStates, MAX_LINEAR_SPEED.in(MetersPerSecond));
         frontLeft.setDesiredState(swerveModuleStates[0]);
         frontRight.setDesiredState(swerveModuleStates[1]);
         rearLeft.setDesiredState(swerveModuleStates[2]);

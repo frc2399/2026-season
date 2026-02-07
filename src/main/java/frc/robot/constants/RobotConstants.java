@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Distance;
 
 public final class RobotConstants {
 
@@ -44,8 +43,6 @@ public final class RobotConstants {
         public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
         public static final double LOGGING_FREQUENCY_HZ = 10;
         public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
-        public static final double DRIVETRAIN_MAX_SPEED_MPS = 4.4;
-        public static final double DRIVETRAIN_MAX_ANGULAR_SPEED_RPS = 2 * Math.PI;
     }
 
     public static class DriveControlConstants {
