@@ -21,6 +21,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
@@ -33,11 +34,13 @@ public class RobotContainer {
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private IndexerSubsystem indexerSubsystem = subsystemFactory.buildIndexer();
+    private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
-    public CommandFactory commandFactory = new CommandFactory(drive, gyro);
+    public CommandFactory commandFactory =
+            new CommandFactory(drive, gyro, intakeSubsystem, intakeArmSubsystem);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();
@@ -83,7 +86,7 @@ public class RobotContainer {
 
     private void configureButtonBindingsDriver() {
         driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
-        driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
+        driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
         driverController.rightBumper().whileTrue(indexerSubsystem.runIndexer());
     }
 
