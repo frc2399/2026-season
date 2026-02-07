@@ -25,6 +25,8 @@ public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
     private final Alert driverDisconnected =
             new Alert("Driver controller disconnected!", AlertType.kWarning);
+    private final Alert noAutonSelectedAlert =
+            new Alert("Auton is not selected!", AlertType.kWarning);
     private Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
@@ -35,6 +37,7 @@ public class RobotContainer {
     public CommandFactory commandFactory = new CommandFactory(drive, gyro);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private Command defaultCommand = Commands.none();
 
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
@@ -75,7 +78,7 @@ public class RobotContainer {
     }
 
     private void setUpAuton() {
-        autoChooser.setDefaultOption("do nothing", Commands.none());
+        autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
 
@@ -86,5 +89,9 @@ public class RobotContainer {
     public void setAlerts() {
         driverDisconnected.set(
                 !DriverStation.isJoystickConnected(driverController.getHID().getPort()));
+        noAutonSelectedAlert.set(
+                DriverStation.isAutonomous()
+                        && !DriverStation.isEnabled()
+                        && getAutonomousCommand() == defaultCommand);
     }
 }
