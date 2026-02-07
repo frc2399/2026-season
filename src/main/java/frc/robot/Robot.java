@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         m_robotContainer.visionPoseEstimator.periodic();
         m_robotContainer.setAlerts();
-  }
+    }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override

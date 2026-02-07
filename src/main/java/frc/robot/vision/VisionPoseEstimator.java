@@ -7,8 +7,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.Optional;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,23 +21,26 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.SubsystemFactory.RobotType;
 import frc.robot.subsystems.drive.DriveConfig;
-import frc.robot.vision.LimelightHelpers.PoseEstimate;
+import java.util.Optional;
 
 public final class VisionPoseEstimator {
 
-    // private static final Angle CAMERA_PITCH = Degrees.of(25); // 0 = horizontal, positive = leaning back
-    // private static final Distance X_ROBOT_TO_CAMERA_OFFSET = Inches.of(11.29); // positive = in front of
+    // private static final Angle CAMERA_PITCH = Degrees.of(25); // 0 = horizontal, positive =
+    // leaning back
+    // private static final Distance X_ROBOT_TO_CAMERA_OFFSET = Inches.of(11.29); // positive = in
+    // front of
     //                                                                             // robot center
     // private static Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
     // private static final Distance Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(6.91); // ground plane = 0
     // private static final Angle CAMERA_YAW = Degrees.of(0);
 
-    private static final Angle CAMERA_PITCH = Degrees.of(15); // 0 = horizontal, positive = leaning back
-    private static final Distance X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75); // positive = in front of
-                                                                                // robot center
+    private static final Angle CAMERA_PITCH =
+            Degrees.of(15); // 0 = horizontal, positive = leaning back
+    private static final Distance X_ROBOT_TO_CAMERA_OFFSET =
+            Inches.of(9.75); // positive = in front of
+    // robot center
     private static Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
     private static final Distance Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10); // ground plane = 0
     private static final Angle CAMERA_YAW = Degrees.of(153);

@@ -1,12 +1,11 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class RebuiltVisionUtil {
 
@@ -17,7 +16,8 @@ public class RebuiltVisionUtil {
     }
 
     public static Pose2d getHubPose() {
-        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+        if (DriverStation.getAlliance().isPresent()
+                && DriverStation.getAlliance().get() == Alliance.Blue) {
             return FieldConstants.BLUE_HUB_POSE;
         } else {
             return FieldConstants.RED_HUB_POSE;
