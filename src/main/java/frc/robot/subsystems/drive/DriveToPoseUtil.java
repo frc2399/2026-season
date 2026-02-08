@@ -17,7 +17,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.util.TunableNumber;
 import java.util.function.Supplier;
 
 public class DriveToPoseUtil {
@@ -49,10 +48,9 @@ public class DriveToPoseUtil {
     }
 
     private static final double ORIENT_P = 1.0;
-    private static final double ORIENT_D = 0.0;
-   
-    private static final PIDController orientPid =
-            new PIDController(ORIENT_P, 0, ORIENT_D);
+    private static final double ORIENT_D = 0.05;
+
+    private static final PIDController orientPid = new PIDController(ORIENT_P, 0, ORIENT_D);
     // Pose2d automatically wraps to -180 to 180 degrees. if this changes, these
     // values need to change, too.
     private static final Angle ORIENT_MIN_INPUT = Degrees.of(-180);
@@ -158,14 +156,11 @@ public class DriveToPoseUtil {
         if (robotPose.get() == null) {
             return desiredRotRate;
         } else {
+            Pose2d poseToOrientToTarget = robotPose.get().transformBy(offsetTransform);
             Translation2d targetToRobotTranslation =
-                    orientTargetPose.getTranslation().minus(robotPose.get().getTranslation());
+                    orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
             SmartDashboard.putNumber("vision/ttr/x", targetToRobotTranslation.getX());
-            SmartDashboard.putNumber(
-                    "vision/ttrm/x", orientTargetPose.getX() - robotPose.get().getX());
             SmartDashboard.putNumber("vision/ttr/y", targetToRobotTranslation.getY());
-            SmartDashboard.putNumber(
-                    "vision/ttrm/y", orientTargetPose.getY() - robotPose.get().getY());
             Angle desiredAngle =
                     Radians.of(
                             Math.atan2(
@@ -173,10 +168,11 @@ public class DriveToPoseUtil {
                                     targetToRobotTranslation.getX()));
             SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
             SmartDashboard.putNumber(
-                    "vision/current angle", robotPose.get().getRotation().getDegrees());
+                    "vision/current angle", poseToOrientToTarget.getRotation().getDegrees());
             desiredRotRate =
                     orientPid.calculate(
-                            robotPose.get().getRotation().getRadians(), desiredAngle.in(Radians));
+                            poseToOrientToTarget.getRotation().getRadians(),
+                            desiredAngle.in(Radians));
             return desiredRotRate;
         }
     }
