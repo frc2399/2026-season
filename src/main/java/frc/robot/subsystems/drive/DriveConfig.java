@@ -30,7 +30,7 @@ public final class DriveConfig {
     static {
         switch (SubsystemFactory.getRobotType()) {
             case BUBBLES:
-                kS = 0.1;
+                kS = 0.05;
                 kV = 2.29;
                 DRIVE_P = 0.4;
                 DRIVE_D = 0;

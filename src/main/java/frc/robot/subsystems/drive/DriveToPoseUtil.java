@@ -10,12 +10,14 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.TunableNumber;
 import java.util.function.Supplier;
 
 public class DriveToPoseUtil {
@@ -44,6 +46,20 @@ public class DriveToPoseUtil {
     static {
         driveToPoseThetaAltPid.enableContinuousInput(
                 DRIVE_TO_POSE_MIN_INPUT.in(Degrees), DRIVE_TO_POSE_MAX_INPUT.in(Degrees));
+    }
+
+    private static final double ORIENT_P = 1.0;
+    private static final double ORIENT_D = 0.0;
+   
+    private static final PIDController orientPid =
+            new PIDController(ORIENT_P, 0, ORIENT_D);
+    // Pose2d automatically wraps to -180 to 180 degrees. if this changes, these
+    // values need to change, too.
+    private static final Angle ORIENT_MIN_INPUT = Degrees.of(-180);
+    private static final Angle ORIENT_MAX_INPUT = Degrees.of(180);
+
+    static {
+        orientPid.enableContinuousInput(ORIENT_MIN_INPUT.in(Radians), ORIENT_MAX_INPUT.in(Radians));
     }
 
     // tolerance constants
@@ -142,22 +158,24 @@ public class DriveToPoseUtil {
         if (robotPose.get() == null) {
             return desiredRotRate;
         } else {
-            Transform2d targetToRobotTransform =
-                    robotPose.get().plus(offsetTransform).minus(orientTargetPose);
-            SmartDashboard.putNumber("vision/ttr/x", targetToRobotTransform.getX());
-            SmartDashboard.putNumber("vision/ttr/y", targetToRobotTransform.getY());
+            Translation2d targetToRobotTranslation =
+                    orientTargetPose.getTranslation().minus(robotPose.get().getTranslation());
+            SmartDashboard.putNumber("vision/ttr/x", targetToRobotTranslation.getX());
+            SmartDashboard.putNumber(
+                    "vision/ttrm/x", orientTargetPose.getX() - robotPose.get().getX());
+            SmartDashboard.putNumber("vision/ttr/y", targetToRobotTranslation.getY());
+            SmartDashboard.putNumber(
+                    "vision/ttrm/y", orientTargetPose.getY() - robotPose.get().getY());
             Angle desiredAngle =
                     Radians.of(
                             Math.atan2(
-                                    targetToRobotTransform.getY(),
-                                    targetToRobotTransform
-                                            .getX())); // note: not sure if this value does wrapping
-            // correctly? may need if angle < 0 += pi
+                                    targetToRobotTranslation.getY(),
+                                    targetToRobotTranslation.getX()));
             SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
             SmartDashboard.putNumber(
                     "vision/current angle", robotPose.get().getRotation().getDegrees());
             desiredRotRate =
-                    driveToPoseThetaAltPid.calculate(
+                    orientPid.calculate(
                             robotPose.get().getRotation().getRadians(), desiredAngle.in(Radians));
             return desiredRotRate;
         }
