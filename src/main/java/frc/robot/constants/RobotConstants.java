@@ -24,6 +24,8 @@ public final class RobotConstants {
         public static final int FRONT_RIGHT_TURNING_CAN_ID = 32;
         public static final int REAR_RIGHT_TURNING_CAN_ID = 42;
 
+        public static final int INTAKE_CAN_ID = 6;
+
         public static final int GYRO_CAN_ID = 3;
     }
 
@@ -49,6 +51,7 @@ public final class RobotConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final double DRIVE_DEADBAND = 0.1;
         public static final boolean FIELD_ORIENTED_DRIVE = true;
+        public static final double LOW_BATTERY_VOLTAGE = 11.0;
     }
 
     public static class TransformConstants {
