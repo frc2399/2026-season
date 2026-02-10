@@ -19,7 +19,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Supplier;
 
-public class DriveToPoseUtil {
+public class AutoAlignUtil {
     // profiled pid controllers for driving to a pose and related constants
     private static final double DRIVE_TO_POSE_XY_P = 4.75;
     private static final double DRIVE_TO_POSE_XY_D = 0.0;
@@ -147,10 +147,6 @@ public class DriveToPoseUtil {
     // mechanism (eg a shooter) to a pose
     public static double getAutoOrientRotRate(
             Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform) {
-        SmartDashboard.putNumber("vision/hub/x", orientTargetPose.getX());
-        SmartDashboard.putNumber("vision/hub/y", orientTargetPose.getY());
-        SmartDashboard.putNumber("vision/hub/theta", orientTargetPose.getRotation().getDegrees());
-
         // default: do not turn
         double desiredRotRate = 0;
         if (robotPose.get() == null) {
@@ -159,8 +155,10 @@ public class DriveToPoseUtil {
             Pose2d poseToOrientToTarget = robotPose.get().transformBy(offsetTransform);
             Translation2d targetToRobotTranslation =
                     orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
-            SmartDashboard.putNumber("vision/ttr/x", targetToRobotTranslation.getX());
-            SmartDashboard.putNumber("vision/ttr/y", targetToRobotTranslation.getY());
+            SmartDashboard.putNumber(
+                    "vision/orient/orientTargetToRobot/x", targetToRobotTranslation.getX());
+            SmartDashboard.putNumber(
+                    "vision/orient/orientTargetToRobot/y", targetToRobotTranslation.getY());
             Angle desiredAngle =
                     Radians.of(
                             Math.atan2(

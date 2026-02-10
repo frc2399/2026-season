@@ -77,18 +77,13 @@ public class RobotContainer {
                                         driverController.getRightX(),
                                         DriveControlConstants.DRIVE_DEADBAND)),
                         true,
-                        () ->
-                                (driverController
-                                        .a()
-                                        .getAsBoolean()))); // i BELIEVE that this returns whether
-        // or not the a button is pressed, but
-        // this should be tested!
-        // note! do not bind to the a button; it is used in drive command for auto-orient!
+                        () -> (driverController.a().getAsBoolean())));
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         indexerSubsystem.setDefaultCommand(indexerSubsystem.defaultBehavior());
     }
 
     private void configureButtonBindingsDriver() {
+        // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
         driverController.rightBumper().whileTrue(indexerSubsystem.runIndexer());

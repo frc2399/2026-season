@@ -55,6 +55,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
     private boolean atGoal = true;
     private BooleanSupplier isBlueAlliance;
+    private boolean isAutoOrienting = false;
 
     private DriveSubsystemStates states = new DriveSubsystemStates();
 
@@ -322,9 +323,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                 currentAngle += Math.PI;
                             }
 
-                            SmartDashboard.putBoolean(
-                                    "vision/orient/shouldAutoOrient",
-                                    shouldAutoOrient.getAsBoolean());
+                            isAutoOrienting = shouldAutoOrient.getAsBoolean();
 
                             double r = Math.hypot(xSpeed.getAsDouble(), ySpeed.getAsDouble());
                             double polarAngle =
@@ -434,9 +433,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             double rotRate,
             double polarXSpeed,
             double polarYSpeed,
-            BooleanSupplier shouldAutoalign) {
-        if (shouldAutoalign.getAsBoolean()) {
-            return DriveToPoseUtil.getAutoOrientRotRate(
+            BooleanSupplier shouldAutoAlign) {
+        if (shouldAutoAlign.getAsBoolean()) {
+            return AutoAlignUtil.getAutoOrientRotRate(
                     () -> robotPose,
                     RebuiltVisionUtil.getHubPose(),
                     TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
@@ -540,7 +539,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                     goalPose.get().getRotation().getDegrees());
 
                             ChassisSpeeds alignmentSpeeds =
-                                    DriveToPoseUtil.getDriveToPoseVelocities(
+                                    AutoAlignUtil.getDriveToPoseVelocities(
                                             () -> robotPose, goalPose);
 
                             // tolerances were accounted for in getDriveToPoseVelocities
@@ -582,6 +581,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // advantagescope
         posePublisher.set(states.pose);
 
+        SmartDashboard.putBoolean("vision/orient/shouldAutoOrient", isAutoOrienting);
         SmartDashboard.putNumber("drive/Pose X(m)", states.pose.getX());
         SmartDashboard.putNumber("drive/Pose Y(m)", states.pose.getY());
         SmartDashboard.putNumber("drive/Pose Theta(deg)", states.poseTheta);
