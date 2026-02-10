@@ -1,6 +1,8 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2026.2.1"
+    id "com.peterabeles.gversion" version "1.10.3"
+    id 'com.diffplug.spotless' version '8.1.0'
 }
 
 java {
@@ -104,4 +106,37 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+gversion {
+	srcDir = "src/main/java/" // path is relative to the sub-project by default
+	// Gradle variables can also be used
+	// E.g. "${project.rootDir}/module/src/main/java"
+	classPackage = "frc.robot"
+	className = "BuildConstants" // optional. If not specified GVersion is used
+	dateFormat = "yyyy-MM-dd HH:mm:ss z" 
+	timeZone = "EST" // optional. EST
+	debug = false // optional. print out extra debug information
+	language = "java" // optional. Can be Java, Kotlin, YAML, or Properties. Case insensitive.
+	explicitType = false // optional. Force types to be explicitly printed
+	indent = "\t" // optional. Change how code is indented. 1 tab is default.
+	annotate = false // optional. Java only. Adds @Generated annotation
+}
+   project.compileJava.dependsOn(createVersionFile)
+  
+//Configure Spotless to use google aosp standards
+//Style Guide: https://source.android.com/docs/setup/contribute/code-style#java-style-rules
+
+project.compileJava.dependsOn(spotlessApply)
+spotless {
+    java {
+        target fileTree(".") {
+            include "**/*.java"
+            exclude "**/build/**", "**/build-*/**"
+        }
+        toggleOffOn()
+        googleJavaFormat('1.28.0').aosp()  // Specify version explicitly
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
