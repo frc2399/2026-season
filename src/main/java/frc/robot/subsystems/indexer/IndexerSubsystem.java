@@ -11,7 +11,7 @@ public class IndexerSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command indexer() {
+    public Command runIndexer() {
         return this.run(() -> io.runIndexer()).withName("runIndexer");
     }
 
