@@ -14,6 +14,8 @@ import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterPlacebo;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -149,6 +151,10 @@ public class SubsystemFactory {
         } else {
             return new IntakeSubsystem(new IntakePlacebo());
         }
+    }
+
+    public ShooterSubsystem buildShooter() {
+        return new ShooterSubsystem(new ShooterPlacebo());
     }
 
     public IndexerSubsystem buildIndexer() {
