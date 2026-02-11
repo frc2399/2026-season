@@ -21,7 +21,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
+
 import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
