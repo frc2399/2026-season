@@ -468,7 +468,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                     field2d.getObject("ROBOT path").setPoses(poses);
                 });
     }
-      
+
     private double getRotRate(
             double currentAngle,
             double rotRate,
