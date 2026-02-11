@@ -27,24 +27,11 @@ import java.util.Optional;
 
 public final class VisionPoseEstimator {
 
-    private static final Angle CAMERA_PITCH = Degrees.of(25); // 0 = horizontal, positive =
-    //     leaning back
-    private static final Distance X_ROBOT_TO_CAMERA_OFFSET = Inches.of(11.29); // positive = in
-    //     front of
-    // robot center
+    private static Angle CAMERA_PITCH; // 0 = horizontal, positive = leaning back
+    private static  Distance X_ROBOT_TO_CAMERA_OFFSET; // positive = in front of robot center
     private static Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
-    private static final Distance Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(6.91); // ground plane = 0
-    private static final Angle CAMERA_YAW = Degrees.of(0);
-
-    //     private static final Angle CAMERA_PITCH =
-    //             Degrees.of(15); // 0 = horizontal, positive = leaning back
-    //     private static final Distance X_ROBOT_TO_CAMERA_OFFSET =
-    //             Inches.of(9.75); // positive = in front of
-    //     // robot center
-    //     private static Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
-    //     private static final Distance Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10); // ground plane =
-    // 0
-    //     private static final Angle CAMERA_YAW = Degrees.of(153);
+    private static  Distance Z_ROBOT_TO_CAMERA_OFFSET; // ground plane = 0
+    private static  Angle CAMERA_YAW;
 
     /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
@@ -95,11 +82,11 @@ public final class VisionPoseEstimator {
                         .publish();
         mt2Publisher.setDefault(new Pose2d());
 
-        if (robot == RobotType.BUBBLES) {
-            Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(0);
-        } else {
-            Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.25);
-        }
+        CAMERA_PITCH = CameraConfig.CAMERA_PITCH;
+        CAMERA_YAW = CameraConfig.CAMERA_YAW;
+        X_ROBOT_TO_CAMERA_OFFSET = CameraConfig.X_ROBOT_TO_CAMERA_OFFSET;
+        Y_ROBOT_TO_CAMERA_OFFSET = CameraConfig.Y_ROBOT_TO_CAMERA_OFFSET;
+        Z_ROBOT_TO_CAMERA_OFFSET = CameraConfig.Z_ROBOT_TO_CAMERA_OFFSET; // ground plane = 0
 
         // meters, radians. Robot origin to camera lens origin
         ROBOT_TO_CAMERA =
