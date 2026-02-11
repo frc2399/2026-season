@@ -1,9 +1,15 @@
 package frc.robot.constants;
 
+<<<<<<< HEAD
+=======
+import static edu.wpi.first.units.Units.Inches;
+
+>>>>>>> main
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class FieldConstants {
+<<<<<<< HEAD
     public static record Pose(String name, Pose2d pose) {}
 
     public static class PoseConstants {
@@ -20,4 +26,11 @@ public final class FieldConstants {
         public static final Pose BUMP_STARTING_LINE =
                 new Pose("bumpStartingLine", new Pose2d(3.482, 5.356, Rotation2d.fromDegrees(180)));
     }
+=======
+    // values taken from field drawings
+    public static final Pose2d RED_CENTER_OF_HUB_POSE =
+            new Pose2d(Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
+    public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
+            new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
+>>>>>>> main
 }
