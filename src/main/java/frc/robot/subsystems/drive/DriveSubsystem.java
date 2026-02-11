@@ -101,7 +101,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
-    private static final double TRANSLATION_P = 1.0;
+    private static final double TRANSLATION_P = 0.05;
     private static final double TRANSLATION_I = 0.0;
     private static final double TRANSLATION_D = 0.0;
 

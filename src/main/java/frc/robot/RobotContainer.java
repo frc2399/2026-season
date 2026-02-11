@@ -91,19 +91,8 @@ public class RobotContainer {
     }
 
     private void setUpAuton() {
-<<<<<<< HEAD
         autoChooser = new SendableChooser<>();
         autoChooser.setDefaultOption("do nothing", Commands.none());
-
-        Command driveStraight =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                new Pose2d(2, 2, Rotation2d.fromDegrees(0)))),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.DRIVE_STRAIGHT,
-                                commandFactory.constraints));
 
         Command hubDepot =
                 Commands.sequence(
@@ -111,184 +100,77 @@ public class RobotContainer {
                                 () ->
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                        commandFactory.buildPath(
+                        commandFactory.buildPathDeferred(
                                 FieldConstants.PoseConstants.DEPOT, commandFactory.constraints),
                         // move into intake position while driving
                         drive.driveToPoseOnExecute(),
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.DEPOT.pose())),
-                        intakeSubsystem.runIntake().withTimeout(3),
-                        intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                        commandFactory.buildPath(
+                        // intakeSubsystem.runIntake().withTimeout(3),
+                        // intakeSubsystem.defaultBehavior().withTimeout(0.01),
+                        commandFactory.buildPathDeferred(
                                 FieldConstants.PoseConstants.HUB_MIDDLE,
                                 commandFactory.constraints),
                         // move into shooting position while driving
                         drive.driveToPoseOnExecute());
-        // shooting command
 
-        Command hubDepotTowerL1 =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.DEPOT, commandFactory.constraints),
-                        // move into intake position while driving
-                        drive.driveToPoseOnExecute(),
-                        intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.HUB_MIDDLE,
-                                commandFactory.constraints),
-                        // move into shooting position while driving
-                        drive.driveToPoseOnExecute(),
-                        // shooting command
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
-                        // move into climbing position while driving
-                        drive.driveToPoseOnExecute());
-        // climbing command
-
-        Command bumpDepotTowerL1 =
+              Command bumpNeutralZone =
                 Commands.sequence(
                         Commands.runOnce(
                                 () ->
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.BUMP_STARTING_LINE
                                                         .pose())),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.DEPOT, commandFactory.constraints),
-                        // move into intake position while driving
-                        drive.driveToPoseOnExecute(),
-                        intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.BUMP_STARTING_LINE,
-                                commandFactory.constraints),
-                        // move into shooting position while driving
-                        drive.driveToPoseOnExecute(),
-                        // shooting command
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
-                        // move into climbing position while driving
-                        drive.driveToPoseOnExecute());
-        // climbing command
-
-        Command depotHubTowerL1 =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.DEPOT.pose())),
-                        intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.HUB_MIDDLE,
-                                commandFactory.constraints),
-                        // move into shooting position while driving
-                        drive.driveToPoseOnExecute(),
-                        // shooting command
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
-                        // move into climbing position while driving
-                        drive.driveToPoseOnExecute());
-        // climbing command
-
-        Command bumpNeutralZone =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.BUMP_STARTING_LINE
-                                                        .pose())),
-                        commandFactory.buildPath(
+                        commandFactory.buildPathDeferred(
                                 FieldConstants.PoseConstants.OVER_THE_BUMP,
                                 commandFactory.bumpConstraints),
                         // move into intaking position while driving
                         drive.driveToPoseOnExecute(),
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.OVER_THE_BUMP.pose())),
-                        commandFactory.buildPath(
+                        commandFactory.buildPathDeferred(
                                 FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
                                 commandFactory.constraints),
                         intakeSubsystem.runIntake().withTimeout(1),
                         intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER
-                                                        .pose())),
-                        commandFactory.buildPath(
+                        commandFactory.buildPathDeferred(
                                 FieldConstants.PoseConstants.OVER_THE_BUMP,
                                 commandFactory.constraints),
                         // get into shooting position while driving
                         drive.driveToPoseOnExecute(),
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.BUMP_STARTING_LINE
-                                                        .pose())),
-                        commandFactory.buildPath(
+                        commandFactory.buildPathDeferred(
                                 FieldConstants.PoseConstants.BUMP_STARTING_LINE,
                                 commandFactory.bumpConstraints),
                         drive.driveToPoseOnExecute());
         // shooting command
 
-        Command bumpNeutralZoneTowerL1 =
+        Command bumpNeutralZoneShooting =
                 Commands.sequence(
                         Commands.runOnce(
                                 () ->
                                         drive.resetOdometry(
                                                 FieldConstants.PoseConstants.BUMP_STARTING_LINE
                                                         .pose())),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
+                        commandFactory.buildPathDeferred(
+                                FieldConstants.PoseConstants.OVER_THE_BUMP,
                                 commandFactory.bumpConstraints),
                         // move into intaking position while driving
                         drive.driveToPoseOnExecute(),
-                        intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.BUMP_STARTING_LINE,
-                                commandFactory.bumpConstraints),
+                        commandFactory.buildPathDeferred(
+                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
+                                commandFactory.constraints),
+                        intakeSubsystem.runIntake().withTimeout(1),
+                        intakeSubsystem.defaultBehavior().withTimeout(0.01),
+                        commandFactory.buildPathDeferred(
+                                FieldConstants.PoseConstants.OVER_THE_BUMP,
+                                commandFactory.constraints),
                         // get into shooting position while driving
                         drive.driveToPoseOnExecute(),
-                        // shooting command
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.TOWER_L1, commandFactory.constraints),
-                        // get into climbing position while driving
-                        drive.driveToPoseOnExecute());
-        // climbing command
-
-        Command bumpTowerL1 =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.BUMP_STARTING_LINE
-                                                        .pose())),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
+                        commandFactory.buildPathDeferred(
+                                FieldConstants.PoseConstants.HUB_MIDDLE,
                                 commandFactory.bumpConstraints),
-                        // move into intaking position while driving
-                        drive.driveToPoseOnExecute(),
-                        intakeSubsystem.runIntake(),
-                        commandFactory.buildPath(
-                                FieldConstants.PoseConstants.TOWER_L1,
-                                commandFactory.bumpConstraints),
-                        // get into climbing position while driving
                         drive.driveToPoseOnExecute());
-        // climbing command
+        // shooting command
 
-        autoChooser.addOption("driveStraight", driveStraight);
+        autoChooser.addOption("bumpNeutralZoneShooting", bumpNeutralZoneShooting);
         autoChooser.addOption("hubDepot", hubDepot);
-        autoChooser.addOption("hubDepotTowerL1", hubDepotTowerL1);
-        autoChooser.addOption("bumpDepotTowerL1", bumpDepotTowerL1);
-        autoChooser.addOption("depotHubTowerL1", depotHubTowerL1);
         autoChooser.addOption("bumpNeutralZone", bumpNeutralZone);
-        autoChooser.addOption("bumpNeutralZoneTowerL1", bumpNeutralZoneTowerL1);
-        autoChooser.addOption("bumpTowerL1", bumpTowerL1);
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
