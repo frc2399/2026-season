@@ -19,14 +19,14 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
 public class ShooterHardwarePrototype implements ShooterIO {
-    private SparkFlex shooterSparkFlex;
-    private SparkMax shooterSparkMax;
-    private SparkClosedLoopController shooterPidController;
+    private SparkFlex shooterBottomSparkFlex;
+    private SparkMax shooterTopSparkMax;
+    private SparkClosedLoopController shooterBottomPIDController;
+    private SparkClosedLoopController shooterTopPIDController;
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
@@ -39,7 +39,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
     private final ClosedLoopConfig closedLoopConfigShooter = new ClosedLoopConfig();
-    private RelativeEncoder shooterEncoder;
+    private RelativeEncoder shooterBottomEncoder;
+    private RelativeEncoder shooterTopEncoder;
 
     public ShooterHardwarePrototype() {
         SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
@@ -73,46 +74,50 @@ public class ShooterHardwarePrototype implements ShooterIO {
         shooterBottomMotorConfig.apply(closedLoopConfigShooter);
         shooterTopMotorConfig.apply(closedLoopConfigShooter);
 
-        shooterSparkFlex =
+        shooterBottomSparkFlex =
                 new SparkFlex(
                         RobotConstants.MotorIdConstants.SHOOTER_BOTTOM_CAN_ID,
                         MotorType.kBrushless);
-        shooterSparkMax =
+        shooterTopSparkMax =
                 new SparkMax(
                         RobotConstants.MotorIdConstants.SHOOTER_TOP_CAN_ID, MotorType.kBrushless);
-        shooterSparkFlex.configure(
+        
+        shooterBottomSparkFlex.configure(
                 shooterBottomMotorConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        shooterSparkMax.configure(
+        shooterTopSparkMax.configure(
                 shooterTopMotorConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
-        shooterPidController = shooterSparkFlex.getClosedLoopController();
-        shooterPidController = shooterSparkMax.getClosedLoopController();
+        shooterBottomPIDController = shooterBottomSparkFlex.getClosedLoopController();
+        shooterTopPIDController = shooterTopSparkMax.getClosedLoopController();
 
-        shooterEncoder = shooterSparkFlex.getEncoder();
-        shooterEncoder = shooterSparkMax.getEncoder();
+        shooterBottomEncoder = shooterBottomSparkFlex.getEncoder();
+        shooterTopEncoder = shooterTopSparkMax.getEncoder();
     }
 
     public void runShooter() {
-        shooterPidController.setSetpoint(
+        shooterBottomPIDController.setSetpoint(
                 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
-
-        SmartDashboard.putNumber(
-                "Shooter/desiredspeed",
-                0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
-        SmartDashboard.putNumber("Shooter/actualspeed", shooterEncoder.getVelocity());
+        shooterTopPIDController.setSetpoint(
+                0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void defaultBehavior() {
-        shooterPidController.setSetpoint(0, ControlType.kVelocity);
-
-        SmartDashboard.putNumber("Intake/desiredspeed", 0);
-        SmartDashboard.putNumber("Intake/actualspeed", shooterEncoder.getVelocity());
+        shooterBottomPIDController.setSetpoint(0, ControlType.kVelocity);
+        shooterTopPIDController.setSetpoint(0, ControlType.kVelocity);
     }
 
-    @Override
-    public void updateStates(ShooterIOState state) {}
+    public void updateStates(ShooterIOState state) {
+        state.topRollerDesiredSpeed = shooterTopEncoder.getVelocity();
+        state.topRollerActualSpeed = shooterTopEncoder.getVelocity();
+        state.topRollerCurrent = shooterTopSparkMax.getOutputCurrent();
+        state.topRollerAppliedVoltage = shooterTopSparkMax.getBusVoltage();
+        state.bottomRollerDesiredSpeed = shooterBottomEncoder.getVelocity();
+        state.bottomRollerActualSpeed = shooterBottomEncoder.getVelocity();
+        state.bottomRollerCurrent = shooterBottomSparkFlex.getOutputCurrent();
+        state.bottomRollerAppliedVoltage = shooterBottomSparkFlex.getBusVoltage();
+    }
 }
