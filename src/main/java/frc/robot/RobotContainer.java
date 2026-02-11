@@ -7,8 +7,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
@@ -41,6 +38,8 @@ public class RobotContainer {
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory = new CommandFactory(drive, gyro);
+    public AutonCommandFactory autonCommandFactory =
+            new AutonCommandFactory(drive, intakeSubsystem);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();
@@ -92,85 +91,11 @@ public class RobotContainer {
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-        autoChooser.setDefaultOption("do nothing", Commands.none());
 
-        Command hubDepot =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.DEPOT, commandFactory.constraints),
-                        // move into intake position while driving
-                        drive.driveToPoseOnExecute(),
-                        // intakeSubsystem.runIntake().withTimeout(3),
-                        // intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.HUB_MIDDLE,
-                                commandFactory.constraints),
-                        // move into shooting position while driving
-                        drive.driveToPoseOnExecute());
-
-              Command bumpNeutralZone =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.BUMP_STARTING_LINE
-                                                        .pose())),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.OVER_THE_BUMP,
-                                commandFactory.bumpConstraints),
-                        // move into intaking position while driving
-                        drive.driveToPoseOnExecute(),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
-                                commandFactory.constraints),
-                        intakeSubsystem.runIntake().withTimeout(1),
-                        intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.OVER_THE_BUMP,
-                                commandFactory.constraints),
-                        // get into shooting position while driving
-                        drive.driveToPoseOnExecute(),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.BUMP_STARTING_LINE,
-                                commandFactory.bumpConstraints),
-                        drive.driveToPoseOnExecute());
-        // shooting command
-
-        Command bumpNeutralZoneShooting =
-                Commands.sequence(
-                        Commands.runOnce(
-                                () ->
-                                        drive.resetOdometry(
-                                                FieldConstants.PoseConstants.BUMP_STARTING_LINE
-                                                        .pose())),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.OVER_THE_BUMP,
-                                commandFactory.bumpConstraints),
-                        // move into intaking position while driving
-                        drive.driveToPoseOnExecute(),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER,
-                                commandFactory.constraints),
-                        intakeSubsystem.runIntake().withTimeout(1),
-                        intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.OVER_THE_BUMP,
-                                commandFactory.constraints),
-                        // get into shooting position while driving
-                        drive.driveToPoseOnExecute(),
-                        commandFactory.buildPathDeferred(
-                                FieldConstants.PoseConstants.HUB_MIDDLE,
-                                commandFactory.bumpConstraints),
-                        drive.driveToPoseOnExecute());
-        // shooting command
-
-        autoChooser.addOption("bumpNeutralZoneShooting", bumpNeutralZoneShooting);
-        autoChooser.addOption("hubDepot", hubDepot);
-        autoChooser.addOption("bumpNeutralZone", bumpNeutralZone);
+        autoChooser.addOption(
+                "bumpNeutralZoneShooting", autonCommandFactory.bumpNeutralZoneShooting());
+        autoChooser.addOption("hubDepot", autonCommandFactory.hubToDepot());
+        autoChooser.addOption("bumpNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }

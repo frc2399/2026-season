@@ -11,6 +11,7 @@ import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
 import frc.robot.subsystems.indexer.IndexerPlacebo;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
+import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
@@ -144,7 +145,7 @@ public class SubsystemFactory {
 
     public IntakeSubsystem buildIntake() {
         if (robotType == RobotType.MOZART) {
-            return new IntakeSubsystem(new IntakePlacebo());
+            return new IntakeSubsystem(new IntakeHardware());
         } else {
             return new IntakeSubsystem(new IntakePlacebo());
         }

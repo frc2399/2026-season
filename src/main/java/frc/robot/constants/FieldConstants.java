@@ -11,10 +11,10 @@ public final class FieldConstants {
                 new Pose("driveStraight", new Pose2d(0.5, 2, Rotation2d.fromDegrees(0)));
         public static final Pose HUB_MIDDLE =
                 new Pose("hubMiddle", new Pose2d(3.488, 4.021, Rotation2d.fromDegrees(0)));
-        public static final Pose DEPOT =
-                new Pose("depot", new Pose2d(1.176, 5.958, Rotation2d.fromDegrees(0)));
         // public static final Pose DEPOT =
-        //         new Pose("depot", new Pose2d(2.2, 5, Rotation2d.fromDegrees(0)));
+        //         new Pose("depot", new Pose2d(1.176, 5.958, Rotation2d.fromDegrees(0)));
+        public static final Pose DEPOT =
+                new Pose("depot", new Pose2d(2.2, 5, Rotation2d.fromDegrees(0)));
         public static final Pose TOWER_L1 =
                 new Pose("towerL1", new Pose2d(1.608, 3.378, Rotation2d.fromDegrees(0)));
         public static final Pose NEUTRAL_ZONE_BORDER =
