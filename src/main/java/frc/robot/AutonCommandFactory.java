@@ -33,11 +33,7 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
-    public Command buildPath(Pose pose, PathConstraints constraints) {
-        return AutoBuilder.pathfindToPose(pose.pose(), constraints, 0).withName(pose.name());
-    }
-
-    public Command hubToDepot() {
+   public Command hubToDepot() {
         return Commands.sequence(
                 Commands.runOnce(
                         () -> drive.resetOdometry(FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
