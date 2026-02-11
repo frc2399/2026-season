@@ -47,8 +47,8 @@ public class AutoAlignUtil {
                 DRIVE_TO_POSE_MIN_INPUT.in(Degrees), DRIVE_TO_POSE_MAX_INPUT.in(Degrees));
     }
 
-    private static final double ORIENT_P = 1.0;
-    private static final double ORIENT_D = 0.05;
+    private static final double ORIENT_P = .9;
+    private static final double ORIENT_D = 0.015;
 
     private static final PIDController orientPid = new PIDController(ORIENT_P, 0, ORIENT_D);
     // Pose2d automatically wraps to -180 to 180 degrees. if this changes, these
