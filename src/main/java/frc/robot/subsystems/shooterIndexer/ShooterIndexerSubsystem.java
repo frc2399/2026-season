@@ -10,7 +10,7 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command shooterIndexer() {
+    public Command runShooterIndexer() {
         return this.run(() -> io.runShooterIndexer()).withName("runShooterIndexer");
     }
 
