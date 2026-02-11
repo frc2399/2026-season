@@ -9,6 +9,8 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
+import frc.robot.subsystems.indexer.IndexerPlacebo;
+import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -153,5 +155,9 @@ public class SubsystemFactory {
 
     public ShooterSubsystem buildShooter() {
         return new ShooterSubsystem(new ShooterPlacebo());
+    }
+
+    public IndexerSubsystem buildIndexer() {
+        return new IndexerSubsystem(new IndexerPlacebo());
     }
 }

@@ -14,6 +14,7 @@ Describe the steps taken to test your changes.
 *  [ ] Merged in the main branch and fixed any merge conflicts
 *  [ ] Built code with no errors
 *  [ ] Tested code
+*  [ ] Formatted code with spotless ( ./gradlew spotlessApply )
 *  [ ] Added and committed all code changes
 *  [ ] Pushed code to github
 *  [ ] Linked this PR to the issue it is associated with using the gear icon next to Development on the right side of this PR page
