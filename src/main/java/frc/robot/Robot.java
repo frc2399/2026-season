@@ -1,4 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -13,6 +12,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -37,6 +39,47 @@ public class Robot extends TimedRobot {
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     }
 
+    @Override
+    public void robotInit() {
+        Map<String, Integer> commandCounts = new HashMap<>();
+        BiConsumer<Command, Boolean> logCommandFunction =
+                (Command command, Boolean active) -> {
+                    String name = command.getName();
+                    int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+                    commandCounts.put(name, count);
+                    SmartDashboard.putBoolean(
+                            "CommandsUnique/"
+                                    + name
+                                    + "_"
+                                    + Integer.toHexString(command.hashCode()),
+                            active);
+                    SmartDashboard.putBoolean("CommandsAll/" + name, count > 0);
+                };
+        CommandScheduler.getInstance()
+                .onCommandInitialize(
+                        (Command command) -> {
+                            logCommandFunction.accept(command, true);
+                            DataLogManager.log(command.getName() + " : Init");
+                        });
+        CommandScheduler.getInstance()
+                .onCommandFinish(
+                        (Command command) -> {
+                            logCommandFunction.accept(command, false);
+                            DataLogManager.log(command.getName() + ": End");
+                        });
+        CommandScheduler.getInstance()
+                .onCommandInterrupt(
+                        (interrupted, interrupting) -> {
+                            logCommandFunction.accept(interrupted, false);
+                            DataLogManager.log(
+                                    interrupted.getName()
+                                            + " Interrupted by "
+                                            + (!interrupting.isEmpty()
+                                                    ? interrupting.get().getName()
+                                                    : "nothing"));
+                        });
+    }
+
     /**
      * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
      * that you want ran during disabled, autonomous, teleoperated and test.
@@ -52,6 +95,8 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        m_robotContainer.visionPoseEstimator.periodic();
+        m_robotContainer.setAlerts();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

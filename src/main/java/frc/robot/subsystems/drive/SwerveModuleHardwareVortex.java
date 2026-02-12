@@ -50,7 +50,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final ClosedLoopConfig sparkMaxClosedLoopConfigTurning = new ClosedLoopConfig();
 
     // drivings are NEO Vortex, turnings are NEO 550s
-    private static final int DRIVING_MOTOR_PINION_TEETH = 12;
+    private static int DRIVING_MOTOR_PINION_TEETH;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of the steering motor in the MAXSwerve Module.
@@ -66,19 +66,12 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     // teeth on the bevel pinion
     // This is also the gear ratio (14T)
 
-    private static final double DRIVING_MOTOR_REDUCTION =
-            (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
+    private final double DRIVING_MOTOR_REDUCTION;
 
-    private static final LinearVelocity DRIVE_WHEEL_FREE_SPEED =
-            MetersPerSecond.of(
-                    (MotorConstants.VORTEX_FREE_SPEED.in(RotationsPerSecond)
-                                    * WHEEL_CIRCUMFERENCE.in(Meters))
-                            / (DRIVING_MOTOR_REDUCTION));
+    private final LinearVelocity DRIVE_WHEEL_FREE_SPEED;
 
-    private static final Distance DRIVING_ENCODER_POSITION_FACTOR =
-            (WHEEL_DIAMETER.times(Math.PI)).div(DRIVING_MOTOR_REDUCTION); // meters
-    private static final Distance DRIVING_ENCODER_VELOCITY_FACTOR =
-            DRIVING_ENCODER_POSITION_FACTOR.div(60); // meters
+    private final Distance DRIVING_ENCODER_POSITION_FACTOR; // meters
+    private final Distance DRIVING_ENCODER_VELOCITY_FACTOR; // meters
     // per
     // second
 
@@ -91,18 +84,26 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT =
             TURNING_ENCODER_POSITION_FACTOR; // radians
 
-    private static final double DRIVING_P = 0.15;
-    private static final double DRIVING_I = 0;
-    private static final double DRIVING_D = 0.1;
+    private final double DRIVING_P;
+    private final double DRIVING_I = 0;
+    private final double DRIVING_D;
+    private final double DRIVING_KS;
+    private final double DRIVING_KV;
     private static final double DRIVING_MIN_OUTPUT = -1;
 
     private static final double DRIVING_MAX_OUTPUT = 1;
 
+<<<<<<< HEAD
     private static final double TURNING_P = 1.0;
     private static final double TURNING_I = 0;
     private static final double TURNING_D = 0.001;
     private static final double DRIVING_KS = 0.05;
     private static final double DRIVING_KV = 2.4;
+=======
+    private final double TURNING_P;
+    private static final double TURNING_I = 0;
+    private static double TURNING_D;
+>>>>>>> main
     private static final double DRIVING_KA = 0;
     private static final double TURNING_MIN_OUTPUT = -1;
     private static final double TURNING_MAX_OUTPUT = 1;
@@ -124,6 +125,41 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         drivingSparkFlex = new SparkFlex(drivingCanId, MotorType.kBrushless);
         turningSparkMax = new SparkMax(turningCanId, MotorType.kBrushless);
 
+        // get from config!
+        DRIVING_KS = DriveConfig.kS;
+        DRIVING_KV = DriveConfig.kV;
+        DRIVING_P = DriveConfig.DRIVE_P;
+        DRIVING_D = DriveConfig.DRIVE_D;
+        TURNING_P = DriveConfig.TURN_P;
+        TURNING_D = DriveConfig.TURN_D;
+        DRIVING_MOTOR_PINION_TEETH = DriveConfig.PINION_TEETH;
+
+        SmartDashboard.putNumber("drive/config/ks", DRIVING_KS);
+        SmartDashboard.putNumber("drive/config/kv", DRIVING_KV);
+        SmartDashboard.putNumber("drive/config/swervedrivep", DRIVING_P);
+        SmartDashboard.putNumber("drive/config/swervedrived", DRIVING_D);
+        SmartDashboard.putNumber("drive/config/turnp", TURNING_P);
+        SmartDashboard.putNumber("drive/config/turnd", TURNING_D);
+        SmartDashboard.putNumber("drive/config/pinion", DRIVING_MOTOR_PINION_TEETH);
+
+        // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+        // teeth on the bevel pinion
+        // This is also the gear ratio (14T)
+        // a lot of this had to get moved down here because pinion teeth is variable by
+        // robot & assigned via module config
+        DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
+        DRIVE_WHEEL_FREE_SPEED =
+                MetersPerSecond.of(
+                        (MotorConstants.VORTEX_FREE_SPEED.in(RotationsPerSecond)
+                                        * WHEEL_CIRCUMFERENCE.in(Meters))
+                                / (DRIVING_MOTOR_REDUCTION));
+
+        DRIVING_ENCODER_POSITION_FACTOR =
+                (WHEEL_DIAMETER.times(Math.PI)).div(DRIVING_MOTOR_REDUCTION); // meters
+        DRIVING_ENCODER_VELOCITY_FACTOR = DRIVING_ENCODER_POSITION_FACTOR.div(60); // meters
+        // per
+        // second
+
         sparkFlexConfigDriving
                 .inverted(DRIVING_MOTOR_INVERTED)
                 .idleMode(DRIVING_MOTOR_IDLE_MODE)
@@ -144,8 +180,6 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                 .sva(DRIVING_KS, DRIVING_KV, DRIVING_KA);
 
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
-
-        //  ClosedLoopConfig.feedForward();
 
         sparkMaxConfigTurning
                 .inverted(TURNING_MOTOR_INVERTED)
