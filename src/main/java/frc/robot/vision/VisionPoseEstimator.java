@@ -27,14 +27,24 @@ import java.util.Optional;
 
 public final class VisionPoseEstimator {
 
-    private static final Angle CAMERA_PITCH =
-            Degrees.of(25); // 0 = horizontal, positive = leaning back
-    private static final Distance X_ROBOT_TO_CAMERA_OFFSET =
-            Inches.of(11.29); // positive = in front of
+    private static final Angle CAMERA_PITCH = Degrees.of(25); // 0 = horizontal, positive =
+    //     leaning back
+    private static final Distance X_ROBOT_TO_CAMERA_OFFSET = Inches.of(11.29); // positive = in
+    //     front of
     // robot center
     private static Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
     private static final Distance Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(6.91); // ground plane = 0
     private static final Angle CAMERA_YAW = Degrees.of(0);
+
+    //     private static final Angle CAMERA_PITCH =
+    //             Degrees.of(15); // 0 = horizontal, positive = leaning back
+    //     private static final Distance X_ROBOT_TO_CAMERA_OFFSET =
+    //             Inches.of(9.75); // positive = in front of
+    //     // robot center
+    //     private static Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
+    //     private static final Distance Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10); // ground plane =
+    // 0
+    //     private static final Angle CAMERA_YAW = Degrees.of(153);
 
     /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
@@ -85,10 +95,10 @@ public final class VisionPoseEstimator {
                         .publish();
         mt2Publisher.setDefault(new Pose2d());
 
-        if (robot == RobotType.BETA) {
-            Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(-2);
-        } else {
+        if (robot == RobotType.BUBBLES) {
             Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(0);
+        } else {
+            Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.25);
         }
 
         // meters, radians. Robot origin to camera lens origin
