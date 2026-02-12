@@ -30,13 +30,15 @@ public class SubsystemFactory {
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "";
 
     public enum RobotType {
         MOZART,
         BUBBLES,
         SIM,
         BETA,
-        COMP
+        COMP,
+        PROTOTYPE
     }
 
     private static RobotType robotType;
@@ -57,6 +59,8 @@ public class SubsystemFactory {
             robotType = RobotType.BUBBLES;
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
             robotType = RobotType.MOZART;
+        } else if (serialNum.equals(PROTOTYPE_SERIAL_NUMBER)) {
+            robotType = RobotType.PROTOTYPE;
         } else {
             throw new RuntimeException(
                     "UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: "
