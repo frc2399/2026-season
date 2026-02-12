@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -17,7 +19,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Supplier;
 
-public class DriveToPoseUtil {
+public class AutoAlignUtil {
     // profiled pid controllers for driving to a pose and related constants
     private static final double DRIVE_TO_POSE_XY_P = 4.75;
     private static final double DRIVE_TO_POSE_XY_D = 0.0;
@@ -43,6 +45,19 @@ public class DriveToPoseUtil {
     static {
         driveToPoseThetaAltPid.enableContinuousInput(
                 DRIVE_TO_POSE_MIN_INPUT.in(Degrees), DRIVE_TO_POSE_MAX_INPUT.in(Degrees));
+    }
+
+    private static final double ORIENT_P = .9;
+    private static final double ORIENT_D = 0.015;
+
+    private static final PIDController orientPid = new PIDController(ORIENT_P, 0, ORIENT_D);
+    // Pose2d automatically wraps to -180 to 180 degrees. if this changes, these
+    // values need to change, too.
+    private static final Angle ORIENT_MIN_INPUT = Degrees.of(-180);
+    private static final Angle ORIENT_MAX_INPUT = Degrees.of(180);
+
+    static {
+        orientPid.enableContinuousInput(ORIENT_MIN_INPUT.in(Radians), ORIENT_MAX_INPUT.in(Radians));
     }
 
     // tolerance constants
@@ -126,5 +141,37 @@ public class DriveToPoseUtil {
                         thetaDesired.in(RadiansPerSecond));
 
         return alignmentSpeeds;
+    }
+
+    // offset pose is not necessarily a requirement, but necessary if trying to align an off-center
+    // mechanism (eg a shooter) to a pose
+    public static double getAutoOrientRotRate(
+            Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform) {
+        // default: do not turn
+        double desiredRotRate = 0;
+        if (robotPose.get() == null) {
+            return desiredRotRate;
+        } else {
+            Pose2d poseToOrientToTarget = robotPose.get().transformBy(offsetTransform);
+            Translation2d targetToRobotTranslation =
+                    orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
+            SmartDashboard.putNumber(
+                    "vision/orient/orientTargetToRobot/x", targetToRobotTranslation.getX());
+            SmartDashboard.putNumber(
+                    "vision/orient/orientTargetToRobot/y", targetToRobotTranslation.getY());
+            Angle desiredAngle =
+                    Radians.of(
+                            Math.atan2(
+                                    targetToRobotTranslation.getY(),
+                                    targetToRobotTranslation.getX()));
+            SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
+            SmartDashboard.putNumber(
+                    "vision/current angle", poseToOrientToTarget.getRotation().getDegrees());
+            desiredRotRate =
+                    orientPid.calculate(
+                            poseToOrientToTarget.getRotation().getRadians(),
+                            desiredAngle.in(Radians));
+            return desiredRotRate;
+        }
     }
 }

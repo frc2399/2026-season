@@ -25,6 +25,6 @@ public class CommandFactory {
     }
 
     public Command runIntakeandIntakeArm() {
-        return Commands.parallel(intakeSubsystem.runIntake(), intakeArmSubsystem.deploy());
+        return Commands.parallel(intakeSubsystem.runIntake(), intakeArmSubsystem.intakeArmDeploy());
     }
 }
