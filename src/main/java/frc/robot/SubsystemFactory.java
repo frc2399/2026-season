@@ -1,9 +1,6 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Inches;
-
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -12,9 +9,13 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
+import frc.robot.subsystems.indexer.IndexerPlacebo;
+import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterPlacebo;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -25,19 +26,20 @@ public class SubsystemFactory {
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
-    private static final String ALPHA_SERIAL_NUMBER = "";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "";
 
     public enum RobotType {
         MOZART,
         BUBBLES,
         SIM,
         BETA,
-        COMP
+        COMP,
+        PROTOTYPE
     }
 
-    private RobotType robotType;
+    private static RobotType robotType;
 
     private String serialNum = System.getenv("serialnum");
 
@@ -55,6 +57,8 @@ public class SubsystemFactory {
             robotType = RobotType.BUBBLES;
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
             robotType = RobotType.MOZART;
+        } else if (serialNum.equals(PROTOTYPE_SERIAL_NUMBER)) {
+            robotType = RobotType.PROTOTYPE;
         } else {
             throw new RuntimeException(
                     "UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: "
@@ -62,7 +66,7 @@ public class SubsystemFactory {
         }
     }
 
-    public RobotType getRobotType() {
+    public static RobotType getRobotType() {
         return robotType;
     }
 
@@ -124,24 +128,14 @@ public class SubsystemFactory {
                                     MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
                                     REAR_RIGHT_CHASSIS_ANGULAR_OFFSET,
                                     "rear right"));
-            return new DriveSubsystem(
-                    frontLeft,
-                    frontRight,
-                    rearLeft,
-                    rearRight,
-                    gyro,
-                    RobotConstants.DriveControlConstants.BETA_XTRACK_WIDTH,
-                    RobotConstants.DriveControlConstants.BETA_YTRACK_WIDTH);
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
         } else {
             frontLeft = new SwerveModule(new SwerveModulePlacebo());
             frontRight = new SwerveModule(new SwerveModulePlacebo());
             rearLeft = new SwerveModule(new SwerveModulePlacebo());
             rearRight = new SwerveModule(new SwerveModulePlacebo());
-            return new DriveSubsystem(
-                    frontLeft, frontRight, rearLeft, rearRight, gyro, Inches.of(10), Inches.of(10));
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
         }
-
-        // 10 is a default value for sim lol
     }
 
     public Gyro buildGyro() {
@@ -161,5 +155,13 @@ public class SubsystemFactory {
         } else {
             return new IntakeSubsystem(new IntakePlacebo());
         }
+    }
+
+    public ShooterSubsystem buildShooter() {
+        return new ShooterSubsystem(new ShooterPlacebo());
+    }
+
+    public IndexerSubsystem buildIndexer() {
+        return new IndexerSubsystem(new IndexerPlacebo());
     }
 }
