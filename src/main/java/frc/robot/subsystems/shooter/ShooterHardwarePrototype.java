@@ -81,7 +81,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         shooterTopSparkMax =
                 new SparkMax(
                         RobotConstants.MotorIdConstants.SHOOTER_TOP_CAN_ID, MotorType.kBrushless);
-        
+
         shooterBottomSparkFlex.configure(
                 shooterBottomMotorConfig,
                 ResetMode.kResetSafeParameters,
