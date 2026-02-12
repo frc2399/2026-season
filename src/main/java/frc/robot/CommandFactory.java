@@ -24,8 +24,4 @@ public class CommandFactory {
     public Command buildPath(Pose pose) {
         return AutoBuilder.pathfindToPose(pose.pose(), constraints, 0).withName(pose.name());
     }
-
-    public Command driveStraight() {
-        return buildPath(FieldConstants.PoseConstants.DRIVE_STRAIGHT);
-    }
 }
