@@ -460,12 +460,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         PathPlannerLogging.setLogTargetPoseCallback(
                 (pose) -> {
-                    field2d.getObject("ROBOT target pose").setPose(pose);
+                    field2d.getObject("ROBOT auton target pose").setPose(pose);
                 });
 
         PathPlannerLogging.setLogActivePathCallback(
                 (poses) -> {
-                    field2d.getObject("ROBOT path").setPoses(poses);
+                    field2d.getObject("ROBOT auton path").setPoses(poses);
                 });
     }
 
