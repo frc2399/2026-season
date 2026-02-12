@@ -97,7 +97,6 @@ public class RobotContainer {
 
         autoChooser = new SendableChooser<>();
 
-        autoChooser.addOption("driveStraight", commandFactory.driveStraight());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
