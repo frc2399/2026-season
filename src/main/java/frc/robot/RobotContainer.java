@@ -31,10 +31,6 @@ import java.util.Optional;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
-    private final Alert driverDisconnected =
-            new Alert("Driver controller disconnected!", AlertType.kWarning);
-    private final Alert noAutonSelectedAlert =
-            new Alert("Auton is not selected!", AlertType.kWarning);
     private Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
@@ -52,6 +48,10 @@ public class RobotContainer {
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
 
+    private final Alert driverDisconnected =
+            new Alert("Driver controller disconnected!", AlertType.kWarning);
+    private final Alert noAutonSelectedAlert =
+            new Alert("Auton is not selected!", AlertType.kWarning);
     private final Alert lowBatteryAlert =
             new Alert(
                     "Battery voltage is very low, turn off the robot or replace the battery to avoid damage.",
