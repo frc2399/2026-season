@@ -19,7 +19,6 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Velocity;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
@@ -103,8 +102,10 @@ public class ShooterHardwarePrototype implements ShooterIO {
     }
 
     public void runShooter() {
-        desiredBottomVelocity = RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
-        desiredTopVelocity = RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+        desiredBottomVelocity =
+                RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+        desiredTopVelocity =
+                RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -116,13 +117,15 @@ public class ShooterHardwarePrototype implements ShooterIO {
         desiredBottomVelocity = RadiansPerSecond.of(0);
         desiredTopVelocity = RadiansPerSecond.of(0);
 
-        shooterBottomPIDController.setSetpoint(desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
-        shooterTopPIDController.setSetpoint(desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        shooterBottomPIDController.setSetpoint(
+                desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        shooterTopPIDController.setSetpoint(
+                desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void updateStates(ShooterIOState state) {
         state.topRollerDesiredSpeed = shooterTopEncoder.getVelocity();
-        state.topRollerActualSpeed = desiredTopVelocity.in(RadiansPerSecond) ;
+        state.topRollerActualSpeed = desiredTopVelocity.in(RadiansPerSecond);
         state.topRollerCurrent = shooterTopSparkMax.getOutputCurrent();
         state.topRollerAppliedVoltage = shooterTopSparkMax.getBusVoltage();
         state.bottomRollerDesiredSpeed = shooterBottomEncoder.getVelocity();
