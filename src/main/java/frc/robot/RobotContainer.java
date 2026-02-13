@@ -5,19 +5,21 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
@@ -110,14 +112,21 @@ public class RobotContainer {
         double poseX = robotLocation.getX();
         if (alliance.isPresent()) {
             if (alliance.get() == DriverStation.Alliance.Blue) {
-                if (0 <= poseX && poseX <= 3.98) {
+                if (FieldConstants.AllianceZoneBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters)
+                                <= poseX
+                        && poseX
+                                <= FieldConstants.AllianceZoneBoundaries.BLUE_ZONE_BOUNDARY_X.in(
+                                        Meters)) {
                     return true;
                 } else {
                     return false;
                 }
             }
             if (alliance.get() == DriverStation.Alliance.Red) {
-                if (12.56 <= poseX && poseX <= 16.54) {
+                if (FieldConstants.AllianceZoneBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX
+                        && poseX
+                                <= FieldConstants.AllianceZoneBoundaries.RED_DRIVER_STATION_WALL_X
+                                        .in(Meters)) {
                     return true;
                 } else {
                     return false;
@@ -125,8 +134,8 @@ public class RobotContainer {
             }
         }
         return false;
-      }
-      
+    }
+
     public void setAlerts() {
         lowBatteryAlert.set(
                 (RobotController.getBatteryVoltage() > 0.0
