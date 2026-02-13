@@ -90,27 +90,18 @@ public class RobotContainer {
         indexerSubsystem.setDefaultCommand(indexerSubsystem.defaultBehavior());
     }
 
-<<<<<<< HEAD
   private void configureButtonBindingsDriver() {
     driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
     driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
-  }
-=======
-    private void configureButtonBindingsDriver() {
-        // note! do not bind to the a button; it is used in drive command for auto-orient!
-        driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
-        driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(indexerSubsystem.runIndexer());
     }
->>>>>>> main
 
     private void setUpAuton() {
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
 
-<<<<<<< HEAD
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
@@ -118,11 +109,6 @@ public class RobotContainer {
   public Gyro getGyro() {
     return gyro;
   }
-}
-=======
-    public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
-    }
 
     public Boolean shouldTargetHub(Pose2d robotLocation) {
         Optional<Alliance> alliance = DriverStation.getAlliance();
@@ -166,4 +152,3 @@ public class RobotContainer {
                         && getAutonomousCommand() == defaultCommand);
     }
 }
->>>>>>> main
