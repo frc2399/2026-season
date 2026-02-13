@@ -58,7 +58,6 @@ public class RobotContainer {
                     AlertType.kWarning);
 
     public RobotContainer() {
-        DriverStation.silenceJoystickConnectionWarning(true);
         configureDefaultCommands();
         configureButtonBindingsDriver();
         setUpAuton();
