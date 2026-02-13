@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
         FollowPathCommand.warmupCommand();
         PathfindingCommand.warmupCommand();
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     @Override
