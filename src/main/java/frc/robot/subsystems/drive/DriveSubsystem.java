@@ -50,6 +50,8 @@ import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.config.ModuleConfig;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
@@ -110,6 +112,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private ChassisSpeeds relativeRobotSpeeds = new ChassisSpeeds();
 
     private Rotation2d lastAngle = new Rotation2d();
+
+    public static final RobotConfig CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, new ModuleConfig(
+        WHEEL_RADIUS, MAX_SPEED, WHEEL_COF, DRIVE_MOTOR, DRIVE_CURRENT_LIMIT, NUM_MOTORS), MODULE_OFFSETS);
 
     public static class DriveSubsystemStates {
         public Pose2d pose = new Pose2d();
