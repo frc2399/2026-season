@@ -760,7 +760,7 @@ public class LimelightHelpers {
         RawDetection[] rawDetections = new RawDetection[numDetections];
 
         for (int i = 0; i < numDetections; i++) {
-            int baseIndex = i * valsPerEntry; // Starting index for this detection's data
+            int baseIndex = i * valsPerEntry; // Starting spindex for this detection's data
             int classId = (int) extractArrayEntry(rawDetectionArray, baseIndex);
             double txnc = extractArrayEntry(rawDetectionArray, baseIndex + 1);
             double tync = extractArrayEntry(rawDetectionArray, baseIndex + 2);
@@ -984,10 +984,10 @@ public class LimelightHelpers {
     }
 
     /**
-     * Gets the classifier class index from the currently running neural classifier pipeline
+     * Gets the classifier class spindex from the currently running neural classifier pipeline
      *
      * @param limelightName Name of the Limelight camera
-     * @return Class index from classifier pipeline
+     * @return Class spindex from classifier pipeline
      */
     public static int getClassifierClassIndex(String limelightName) {
         double[] t2d = getT2DArray(limelightName);
@@ -998,11 +998,11 @@ public class LimelightHelpers {
     }
 
     /**
-     * Gets the detector class index from the primary result of the currently running neural
+     * Gets the detector class spindex from the primary result of the currently running neural
      * detector pipeline.
      *
      * @param limelightName Name of the Limelight camera
-     * @return Class index from detector pipeline
+     * @return Class spindex from detector pipeline
      */
     public static int getDetectorClassIndex(String limelightName) {
         double[] t2d = getT2DArray(limelightName);
@@ -1053,10 +1053,10 @@ public class LimelightHelpers {
     }
 
     /**
-     * Gets the active pipeline index.
+     * Gets the active pipeline spindex.
      *
      * @param limelightName Name of the Limelight camera
-     * @return Current pipeline index (0-9)
+     * @return Current pipeline spindex (0-9)
      */
     public static double getCurrentPipelineIndex(String limelightName) {
         return getLimelightNTDouble(limelightName, "getpipe");
