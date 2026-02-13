@@ -113,8 +113,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private Rotation2d lastAngle = new Rotation2d();
 
-    public static final RobotConfig CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, new ModuleConfig(
-        WHEEL_RADIUS, MAX_SPEED, WHEEL_COF, DRIVE_MOTOR, DRIVE_CURRENT_LIMIT, NUM_MOTORS), MODULE_OFFSETS);
+//     public static final RobotConfig CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, new ModuleConfig(
+//         WHEEL_RADIUS, MAX_SPEED, WHEEL_COF, DRIVE_MOTOR, DRIVE_CURRENT_LIMIT, NUM_MOTORS), MODULE_OFFSETS);
 
     public static class DriveSubsystemStates {
         public Pose2d pose = new Pose2d();
