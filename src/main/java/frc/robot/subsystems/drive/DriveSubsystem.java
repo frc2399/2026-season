@@ -260,12 +260,30 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 };
         swerveModuleStatePublisher.set(swerveModuleStates);
 
+<<<<<<< HEAD
+                if (Robot.isSimulation()) {
+                        double angleChange = DRIVE_KINEMATICS
+                                        .toChassisSpeeds(swerveModuleStates).omegaRadiansPerSecond
+                                        * (1 / RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+                        lastAngle = lastAngle.plus(Rotation2d.fromRadians(angleChange));
+                        gyro.setYawCommand(Radians.of(lastAngle.getRadians()));
+                }
+
+                logAndUpdateDriveSubsystemStates();
+                alert.set(gyro.hasFault());
+
+                frontLeft.updateStates();
+                frontRight.updateStates();
+                rearLeft.updateStates();
+                rearRight.updateStates();
+=======
         if (Robot.isSimulation()) {
             double angleChange =
                     DRIVE_KINEMATICS.toChassisSpeeds(swerveModuleStates).omegaRadiansPerSecond
                             * (1 / RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
             lastAngle = lastAngle.plus(Rotation2d.fromRadians(angleChange));
             gyro.setYaw(Radians.of(lastAngle.getRadians()));
+>>>>>>> main
         }
 
         logAndUpdateDriveSubsystemStates();
