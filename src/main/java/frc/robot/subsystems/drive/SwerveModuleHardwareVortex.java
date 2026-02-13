@@ -93,17 +93,9 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
 
     private static final double DRIVING_MAX_OUTPUT = 1;
 
-<<<<<<< HEAD
-    private static final double TURNING_P = 1.0;
-    private static final double TURNING_I = 0;
-    private static final double TURNING_D = 0.001;
-    private static final double DRIVING_KS = 0.05;
-    private static final double DRIVING_KV = 2.4;
-=======
     private final double TURNING_P;
     private static final double TURNING_I = 0;
     private static double TURNING_D;
->>>>>>> main
     private static final double DRIVING_KA = 0;
     private static final double TURNING_MIN_OUTPUT = -1;
     private static final double TURNING_MAX_OUTPUT = 1;
