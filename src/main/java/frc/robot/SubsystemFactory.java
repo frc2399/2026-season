@@ -28,7 +28,7 @@ public class SubsystemFactory {
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
-    private static final String PROTOTYPE_SERIAL_NUMBER = "";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "03260a64";
 
     public enum RobotType {
         MOZART,
