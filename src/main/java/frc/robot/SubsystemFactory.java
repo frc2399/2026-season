@@ -44,9 +44,6 @@ public class SubsystemFactory {
     private String serialNum = System.getenv("serialnum");
 
     public SubsystemFactory() {
-        // if (serialNum.equals(ALPHA_SERIAL_NUMBER)) {
-        //     robotType = RobotType.ALPHA;
-        // } else
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
