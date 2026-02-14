@@ -42,8 +42,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private RelativeEncoder shooterBottomEncoder;
     private RelativeEncoder shooterTopEncoder;
 
-    private AngularVelocity desiredBottomVelocity;
-    private AngularVelocity desiredTopVelocity;
+    private AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
+    private AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
 
     public ShooterHardwarePrototype() {
         SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
@@ -125,13 +125,13 @@ public class ShooterHardwarePrototype implements ShooterIO {
     }
 
     public void updateStates(ShooterIOState state) {
-        state.topRollerDesiredSpeed = shooterTopEncoder.getVelocity();
-        state.topRollerActualSpeed = desiredTopVelocity.in(RadiansPerSecond);
+        state.topRollerDesiredSpeed = desiredTopVelocity.in(RadiansPerSecond);
+        state.topRollerActualSpeed = shooterTopEncoder.getVelocity();
         state.topRollerCurrent = shooterTopSparkMax.getOutputCurrent();
         state.topRollerAppliedVoltage = shooterTopSparkMax.getBusVoltage();
-        state.bottomRollerDesiredSpeed = shooterBottomEncoder.getVelocity();
-        state.bottomRollerActualSpeed = desiredBottomVelocity.in(RadiansPerSecond);
+        state.bottomRollerDesiredSpeed = desiredBottomVelocity.in(RadiansPerSecond);
         state.bottomRollerCurrent = shooterBottomSparkFlex.getOutputCurrent();
+        state.bottomRollerActualSpeed = shooterBottomEncoder.getVelocity();
         state.bottomRollerAppliedVoltage = shooterBottomSparkFlex.getBusVoltage();
     }
 }
