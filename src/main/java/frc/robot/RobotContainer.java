@@ -26,25 +26,25 @@ import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
 import java.util.Optional;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
-    private final Alert driverDisconnected =
-            new Alert("Driver controller disconnected!", AlertType.kWarning);
-    private final Alert noAutonSelectedAlert =
-            new Alert("Auton is not selected!", AlertType.kWarning);
     private Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
     private IndexerSubsystem indexerSubsystem = subsystemFactory.buildIndexer();
+    private ShooterIndexerSubsystem shooterIndexerSubsystem =
+            subsystemFactory.buildShooterIndexer();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
-    public CommandFactory commandFactory = new CommandFactory(drive, gyro);
+    public CommandFactory commandFactory =
+            new CommandFactory(drive, gyro, shooterSubsystem, shooterIndexerSubsystem);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();
@@ -52,13 +52,16 @@ public class RobotContainer {
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
 
+    private final Alert driverDisconnected =
+            new Alert("Driver controller disconnected!", AlertType.kWarning);
+    private final Alert noAutonSelectedAlert =
+            new Alert("Auton is not selected!", AlertType.kWarning);
     private final Alert lowBatteryAlert =
             new Alert(
                     "Battery voltage is very low, turn off the robot or replace the battery to avoid damage.",
                     AlertType.kWarning);
 
     public RobotContainer() {
-        DriverStation.silenceJoystickConnectionWarning(true);
         configureDefaultCommands();
         configureButtonBindingsDriver();
         setUpAuton();
