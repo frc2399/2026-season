@@ -45,6 +45,8 @@ public class RobotContainer {
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory =
             new CommandFactory(drive, gyro, shooterSubsystem, shooterIndexerSubsystem);
+    public AutonCommandFactory autonCommandFactory =
+            new AutonCommandFactory(drive, intakeSubsystem);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();
@@ -102,6 +104,12 @@ public class RobotContainer {
     }
 
     private void setUpAuton() {
+        autoChooser = new SendableChooser<>();
+
+        autoChooser.addOption(
+                "bumpNeutralZoneShooting", autonCommandFactory.bumpNeutralZoneShooting());
+        autoChooser.addOption("hubDepot", autonCommandFactory.hubToDepot());
+        autoChooser.addOption("bumpNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
