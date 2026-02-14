@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     @Override
