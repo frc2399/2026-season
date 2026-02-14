@@ -12,13 +12,14 @@ public class CameraConfig {
     public static final Angle CAMERA_PITCH; // 0 = horizontal; positive = leaning back
     public static final Angle CAMERA_YAW;
     public static final Distance X_ROBOT_TO_CAMERA_OFFSET; // positive = in front of robot center
-    public static Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
+    public static final Distance Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
     public static final Distance Z_ROBOT_TO_CAMERA_OFFSET; // GROUND plane = 0 (not bellypan)
+    public static final boolean HAS_SECOND_CAMERA;
     public static final String SECOND_LIMELIGHT_NAME;
     public static final Angle SECOND_CAMERA_PITCH; // 0 = horizontal; positive = leaning back
     public static final Angle SECOND_CAMERA_YAW;
     public static final Distance SECOND_X_ROBOT_TO_CAMERA_OFFSET; // positive = in front of robot center
-    public static Distance SECOND_Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
+    public static final Distance SECOND_Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
     public static final Distance SECOND_Z_ROBOT_TO_CAMERA_OFFSET; // GROUND plane = 0 (not bellypan)
 
     static {
@@ -30,7 +31,8 @@ public class CameraConfig {
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
                 Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.25);
                 Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10);
-                SECOND_LIMELIGHT_NAME = "";
+                HAS_SECOND_CAMERA = false;
+                SECOND_LIMELIGHT_NAME = "not_a_limelight";
                 SECOND_CAMERA_PITCH = Degrees.of(15);
                 SECOND_CAMERA_YAW = Degrees.of(153);
                 SECOND_X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
@@ -44,7 +46,8 @@ public class CameraConfig {
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
                 Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.25);
                 Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10);
-                SECOND_LIMELIGHT_NAME = "";
+                HAS_SECOND_CAMERA = false;
+                SECOND_LIMELIGHT_NAME = "not_a_limelight";
                 SECOND_CAMERA_PITCH = Degrees.of(15);
                 SECOND_CAMERA_YAW = Degrees.of(153);
                 SECOND_X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
@@ -58,7 +61,8 @@ public class CameraConfig {
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
                 Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.25);
                 Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10);
-                SECOND_LIMELIGHT_NAME = "";
+                HAS_SECOND_CAMERA = false;
+                SECOND_LIMELIGHT_NAME = "not_a_limelight";
                 SECOND_CAMERA_PITCH = Degrees.of(15);
                 SECOND_CAMERA_YAW = Degrees.of(153);
                 SECOND_X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
@@ -72,7 +76,8 @@ public class CameraConfig {
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
                 Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.25);
                 Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(10);
-                SECOND_LIMELIGHT_NAME = "";
+                HAS_SECOND_CAMERA = false;
+                SECOND_LIMELIGHT_NAME = "not_a_limelight";
                 SECOND_CAMERA_PITCH = Degrees.of(15);
                 SECOND_CAMERA_YAW = Degrees.of(153);
                 SECOND_X_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.75);
