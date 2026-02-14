@@ -25,7 +25,7 @@ public final class RobotConstants {
         public static final int REAR_RIGHT_TURNING_CAN_ID = 42;
 
         public static final int INTAKE_CAN_ID = 6;
-
+        public static final int SHOOTER_INDEXER_CAN_ID = 1;
         public static final int GYRO_CAN_ID = 3;
     }
 
