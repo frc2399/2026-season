@@ -1,15 +1,15 @@
 package frc.robot.util;
 
-import java.util.Optional;
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
+import java.util.Optional;
 
-import static edu.wpi.first.units.Units.Meters;
-
-public class  FieldCalculationHelpers {
-      public Boolean shouldTargetHub(Pose2d robotLocation) {
+public class FieldCalculationHelpers {
+    public static Boolean shouldTargetHub(Pose2d robotLocation) {
         Optional<Alliance> alliance = DriverStation.getAlliance();
         double poseX = robotLocation.getX();
         if (alliance.isPresent()) {
@@ -37,5 +37,4 @@ public class  FieldCalculationHelpers {
         }
         return false;
     }
-
 }
