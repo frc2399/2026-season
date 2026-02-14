@@ -28,3 +28,20 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+      
+  checkForBuildConstantsFile:
+    runs-on: ubuntu-22.04
+    container: wpilib/roborio-cross-ubuntu:2025-22.04
+    steps:
+      - uses: actions/checkout@v4  
+      - name: Add repository to safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+      - name: Make sure the BuildConstants file is not included in PR
+        run: |
+          PROHIBITED_FILE="src/main/java/frc/robot/BuildConstants.java"
+          if [ -f "$PROHIBITED_FILE" ]; then
+            echo "::error::Prohibited file '$PROHIBITED_FILE' is included in the repository. Run this to remove it: git rm -r src/main/java/frc/robot/BuildConstants.java."
+            exit 1
+          else
+            echo "Prohibited file '$PROHIBITED_FILE' not found. Continuing workflow."
+          fi
