@@ -998,11 +998,11 @@ public class LimelightHelpers {
     }
 
     /**
-     * Gets the detector class spindex from the primary result of the currently running neural
+     * Gets the detector class index from the primary result of the currently running neural
      * detector pipeline.
      *
      * @param limelightName Name of the Limelight camera
-     * @return Class spindex from detector pipeline
+     * @return Class index from detector pipeline
      */
     public static int getDetectorClassIndex(String limelightName) {
         double[] t2d = getT2DArray(limelightName);
@@ -1053,10 +1053,10 @@ public class LimelightHelpers {
     }
 
     /**
-     * Gets the active pipeline spindex.
+     * Gets the active pipeline index.
      *
      * @param limelightName Name of the Limelight camera
-     * @return Current pipeline spindex (0-9)
+     * @return Current pipeline index (0-9)
      */
     public static double getCurrentPipelineIndex(String limelightName) {
         return getLimelightNTDouble(limelightName, "getpipe");
