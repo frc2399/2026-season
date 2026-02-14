@@ -96,10 +96,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private final LinearVelocity MAX_LINEAR_SPEED;
     private final AngularVelocity MAX_ANGULAR_VELOCITY;
 
-    private final Translation2d FRONT_LEFT_OFFSET;
-    private final Translation2d REAR_LEFT_OFFSET;
-    private final Translation2d FRONT_RIGHT_OFFSET;
-    private final Translation2d REAR_RIGHT_OFFSET;
+    public final Translation2d FRONT_LEFT_OFFSET;
+    public final Translation2d REAR_LEFT_OFFSET;
+    public final Translation2d FRONT_RIGHT_OFFSET;
+    public final Translation2d REAR_RIGHT_OFFSET;
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
