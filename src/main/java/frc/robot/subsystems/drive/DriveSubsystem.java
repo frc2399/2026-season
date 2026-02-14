@@ -34,7 +34,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -55,6 +54,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
     private boolean atGoal = true;
     private BooleanSupplier isBlueAlliance;
+    private Alliance alliance;
     private boolean isAutoOrienting = false;
 
     private DriveSubsystemStates states = new DriveSubsystemStates();
@@ -318,8 +318,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == Alliance.Red) {
+                            if (alliance == Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
 
@@ -366,8 +365,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 xSpeedDelivered, ySpeedDelivered, rotRateDelivered);
                             }
 
-                            SmartDashboard.putNumber("x speed delivered", xSpeedDelivered);
-                            SmartDashboard.putNumber("y speed delivered", ySpeedDelivered);
+                            SmartDashboard.putNumber("drive/xSpeedDelivered", xSpeedDelivered);
+                            SmartDashboard.putNumber("drive/ySpeedDelivered", ySpeedDelivered);
+                            SmartDashboard.putNumber("drive/PolarAngle", polarAngle);
 
                             var swerveModuleStates =
                                     DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
@@ -521,8 +521,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == Alliance.Blue) {
+                            if (alliance == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
@@ -590,5 +589,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
         SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
+    }
+
+    public void setAlliance(Alliance allianceColor) {
+        alliance = allianceColor;
     }
 }

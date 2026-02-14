@@ -6,6 +6,7 @@ package frc.robot;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -106,6 +107,16 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {}
+
+    @Override
+    public void driverStationConnected() {
+        if (DriverStation.getAlliance().isPresent()
+                && DriverStation.getAlliance().get() == Alliance.Red) {
+            // DriveSubsystem.setAlliance().get == Alliance.Red
+        } else {
+
+        }
+    }
 
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
