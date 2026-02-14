@@ -16,6 +16,8 @@ import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -44,9 +46,6 @@ public class SubsystemFactory {
     private String serialNum = System.getenv("serialnum");
 
     public SubsystemFactory() {
-        // if (serialNum.equals(ALPHA_SERIAL_NUMBER)) {
-        //     robotType = RobotType.ALPHA;
-        // } else
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
@@ -75,28 +74,6 @@ public class SubsystemFactory {
         SwerveModule rearLeft;
         SwerveModule frontRight;
         SwerveModule rearRight;
-
-        // if (robotType == RobotType.ALPHA) {
-        //     frontLeft = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
-        //             MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
-        //             FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left"));
-        //     frontRight = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.FRONT_RIGHT_DRIVING_CAN_ID,
-        //             MotorIdConstants.FRONT_RIGHT_TURNING_CAN_ID,
-        //             FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right"));
-        //     rearLeft = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.REAR_LEFT_DRIVING_CAN_ID,
-        //             MotorIdConstants.REAR_LEFT_TURNING_CAN_ID,
-        //             REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left"));
-        //     rearRight = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.REAR_RIGHT_DRIVING_CAN_ID,
-        //             MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
-        //             REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
-        //     return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-        //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH,
-        //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH);
-        // } else
         if (robotType == RobotType.BETA
                 || robotType == RobotType.BUBBLES
                 || robotType == RobotType.MOZART) {
@@ -163,5 +140,9 @@ public class SubsystemFactory {
 
     public IndexerSubsystem buildIndexer() {
         return new IndexerSubsystem(new IndexerPlacebo());
+    }
+
+    public ShooterIndexerSubsystem buildShooterIndexer() {
+        return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
     }
 }

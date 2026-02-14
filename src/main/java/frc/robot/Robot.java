@@ -28,8 +28,7 @@ import java.util.function.BiConsumer;
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
-    private final RobotContainer m_robotContainer;
-
+    private final RobotContainer robotContainer;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -37,10 +36,11 @@ public class Robot extends TimedRobot {
   public Robot() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    robotContainer = new RobotContainer();
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+        DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   /**
@@ -58,8 +58,8 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        m_robotContainer.visionPoseEstimator.periodic();
-        m_robotContainer.setAlerts();
+        robotContainer.visionPoseEstimator.periodic();
+        robotContainer.setAlerts();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -73,17 +73,17 @@ public class Robot extends TimedRobot {
   public void driverStationConnected() {
     // support for starting on either red or blue alliance for auton
     if (DriverStation.getAlliance().get() == Alliance.Red) {
-     m_robotContainer.getGyro().setYaw(Degrees.of(0));
+     robotContainer.getGyro().setYaw(Degrees.of(0));
    }
    else {
-     m_robotContainer.getGyro().setYaw(Degree.of(180));
+     robotContainer.getGyro().setYaw(Degree.of(180));
    }
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
