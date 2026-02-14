@@ -33,7 +33,7 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
-   public Command hubToDepot() {
+    public Command hubToDepot() {
         return Commands.sequence(
                 Commands.runOnce(
                         () -> drive.resetOdometry(FieldConstants.PoseConstants.HUB_MIDDLE.pose())),

@@ -39,6 +39,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -60,7 +61,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
     private boolean atGoal = true;
     private BooleanSupplier isBlueAlliance;
-    private Alliance alliance;
     private boolean isAutoOrienting = false;
 
     private DriveSubsystemStates states = new DriveSubsystemStates();
@@ -359,7 +359,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
-                            if (alliance == Alliance.Red) {
+                            if (alliance.get() == DriverStation.Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
 
@@ -472,6 +472,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                     field2d.getObject("ROBOT path").setPoses(poses);
                 });
     }
+
     private double getRotRate(
             double currentAngle,
             double rotRate,
@@ -565,7 +566,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (alliance == Alliance.Blue) {
+                            if (alliance.get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
@@ -635,7 +636,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
     }
 
-    public void setAlliance(Alliance allianceColor) {
+    public void setAlliance(Optional<Alliance> allianceColor) {
         alliance = allianceColor;
     }
 }
