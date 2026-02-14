@@ -53,7 +53,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         shooterTopMotorConfig.idleMode(IdleMode.kBrake);
         shooterBottomMotorConfig.inverted(true);
         shooterTopMotorConfig.inverted(true);
-        shooterBottomMotorConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
+        shooterBottomMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
         shooterTopMotorConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
 
         shooterBottomMotorConfig.encoder.positionConversionFactor(
