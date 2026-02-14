@@ -19,8 +19,8 @@ public class AutonCommandFactory {
     public final PathConstraints constraints =
             new PathConstraints(0.8, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
-    public final PathConstraints bumpConstraints =
-            new PathConstraints(0.4, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
+    public final PathConstraints bumpAndDepotConstraints =
+            new PathConstraints(0.25, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
 
     public AutonCommandFactory(DriveSubsystem drive, IntakeSubsystem intake) {
         this.drive = drive;
@@ -53,7 +53,7 @@ public class AutonCommandFactory {
                         () ->
                                 drive.resetOdometry(
                                         FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, bumpConstraints),
+                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints),
                 // move into intaking position while driving
                 drive.driveToPoseOnExecute(),
                 buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
@@ -62,7 +62,7 @@ public class AutonCommandFactory {
                 buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
                 // get into shooting position while driving
                 drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.BUMP_STARTING_LINE, bumpConstraints),
+                buildPathDeferred(FieldConstants.PoseConstants.BUMP_STARTING_LINE, bumpAndDepotConstraints),
                 drive.driveToPoseOnExecute());
     }
 
@@ -72,7 +72,7 @@ public class AutonCommandFactory {
                         () ->
                                 drive.resetOdometry(
                                         FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, bumpConstraints),
+                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints),
                 // move into intaking position while driving
                 drive.driveToPoseOnExecute(),
                 buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
@@ -81,7 +81,7 @@ public class AutonCommandFactory {
                 buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
                 // get into shooting position while driving
                 drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, bumpConstraints),
+                buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, bumpAndDepotConstraints),
                 drive.driveToPoseOnExecute());
     }
 }
