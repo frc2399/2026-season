@@ -23,10 +23,10 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ public class RobotContainer {
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
-    private IndexerSubsystem indexerSubsystem = subsystemFactory.buildIndexer();
+    private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildIndexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
     // this is public because we need to run the visionPoseEstimator periodic from
@@ -90,7 +90,7 @@ public class RobotContainer {
                         () -> (driverController.a().getAsBoolean())));
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
-        indexerSubsystem.setDefaultCommand(indexerSubsystem.defaultBehavior());
+        spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
     }
 
     private void configureButtonBindingsDriver() {
@@ -98,7 +98,7 @@ public class RobotContainer {
         driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
-        driverController.rightBumper().whileTrue(indexerSubsystem.runIndexer());
+        driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
     }
 
     private void setUpAuton() {

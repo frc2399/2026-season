@@ -15,7 +15,7 @@ public class SpindexerSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command spindexer() {
+    public Command runSpindexer() {
         return this.run(() -> io.runSpindexer()).withName("runSpindexer");
     }
 
