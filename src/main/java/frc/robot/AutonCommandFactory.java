@@ -66,7 +66,7 @@ public class AutonCommandFactory {
                 drive.driveToPoseOnExecute());
     }
 
-    public Command bumpNeutralZoneShooting() {
+    public Command bumpToNeutralZoneShooting() {
         return Commands.sequence(
                 Commands.runOnce(
                         () ->
