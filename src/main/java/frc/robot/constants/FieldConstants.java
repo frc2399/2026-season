@@ -1,10 +1,17 @@
 package frc.robot.constants;
+<<<<<<< HEAD
 import static edu.wpi.first.units.Units.Inches;
+=======
+
+import static edu.wpi.first.units.Units.*;
+>>>>>>> main
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Distance;
 
 public final class FieldConstants {
+<<<<<<< HEAD
 
     public static record Pose(String name, Pose2d pose) {}
 
@@ -25,6 +32,13 @@ public final class FieldConstants {
                 new Pose("bumpStartingLine", new Pose2d(3.482, 5.356, Rotation2d.fromDegrees(0)));
         public static final Pose OVER_THE_BUMP =
                 new Pose("overTheBump", new Pose2d(5.482, 5.356, Rotation2d.fromDegrees(0)));
+=======
+    public static class AllianceZoneBoundaries {
+        public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
+        public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
+        public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
+        public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
+>>>>>>> main
     }
 
     // values taken from field drawings
