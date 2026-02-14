@@ -12,11 +12,11 @@ public class IntakeArmSubsystem extends SubsystemBase {
     }
 
     public Command intakeArmDeploy() {
-        return this.run(() -> io.setSetpoint(IntakeArmSetpoint.DEPLOYED))
+        return this.runOnce(() -> io.setSetpoint(IntakeArmSetpoint.DEPLOYED))
                 .withName("intakeArmDeploy");
     }
 
     public Command intakeArmStow() {
-        return this.run(() -> io.setSetpoint(IntakeArmSetpoint.STOWED)).withName("intakeArmStow");
+        return this.runOnce(() -> io.setSetpoint(IntakeArmSetpoint.STOWED)).withName("intakeArmStow");
     }
 }
