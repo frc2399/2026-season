@@ -1,7 +1,5 @@
 package frc.robot.vision;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
@@ -34,11 +32,12 @@ public final class VisionPoseEstimator {
     private static Angle CAMERA_YAW_MAIN;
 
     private static Angle CAMERA_PITCH_SECONDARY; // 0 = horizontal, positive = leaning back
-    private static Distance X_ROBOT_TO_CAMERA_OFFSET_SECONDARY; // positive = in front of robot center
-    private static Distance Y_ROBOT_TO_CAMERA_OFFSET_SECONDARY; // positive = left of robot centerline
+    private static Distance
+            X_ROBOT_TO_CAMERA_OFFSET_SECONDARY; // positive = in front of robot center
+    private static Distance
+            Y_ROBOT_TO_CAMERA_OFFSET_SECONDARY; // positive = left of robot centerline
     private static Distance Z_ROBOT_TO_CAMERA_OFFSET_SECONDARY; // ground plane = 0
     private static Angle CAMERA_YAW_SECONDARY;
-    
 
     /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
@@ -71,7 +70,10 @@ public final class VisionPoseEstimator {
     private final StructPublisher<Pose2d> mt2PublisherMain;
     private final StructPublisher<Pose2d> mt2PublisherSecondary;
     private final DriveBase driveBase;
-    private final String limelightNameMain, limelightHostnameMain, limelightNameSecondary, limelightHostnameSecondary;
+    private final String limelightNameMain,
+            limelightHostnameMain,
+            limelightNameSecondary,
+            limelightHostnameSecondary;
 
     /**
      * Create a VisionPoseEstimator
@@ -83,19 +85,23 @@ public final class VisionPoseEstimator {
     public VisionPoseEstimator(DriveBase driveBase, RobotType robot) {
         this.driveBase = driveBase;
         this.limelightNameMain = CameraConfig.LIMELIGHT_NAME;
-        this.limelightHostnameMain = "limelight" + (limelightNameMain != "" ? "-" + limelightNameMain : "");
+        this.limelightHostnameMain =
+                "limelight" + (limelightNameMain != "" ? "-" + limelightNameMain : "");
         this.limelightNameSecondary = CameraConfig.SECOND_LIMELIGHT_NAME;
-        this.limelightHostnameSecondary = "limelight" + (limelightNameSecondary != "" ? "-" + limelightNameSecondary : "");
+        this.limelightHostnameSecondary =
+                "limelight" + (limelightNameSecondary != "" ? "-" + limelightNameSecondary : "");
 
         mt2PublisherMain =
                 NetworkTableInstance.getDefault()
-                        .getStructTopic("VisionPoseEstimator/" + this.limelightNameMain, Pose2d.struct)
+                        .getStructTopic(
+                                "VisionPoseEstimator/" + this.limelightNameMain, Pose2d.struct)
                         .publish();
         mt2PublisherMain.setDefault(new Pose2d());
 
-        mt2PublisherSecondary = 
+        mt2PublisherSecondary =
                 NetworkTableInstance.getDefault()
-                        .getStructTopic("VisionPoseEstimator/" + this.limelightNameSecondary, Pose2d.struct)
+                        .getStructTopic(
+                                "VisionPoseEstimator/" + this.limelightNameSecondary, Pose2d.struct)
                         .publish();
         mt2PublisherSecondary.setDefault(new Pose2d());
 
@@ -117,15 +123,18 @@ public final class VisionPoseEstimator {
                         X_ROBOT_TO_CAMERA_OFFSET_MAIN.in(Meters),
                         Y_ROBOT_TO_CAMERA_OFFSET_MAIN.in(Meters),
                         Z_ROBOT_TO_CAMERA_OFFSET_MAIN.in(Meters),
-                        new Rotation3d(0, CAMERA_PITCH_MAIN.in(Radians), CAMERA_YAW_MAIN.in(Radians)));
+                        new Rotation3d(
+                                0, CAMERA_PITCH_MAIN.in(Radians), CAMERA_YAW_MAIN.in(Radians)));
 
         ROBOT_TO_CAMERA_SECONDARY =
                 new Transform3d(
                         X_ROBOT_TO_CAMERA_OFFSET_SECONDARY.in(Meters),
                         Y_ROBOT_TO_CAMERA_OFFSET_SECONDARY.in(Meters),
                         Z_ROBOT_TO_CAMERA_OFFSET_SECONDARY.in(Meters),
-                        new Rotation3d(0, CAMERA_PITCH_SECONDARY.in(Radians), CAMERA_YAW_SECONDARY.in(Radians))
-                );
+                        new Rotation3d(
+                                0,
+                                CAMERA_PITCH_SECONDARY.in(Radians),
+                                CAMERA_YAW_SECONDARY.in(Radians)));
 
         LimelightHelpers.setCameraPose_RobotSpace(
                 limelightNameMain,
@@ -137,12 +146,12 @@ public final class VisionPoseEstimator {
                 Math.toDegrees(ROBOT_TO_CAMERA_MAIN.getRotation().getZ()));
 
         LimelightHelpers.setCameraPose_RobotSpace(
-                limelightNameSecondary, 
-                ROBOT_TO_CAMERA_SECONDARY.getX(), 
-                ROBOT_TO_CAMERA_SECONDARY.getY(), 
-                ROBOT_TO_CAMERA_SECONDARY.getZ(), 
-                Math.toDegrees(ROBOT_TO_CAMERA_SECONDARY.getRotation().getX()), 
-                Math.toDegrees(ROBOT_TO_CAMERA_SECONDARY.getRotation().getY()), 
+                limelightNameSecondary,
+                ROBOT_TO_CAMERA_SECONDARY.getX(),
+                ROBOT_TO_CAMERA_SECONDARY.getY(),
+                ROBOT_TO_CAMERA_SECONDARY.getZ(),
+                Math.toDegrees(ROBOT_TO_CAMERA_SECONDARY.getRotation().getX()),
+                Math.toDegrees(ROBOT_TO_CAMERA_SECONDARY.getRotation().getY()),
                 Math.toDegrees(ROBOT_TO_CAMERA_SECONDARY.getRotation().getZ()));
     }
 
@@ -196,8 +205,9 @@ public final class VisionPoseEstimator {
                                             stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
                         });
         getPoseEstimate(limelightNameSecondary)
-                .ifPresent((pe) -> {
-                        mt2PublisherSecondary.set(pe.pose);
+                .ifPresent(
+                        (pe) -> {
+                            mt2PublisherSecondary.set(pe.pose);
                             // LimelightHelpers doesn't expose a helper method for these, layout is:
                             // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
                             // MT2roll,
@@ -210,6 +220,6 @@ public final class VisionPoseEstimator {
                                     pe.timestampSeconds,
                                     VecBuilder.fill(
                                             stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
-                });
+                        });
     }
 }

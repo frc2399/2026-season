@@ -18,8 +18,10 @@ public class CameraConfig {
     public static final String SECOND_LIMELIGHT_NAME;
     public static final Angle SECOND_CAMERA_PITCH; // 0 = horizontal; positive = leaning back
     public static final Angle SECOND_CAMERA_YAW;
-    public static final Distance SECOND_X_ROBOT_TO_CAMERA_OFFSET; // positive = in front of robot center
-    public static final Distance SECOND_Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
+    public static final Distance
+            SECOND_X_ROBOT_TO_CAMERA_OFFSET; // positive = in front of robot center
+    public static final Distance
+            SECOND_Y_ROBOT_TO_CAMERA_OFFSET; // positive = left of robot centerline
     public static final Distance SECOND_Z_ROBOT_TO_CAMERA_OFFSET; // GROUND plane = 0 (not bellypan)
 
     static {
