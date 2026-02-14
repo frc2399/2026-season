@@ -760,7 +760,7 @@ public class LimelightHelpers {
         RawDetection[] rawDetections = new RawDetection[numDetections];
 
         for (int i = 0; i < numDetections; i++) {
-            int baseIndex = i * valsPerEntry; // Starting spindex for this detection's data
+            int baseIndex = i * valsPerEntry; // Starting index for this detection's data
             int classId = (int) extractArrayEntry(rawDetectionArray, baseIndex);
             double txnc = extractArrayEntry(rawDetectionArray, baseIndex + 1);
             double tync = extractArrayEntry(rawDetectionArray, baseIndex + 2);
@@ -984,10 +984,10 @@ public class LimelightHelpers {
     }
 
     /**
-     * Gets the classifier class spindex from the currently running neural classifier pipeline
+     * Gets the classifier class index from the currently running neural classifier pipeline
      *
      * @param limelightName Name of the Limelight camera
-     * @return Class spindex from classifier pipeline
+     * @return Class index from classifier pipeline
      */
     public static int getClassifierClassIndex(String limelightName) {
         double[] t2d = getT2DArray(limelightName);

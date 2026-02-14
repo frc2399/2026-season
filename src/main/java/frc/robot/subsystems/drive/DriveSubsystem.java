@@ -34,7 +34,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -44,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import java.util.function.BooleanSupplier;
@@ -54,6 +54,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
     private boolean atGoal = true;
     private BooleanSupplier isBlueAlliance;
+    private Alliance alliance;
+    private boolean isAutoOrienting = false;
 
     private DriveSubsystemStates states = new DriveSubsystemStates();
 
@@ -85,8 +87,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private final Distance WHEEL_BASE;
     private final LinearVelocity MAX_LINEAR_SPEED;
     private final AngularVelocity MAX_ANGULAR_VELOCITY;
-
-    // Distance between front and back wheels on robot
 
     private final Translation2d FRONT_LEFT_OFFSET;
     private final Translation2d REAR_LEFT_OFFSET;
@@ -313,14 +313,16 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             DoubleSupplier xSpeed,
             DoubleSupplier ySpeed,
             DoubleSupplier rotRate,
-            Boolean fieldRelative) {
+            Boolean fieldRelative,
+            BooleanSupplier shouldAutoOrient) {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == Alliance.Red) {
+                            if (alliance == Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
+
+                            isAutoOrienting = shouldAutoOrient.getAsBoolean();
 
                             double r = Math.hypot(xSpeed.getAsDouble(), ySpeed.getAsDouble());
                             double polarAngle =
@@ -334,11 +336,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             }
 
                             double newRotRate =
-                                    getHeadingCorrectionRotRate(
+                                    getRotRate(
                                             currentAngle,
                                             Math.pow(rotRate.getAsDouble(), 5),
                                             polarXSpeed,
-                                            polarYSpeed);
+                                            polarYSpeed,
+                                            shouldAutoOrient);
 
                             // Convert the commanded speeds into the correct units for the
                             // drivetrain
@@ -362,8 +365,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 xSpeedDelivered, ySpeedDelivered, rotRateDelivered);
                             }
 
-                            SmartDashboard.putNumber("x speed delivered", xSpeedDelivered);
-                            SmartDashboard.putNumber("y speed delivered", ySpeedDelivered);
+                            SmartDashboard.putNumber("drive/xSpeedDelivered", xSpeedDelivered);
+                            SmartDashboard.putNumber("drive/ySpeedDelivered", ySpeedDelivered);
+                            SmartDashboard.putNumber("drive/PolarAngle", polarAngle);
 
                             var swerveModuleStates =
                                     DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
@@ -424,6 +428,21 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     //                 field2d.getObject("ROBOT path").setPoses(poses);
     //         });
     // }
+    private double getRotRate(
+            double currentAngle,
+            double rotRate,
+            double polarXSpeed,
+            double polarYSpeed,
+            BooleanSupplier shouldAutoAlign) {
+        if (shouldAutoAlign.getAsBoolean()) {
+            return AutoAlignUtil.getAutoOrientRotRate(
+                    () -> robotPose,
+                    RebuiltVisionUtil.getHubPose(),
+                    TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
+        } else {
+            return getHeadingCorrectionRotRate(currentAngle, rotRate, polarXSpeed, polarYSpeed);
+        }
+    }
 
     private double getHeadingCorrectionRotRate(
             double currentAngle, double rotRate, double polarXSpeed, double polarYSpeed) {
@@ -502,8 +521,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == Alliance.Blue) {
+                            if (alliance == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
@@ -520,7 +538,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                     goalPose.get().getRotation().getDegrees());
 
                             ChassisSpeeds alignmentSpeeds =
-                                    DriveToPoseUtil.getDriveToPoseVelocities(
+                                    AutoAlignUtil.getDriveToPoseVelocities(
                                             () -> robotPose, goalPose);
 
                             // tolerances were accounted for in getDriveToPoseVelocities
@@ -562,6 +580,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // advantagescope
         posePublisher.set(states.pose);
 
+        SmartDashboard.putBoolean("vision/orient/shouldAutoOrient", isAutoOrienting);
         SmartDashboard.putNumber("drive/Pose X(m)", states.pose.getX());
         SmartDashboard.putNumber("drive/Pose Y(m)", states.pose.getY());
         SmartDashboard.putNumber("drive/Pose Theta(deg)", states.poseTheta);
@@ -570,5 +589,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
         SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
+    }
+
+    public void setAlliance(Alliance allianceColor) {
+        alliance = allianceColor;
     }
 }
