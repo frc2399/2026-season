@@ -1,5 +1,6 @@
 package frc.robot.vision;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
@@ -19,6 +20,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.SubsystemFactory.RobotType;
 import frc.robot.subsystems.drive.DriveConfig;
 import java.util.Optional;
@@ -110,6 +112,8 @@ public final class VisionPoseEstimator {
         X_ROBOT_TO_CAMERA_OFFSET_MAIN = CameraConfig.X_ROBOT_TO_CAMERA_OFFSET;
         Y_ROBOT_TO_CAMERA_OFFSET_MAIN = CameraConfig.Y_ROBOT_TO_CAMERA_OFFSET;
         Z_ROBOT_TO_CAMERA_OFFSET_MAIN = CameraConfig.Z_ROBOT_TO_CAMERA_OFFSET; // ground plane = 0
+
+        SmartDashboard.putNumber("vision/cameraConfig/pitch", CAMERA_PITCH_MAIN.in(Degrees));
 
         CAMERA_PITCH_SECONDARY = CameraConfig.SECOND_CAMERA_PITCH;
         CAMERA_YAW_SECONDARY = CameraConfig.SECOND_CAMERA_YAW;
