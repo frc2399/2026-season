@@ -9,9 +9,9 @@ public interface SpindexerIO {
     public void updateStates(SpindexerIOState state);
 
     public static class SpindexerIOState {
-        public double SpindexerDesiredSpeed = 0;
-        public double SpindexerActualSpeed = 0;
-        public double SpindexerAppliedVoltage = 0;
-        public double SpindexerCurrent = 0;
+        public double spindexerDesiredSpeed = 0;
+        public double spindexerActualSpeed = 0;
+        public double spindexerAppliedVoltage = 0;
+        public double spindexerCurrent = 0;
     }
 }

@@ -1,9 +1,7 @@
 package frc.robot.subsystems.spindexer;
 
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.spindexer.SpindexerIO.SpindexerIOState;
 
@@ -28,9 +26,9 @@ public class SpindexerSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         io.updateStates(spindexerState);
-        SmartDashboard.putNumber("Spindexer/desiredspeed", spindexerState.SpindexerDesiredSpeed);
-        SmartDashboard.putNumber("Spindexer/actualspeed", spindexerState.SpindexerActualSpeed);
-        SmartDashboard.putNumber("Spindexer/drivevoltage", spindexerState.driveVoltage);
-        SmartDashboard.putNumber("Spindexer/drivecurrent", spindexerState.driveCurrent);
+        SmartDashboard.putNumber("Spindexer/desiredSpeed", spindexerState.spindexerDesiredSpeed);
+        SmartDashboard.putNumber("Spindexer/actualSpeed", spindexerState.spindexerActualSpeed);
+        SmartDashboard.putNumber("Spindexer/driveVoltage", spindexerState.spindexerAppliedVoltage);
+        SmartDashboard.putNumber("Spindexer/driveCurrent", spindexerState.spindexerCurrent);
     }
 }
