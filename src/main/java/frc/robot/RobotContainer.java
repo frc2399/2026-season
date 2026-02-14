@@ -65,6 +65,7 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindingsDriver();
         setUpAuton();
+        SmartDashboard.putData("Driver Controller", driverController.getHID());
     }
 
     public void disableSubsystems() {
