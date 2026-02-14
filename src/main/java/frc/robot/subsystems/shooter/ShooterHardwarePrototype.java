@@ -32,13 +32,20 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
-    private final double SHOOTER_P = 0;
-    private final double SHOOTER_D = 0;
-    private final double SHOOTER_KS = 0.1;
-    private final double SHOOTER_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private final double SHOOTER_TOP_P = 0;
+    private final double SHOOTER_TOP_D = 0;
+    private final double SHOOTER_TOP_KS = 0.12;
+    private final double SHOOTER_TOP_KV = 0;
+    // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private final double SHOOTER_BOTTOM_P = 0;
+    private final double SHOOTER_BOTTOM_D = 0;
+    private final double SHOOTER_BOTTOM_KS = 0.25;
+    private final double SHOOTER_BOTTOM_KV = 0;
+    // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
-    private final ClosedLoopConfig closedLoopConfigShooter = new ClosedLoopConfig();
+    private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
+    private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
+
     private RelativeEncoder shooterBottomEncoder;
     private RelativeEncoder shooterTopEncoder;
 
@@ -68,15 +75,16 @@ public class ShooterHardwarePrototype implements ShooterIO {
 
         shooterBottomMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         shooterTopMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        shooterBottomMotorConfig.closedLoop.pid(SHOOTER_P, 0, SHOOTER_D);
-        shooterTopMotorConfig.closedLoop.pid(SHOOTER_P, 0, SHOOTER_D);
+        shooterBottomMotorConfig.closedLoop.pid(SHOOTER_BOTTOM_P, 0, SHOOTER_BOTTOM_D);
+        shooterTopMotorConfig.closedLoop.pid(SHOOTER_TOP_P, 0, SHOOTER_TOP_D);
         shooterBottomMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
         shooterTopMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
-        closedLoopConfigShooter.feedForward.sva(SHOOTER_KS, SHOOTER_KV, 0);
+        closedLoopConfigShooterTop.feedForward.sva(SHOOTER_TOP_KS, SHOOTER_TOP_KV, 0);
+        closedLoopConfigShooterBottom.feedForward.sva(SHOOTER_BOTTOM_KS, SHOOTER_BOTTOM_KV, 0);
 
-        shooterBottomMotorConfig.apply(closedLoopConfigShooter);
-        shooterTopMotorConfig.apply(closedLoopConfigShooter);
+        shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
+        shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
 
         shooterBottomSparkFlex =
                 new SparkFlex(
