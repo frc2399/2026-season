@@ -14,6 +14,10 @@ import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterPlacebo;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -26,13 +30,15 @@ public class SubsystemFactory {
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "";
 
     public enum RobotType {
         MOZART,
         BUBBLES,
         SIM,
         BETA,
-        COMP
+        COMP,
+        PROTOTYPE
     }
 
     private static RobotType robotType;
@@ -53,6 +59,8 @@ public class SubsystemFactory {
             robotType = RobotType.BUBBLES;
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
             robotType = RobotType.MOZART;
+        } else if (serialNum.equals(PROTOTYPE_SERIAL_NUMBER)) {
+            robotType = RobotType.PROTOTYPE;
         } else {
             throw new RuntimeException(
                     "UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: "
@@ -151,7 +159,15 @@ public class SubsystemFactory {
         }
     }
 
+    public ShooterSubsystem buildShooter() {
+        return new ShooterSubsystem(new ShooterPlacebo());
+    }
+
     public IndexerSubsystem buildIndexer() {
         return new IndexerSubsystem(new IndexerPlacebo());
+    }
+
+    public ShooterIndexerSubsystem buildShooterIndexer() {
+        return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
     }
 }

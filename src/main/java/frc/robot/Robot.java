@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     @Override
@@ -95,6 +96,7 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        m_robotContainer.visionPoseEstimator.periodic();
         m_robotContainer.setAlerts();
     }
 

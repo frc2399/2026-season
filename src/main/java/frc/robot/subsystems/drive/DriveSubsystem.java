@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import java.util.function.BooleanSupplier;
@@ -54,6 +55,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
     private boolean atGoal = true;
     private BooleanSupplier isBlueAlliance;
+    private boolean isAutoOrienting = false;
 
     private DriveSubsystemStates states = new DriveSubsystemStates();
 
@@ -85,8 +87,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private final Distance WHEEL_BASE;
     private final LinearVelocity MAX_LINEAR_SPEED;
     private final AngularVelocity MAX_ANGULAR_VELOCITY;
-
-    // Distance between front and back wheels on robot
 
     private final Translation2d FRONT_LEFT_OFFSET;
     private final Translation2d REAR_LEFT_OFFSET;
@@ -313,7 +313,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             DoubleSupplier xSpeed,
             DoubleSupplier ySpeed,
             DoubleSupplier rotRate,
-            Boolean fieldRelative) {
+            Boolean fieldRelative,
+            BooleanSupplier shouldAutoOrient) {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
@@ -321,6 +322,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                     && DriverStation.getAlliance().get() == Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
+
+                            isAutoOrienting = shouldAutoOrient.getAsBoolean();
 
                             double r = Math.hypot(xSpeed.getAsDouble(), ySpeed.getAsDouble());
                             double polarAngle =
@@ -334,11 +337,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             }
 
                             double newRotRate =
-                                    getHeadingCorrectionRotRate(
+                                    getRotRate(
                                             currentAngle,
                                             Math.pow(rotRate.getAsDouble(), 5),
                                             polarXSpeed,
-                                            polarYSpeed);
+                                            polarYSpeed,
+                                            shouldAutoOrient);
 
                             // Convert the commanded speeds into the correct units for the
                             // drivetrain
@@ -424,6 +428,21 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     //                 field2d.getObject("ROBOT path").setPoses(poses);
     //         });
     // }
+    private double getRotRate(
+            double currentAngle,
+            double rotRate,
+            double polarXSpeed,
+            double polarYSpeed,
+            BooleanSupplier shouldAutoAlign) {
+        if (shouldAutoAlign.getAsBoolean()) {
+            return AutoAlignUtil.getAutoOrientRotRate(
+                    () -> robotPose,
+                    RebuiltVisionUtil.getHubPose(),
+                    TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
+        } else {
+            return getHeadingCorrectionRotRate(currentAngle, rotRate, polarXSpeed, polarYSpeed);
+        }
+    }
 
     private double getHeadingCorrectionRotRate(
             double currentAngle, double rotRate, double polarXSpeed, double polarYSpeed) {
@@ -520,7 +539,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                     goalPose.get().getRotation().getDegrees());
 
                             ChassisSpeeds alignmentSpeeds =
-                                    DriveToPoseUtil.getDriveToPoseVelocities(
+                                    AutoAlignUtil.getDriveToPoseVelocities(
                                             () -> robotPose, goalPose);
 
                             // tolerances were accounted for in getDriveToPoseVelocities
@@ -562,6 +581,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // advantagescope
         posePublisher.set(states.pose);
 
+        SmartDashboard.putBoolean("vision/orient/shouldAutoOrient", isAutoOrienting);
         SmartDashboard.putNumber("drive/Pose X(m)", states.pose.getX());
         SmartDashboard.putNumber("drive/Pose Y(m)", states.pose.getY());
         SmartDashboard.putNumber("drive/Pose Theta(deg)", states.poseTheta);
