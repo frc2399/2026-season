@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
+
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
@@ -42,6 +45,8 @@ public class Robot extends TimedRobot {
         DriverStation.startDataLog(DataLogManager.getLog());
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         DriverStation.silenceJoystickConnectionWarning(true);
+        FollowPathCommand.warmupCommand();
+        PathfindingCommand.warmupCommand();
     }
 
     /**
