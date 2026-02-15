@@ -20,7 +20,7 @@ public class AutonCommandFactory {
             new PathConstraints(0.8, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
     public final PathConstraints bumpAndDepotConstraints =
-            new PathConstraints(0.25, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
+            new PathConstraints(1.2, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
 
     public AutonCommandFactory(DriveSubsystem drive, IntakeSubsystem intake) {
         this.drive = drive;
@@ -58,8 +58,10 @@ public class AutonCommandFactory {
                 // move into intaking position while driving
                 drive.driveToPoseOnExecute(),
                 buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
-                intake.runIntake().withTimeout(1),
-                intake.defaultBehavior().withTimeout(0.01),
+                Commands.parallel(
+                        intake.runIntake().withTimeout(5),
+                        buildPathDeferred(
+                                FieldConstants.PoseConstants.IN_NEUTRAL_ZONE, constraints)),
                 buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
                 // get into shooting position while driving
                 drive.driveToPoseOnExecute(),
