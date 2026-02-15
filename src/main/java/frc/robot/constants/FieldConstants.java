@@ -25,7 +25,7 @@ public final class FieldConstants {
         public static final Pose NEUTRAL_ZONE_BORDER =
                 new Pose("neutralZoneBorder", new Pose2d(6.86, 5.356, Rotation2d.fromDegrees(180)));
         public static final Pose IN_NEUTRAL_ZONE =
-                new Pose("inNeutralZone", new Pose2d(7, 5.356, Rotation2d.fromDegrees(180)));
+                new Pose("inNeutralZone", new Pose2d(8.63, 5.356, Rotation2d.fromDegrees(180)));
         public static final Pose BUMP_STARTING_LINE =
                 new Pose("bumpStartingLine", new Pose2d(3.482, 5.356, Rotation2d.fromDegrees(180)));
         public static final Pose OVER_THE_BUMP =

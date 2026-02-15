@@ -17,10 +17,13 @@ public class AutonCommandFactory {
     private final IntakeSubsystem intake;
 
     public final PathConstraints constraints =
-            new PathConstraints(0.8, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
+        new PathConstraints(2, 5, Units.degreesToRadians(720), Units.degreesToRadians(720))
+    public final PathConstraints intakeConstraints =
+            new PathConstraints(
+                    0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
     public final PathConstraints bumpAndDepotConstraints =
-            new PathConstraints(1.2, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
+            new PathConstraints(1.5, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
 
     public AutonCommandFactory(DriveSubsystem drive, IntakeSubsystem intake) {
         this.drive = drive;
@@ -57,11 +60,13 @@ public class AutonCommandFactory {
                         FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints),
                 // move into intaking position while driving
                 drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
+                // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(5),
+                        intake.runIntake().withTimeout(6),
                         buildPathDeferred(
-                                FieldConstants.PoseConstants.IN_NEUTRAL_ZONE, constraints)),
+                                FieldConstants.PoseConstants.IN_NEUTRAL_ZONE, intakeConstraints)),
+                intake.defaultBehavior().withTimeout(0.01),
+                // drive.driveToPoseOnExecute()),
                 buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
                 // get into shooting position while driving
                 drive.driveToPoseOnExecute(),

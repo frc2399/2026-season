@@ -70,10 +70,12 @@ public class IntakeHardware implements IntakeIO {
 
     public void runIntake() {
         intakePidController.setSetpoint(
-                0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
+                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond),
+                ControlType.kVelocity);
 
         SmartDashboard.putNumber(
-                "Intake/desiredspeed", 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+                "Intake/desiredspeed",
+                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
     }
 
