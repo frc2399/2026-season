@@ -65,8 +65,11 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
                 new SparkMax(
                         RobotConstants.MotorIdConstants.SHOOTER_INDEXER_CAN_ID,
                         MotorType.kBrushless);
-        
-        shooterIndexerSparkMax.configure(shooterIndexerSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        shooterIndexerSparkMax.configure(
+                shooterIndexerSparkMaxConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
 
         shooterIndexerPidController = shooterIndexerSparkMax.getClosedLoopController();
 
@@ -76,18 +79,21 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
     public void runShooterIndexer() {
         desiredVelocity =
                 RadiansPerSecond.of(0.5 * MotorConstants.NEO_FREE_SPEED.in(RadiansPerSecond));
-        shooterIndexerPidController.setSetpoint(desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        shooterIndexerPidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void backwardsRunShooterIndexer() {
-        desiredVelocity = RadiansPerSecond.of(-0.5 * MotorConstants.NEO_FREE_SPEED.in(RadiansPerSecond));
-        shooterIndexerPidController.setSetpoint(desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        desiredVelocity =
+                RadiansPerSecond.of(-0.5 * MotorConstants.NEO_FREE_SPEED.in(RadiansPerSecond));
+        shooterIndexerPidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
-
 
     public void defaultBehavior() {
         desiredVelocity = RadiansPerSecond.of(0);
-        shooterIndexerPidController.setSetpoint(desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        shooterIndexerPidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void updateStates(ShooterIndexerIOState state) {

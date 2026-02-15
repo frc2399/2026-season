@@ -9,8 +9,6 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
-import frc.robot.subsystems.indexer.IndexerPlacebo;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -18,6 +16,8 @@ import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerPlacebo;
+import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -48,6 +48,9 @@ public class SubsystemFactory {
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
+        } else if (serialNum == null) {
+            robotType = null;
+            throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
@@ -138,8 +141,8 @@ public class SubsystemFactory {
         return new ShooterSubsystem(new ShooterPlacebo());
     }
 
-    public IndexerSubsystem buildIndexer() {
-        return new IndexerSubsystem(new IndexerPlacebo());
+    public SpindexerSubsystem buildIndexer() {
+        return new SpindexerSubsystem(new SpindexerPlacebo());
     }
 
     public ShooterIndexerSubsystem buildShooterIndexer() {
