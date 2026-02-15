@@ -12,6 +12,7 @@ import frc.robot.subsystems.drive.gyro.GyroPlacebo;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBeta;
@@ -32,7 +33,7 @@ public class SubsystemFactory {
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
-    private static final String PROTOTYPE_SERIAL_NUMBER = "";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
 
     public enum RobotType {
         MOZART,
@@ -140,7 +141,11 @@ public class SubsystemFactory {
     }
 
     public ShooterSubsystem buildShooter() {
-        return new ShooterSubsystem(new ShooterPlacebo());
+        if (robotType == RobotType.PROTOTYPE) {
+            return new ShooterSubsystem(new ShooterHardwarePrototype());
+        } else {
+            return new ShooterSubsystem(new ShooterPlacebo());
+        }
     }
 
     public SpindexerSubsystem buildIndexer() {
