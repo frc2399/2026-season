@@ -45,36 +45,36 @@ public class GameState {
         UNDEFINED;
     }
 
-    public static Period getPeriod() {
+    public static Period getPeriod(double shooterTimeDelay) {
         if (DriverStation.isAutonomous()) {
             return Period.AUTO;
         }
         double timeRemaining;
         timeRemaining = DriverStation.getMatchTime();
-        if (timeRemaining < 30) {
+        if (timeRemaining < 30 - shooterTimeDelay) {
             return Period.ENDGAME;
         }
-        if (timeRemaining < 55) {
+        if (timeRemaining < 55 - shooterTimeDelay) {
             return Period.SHIFT_4;
         }
-        if (timeRemaining < 80) {
+        if (timeRemaining < 80 - shooterTimeDelay) {
             return Period.SHIFT_3;
         }
-        if (timeRemaining < 105) {
+        if (timeRemaining < 105 - shooterTimeDelay) {
             return Period.SHIFT_2;
         }
-        if (timeRemaining < 130) {
+        if (timeRemaining < 13 - shooterTimeDelay) {
             return Period.SHIFT_1;
         }
-        if (timeRemaining < 140) {
+        if (timeRemaining < 140 - shooterTimeDelay) {
             return Period.TRANSITION;
         } else {
             return Period.UNDEFINED;
         }
     }
 
-    public static boolean isHubActive() {
-        Period period = getPeriod();
+    public static boolean isHubActive(double shooterTimeDelay) {
+        Period period = getPeriod(shooterTimeDelay);
         if (period == Period.AUTO || period == Period.TRANSITION || period == Period.ENDGAME) {
             return true;
         } else if (period == Period.SHIFT_1 || period == Period.SHIFT_3) {
