@@ -32,12 +32,12 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final double MAX_OUTPUT_RANGE = 1;
     private final double SHOOTER_TOP_P = 0;
     private final double SHOOTER_TOP_D = 0;
-    private final double SHOOTER_TOP_KS = 0.12;
+    private final double SHOOTER_TOP_KS = 0.01;
     private final double SHOOTER_TOP_KV = 0.01;
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private final double SHOOTER_BOTTOM_P = 0;
     private final double SHOOTER_BOTTOM_D = 0;
-    private final double SHOOTER_BOTTOM_KS = 0.25;
+    private final double SHOOTER_BOTTOM_KS = 0.01;
     private final double SHOOTER_BOTTOM_KV = 0.01;
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
