@@ -88,6 +88,7 @@ public class RobotContainer {
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
         spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
+        shooterIndexerSubsystem.setDefaultCommand(shooterIndexerSubsystem.defaultBehavior());
     }
 
     private void configureButtonBindingsDriver() {
