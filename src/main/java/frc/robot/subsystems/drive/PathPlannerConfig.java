@@ -51,7 +51,7 @@ public final class PathPlannerConfig {
                 DRIVE_MOTOR = null;
                 DRIVE_CURRENT_LIMIT = 0;
                 NUM_MOTORS = 0;
-                MODULE_OFFSETS = new Translation2d()
+                MODULE_OFFSETS = new Translation2d();
                 break;
             case BETA:
                 ROBOT_MASS = Kilograms.of(0);
