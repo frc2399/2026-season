@@ -48,6 +48,10 @@ public class SubsystemFactory {
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
+        } else if (serialNum == null) {
+            robotType = null;
+         throw new RuntimeException(
+                    "NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
