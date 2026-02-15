@@ -11,11 +11,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -34,6 +29,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -52,10 +48,11 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
-import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import javax.lang.model.util.ElementScanner14;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose
@@ -71,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
 
-    private RobotConfig config;
+    // private RobotConfig config;
 
     // debouncer for turning
     private double ROTATION_DEBOUNCE_TIME = 0.5;
@@ -100,16 +97,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private final Translation2d REAR_RIGHT_OFFSET;
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
-
-    private static final double TRANSLATION_P = 1.0;
-    private static final double TRANSLATION_I = 0.0;
-    private static final double TRANSLATION_D = 0.0;
-
-    private static final double ROTATION_P = 5.0;
-    private static final double ROTATION_I = 0.0;
-    private static final double ROTATION_D = 0.0;
-
-    private Optional<Alliance> alliance = DriverStation.getAlliance();
 
     // Slew rate filter variables for controlling lateral acceleration
     private double desiredAngle = 0;
@@ -217,31 +204,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         .getStructTopic("DriveSubsystem/EstimatedPose", Pose2d.struct)
                         .publish();
         posePublisher.setDefault(new Pose2d());
-
-        try {
-            config = RobotConfig.fromGUISettings();
-            AutoBuilder.configure(
-                    this::getPose,
-                    this::resetOdometry,
-                    this::getRobotRelativeSpeeds,
-                    (speeds, feedforwards) -> setRobotRelativeSpeeds(speeds),
-                    new PPHolonomicDriveController(
-                            new PIDConstants(TRANSLATION_P, TRANSLATION_I, TRANSLATION_D),
-                            new PIDConstants(ROTATION_P, ROTATION_I, ROTATION_D)),
-                    config, // The robot configuration
-                    () -> {
-                        if (alliance.isPresent()) {
-                            return alliance.get() == DriverStation.Alliance.Red;
-                        }
-                        return false;
-                    },
-                    this);
-        } catch (Exception e) {
-            DriverStation.reportError(
-                    "Failed to load Pathplanner config and configure Autobuilder",
-                    e.getStackTrace());
-        }
-        configurePathPlannerLogging();
     }
 
     @Override
@@ -359,7 +321,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
-                            if (alliance.get() == DriverStation.Alliance.Red) {
+                            if (DriverStation.getAlliance().isPresent()
+                                    && DriverStation.getAlliance().get() == Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
 
@@ -406,9 +369,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 xSpeedDelivered, ySpeedDelivered, rotRateDelivered);
                             }
 
-                            SmartDashboard.putNumber("drive/xSpeedDelivered", xSpeedDelivered);
-                            SmartDashboard.putNumber("drive/ySpeedDelivered", ySpeedDelivered);
-                            SmartDashboard.putNumber("drive/PolarAngle", polarAngle);
+                            SmartDashboard.putNumber("x speed delivered", xSpeedDelivered);
+                            SmartDashboard.putNumber("y speed delivered", ySpeedDelivered);
 
                             var swerveModuleStates =
                                     DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
@@ -456,23 +418,19 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         swerveModuleDesiredStatePublisher.set(swerveModuleStates);
     }
 
-    private void configurePathPlannerLogging() {
-        PathPlannerLogging.setLogCurrentPoseCallback(
-                (pose) -> {
-                    field2d.setRobotPose(pose);
-                });
+    // private void configurePathPlannerLogging() {
+    //         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+    //                 field2d.setRobotPose(pose);
+    //         });
 
-        PathPlannerLogging.setLogTargetPoseCallback(
-                (pose) -> {
-                    field2d.getObject("ROBOT target pose").setPose(pose);
-                });
+    //         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+    //                 field2d.getObject("ROBOT target pose").setPose(pose);
+    //         });
 
-        PathPlannerLogging.setLogActivePathCallback(
-                (poses) -> {
-                    field2d.getObject("ROBOT path").setPoses(poses);
-                });
-    }
-
+    //         PathPlannerLogging.setLogActivePathCallback((poses) -> {
+    //                 field2d.getObject("ROBOT path").setPoses(poses);
+    //         });
+    // }
     private double getRotRate(
             double currentAngle,
             double rotRate,
@@ -566,7 +524,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (alliance.get() == Alliance.Blue) {
+                            if (DriverStation.getAlliance().isPresent()
+                                    && DriverStation.getAlliance().get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
@@ -634,9 +593,5 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
         SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
-    }
-
-    public void setAlliance(Optional<Alliance> allianceColor) {
-        alliance = allianceColor;
     }
 }

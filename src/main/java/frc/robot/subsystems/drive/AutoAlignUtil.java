@@ -174,4 +174,6 @@ public class AutoAlignUtil {
             return desiredRotRate;
         }
     }
+
+    public static Angle getDesiredAngleToHub()
 }
