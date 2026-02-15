@@ -25,15 +25,18 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic() {
         io.updateStates(shooterStates);
         SmartDashboard.putNumber(
-                "shoot/topRollerDesiredSpeed", shooterStates.topRollerDesiredSpeed);
-        SmartDashboard.putNumber("topRollerActualSpeed", shooterStates.topRollerActualSpeed);
-        SmartDashboard.putNumber("topRollerCurrent", shooterStates.topRollerCurrent);
-        SmartDashboard.putNumber("topRollerAppliedVoltage", shooterStates.topRollerAppliedVoltage);
+                "shooter/topRollerDesiredSpeed", shooterStates.topRollerDesiredSpeed);
         SmartDashboard.putNumber(
-                "bottomRollerDesiredSpeed", shooterStates.bottomRollerDesiredSpeed);
-        SmartDashboard.putNumber("bottomRollerActualSpeed", shooterStates.bottomRollerActualSpeed);
-        SmartDashboard.putNumber("bottomRollerCurrent", shooterStates.bottomRollerCurrent);
+                "shooter/topRollerActualSpeed", shooterStates.topRollerActualSpeed);
+        SmartDashboard.putNumber("shooter/topRollerCurrent", shooterStates.topRollerCurrent);
         SmartDashboard.putNumber(
-                "bottomRollerAppliedVoltage", shooterStates.bottomRollerAppliedVoltage);
+                "shooter/topRollerAppliedVoltage", shooterStates.topRollerAppliedVoltage);
+        SmartDashboard.putNumber(
+                "shooter/bottomRollerDesiredSpeed", shooterStates.bottomRollerDesiredSpeed);
+        SmartDashboard.putNumber(
+                "shooter/bottomRollerActualSpeed", shooterStates.bottomRollerActualSpeed);
+        SmartDashboard.putNumber("shooter/bottomRollerCurrent", shooterStates.bottomRollerCurrent);
+        SmartDashboard.putNumber(
+                "shooter/bottomRollerAppliedVoltage", shooterStates.bottomRollerAppliedVoltage);
     }
 }

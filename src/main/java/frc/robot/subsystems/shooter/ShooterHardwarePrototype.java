@@ -30,8 +30,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
-    private final int MIN_OUTPUT_RANGE = -1;
-    private final int MAX_OUTPUT_RANGE = 1;
+    private final double MIN_OUTPUT_RANGE = -1;
+    private final double MAX_OUTPUT_RANGE = 1;
     private final double SHOOTER_TOP_P = 0;
     private final double SHOOTER_TOP_D = 0;
     private final double SHOOTER_TOP_KS = 0.12;
@@ -56,8 +56,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
         SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
         SparkMaxConfig shooterTopMotorConfig = new SparkMaxConfig();
 
-        shooterBottomMotorConfig.idleMode(IdleMode.kBrake);
-        shooterTopMotorConfig.idleMode(IdleMode.kBrake);
+        shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
+        shooterTopMotorConfig.idleMode(IdleMode.kCoast);
         shooterBottomMotorConfig.inverted(true);
         shooterTopMotorConfig.inverted(true);
         shooterBottomMotorConfig.smartCurrentLimit(
@@ -114,7 +114,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         desiredBottomVelocity =
                 RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         desiredTopVelocity =
-                RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+                RadiansPerSecond.of(0.5 * MotorConstants.NEO_FREE_SPEED.in(RadiansPerSecond));
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
