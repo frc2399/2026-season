@@ -15,6 +15,8 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBeta;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwarePrototype;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerPlacebo;
@@ -151,6 +153,12 @@ public class SubsystemFactory {
     }
 
     public ShooterIndexerSubsystem buildShooterIndexer() {
-        return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
+        if (robotType == RobotType.PROTOTYPE) {
+            return new ShooterIndexerSubsystem(new ShooterIndexerHardwarePrototype());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterIndexerSubsystem(new ShooterIndexerHardwareBeta());
+        } else {
+            return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
+        }
     }
 }
