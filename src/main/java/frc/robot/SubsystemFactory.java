@@ -12,6 +12,7 @@ import frc.robot.subsystems.drive.gyro.GyroPlacebo;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterHardwareBeta;
 import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -143,6 +144,8 @@ public class SubsystemFactory {
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterSubsystem(new ShooterHardwareBeta());
         } else {
             return new ShooterSubsystem(new ShooterPlacebo());
         }
