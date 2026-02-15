@@ -29,7 +29,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -51,8 +50,6 @@ import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
-import javax.lang.model.util.ElementScanner14;
 
 public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // for drivetopose

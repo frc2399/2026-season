@@ -25,14 +25,12 @@ public class RebuiltVisionUtil {
         }
     }
 
-     public static boolean isShootingAngleAlignedToHub(Pose2d robotPose2d) {
-        Angle robotAngleToHub = ;
-        
-
-
-        if Math.abs ()
-        return true;
-        else
-        return false;
-    }
+     public static boolean isShootingAngleAlignedToHub(Pose2d robotPose2d, Angle desiredAngle) {
+        if (Angle robotAngleToHub = desiredAngle) {}
+            return true;
+     } else {
+            return false;
+     }
 }
+            
+    

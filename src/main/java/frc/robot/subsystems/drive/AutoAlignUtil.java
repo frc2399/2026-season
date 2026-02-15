@@ -17,7 +17,11 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.drive.gyro.Gyro;
+
 import java.util.function.Supplier;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class AutoAlignUtil {
     // profiled pid controllers for driving to a pose and related constants
@@ -175,5 +179,25 @@ public class AutoAlignUtil {
         }
     }
 
-    public static Angle getDesiredAngleToHub()
+    public static Angle getDesiredAngleToHub (Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform) {
+        Pose2d poseToOrientToTarget = robotPose.get().transformBy(offsetTransform);
+        Translation2d targetToRobotTranslation =
+                    orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
+        Angle desiredAngle =
+                    Radians.of(
+                            Math.atan2(
+                                    targetToRobotTranslation.getY(),
+                                    targetToRobotTranslation.getX()));
+        return desiredAngle;
+    }
+
+    public Angle getActualAngleToHub (Class Gyro, Angle getYaw(boolean refresh)) {
+       private final Pigeon2 pigeon;
+       pigeon.getYaw(false).setUpdateFrequency(RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
+
+       Angle actualAngle = gyro.pigeon.getYaw(false){
+        return Degrees.of(pigeon.getYaw(boolean).getValueAsDouble());
+       };
+        return actualAngle;
+    }
 }
