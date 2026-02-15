@@ -41,8 +41,8 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_MIN_OUTPUT = -1;
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
-    private static final double SHOOTER_INDEXER_KS = 0;
-    private static final double SHOOTER_INDEXER_KV = 0;
+    private static final double SHOOTER_INDEXER_KS = 0.01;
+    private static final double SHOOTER_INDEXER_KV = 0.01;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
