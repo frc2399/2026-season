@@ -42,9 +42,11 @@ public class SpindexerHardwareBeta implements SpindexerIO {
 
         spindexSparkFlexConfig.idleMode(IdleMode.kBrake);
         spindexSparkFlexConfig.inverted(true);
-        spindexSparkFlexConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
+        spindexSparkFlexConfig.smartCurrentLimit(
+                (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
-        spindexSparkFlexConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
+        spindexSparkFlexConfig.encoder.positionConversionFactor(
+                ENCODER_POSITION_FACTOR.in(Radians));
         spindexSparkFlexConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
