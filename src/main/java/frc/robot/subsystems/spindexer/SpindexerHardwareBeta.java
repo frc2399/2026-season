@@ -8,19 +8,19 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
-public class SpindexerHardwarePrototype implements SpindexerIO {
+public class SpindexerHardwareBeta implements SpindexerIO {
 
-    private SparkMax spindexerSparkMax;
+    private SparkFlex spindexerSparkFlex;
     private final SparkClosedLoopController spindexerPidController;
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
@@ -37,32 +37,32 @@ public class SpindexerHardwarePrototype implements SpindexerIO {
 
     private AngularVelocity desiredVelocity;
 
-    public SpindexerHardwarePrototype() {
-        SparkMaxConfig spindexSparkMaxConfig = new SparkMaxConfig();
+    public SpindexerHardwareBeta() {
+        SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
 
-        spindexSparkMaxConfig.idleMode(IdleMode.kBrake);
-        spindexSparkMaxConfig.inverted(true);
-        spindexSparkMaxConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
+        spindexSparkFlexConfig.idleMode(IdleMode.kBrake);
+        spindexSparkFlexConfig.inverted(true);
+        spindexSparkFlexConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
 
-        spindexSparkMaxConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
-        spindexSparkMaxConfig.encoder.velocityConversionFactor(
+        spindexSparkFlexConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
+        spindexSparkFlexConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
-        spindexSparkMaxConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        spindexSparkMaxConfig.closedLoop.pid(SPINDEXER_P, 0, SPINDEXER_D);
-        spindexSparkMaxConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
+        spindexSparkFlexConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        spindexSparkFlexConfig.closedLoop.pid(SPINDEXER_P, 0, SPINDEXER_D);
+        spindexSparkFlexConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
         spindexClosedLoopConfig.feedForward.sva(SPINDEXER_KS, SPINDEXER_KV, 0);
 
-        spindexSparkMaxConfig.apply(spindexClosedLoopConfig);
+        spindexSparkFlexConfig.apply(spindexClosedLoopConfig);
 
-        spindexerSparkMax =
-                new SparkMax(
+        spindexerSparkFlex =
+                new SparkFlex(
                         RobotConstants.MotorIdConstants.SPINDEXER_CAN_ID, MotorType.kBrushless);
 
-        spindexerPidController = spindexerSparkMax.getClosedLoopController();
+        spindexerPidController = spindexerSparkFlex.getClosedLoopController();
 
-        spindexerEncoder = spindexerSparkMax.getEncoder();
+        spindexerEncoder = spindexerSparkFlex.getEncoder();
     }
 
     public void runSpindexer() {
@@ -80,7 +80,7 @@ public class SpindexerHardwarePrototype implements SpindexerIO {
     public void updateStates(SpindexerIOState state) {
         state.spindexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
         state.spindexerActualSpeed = spindexerEncoder.getVelocity();
-        state.spindexerCurrent = spindexerSparkMax.getOutputCurrent();
-        state.spindexerAppliedVoltage = spindexerSparkMax.getBusVoltage();
+        state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
+        state.spindexerAppliedVoltage = spindexerSparkFlex.getBusVoltage();
     }
 }
