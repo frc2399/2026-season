@@ -33,12 +33,12 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final double SHOOTER_TOP_P = 0;
     private final double SHOOTER_TOP_D = 0;
     private final double SHOOTER_TOP_KS = 0.12;
-    private final double SHOOTER_TOP_KV = 0;
+    private final double SHOOTER_TOP_KV = 0.01;
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private final double SHOOTER_BOTTOM_P = 0;
     private final double SHOOTER_BOTTOM_D = 0;
     private final double SHOOTER_BOTTOM_KS = 0.25;
-    private final double SHOOTER_BOTTOM_KV = 0;
+    private final double SHOOTER_BOTTOM_KV = 0.01;
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
@@ -60,7 +60,7 @@ public class ShooterHardwareBeta implements ShooterIO {
         shooterTopMotorConfig.inverted(true);
         shooterBottomMotorConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
-        shooterTopMotorConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
+        shooterTopMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
         shooterBottomMotorConfig.encoder.positionConversionFactor(
                 ENCODER_POSITION_FACTOR.in(Radians));
