@@ -15,7 +15,7 @@ public final class FieldConstants {
         public static final Pose DRIVE_STRAIGHT =
                 new Pose("driveStraight", new Pose2d(0.5, 2, Rotation2d.fromDegrees(0)));
         public static final Pose HUB_MIDDLE =
-                new Pose("hubMiddle", new Pose2d(3.488, 4.021, Rotation2d.fromDegrees(0)));
+                new Pose("hubMiddle", new Pose2d(3.488, 4.021, Rotation2d.fromDegrees(180)));
         public static final Pose DEPOT =
                 new Pose("depot", new Pose2d(1.176, 5.958, Rotation2d.fromDegrees(0)));
         public static final Pose DEPOT_TESTING =
