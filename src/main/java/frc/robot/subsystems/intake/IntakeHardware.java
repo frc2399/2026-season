@@ -39,14 +39,15 @@ public class IntakeHardware implements IntakeIO {
 
     private static final double DEFAULT_INTAKE_P = 0;
     private static final double DEFAULT_INTAKE_KS = 0.1;
-    private static final double DEFAULT_INTAKE_KV = 0.1;
+    private static final double DEFAULT_INTAKE_KV =
+            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
     private static final TunableNumber TUNABLE_INTAKE_P =
-            new TunableNumber("Intake/turning_p", DEFAULT_INTAKE_P, true);
+            new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
     private static final TunableNumber TUNABLE_INTAKE_KS =
-            new TunableNumber("Intake/turning_ks", DEFAULT_INTAKE_KS, true);
+            new TunableNumber("Intake/intake_ks", DEFAULT_INTAKE_KS, true);
     private static final TunableNumber TUNABLE_INTAKE_KV =
-            new TunableNumber("Intake/turning_kv", DEFAULT_INTAKE_KV, true);
+            new TunableNumber("Intake/intake_kv", DEFAULT_INTAKE_KV, true);
 
     private final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
@@ -57,7 +58,7 @@ public class IntakeHardware implements IntakeIO {
 
         intakeMotorConfig.idleMode(IdleMode.kBrake);
         intakeMotorConfig.inverted(true);
-        intakeMotorConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
+        intakeMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
         intakeMotorConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
         intakeMotorConfig.encoder.velocityConversionFactor(
@@ -83,11 +84,18 @@ public class IntakeHardware implements IntakeIO {
 
     public void runIntake() {
         intakePidController.setSetpoint(
-                0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
+                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond),
+                ControlType.kVelocity);
 
         SmartDashboard.putNumber(
-                "Intake/desiredspeed", 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+                "Intake/desiredspeed",
+                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+
+        SmartDashboard.putNumber(
+                "Intake/actualoverdesired",
+                (intakeEncoder.getVelocity())
+                        / (0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)));
     }
 
     public void setZero() {
@@ -100,12 +108,8 @@ public class IntakeHardware implements IntakeIO {
     public void periodicUpdate() {
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
-        if (TUNABLE_INTAKE_P.hasChanged()
-                || TUNABLE_INTAKE_KS.hasChanged()
-                || TUNABLE_INTAKE_KV.hasChanged()) {
-            closedLoopConfigIntake.p(TUNABLE_INTAKE_P.get());
-            closedLoopConfigIntake.p(TUNABLE_INTAKE_KS.get());
-            closedLoopConfigIntake.p(TUNABLE_INTAKE_KV.get());
+        if (TUNABLE_INTAKE_KS.hasChanged()) {
+            closedLoopConfigIntake.feedForward.kS(TUNABLE_INTAKE_KS.get());
             intakeMotorConfig.apply(closedLoopConfigIntake);
             intakeSparkFlex.configure(
                     intakeMotorConfig,
