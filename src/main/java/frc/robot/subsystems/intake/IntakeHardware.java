@@ -20,7 +20,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
-import frc.robot.util.TunableNumber;
 
 public class IntakeHardware implements IntakeIO {
 
@@ -34,7 +33,7 @@ public class IntakeHardware implements IntakeIO {
     private final double INTAKE_P = 0;
     private final double INTAKE_D = 0;
     private final double INTAKE_KS = 0.1;
-    private final double INTAKE_KV = 
+    private final double INTAKE_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
     private static final double DEFAULT_INTAKE_P = 0.1;
@@ -43,11 +42,11 @@ public class IntakeHardware implements IntakeIO {
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
     // private static final TunableNumber TUNABLE_INTAKE_P =
-            // new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
+    // new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
     // private static final TunableNumber TUNABLE_INTAKE_KS =
-            // new TunableNumber("Intake/intake_ks", DEFAULT_INTAKE_KS, true);
+    // new TunableNumber("Intake/intake_ks", DEFAULT_INTAKE_KS, true);
     // private static final TunableNumber TUNABLE_INTAKE_KV =
-            // new TunableNumber("Intake/intake_kv", DEFAULT_INTAKE_KV, true);
+    // new TunableNumber("Intake/intake_kv", DEFAULT_INTAKE_KV, true);
 
     private final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
@@ -109,11 +108,11 @@ public class IntakeHardware implements IntakeIO {
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
         // if (TUNABLE_INTAKE_KS.hasChanged()) {
-            // closedLoopConfigIntake.feedForward.kS(TUNABLE_INTAKE_KS.get());
-            // intakeMotorConfig.apply(closedLoopConfigIntake);
-            // intakeSparkFlex.configure(
-                    // intakeMotorConfig,
-                    // ResetMode.kResetSafeParameters,
-                    // PersistMode.kPersistParameters); } 
-        }
+        // closedLoopConfigIntake.feedForward.kS(TUNABLE_INTAKE_KS.get());
+        // intakeMotorConfig.apply(closedLoopConfigIntake);
+        // intakeSparkFlex.configure(
+        // intakeMotorConfig,
+        // ResetMode.kResetSafeParameters,
+        // PersistMode.kPersistParameters); }
+    }
 }
