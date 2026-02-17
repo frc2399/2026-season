@@ -42,12 +42,12 @@ public class IntakeHardware implements IntakeIO {
     private static final double DEFAULT_INTAKE_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
-    private static final TunableNumber TUNABLE_INTAKE_P =
-            new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
-    private static final TunableNumber TUNABLE_INTAKE_KS =
-            new TunableNumber("Intake/intake_ks", DEFAULT_INTAKE_KS, true);
-    private static final TunableNumber TUNABLE_INTAKE_KV =
-            new TunableNumber("Intake/intake_kv", DEFAULT_INTAKE_KV, true);
+    // private static final TunableNumber TUNABLE_INTAKE_P =
+            // new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
+    // private static final TunableNumber TUNABLE_INTAKE_KS =
+            // new TunableNumber("Intake/intake_ks", DEFAULT_INTAKE_KS, true);
+    // private static final TunableNumber TUNABLE_INTAKE_KV =
+            // new TunableNumber("Intake/intake_kv", DEFAULT_INTAKE_KV, true);
 
     private final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
@@ -108,13 +108,12 @@ public class IntakeHardware implements IntakeIO {
     public void periodicUpdate() {
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
-        if (TUNABLE_INTAKE_KS.hasChanged()) {
-            closedLoopConfigIntake.feedForward.kS(TUNABLE_INTAKE_KS.get());
-            intakeMotorConfig.apply(closedLoopConfigIntake);
-            intakeSparkFlex.configure(
-                    intakeMotorConfig,
-                    ResetMode.kResetSafeParameters,
-                    PersistMode.kPersistParameters);
+        // if (TUNABLE_INTAKE_KS.hasChanged()) {
+            // closedLoopConfigIntake.feedForward.kS(TUNABLE_INTAKE_KS.get());
+            // intakeMotorConfig.apply(closedLoopConfigIntake);
+            // intakeSparkFlex.configure(
+                    // intakeMotorConfig,
+                    // ResetMode.kResetSafeParameters,
+                    // PersistMode.kPersistParameters); } 
         }
-    }
 }
