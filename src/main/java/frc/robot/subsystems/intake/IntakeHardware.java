@@ -30,11 +30,7 @@ public class IntakeHardware implements IntakeIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
-    private final double INTAKE_P = 0;
     private final double INTAKE_D = 0;
-    private final double INTAKE_KS = 0.1;
-    private final double INTAKE_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
     private static final double DEFAULT_INTAKE_P = 0.1;
     private static final double DEFAULT_INTAKE_KS = 0.1;
@@ -64,10 +60,10 @@ public class IntakeHardware implements IntakeIO {
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
         intakeMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        intakeMotorConfig.closedLoop.pid(INTAKE_P, 0, INTAKE_D);
+        intakeMotorConfig.closedLoop.pid(DEFAULT_INTAKE_P, 0, INTAKE_D);
         intakeMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
-        closedLoopConfigIntake.feedForward.sva(INTAKE_KS, INTAKE_KV, 0);
+        closedLoopConfigIntake.feedForward.sva(DEFAULT_INTAKE_KS, DEFAULT_INTAKE_KV, 0);
 
         intakeMotorConfig.apply(closedLoopConfigIntake);
 
@@ -90,11 +86,6 @@ public class IntakeHardware implements IntakeIO {
                 "Intake/desiredspeed",
                 0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
-
-        SmartDashboard.putNumber(
-                "Intake/actualoverdesired",
-                (intakeEncoder.getVelocity())
-                        / (0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)));
     }
 
     public void setZero() {
