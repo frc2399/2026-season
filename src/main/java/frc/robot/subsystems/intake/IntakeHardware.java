@@ -34,10 +34,10 @@ public class IntakeHardware implements IntakeIO {
     private final double INTAKE_P = 0;
     private final double INTAKE_D = 0;
     private final double INTAKE_KS = 0.1;
-    private final double INTAKE_KV =
+    private final double INTAKE_KV = 
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
-    private static final double DEFAULT_INTAKE_P = 0;
+    private static final double DEFAULT_INTAKE_P = 0.1;
     private static final double DEFAULT_INTAKE_KS = 0.1;
     private static final double DEFAULT_INTAKE_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
