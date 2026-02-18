@@ -15,6 +15,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
@@ -30,7 +31,8 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     private final double SPINDEXER_P = 0;
     private final double SPINDEXER_D = 0;
     private final double SPINDEXER_KS = 0.1;
-    private final double SPINDEXER_KV = 0;
+    private final double SPINDEXER_KV = 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private final boolean SPINDEXER_INVERTED = false;
 
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder spindexerEncoder;
@@ -41,7 +43,7 @@ public class SpindexerHardwareBeta implements SpindexerIO {
         SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
 
         spindexSparkFlexConfig.idleMode(IdleMode.kBrake);
-        spindexSparkFlexConfig.inverted(true);
+        spindexSparkFlexConfig.inverted(SPINDEXER_INVERTED);
         spindexSparkFlexConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
