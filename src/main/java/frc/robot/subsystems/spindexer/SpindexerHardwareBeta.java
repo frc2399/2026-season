@@ -24,8 +24,8 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     private SparkFlex spindexerSparkFlex;
     private final SparkClosedLoopController spindexerPidController;
 
-    private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
-    private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
+    private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / 6); // 6 : 1 gear ratio
+    private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60 / 6);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
     private final double SPINDEXER_P = 0;

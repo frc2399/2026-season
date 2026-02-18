@@ -32,9 +32,9 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
     private static final boolean SHOOTER_INDEXER_MOTOR_INVERTED = false;
     private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kBrake;
 
-    private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR = Radians.of(2 * Math.PI);
+    private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR = Radians.of(2 * Math.PI / 3); // 3 : 1 gear ratio
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
-            RadiansPerSecond.of(2 * Math.PI / 60);
+            RadiansPerSecond.of(2 * Math.PI / 60 / 3);
 
     private static final double SHOOTER_INDEXER_P = 0;
     private static final double SHOOTER_INDEXER_I = 0;
