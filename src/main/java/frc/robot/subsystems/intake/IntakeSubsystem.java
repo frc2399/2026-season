@@ -17,4 +17,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command defaultBehavior() {
         return this.run(() -> io.setZero()).withName("defaultBehavior");
     }
+
+    @Override
+    public void periodic() {
+        io.periodicUpdate();
+    }
 }
