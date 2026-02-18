@@ -86,14 +86,14 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
     @Override
     public void runShooterIndexer() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.5);
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.0781);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     @Override
     public void backwardsRunShooterIndexer() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(-0.5);
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(-0.0781);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
