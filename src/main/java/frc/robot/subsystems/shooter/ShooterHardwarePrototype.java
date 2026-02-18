@@ -21,6 +21,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
+import frc.robot.util.TunableNumber;
 
 public class ShooterHardwarePrototype implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
@@ -43,6 +44,25 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private final double SHOOTER_BOTTOM_KV = 0;
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
+    // have to removE the SHOOTER_ROLLER_PLACE_VALUE and replace with a number
+
+    // private static final TunableNumber TUNABLE_SHOOTER_TOP_D =
+    // new TunableNumber("Shooter/shooter_top_p", SHOOTER_TOP_D, true);
+    // private static final TunableNumber TUNABLE_SHOOTER_TOP_P =
+    // new TunableNumber("Shooter/shooter_top_p", SHOOTER_TOP_P, true);
+    private static final TunableNumber TUNABLE_SHOOTER_TOP_KS =
+            new TunableNumber("Shooter/shooter_top_ks", 0.12, true);
+    // private static final TunableNumber TUNABLE_SHOOTER_TOP_KV =
+    // new TunableNumber("Shooter/shooter_top_kv", SHOOTER_TOP_KV, true);
+    // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_D =
+    // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_D, true);
+    // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
+    // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_P, true);
+    private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KS =
+            new TunableNumber("Shooter/shooter_bottom_ks", 0.25, true);
+    // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KV =
+    // new TunableNumber("Shooter/shooter_bottom_kv", SHOOTER_BOTTOM_KV, true);
+
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
 
@@ -52,9 +72,10 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
     private AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
 
+    private SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
+    private SparkMaxConfig shooterTopMotorConfig = new SparkMaxConfig();
+
     public ShooterHardwarePrototype() {
-        SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
-        SparkMaxConfig shooterTopMotorConfig = new SparkMaxConfig();
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
         shooterTopMotorConfig.idleMode(IdleMode.kCoast);
@@ -141,5 +162,26 @@ public class ShooterHardwarePrototype implements ShooterIO {
         state.bottomRollerCurrent = shooterBottomSparkFlex.getOutputCurrent();
         state.bottomRollerActualSpeed = shooterBottomEncoder.getVelocity();
         state.bottomRollerAppliedVoltage = shooterBottomSparkFlex.getBusVoltage();
+    }
+
+    public void periodicUpdate() {
+        // if tuning a value, update this chunk for that motor's p, i, OR d
+        // attempting to have this logic running with multiple causes a loop overrun :)
+        if (TUNABLE_SHOOTER_BOTTOM_KS.hasChanged()) {
+            closedLoopConfigShooterBottom.feedForward.kS(TUNABLE_SHOOTER_BOTTOM_KS.get());
+            shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
+            shooterBottomSparkFlex.configure(
+                    shooterBottomMotorConfig,
+                    ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters);
+        }
+        if (TUNABLE_SHOOTER_TOP_KS.hasChanged()) {
+            closedLoopConfigShooterTop.feedForward.kS(TUNABLE_SHOOTER_TOP_KS.get());
+            shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
+            shooterTopSparkMax.configure(
+                    shooterTopMotorConfig,
+                    ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters);
+        }
     }
 }
