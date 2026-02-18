@@ -35,7 +35,7 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder spindexerEncoder;
 
-    private AngularVelocity desiredVelocity;
+    private AngularVelocity desiredVelocity; 
 
     public SpindexerHardwareBeta() {
         SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
@@ -83,6 +83,7 @@ public class SpindexerHardwareBeta implements SpindexerIO {
         state.spindexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
         state.spindexerActualSpeed = spindexerEncoder.getVelocity();
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
-        state.spindexerAppliedVoltage = spindexerSparkFlex.getBusVoltage();
+        state.spindexerAppliedVoltage = spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
+
     }
 }
