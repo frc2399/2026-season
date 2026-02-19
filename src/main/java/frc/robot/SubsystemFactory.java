@@ -33,7 +33,7 @@ public class SubsystemFactory {
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
-    private static final String BETA_SERIAL_NUMBER = "";
+    private static final String BETA_SERIAL_NUMBER = "030589d5";
     private static final String COMP_SERIAL_NUMBER = "";
     private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
 
@@ -82,9 +82,9 @@ public class SubsystemFactory {
         SwerveModule rearLeft;
         SwerveModule frontRight;
         SwerveModule rearRight;
-        if (robotType == RobotType.BETA
-                || robotType == RobotType.BUBBLES
-                || robotType == RobotType.MOZART) {
+        if (
+        // robotType == RobotType.BETA
+        robotType == RobotType.BUBBLES || robotType == RobotType.MOZART) {
             frontLeft =
                     new SwerveModule(
                             new SwerveModuleHardwareVortex(
@@ -157,8 +157,8 @@ public class SubsystemFactory {
             return new SpindexerSubsystem(new SpindexerHardwareBeta());
         } else {
             return new SpindexerSubsystem(new SpindexerPlacebo());
-       }
-    }  
+        }
+    }
 
     public ShooterIndexerSubsystem buildShooterIndexer() {
         if (robotType == RobotType.PROTOTYPE) {

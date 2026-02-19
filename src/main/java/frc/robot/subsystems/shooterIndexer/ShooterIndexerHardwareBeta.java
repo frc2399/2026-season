@@ -32,7 +32,8 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
     private static final boolean SHOOTER_INDEXER_MOTOR_INVERTED = false;
     private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kBrake;
 
-    private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR = Radians.of(2 * Math.PI / 3); // 3 : 1 gear ratio
+    private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
+            Radians.of(2 * Math.PI / 3); // 3 : 1 gear ratio
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
             RadiansPerSecond.of(2 * Math.PI / 60 / 3);
 
@@ -43,8 +44,9 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
     private static final double SHOOTER_INDEXER_KS = 0.01;
-    private static final double SHOOTER_INDEXER_KV = 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
-//      0.01;
+    private static final double SHOOTER_INDEXER_KV =
+            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    //      0.01;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
@@ -86,7 +88,8 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
     @Override
     public void runShooterIndexer() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.0781);
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(.0);
+        // desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.03);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
