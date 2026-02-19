@@ -42,7 +42,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -250,7 +249,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     public void periodic() {
         SmartDashboard.putBoolean("/drive/atGoal", atGoal);
         SmartDashboard.putBoolean("/drive/isHubActive", GameState.isHubActive(0));
-        SmartDashboard.putNumber("/drive/matchTime", DriverStationSim.getMatchTime());
         // This will get the simulated sensor readings that we set
         // in the previous article while in simulation, but will use
         // real values on the robot itself.
