@@ -43,32 +43,32 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
     public SpindexerHardwareBeta() {
-        SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
+        SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
 
-        spindexSparkFlexConfig.idleMode(IdleMode.kCoast);
-        spindexSparkFlexConfig.inverted(SPINDEXER_INVERTED);
-        spindexSparkFlexConfig.smartCurrentLimit(
+        spindexerSparkFlexConfig.idleMode(IdleMode.kCoast);
+        spindexerSparkFlexConfig.inverted(SPINDEXER_INVERTED);
+        spindexerSparkFlexConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
-        spindexSparkFlexConfig.encoder.positionConversionFactor(
+        spindexerSparkFlexConfig.encoder.positionConversionFactor(
                 ENCODER_POSITION_FACTOR.in(Radians));
-        spindexSparkFlexConfig.encoder.velocityConversionFactor(
+        spindexerSparkFlexConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
-        spindexSparkFlexConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        spindexSparkFlexConfig.closedLoop.pid(SPINDEXER_P, 0, SPINDEXER_D);
-        spindexSparkFlexConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
+        spindexerSparkFlexConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        spindexerSparkFlexConfig.closedLoop.pid(SPINDEXER_P, 0, SPINDEXER_D);
+        spindexerSparkFlexConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
         spindexClosedLoopConfig.feedForward.sva(SPINDEXER_KS, SPINDEXER_KV, 0);
 
-        spindexSparkFlexConfig.apply(spindexClosedLoopConfig);
+        spindexerSparkFlexConfig.apply(spindexClosedLoopConfig);
 
         spindexerSparkFlex =
                 new SparkFlex(
                         RobotConstants.MotorIdConstants.SPINDEXER_CAN_ID, MotorType.kBrushless);
 
         spindexerSparkFlex.configure(
-                spindexSparkFlexConfig,
+                spindexerSparkFlexConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
