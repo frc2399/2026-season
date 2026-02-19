@@ -46,7 +46,8 @@ public class SwerveModule {
     public SwerveModuleState getState() {
         // Apply chassis angular offset to the encoder position to get the position
         // relative to the chassis.
-        return new SwerveModuleState(getDriveEncoderSpeedMPS(),
+        return new SwerveModuleState(
+                getDriveEncoderSpeedMPS(),
                 new Rotation2d((getTurnEncoderPosition()) - io.getChassisAngularOffset()));
     }
 
@@ -72,12 +73,15 @@ public class SwerveModule {
         // Apply chassis angular offset to the desired state.
         SwerveModuleState correctedDesiredState = new SwerveModuleState();
         correctedDesiredState.speedMetersPerSecond = newDesiredState.speedMetersPerSecond;
-        correctedDesiredState.angle = newDesiredState.angle.plus(Rotation2d.fromRadians(io.getChassisAngularOffset()));
+        correctedDesiredState.angle =
+                newDesiredState.angle.plus(Rotation2d.fromRadians(io.getChassisAngularOffset()));
 
         // Optimize the reference state to avoid spinning further than 90 degrees.
 
         correctedDesiredState.optimize(new Rotation2d(getTurnEncoderPosition()));
-        io.setDesiredDriveSpeedMPS(correctedDesiredState.speedMetersPerSecond);
+        io.setDesiredDriveSpeedMPS(
+                correctedDesiredState.speedMetersPerSecond,
+                correctedDesiredState.angle != newDesiredState.angle);
         io.setDesiredTurnAngle(correctedDesiredState.angle.getRadians());
         desiredState = newDesiredState;
     }

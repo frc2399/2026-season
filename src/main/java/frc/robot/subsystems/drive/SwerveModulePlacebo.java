@@ -2,8 +2,7 @@ package frc.robot.subsystems.drive;
 
 public class SwerveModulePlacebo implements SwerveModuleIO {
     @Override
-    public void setDriveEncoderPosition(double position) {
-    }
+    public void setDriveEncoderPosition(double position) {}
 
     @Override
     public double getTurnEncoderPosition() {
@@ -11,8 +10,7 @@ public class SwerveModulePlacebo implements SwerveModuleIO {
     }
 
     @Override
-    public void setDesiredDriveSpeedMPS(double speed) {
-    }
+    public void setDesiredDriveSpeedMPS(double speed, boolean isFlipped) {}
 
     @Override
     public double getDriveEncoderSpeedMPS() {
@@ -20,8 +18,7 @@ public class SwerveModulePlacebo implements SwerveModuleIO {
     }
 
     @Override
-    public void setDesiredTurnAngle(double angle) {
-    }
+    public void setDesiredTurnAngle(double angle) {}
 
     @Override
     public double getDriveEncoderPosition() {
@@ -34,7 +31,5 @@ public class SwerveModulePlacebo implements SwerveModuleIO {
     }
 
     @Override
-    public void updateStates(SwerveModuleIOStates states) {
-
-    }
+    public void updateStates(SwerveModuleIOStates states) {}
 }

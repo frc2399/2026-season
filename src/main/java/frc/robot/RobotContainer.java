@@ -7,9 +7,10 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,63 +20,97 @@ import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
-import frc.robot.vision.LimelightHelpers.PoseEstimate;
-
 
 public class RobotContainer {
-  private SubsystemFactory subsystemFactory = new SubsystemFactory();
-  private Gyro gyro = subsystemFactory.buildGyro();
-  private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
-  private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
-  // this is public because we need to run the visionPoseEstimator periodic from
-  // Robot
-  public VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
-  public CommandFactory commandFactory = new CommandFactory(drive, gyro);
+    private SubsystemFactory subsystemFactory = new SubsystemFactory();
+    private Gyro gyro = subsystemFactory.buildGyro();
+    private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
+    private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
+    private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
+    private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
+    private ShooterIndexerSubsystem shooterIndexerSubsystem =
+            subsystemFactory.buildShooterIndexer();
+    // this is public because we need to run the visionPoseEstimator periodic from
+    // Robot
+    public VisionPoseEstimator visionPoseEstimator =
+            new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
+    public CommandFactory commandFactory =
+            new CommandFactory(drive, gyro, shooterSubsystem, shooterIndexerSubsystem);
+    public AutonCommandFactory autonCommandFactory =
+            new AutonCommandFactory(drive, intakeSubsystem);
 
-  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private Command defaultCommand = Commands.none();
 
+    private static final CommandXboxController driverController =
+            new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
 
-  private static final CommandXboxController driverController = new CommandXboxController(
-      DriveControlConstants.DRIVER_CONTROLLER_PORT);
-  private static final CommandXboxController operatorController = new CommandXboxController(
-      DriveControlConstants.OPERATOR_CONTROLLER_PORT);
+    private final Alert driverDisconnected =
+            new Alert("Driver controller disconnected!", AlertType.kWarning);
+    private final Alert noAutonSelectedAlert =
+            new Alert("Auton is not selected!", AlertType.kWarning);
+    private final Alert lowBatteryAlert =
+            new Alert(
+                    "Battery voltage is very low, turn off the robot or replace the battery to avoid damage.",
+                    AlertType.kWarning);
 
-  public RobotContainer() {
-    DriverStation.silenceJoystickConnectionWarning(true);
-    configureDefaultCommands();
-    configureButtonBindingsDriver();
-    setUpAuton();
-  }
+    public RobotContainer() {
+        configureDefaultCommands();
+        configureButtonBindingsDriver();
+        setUpAuton();
+        SmartDashboard.putData("robot/driverController", driverController.getHID());
+    }
 
-  public void disableSubsystems() {
-    drive.disableDriveToPose();
-  }
+    public void disableSubsystems() {
+        drive.disableDriveToPose();
+    }
 
-  public void configureDefaultCommands() {
-    drive.setDefaultCommand(drive.driveCommand(
-        () -> -(MathUtil.applyDeadband(
-            driverController.getLeftY(),
-            DriveControlConstants.DRIVE_DEADBAND)),
-        () -> -(MathUtil.applyDeadband(
-            driverController.getLeftX(),
-            DriveControlConstants.DRIVE_DEADBAND)),
-        () -> -(MathUtil.applyDeadband(
-            driverController.getRightX(),
-            DriveControlConstants.DRIVE_DEADBAND)),
-        true));
-    intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
-  }
+    public void configureDefaultCommands() {
+        drive.setDefaultCommand(
+                drive.driveCommand(
+                        () ->
+                                -(MathUtil.applyDeadband(
+                                        driverController.getLeftY(),
+                                        DriveControlConstants.DRIVE_DEADBAND)),
+                        () ->
+                                -(MathUtil.applyDeadband(
+                                        driverController.getLeftX(),
+                                        DriveControlConstants.DRIVE_DEADBAND)),
+                        () ->
+                                -(MathUtil.applyDeadband(
+                                        driverController.getRightX(),
+                                        DriveControlConstants.DRIVE_DEADBAND)),
+                        true,
+                        () -> (driverController.a().getAsBoolean())));
+        intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
+        shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
+        spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
+        shooterIndexerSubsystem.setDefaultCommand(shooterIndexerSubsystem.defaultBehavior());
+    }
 
+<<<<<<< HEAD
   private void configureButtonBindingsDriver() {
     driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
     driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
   }
+=======
+    private void configureButtonBindingsDriver() {
+        // note! do not bind to the a button; it is used in drive command for auto-orient!
+        driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
+        driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
+        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
+        driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+    }
+>>>>>>> main
 
-  private void setUpAuton() {
-    SmartDashboard.putData("Autos/Selector", autoChooser);
-  }
+    private void setUpAuton() {
+        autoChooser = new SendableChooser<>();
 
+<<<<<<< HEAD
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
@@ -84,3 +119,30 @@ public class RobotContainer {
     return gyro;
   }
 }
+=======
+        autoChooser.addOption(
+                "bumpNeutralZoneShooting", autonCommandFactory.bumpNeutralZoneShooting());
+        autoChooser.addOption("hubDepot", autonCommandFactory.hubToDepot());
+        autoChooser.addOption("bumpNeutralZone", autonCommandFactory.bumpToNeutralZone());
+        autoChooser.setDefaultOption("do nothing", defaultCommand);
+        SmartDashboard.putData("Autos/Selector", autoChooser);
+    }
+
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
+    }
+
+    public void setAlerts() {
+        lowBatteryAlert.set(
+                (RobotController.getBatteryVoltage() > 0.0
+                        && RobotController.getBatteryVoltage()
+                                <= DriveControlConstants.LOW_BATTERY_VOLTAGE));
+        driverDisconnected.set(
+                !DriverStation.isJoystickConnected(driverController.getHID().getPort()));
+        noAutonSelectedAlert.set(
+                DriverStation.isAutonomous()
+                        && !DriverStation.isEnabled()
+                        && getAutonomousCommand() == defaultCommand);
+    }
+}
+>>>>>>> main
