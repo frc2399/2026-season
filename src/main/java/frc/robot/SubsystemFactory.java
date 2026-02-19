@@ -151,7 +151,7 @@ public class SubsystemFactory {
         }
     }
 
-    public SpindexerSubsystem buildIndexer() {
+    public SpindexerSubsystem buildSpindexer() {
         return new SpindexerSubsystem(new SpindexerPlacebo());
     }
 

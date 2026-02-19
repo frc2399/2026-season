@@ -249,7 +249,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("/drive/atGoal", atGoal);
-        SmartDashboard.putBoolean("/drive/isHubActive", GameState.isHubActive());
+        SmartDashboard.putBoolean("/drive/isHubActive", GameState.isHubActive(0));
         SmartDashboard.putNumber("/drive/matchTime", DriverStationSim.getMatchTime());
         // This will get the simulated sensor readings that we set
         // in the previous article while in simulation, but will use
