@@ -31,7 +31,7 @@ public class RobotContainer {
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
-    private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildIndexer();
+    private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
     // this is public because we need to run the visionPoseEstimator periodic from
@@ -62,6 +62,7 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindingsDriver();
         setUpAuton();
+        SmartDashboard.putData("robot/driverController", driverController.getHID());
     }
 
     public void disableSubsystems() {

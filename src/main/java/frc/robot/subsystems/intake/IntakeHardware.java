@@ -30,12 +30,21 @@ public class IntakeHardware implements IntakeIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
-    private final double INTAKE_P = 0;
     private final double INTAKE_D = 0;
-    private final double INTAKE_KS = 0.1;
-    private final double INTAKE_KV =
+
+    private static final double DEFAULT_INTAKE_P = 0.1;
+    private static final double DEFAULT_INTAKE_KS = 0.1;
+    private static final double DEFAULT_INTAKE_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
+    // private static final TunableNumber TUNABLE_INTAKE_P =
+    // new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
+    // private static final TunableNumber TUNABLE_INTAKE_KS =
+    // new TunableNumber("Intake/intake_ks", DEFAULT_INTAKE_KS, true);
+    // private static final TunableNumber TUNABLE_INTAKE_KV =
+    // new TunableNumber("Intake/intake_kv", DEFAULT_INTAKE_KV, true);
+
+    private final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
     private final RelativeEncoder intakeEncoder;
 
@@ -44,17 +53,17 @@ public class IntakeHardware implements IntakeIO {
 
         intakeMotorConfig.idleMode(IdleMode.kBrake);
         intakeMotorConfig.inverted(true);
-        intakeMotorConfig.smartCurrentLimit((int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
+        intakeMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
         intakeMotorConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
         intakeMotorConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
         intakeMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        intakeMotorConfig.closedLoop.pid(INTAKE_P, 0, INTAKE_D);
+        intakeMotorConfig.closedLoop.pid(DEFAULT_INTAKE_P, 0, INTAKE_D);
         intakeMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
-        closedLoopConfigIntake.feedForward.sva(INTAKE_KS, INTAKE_KV, 0);
+        closedLoopConfigIntake.feedForward.sva(DEFAULT_INTAKE_KS, DEFAULT_INTAKE_KV, 0);
 
         intakeMotorConfig.apply(closedLoopConfigIntake);
 
@@ -84,5 +93,17 @@ public class IntakeHardware implements IntakeIO {
 
         SmartDashboard.putNumber("Intake/desiredspeed", 0);
         SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+    }
+
+    public void periodicUpdate() {
+        // if tuning a value, update this chunk for that motor's p, i, OR d
+        // attempting to have this logic running with multiple causes a loop overrun :)
+        // if (TUNABLE_INTAKE_KS.hasChanged()) {
+        // closedLoopConfigIntake.feedForward.kS(TUNABLE_INTAKE_KS.get());
+        // intakeMotorConfig.apply(closedLoopConfigIntake);
+        // intakeSparkFlex.configure(
+        // intakeMotorConfig,
+        // ResetMode.kResetSafeParameters,
+        // PersistMode.kPersistParameters); }
     }
 }
