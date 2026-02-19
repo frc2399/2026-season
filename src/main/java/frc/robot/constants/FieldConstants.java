@@ -3,13 +3,18 @@ package frc.robot.constants;
 import static edu.wpi.first.units.Units.*;
 import static edu.wpi.first.units.Units.Inches;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class FieldConstants {
 
     public static record Pose(String name, Pose2d pose) {}
+
+    public static Optional<Alliance> alliance;
 
     public static class PoseConstants {
         public static final Pose DRIVE_STRAIGHT =

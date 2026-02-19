@@ -10,10 +10,9 @@ import java.util.Optional;
 
 public class FieldCalculationHelpers {
     public static Boolean shouldTargetHub(Pose2d robotLocation) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
         double poseX = robotLocation.getX();
-        if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Blue) {
+        if (FieldConstants.alliance.isPresent()) {
+            if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
                 if (FieldConstants.AllianceZoneBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters)
                                 <= poseX
                         && poseX
@@ -24,7 +23,7 @@ public class FieldCalculationHelpers {
                     return false;
                 }
             }
-            if (alliance.get() == DriverStation.Alliance.Red) {
+            if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
                 if (FieldConstants.AllianceZoneBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX
                         && poseX
                                 <= FieldConstants.AllianceZoneBoundaries.RED_DRIVER_STATION_WALL_X
