@@ -104,17 +104,26 @@ public class RobotContainer {
         autoChooser = new SendableChooser<>();
 
         autoChooser.addOption(
-                "depotSideBumpToNeutralZoneShooting", autonCommandFactory.depotSideBumpToNeutralZoneShooting());
-        autoChooser.addOption("outpostSideBumpToNeutralZoneShooting", autonCommandFactory.outpostSideBumpToNeutralZoneShooting());
+                "depotSideBumpToNeutralZoneShooting",
+                autonCommandFactory.depotSideBumpToNeutralZoneShooting());
+        autoChooser.addOption(
+                "outpostSideBumpToNeutralZoneShooting",
+                autonCommandFactory.outpostSideBumpToNeutralZoneShooting());
         autoChooser.addOption("hubDepot", autonCommandFactory.hubToDepot());
-        autoChooser.addOption("depotSideBumpToNeutralZone", autonCommandFactory.depotSideBumpToNeutralZone());
-        autoChooser.addOption("outpostSideBumpToNeutralZone", autonCommandFactory.outpostSideBumpToNeutralZone());
         autoChooser.addOption(
-                "depotSideDepotToNeutralZone", autonCommandFactory.depotSideDepotToNeutralZoneShooting());
+                "depotSideBumpToNeutralZone", autonCommandFactory.depotSideBumpToNeutralZone());
         autoChooser.addOption(
-                "outpostSideDepotToNeutralZone", autonCommandFactory.outpostSideDepotToNeutralZoneShooting());
-        autoChooser.addOption("hubToNeutralZone", autonCommandFactory.depotSideHubToNeutralZoneWaypoints());
-        autoChooser.addOption("neutralZoneToHub", autonCommandFactory.depotSideNeutralZoneToHubWaypoints());
+                "outpostSideBumpToNeutralZone", autonCommandFactory.outpostSideBumpToNeutralZone());
+        autoChooser.addOption(
+                "depotSideDepotToNeutralZone",
+                autonCommandFactory.depotSideDepotToNeutralZoneShooting());
+        autoChooser.addOption(
+                "outpostSideDepotToNeutralZone",
+                autonCommandFactory.outpostSideDepotToNeutralZoneShooting());
+        autoChooser.addOption(
+                "hubToNeutralZone", autonCommandFactory.depotSideHubToNeutralZoneWaypoints());
+        autoChooser.addOption(
+                "neutralZoneToHub", autonCommandFactory.depotSideNeutralZoneToHubWaypoints());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
