@@ -35,12 +35,12 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private final double MAX_OUTPUT_RANGE = 1;
     private final double SHOOTER_TOP_P = 0;
     private final double SHOOTER_TOP_D = 0;
-    private final double SHOOTER_TOP_KS = 0.12;
+    private final double SHOOTER_TOP_KS = 0;
     private final double SHOOTER_TOP_KV = 0;
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private final double SHOOTER_BOTTOM_P = 0;
     private final double SHOOTER_BOTTOM_D = 0;
-    private final double SHOOTER_BOTTOM_KS = 0.25;
+    private final double SHOOTER_BOTTOM_KS = 0;
     private final double SHOOTER_BOTTOM_KV = 0;
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
@@ -51,7 +51,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
     // private static final TunableNumber TUNABLE_SHOOTER_TOP_P =
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_TOP_P, true);
     private static final TunableNumber TUNABLE_SHOOTER_TOP_KS =
-            new TunableNumber("Shooter/shooter_top_ks", 0.12, true);
+            new TunableNumber("Shooter/shooter_top_ks", 0, true);
     // private static final TunableNumber TUNABLE_SHOOTER_TOP_KV =
     // new TunableNumber("Shooter/shooter_top_kv", SHOOTER_TOP_KV, true);
     // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_D =
@@ -59,7 +59,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
     // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
     // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_P, true);
     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KS =
-            new TunableNumber("Shooter/shooter_bottom_ks", 0.25, true);
+            new TunableNumber("Shooter/shooter_bottom_ks", 0, true);
     // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KV =
     // new TunableNumber("Shooter/shooter_bottom_kv", SHOOTER_BOTTOM_KV, true);
 
