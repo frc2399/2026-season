@@ -1,12 +1,25 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.FieldConstants.HubConstants;
+import frc.robot.constants.RobotConstants.TransformConstants;
+import frc.robot.subsystems.drive.gyro.GyroHardware;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Radians;
+
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class RebuiltVisionUtil {
 
@@ -25,12 +38,52 @@ public class RebuiltVisionUtil {
         }
     }
 
-     public static boolean isShootingAngleAlignedToHub(Pose2d robotPose2d, Angle desiredAngle) {
-        if (Angle robotAngleToHub = desiredAngle) {}
+     public static double getDesiredAngleToHub(Supplier<Pose2d> robotPose) {
+
+        Pose2d orientTargetPose = RebuiltVisionUtil.getHubPose();
+        Transform2d poseToOrientToTarget = TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM;
+        
+        Translation2d targetToRobotTranslation =
+                    orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
+        Angle desiredAngle =
+                    Radians.of(
+                            Math.atan2(
+                                    targetToRobotTranslation.getY(),
+                                    targetToRobotTranslation.getX()));
+        double desiredAngleInDegrees = desiredAngle.in(Degrees);
+        return desiredAngleInDegrees;
+    }
+
+    public double getActualAngleToHub (Supplier<Pose2d> robotPose) {
+        double actualAngleInDegrees = robotPose.get().getRotation().getDegrees();
+        return actualAngleInDegrees;
+    }
+
+    public double getDiffOfAngleInDegrees (double actualAngleInDegrees, double desiredAngleInDegrees) {
+        double diffOfAngleInDegrees = Math.min(actualAngleInDegrees, desiredAngleInDegrees);
+        return diffOfAngleInDegrees;
+    }
+
+    public double getRangeOfAngleToHubInDegrees(double robotDistanceToHub, Pose2d orientTargetPose, Pose2d poseToOrientToTarget) {
+        double hubRadiusMinusFuelRadiusInMeters = HubConstants.HUB_RADIUS.minus(HubConstants.FUEL_RADIUS).in(Meters);
+
+        Translation2d targetToRobotTranslation =
+                    orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
+        double hubToRobotDistance = targetToRobotTranslation.getNorm();
+        double rangeOfAngleToHubInDegrees = Math.atan2(hubRadiusMinusFuelRadiusInMeters, hubToRobotDistance);
+        return rangeOfAngleToHubInDegrees;
+    }
+
+    public static boolean isShootingAngleAlignedToHub(Supplier<Pose2d> robotPose) {
+        
+        double robotAngleToHubInDegrees = RebuiltVisionUtil.getDesiredAngleToHub(robotPose); {
+        }
+        if (Math.abs(diffOfAngleInDegrees)) <= Math.abs(robotAngleToHubInDegrees) {
             return true;
-     } else {
+        } else {
             return false;
-     }
+        }
+    }
 }
             
     
