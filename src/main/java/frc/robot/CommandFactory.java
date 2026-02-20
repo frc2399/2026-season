@@ -28,9 +28,12 @@ public class CommandFactory {
         this.spindexer = spindexer;
     }
 
+    // public Command runSpindexShooterIndexAndShooter() {
+    //     return Commands.sequence(
+    //             shooter.shoot().withTimeout(1.0),
+    //             Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
+    // }
     public Command runSpindexShooterIndexAndShooter() {
-        return Commands.sequence(
-                shooter.shoot().withTimeout(1.0),
-                Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
+        return Commands.parallel(shooter.shoot(), spindexer.runSpindexer(), shooterIndexer.runShooterIndexer());
     }
 }
