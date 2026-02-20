@@ -12,8 +12,6 @@ public final class FieldConstants {
     public static record Pose(String name, Pose2d pose) {}
 
     public static class PoseConstants {
-        public static final Pose DRIVE_STRAIGHT =
-                new Pose("driveStraight", new Pose2d(0.5, 2, Rotation2d.fromDegrees(0)));
         public static final Pose HUB_MIDDLE =
                 new Pose("hubMiddle", new Pose2d(3.488, 4.021, Rotation2d.fromDegrees(180)));
         public static final Pose DEPOT =
@@ -22,14 +20,22 @@ public final class FieldConstants {
                 new Pose("depot", new Pose2d(2.2, 5, Rotation2d.fromDegrees(0)));
         public static final Pose TOWER_L1 =
                 new Pose("towerL1", new Pose2d(1.608, 3.378, Rotation2d.fromDegrees(0)));
-        public static final Pose NEUTRAL_ZONE_BORDER =
-                new Pose("neutralZoneBorder", new Pose2d(6.86, 5.356, Rotation2d.fromDegrees(180)));
-        public static final Pose IN_NEUTRAL_ZONE =
-                new Pose("inNeutralZone", new Pose2d(8.63, 5.356, Rotation2d.fromDegrees(180)));
-        public static final Pose BUMP_STARTING_LINE =
-                new Pose("bumpStartingLine", new Pose2d(3.482, 5.356, Rotation2d.fromDegrees(180)));
-        public static final Pose OVER_THE_BUMP =
-                new Pose("overTheBump", new Pose2d(5.482, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose DEPOT_SIDE_NEUTRAL_ZONE_BORDER =
+                new Pose("depotSideNeutralZoneBorder", new Pose2d(6.86, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose DEPOT_SIDE_IN_NEUTRAL_ZONE =
+                new Pose("depotSideInNeutralZone", new Pose2d(8.63, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose DEPOT_SIDE_BUMP_STARTING_LINE =
+                new Pose("depotSideBumpStartingLine", new Pose2d(3.482, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose DEPOT_SIDE_OVER_THE_BUMP =
+                new Pose("depotSideOverTheBump", new Pose2d(5.482, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose OUTPOST_SIDE_NEUTRAL_ZONE_BORDER = 
+                new Pose("outpostSideNeutralZoneBorder", newPose2d(x, y, Rotation2d.fromDegrees(180)));
+        public static final Pose OUTPOST_SIDE_IN_NEUTRAL_ZONE = 
+                new Pose("outpostSideInNeutralZone", new Pose2d(x, y,Rotation2d.fromDegrees(180)));
+        public static final Pose OUTPOST_SIDE_BUMP_STARTING_LINE = 
+                new Pose("outposeSideBumpStartingLine", new Pose2d(x, y, Rotation2d.fromDegrees(180)));
+        public static final Pose OUTPOST_SIDE_OVER_THE_BUMP = 
+                new Pose("outposeSideOverTheBump", new Pose2d(x, y, Rotation2d.fromDegrees(180))); 
     }
 
     public static class AllianceZoneBoundaries {

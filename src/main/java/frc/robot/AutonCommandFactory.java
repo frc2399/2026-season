@@ -14,6 +14,8 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
@@ -59,61 +61,109 @@ public class AutonCommandFactory {
                 drive.driveToPoseOnExecute());
     }
 
-    public Command bumpToNeutralZone() {
+    public Command depotSideBumpToNeutralZone() {
         return Commands.sequence(
                 Commands.runOnce(
                         () ->
                                 drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE.pose())),
                 buildPathDeferred(
-                        FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints, 0.75),
+                        FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP, bumpAndDepotConstraints, 0.75),
+                // drive.driveToPoseOnExecute(),
+                Commands.parallel(
+                        intake.runIntake().withTimeout(6),
+                        buildPathDeferred(
+                                FieldConstants.PoseConstants.DEPOT_SIDE_IN_NEUTRAL_ZONE,
+                                intakeConstraints,
+                                0)),
+                intake.defaultBehavior().withTimeout(0.01),
+                // drive.driveToPoseOnExecute()),
+                buildPathDeferred(FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER, constraints, 1.5),
+                // get into shooting position while driving
+                // drive.driveToPoseOnExecute(),
+                depotSideNeutralZoneToHubWaypoints());
+        // drive.driveToPoseOnExecute());
+    }
+
+    public Command outpostSideBumpToNeutralZone() {
+        return Commands.sequence(
+                Commands.runOnce(
+                        () ->
+                                drive.resetOdometry(
+                                        FieldConstants.PoseConstants.OUTPOST_SIDE_BUMP_STARTING_LINE.pose())),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.OUTPOST_SIDE_OVER_THE_BUMP, bumpAndDepotConstraints, 0.75),
                 // drive.driveToPoseOnExecute(),
                 // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
                 Commands.parallel(
                         intake.runIntake().withTimeout(6),
                         buildPathDeferred(
-                                FieldConstants.PoseConstants.IN_NEUTRAL_ZONE,
+                                FieldConstants.PoseConstants.OUTPOST_SIDE_IN_NEUTRAL_ZONE,
                                 intakeConstraints,
                                 0)),
                 intake.defaultBehavior().withTimeout(0.01),
                 // drive.driveToPoseOnExecute()),
-                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints, 1.5),
+                buildPathDeferred(FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER, constraints, 1.5),
                 // get into shooting position while driving
                 // drive.driveToPoseOnExecute(),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.BUMP_STARTING_LINE,
-                        bumpAndDepotConstraints,
-                        0));
+                outpostSideNeutralZoneToHubWaypoints());
         // drive.driveToPoseOnExecute());
     }
 
-    public Command bumpToNeutralZoneShooting() {
+    public Command depotSideBumpToNeutralZoneShooting() {
         return Commands.sequence(
                 Commands.runOnce(
                         () ->
                                 drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE.pose())),
                 buildPathDeferred(
-                        FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints, 1.5),
+                        FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP, bumpAndDepotConstraints, 1.5),
                 // move into intaking position while driving
                 drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints, 0),
-                intake.runIntake().withTimeout(1),
+                Commands.parallel(
+                        intake.runIntake().withTimeout(6),
+                        buildPathDeferred(
+                                FieldConstants.PoseConstants.DEPOT_SIDE_IN_NEUTRAL_ZONE,
+                                intakeConstraints,
+                                0)),
                 intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints, 1.5),
+                buildPathDeferred(FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER, constraints, 1.5),
                 // get into shooting position while driving
                 drive.driveToPoseOnExecute(),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.HUB_MIDDLE, bumpAndDepotConstraints, 0),
-                drive.driveToPoseOnExecute());
+                depotSideNeutralZoneToHubWaypoints());
+                // shooting command
     }
 
-    public Command depotToNeutralZoneShooting() {
+    public Command outpostSideBumpToNeutralZoneShooting() {
         return Commands.sequence(
                 Commands.runOnce(
                         () ->
                                 drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+                                        FieldConstants.PoseConstants.OUTPOST_SIDE_BUMP_STARTING_LINE.pose())),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.OUTPOST_SIDE_OVER_THE_BUMP, bumpAndDepotConstraints, 1.5),
+                // move into intaking position while driving
+                drive.driveToPoseOnExecute(),
+                Commands.parallel(
+                        intake.runIntake().withTimeout(6),
+                        buildPathDeferred(
+                                FieldConstants.PoseConstants.OUTPOST_SIDE_IN_NEUTRAL_ZONE,
+                                intakeConstraints,
+                                0)),
+                intake.defaultBehavior().withTimeout(0.01),
+                buildPathDeferred(FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER, constraints, 1.5),
+                // get into shooting position while driving
+                drive.driveToPoseOnExecute(),
+                outpostSideNeutralZoneToHubWaypoints());
+                // shooting command
+    }
+
+    public Command depotSideDepotToNeutralZoneShooting() {
+        return Commands.sequence(
+                Commands.runOnce(
+                        () ->
+                                drive.resetOdometry(
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE.pose())),
                 buildPathDeferred(FieldConstants.PoseConstants.DEPOT, constraints, 0),
                 drive.driveToPoseOnExecute(),
                 intake.runIntake().withTimeout(3),
@@ -121,10 +171,26 @@ public class AutonCommandFactory {
                 buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, constraints, 0),
                 drive.driveToPoseOnExecute(),
                 // shooting command
-                hubToNeutralZoneWaypoints());
+                depotSideHubToNeutralZoneWaypoints());
     }
 
-    public Command hubToNeutralZoneWaypoints() {
+    public Command outpostSideDepotToNeutralZoneShooting() {
+        return Commands.sequence(
+                Commands.runOnce(
+                        () ->
+                                drive.resetOdometry(
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE.pose())),
+                buildPathDeferred(FieldConstants.PoseConstants.DEPOT, constraints, 0),
+                drive.driveToPoseOnExecute(),
+                intake.runIntake().withTimeout(3),
+                intake.defaultBehavior().withTimeout(0.01),
+                buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, constraints, 0),
+                drive.driveToPoseOnExecute(),
+                // shooting command
+                outpostSideHubToNeutralZoneWaypoints());
+    }
+
+    public Command depotSideHubToNeutralZoneWaypoints() {
         return Commands.runOnce(
                 () -> {
                     drive.resetOdometry(FieldConstants.PoseConstants.HUB_MIDDLE.pose());
@@ -132,20 +198,96 @@ public class AutonCommandFactory {
                     List<Waypoint> waypoints =
                             PathPlannerPath.waypointsFromPoses(
                                     FieldConstants.PoseConstants.HUB_MIDDLE.pose(),
-                                    FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose(),
-                                    FieldConstants.PoseConstants.OVER_THE_BUMP.pose(),
-                                    FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER.pose());
+                                    FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE.pose(),
+                                    FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP.pose(),
+                                    FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER.pose());
 
-                    PathPlannerPath hubToNeutralZone =
+                    PathPlannerPath depotSideHubToNeutralZone =
                             new PathPlannerPath(
                                     waypoints,
                                     bumpAndDepotConstraints,
                                     null,
                                     new GoalEndState(0, Rotation2d.fromDegrees(180)));
 
-                    hubToNeutralZone.preventFlipping = true;
+                    depotSideHubToNeutralZone.preventFlipping = true;
 
-                    AutoBuilder.followPath(hubToNeutralZone).schedule();
+                    AutoBuilder.followPath(depotSideHubToNeutralZone).schedule();
                 });
     }
-}
+
+    public Command outpostSideHubToNeutralZoneWaypoints() {
+        return Commands.runOnce(
+                () -> {
+                    drive.resetOdometry(FieldConstants.PoseConstants.HUB_MIDDLE.pose());
+
+                    List<Waypoint> waypoints =
+                            PathPlannerPath.waypointsFromPoses(
+                                    FieldConstants.PoseConstants.HUB_MIDDLE.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_SIDE_BUMP_STARTING_LINE.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_SIDE_OVER_THE_BUMP.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER.pose());
+
+                    PathPlannerPath outpostSideHubToNeutralZone =
+                            new PathPlannerPath(
+                                    waypoints,
+                                    bumpAndDepotConstraints,
+                                    null,
+                                    new GoalEndState(0, Rotation2d.fromDegrees(180)));
+
+                    outpostSideHubToNeutralZone.preventFlipping = true;
+
+                    AutoBuilder.followPath(outpostSideHubToNeutralZone).schedule();
+                });
+    }
+
+    public Command depotSideNeutralZoneToHubWaypoints() {
+        return Commands.runOnce(
+                () -> {
+                        drive.resetOdometry(FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER.pose());
+
+                        List<Waypoint> waypoints = 
+                                PathPlannerPath.waypointsFromPoses(
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER.pose(),
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP.pose(),
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE.pose(),
+                                        FieldConstants.PoseConstants.HUB_MIDDLE.pose());
+
+                        PathPlannerPath depotSideNeutralZoneToHub = 
+                                new PathPlannerPath(
+                                        waypoints,
+                                        bumpAndDepotConstraints,
+                                        null,
+                                        new GoalEndState(0, Rotation2d.fromDegrees(180)));
+
+                        depotSideNeutralZoneToHub.preventFlipping = true;
+
+                        AutoBuilder.followPath(depotSideNeutralZoneToHub).schedule();
+                }); 
+        }
+
+public Command outpostSideNeutralZoneToHubWaypoints() {
+        return Commands.runOnce(
+                () -> {
+                        drive.resetOdometry(FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER.pose());
+
+                        List<Waypoint> waypoints = 
+                                PathPlannerPath.waypointsFromPoses(
+                                        FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER.pose(),
+                                        FieldConstants.PoseConstants.OUTPOST_SIDE_OVER_THE_BUMP.pose(),
+                                        FieldConstants.PoseConstants.OUTPOST_SIDE_BUMP_STARTING_LINE.pose(),
+                                        FieldConstants.PoseConstants.HUB_MIDDLE.pose());
+
+                        PathPlannerPath outpostSideNeutralZoneToHub = 
+                                new PathPlannerPath(
+                                        waypoints,
+                                        bumpAndDepotConstraints,
+                                        null,
+                                        new GoalEndState(0, Rotation2d.fromDegrees(180)));
+
+                        outpostSideNeutralZoneToHub.preventFlipping = true;
+
+                        AutoBuilder.followPath(outpostSideNeutralZoneToHub).schedule();
+                }); 
+        }
+
+    }
