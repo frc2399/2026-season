@@ -311,7 +311,7 @@ public class AutonCommandFactory {
                                             .pose(),
                                     FieldConstants.PoseConstants.HUB_MIDDLE.pose());
 
-                    PathPlannerPath outpostSideNeutralZoneToHub =
+                    PathPlannerPath outpostSideNeutralZoneToHub = 
                             new PathPlannerPath(
                                     waypoints,
                                     bumpAndDepotConstraints,
