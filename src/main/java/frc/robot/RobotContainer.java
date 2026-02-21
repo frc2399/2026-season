@@ -27,11 +27,11 @@ import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
-    private Gyro gyro = subsystemFactory.buildGyro();
+    public Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
-    private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildIndexer();
+    private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
     // this is public because we need to run the visionPoseEstimator periodic from
@@ -63,6 +63,7 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindingsDriver();
         setUpAuton();
+        SmartDashboard.putData("robot/driverController", driverController.getHID());
     }
 
     public void disableSubsystems() {
@@ -94,7 +95,7 @@ public class RobotContainer {
 
     private void configureButtonBindingsDriver() {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
-        driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
+        driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
@@ -103,11 +104,10 @@ public class RobotContainer {
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-
         autoChooser.addOption(
-                "bumpNeutralZoneShooting", autonCommandFactory.bumpNeutralZoneShooting());
-        autoChooser.addOption("hubDepot", autonCommandFactory.hubToDepot());
-        autoChooser.addOption("bumpNeutralZone", autonCommandFactory.bumpToNeutralZone());
+                "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
+        autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
+        autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }

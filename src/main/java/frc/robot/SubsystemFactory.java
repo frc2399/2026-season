@@ -152,7 +152,7 @@ public class SubsystemFactory {
         }
     }
 
-    public SpindexerSubsystem buildIndexer() {
+    public SpindexerSubsystem buildSpindexer() {
         if (robotType == RobotType.BETA) {
             return new SpindexerSubsystem(new SpindexerHardwareBeta());
         } else {
