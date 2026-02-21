@@ -6,10 +6,14 @@ import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import java.util.Optional;
 
 public final class FieldConstants {
 
     public static record Pose(String name, Pose2d pose) {}
+
+    public static Optional<Alliance> alliance;
 
     public static class PoseConstants {
         public static final Pose DRIVE_STRAIGHT =

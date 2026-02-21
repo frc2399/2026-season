@@ -2,15 +2,14 @@ package frc.robot.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import java.util.Optional;
+import frc.robot.constants.FieldConstants;
 
 public class GameState {
     public static Alliance getAlliance() {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-        if (alliance.isEmpty()) {
+        if (FieldConstants.alliance.isEmpty()) {
             return Alliance.Red;
         }
-        return alliance.get();
+        return FieldConstants.alliance.get();
     }
 
     public static Alliance getautonwinnerAlliance() {
