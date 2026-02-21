@@ -26,6 +26,8 @@ public class CommandFactory {
     }
 
     public Command runShooterAndShooterIndexer() {
-        return Commands.parallel(shooter.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getRobotPose())), shooterIndexer.runShooterIndexer());
+        return Commands.parallel(
+                shooter.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getRobotPose())),
+                shooterIndexer.runShooterIndexer());
     }
 }

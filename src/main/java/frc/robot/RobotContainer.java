@@ -97,7 +97,11 @@ public class RobotContainer {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
-        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getRobotPose())));
+        driverController
+                .leftTrigger()
+                .whileTrue(
+                        shooterSubsystem.shoot(
+                                RebuiltVisionUtil.getDistanceToHub(() -> drive.getRobotPose())));
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
     }
 

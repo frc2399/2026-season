@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -19,7 +20,6 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
-import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
@@ -29,8 +29,16 @@ public class ShooterHardwareBeta implements ShooterIO {
     private SparkClosedLoopController shooterBottomPIDController;
     private SparkClosedLoopController shooterTopPIDController;
 
-    private double topRollerCurveFitSlope = 1474.38483; // from desmos (natural log fit)
-    private double topRollerCurveFitIntercept = -2995.98209; // also from desmos (natural log fit)
+    private static final double topRollerCurveFitSlope =
+            1474.38483; // from desmos (natural log fit)
+    private static final double topRollerCurveFitIntercept =
+            -2995.98209; // also from desmos (natural log fit)
+    private static final Distance bottomRollerCurveBoundary = Inches.of(32);
+    private static final double bottomRollerCloseToHubCurveSlope =
+            -107.14286; // all of these are from desmos, linear piecewise fit)
+    private static final double bottomRollerCloseToHubCurveIntercept = 5478.57143;
+    private static final double bottomRollerFarFromHubCurveSlope = 7.58432;
+    private static final double bottomRollerFarFromHubCurveIntercept = 1860.20103;
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
@@ -126,19 +134,46 @@ public class ShooterHardwareBeta implements ShooterIO {
     }
 
     private AngularVelocity getBottomRollerSpeed(Distance distanceToHub) {
-        
+        AngularVelocity calculatedDesiredVelocity;
+        //  .compareTo returns a number greater than 0 if what it's being called on is GREATER than
+        // the parameter
+        if (distanceToHub.compareTo(bottomRollerCurveBoundary) < 0) {
+            calculatedDesiredVelocity =
+                    RPM.of(
+                            bottomRollerCloseToHubCurveIntercept * distanceToHub.in(Inches)
+                                    + bottomRollerCloseToHubCurveIntercept);
+        } else {
+            calculatedDesiredVelocity =
+                    RPM.of(
+                            bottomRollerFarFromHubCurveSlope * distanceToHub.in(Inches)
+                                    + bottomRollerFarFromHubCurveIntercept);
+        }
+        // check to make sure it's not negative!
+        if (calculatedDesiredVelocity.in(RadiansPerSecond) < 0) {
+            return RadiansPerSecond.of(0);
+        }
+        // check to make sure it's not greater than max speed
+        if (calculatedDesiredVelocity.compareTo(RobotConstants.MotorConstants.VORTEX_FREE_SPEED)
+                > 0) {
+            return RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+        }
         return RadiansPerSecond.of(0);
     }
 
     private AngularVelocity getTopRollerSpeed(Distance distanceToHub) {
-        AngularVelocity calculatedDesiredVelocity = RadiansPerSecond.of(topRollerCurveFitSlope * Math.log(distanceToHub.in(Inches) - topRollerCurveFitIntercept));
+        AngularVelocity calculatedDesiredVelocity =
+                RPM.of(
+                        topRollerCurveFitSlope
+                                * Math.log(distanceToHub.in(Inches) + topRollerCurveFitIntercept));
         // check to make sure it's not negative!
         if (calculatedDesiredVelocity.in(RadiansPerSecond) < 0) {
-                return RadiansPerSecond.of(0);
+            return RadiansPerSecond.of(0);
         }
-        // check to make sure it's not greater than max speed (.compareTo returns a number greater than 0 if what it's being called on is GREATER than the parameter)
-        if (calculatedDesiredVelocity.compareTo(RobotConstants.MotorConstants.VORTEX_FREE_SPEED) > 0) {
-                return RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+        // check to make sure it's not greater than max speed (.compareTo returns a number greater
+        // than 0 if what it's being called on is GREATER than the parameter)
+        if (calculatedDesiredVelocity.compareTo(RobotConstants.MotorConstants.VORTEX_FREE_SPEED)
+                > 0) {
+            return RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
         }
         return calculatedDesiredVelocity;
     }
