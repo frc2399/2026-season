@@ -37,29 +37,31 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
     private final ClosedLoopConfig shooterIndexerClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder shooterIndexerEncoder;
 
-    private AngularVelocity desiredVelocity;
+    private AngularVelocity desiredVelocityRad_P_S;
 
     public ShooterIndexerHardwarePrototype() {
 
-        SparkMaxConfig shooterIndexerSparkMaxConfig = new SparkMaxConfig();
+        SparkMaxConfig shooterIndexerSparkMaxConfigRad_P_S = new SparkMaxConfig();
 
-        shooterIndexerSparkMaxConfig.idleMode(IdleMode.kBrake);
-        shooterIndexerSparkMaxConfig.inverted(true);
-        shooterIndexerSparkMaxConfig.smartCurrentLimit(
+        shooterIndexerSparkMaxConfigRad_P_S.idleMode(IdleMode.kBrake);
+        shooterIndexerSparkMaxConfigRad_P_S.inverted(true);
+        shooterIndexerSparkMaxConfigRad_P_S.smartCurrentLimit(
                 (int) MotorConstants.NEO_CURRENT_LIMIT.in(Amps));
 
-        shooterIndexerSparkMaxConfig.encoder.positionConversionFactor(
+        shooterIndexerSparkMaxConfigRad_P_S.encoder.positionConversionFactor(
                 ENCODER_POSITION_FACTOR.in(Radians));
-        shooterIndexerSparkMaxConfig.encoder.velocityConversionFactor(
+        shooterIndexerSparkMaxConfigRad_P_S.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
-        shooterIndexerSparkMaxConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        shooterIndexerSparkMaxConfig.closedLoop.pid(SHOOTER_INDEXER_P, 0, SHOOTER_INDEXER_D);
-        shooterIndexerSparkMaxConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
+        shooterIndexerSparkMaxConfigRad_P_S.closedLoop.feedbackSensor(
+                FeedbackSensor.kPrimaryEncoder);
+        shooterIndexerSparkMaxConfigRad_P_S.closedLoop.pid(SHOOTER_INDEXER_P, 0, SHOOTER_INDEXER_D);
+        shooterIndexerSparkMaxConfigRad_P_S.closedLoop.outputRange(
+                MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
         shooterIndexerClosedLoopConfig.feedForward.sva(SHOOTER_INDEXER_KS, SHOOTER_INDEXER_KV, 0);
 
-        shooterIndexerSparkMaxConfig.apply(shooterIndexerClosedLoopConfig);
+        shooterIndexerSparkMaxConfigRad_P_S.apply(shooterIndexerClosedLoopConfig);
 
         shooterIndexerSparkMax =
                 new SparkMax(
@@ -67,7 +69,7 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
                         MotorType.kBrushless);
 
         shooterIndexerSparkMax.configure(
-                shooterIndexerSparkMaxConfig,
+                shooterIndexerSparkMaxConfigRad_P_S,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
@@ -77,28 +79,28 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
     }
 
     public void runShooterIndexer() {
-        desiredVelocity =
+        desiredVelocityRad_P_S =
                 RadiansPerSecond.of(0.5 * MotorConstants.NEO_FREE_SPEED.in(RadiansPerSecond));
         shooterIndexerPidController.setSetpoint(
-                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+                desiredVelocityRad_P_S.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void backwardsRunShooterIndexer() {
-        desiredVelocity =
+        desiredVelocityRad_P_S =
                 RadiansPerSecond.of(-0.5 * MotorConstants.NEO_FREE_SPEED.in(RadiansPerSecond));
         shooterIndexerPidController.setSetpoint(
-                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+                desiredVelocityRad_P_S.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void defaultBehavior() {
-        desiredVelocity = RadiansPerSecond.of(0);
+        desiredVelocityRad_P_S = RadiansPerSecond.of(0);
         shooterIndexerPidController.setSetpoint(
-                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+                desiredVelocityRad_P_S.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
-        state.shooterIndexerActualSpeed = shooterIndexerEncoder.getVelocity();
+        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocityRad_P_S.in(RadiansPerSecond);
+        state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerCurrent = shooterIndexerSparkMax.getOutputCurrent();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkMax.getAppliedOutput() * shooterIndexerSparkMax.getBusVoltage();

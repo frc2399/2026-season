@@ -35,7 +35,7 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder spindexerEncoder;
 
-    private AngularVelocity desiredVelocity;
+    private AngularVelocity desiredVelocityRad_P_S;
 
     public SpindexerHardwareBeta() {
         SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
@@ -68,20 +68,20 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     }
 
     public void runSpindexer() {
-        desiredVelocity =
+        desiredVelocityRad_P_S =
                 RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         spindexerPidController.setSetpoint(
                 0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void defaultBehavior() {
-        desiredVelocity = RadiansPerSecond.of(0);
+        desiredVelocityRad_P_S = RadiansPerSecond.of(0);
         spindexerPidController.setSetpoint(0, ControlType.kVelocity);
     }
 
     public void updateStates(SpindexerIOState state) {
-        state.spindexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
-        state.spindexerActualSpeed = spindexerEncoder.getVelocity();
+        state.spindexerDesiredSpeedRad_P_S = desiredVelocityRad_P_S.in(RadiansPerSecond);
+        state.spindexerActualSpeedRad_P_S = spindexerEncoder.getVelocity();
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
         state.spindexerAppliedVoltage =
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();

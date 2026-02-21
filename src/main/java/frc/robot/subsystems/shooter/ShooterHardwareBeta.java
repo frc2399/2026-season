@@ -129,15 +129,30 @@ public class ShooterHardwareBeta implements ShooterIO {
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
+    public boolean isUpToSpeed() {
+        boolean topRollerDesiredSpeedRad_P_S =
+                Math.abs(
+                                (shooterTopEncoder.getVelocity())
+                                        - (desiredTopVelocity.in(RadiansPerSecond)))
+                        < 25;
+        boolean bottomRollerDesiredSpeedRad_P_S =
+                Math.abs(
+                                (shooterBottomEncoder.getVelocity())
+                                        - (desiredBottomVelocity.in(RadiansPerSecond)))
+                        < 25;
+
+        return topRollerDesiredSpeedRad_P_S && bottomRollerDesiredSpeedRad_P_S;
+    }
+
     public void updateStates(ShooterIOState state) {
-        state.topRollerDesiredSpeed = desiredTopVelocity.in(RadiansPerSecond);
-        state.topRollerActualSpeed = shooterTopEncoder.getVelocity();
+        state.topRollerDesiredSpeedRad_P_S = desiredTopVelocity.in(RadiansPerSecond);
+        state.topRollerActualSpeedRad_P_S = shooterTopEncoder.getVelocity();
         state.topRollerCurrent = shooterTopSparkFlex.getOutputCurrent();
         state.topRollerAppliedVoltage =
                 shooterTopSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
-        state.bottomRollerDesiredSpeed = desiredBottomVelocity.in(RadiansPerSecond);
+        state.bottomRollerDesiredSpeedRad_P_S = desiredBottomVelocity.in(RadiansPerSecond);
         state.bottomRollerCurrent = shooterBottomSparkFlex.getOutputCurrent();
-        state.bottomRollerActualSpeed = shooterBottomEncoder.getVelocity();
+        state.bottomRollerActualSpeedRad_P_S = shooterBottomEncoder.getVelocity();
         state.bottomRollerAppliedVoltage =
                 shooterBottomSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
     }

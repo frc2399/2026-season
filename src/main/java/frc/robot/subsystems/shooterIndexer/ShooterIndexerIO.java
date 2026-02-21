@@ -10,8 +10,8 @@ public interface ShooterIndexerIO {
     public void updateStates(ShooterIndexerIOState state);
 
     public static class ShooterIndexerIOState {
-        public double shooterIndexerDesiredSpeed = 0;
-        public double shooterIndexerActualSpeed = 0;
+        public double shooterIndexerDesiredSpeedRad_P_S = 0;
+        public double shooterIndexerActualSpeedRad_P_S = 0;
         public double shooterIndexerAppliedVoltage = 0;
         public double shooterIndexerCurrent = 0;
     }
