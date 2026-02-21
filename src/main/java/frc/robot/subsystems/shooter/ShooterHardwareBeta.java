@@ -29,17 +29,34 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final double MIN_OUTPUT_RANGE = -1;
-    private final double MAX_OUTPUT_RANGE = 1;
-    private final double SHOOTER_TOP_P = 0;
-    private final double SHOOTER_TOP_D = 0;
-    private final double SHOOTER_TOP_KS = 0.01;
-    private final double SHOOTER_TOP_KV = 0.01;
+    private final double MAX_OUTPUT_RANGE = 1; 
+    private final double SHOOTER_BETA_TOP_P = 0; // .001
+    private final double SHOOTER_BETA_TOP_D = 0; //
+    private final double SHOOTER_BETA_TOP_KS = 0; // 0.118
+    private final double SHOOTER_BETA_TOP_KV = 0; // 0.01700044443192286
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
-    private final double SHOOTER_BOTTOM_P = 0;
-    private final double SHOOTER_BOTTOM_D = 0;
-    private final double SHOOTER_BOTTOM_KS = 0.01;
-    private final double SHOOTER_BOTTOM_KV = 0.01;
+    private final double SHOOTER_BETA_BOTTOM_P = 0; // .001
+    private final double SHOOTER_BETA_BOTTOM_D = 0; //
+    private final double SHOOTER_BETA_BOTTOM_KS = 0; // 0.154
+    private final double SHOOTER_BETA_BOTTOM_KV = 0; // 0.019691444431922856
     // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+
+// private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_D =
+    // new TunableNumber("Shooter/shooter_top_p", SHOOTER_BETA_TOP_D, true);
+//     private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_P =
+//             new TunableNumber("Shooter/shooter_top_p", .001, true);
+    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KS =
+    //             new TunableNumber("Shooter/shooter_top_ks", 0.118, true);
+    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KV =
+    //             new TunableNumber("Shooter/shooter_top_kv", 0.01700044443192286, true);
+    // private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_D =
+    // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_D, true);
+//     private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_P =
+//             new TunableNumber("Shooter/shooter_bottom_p", .001, true);
+    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KS =
+    //             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
+    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KV =
+    //             new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
@@ -73,13 +90,13 @@ public class ShooterHardwareBeta implements ShooterIO {
 
         shooterBottomMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         shooterTopMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        shooterBottomMotorConfig.closedLoop.pid(SHOOTER_BOTTOM_P, 0, SHOOTER_BOTTOM_D);
-        shooterTopMotorConfig.closedLoop.pid(SHOOTER_TOP_P, 0, SHOOTER_TOP_D);
+        shooterBottomMotorConfig.closedLoop.pid(SHOOTER_BETA_BOTTOM_P, 0, SHOOTER_BETA_BOTTOM_D);
+        shooterTopMotorConfig.closedLoop.pid(SHOOTER_BETA_TOP_P, 0, SHOOTER_BETA_TOP_D);
         shooterBottomMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
         shooterTopMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
-        closedLoopConfigShooterTop.feedForward.sva(SHOOTER_TOP_KS, SHOOTER_TOP_KV, 0);
-        closedLoopConfigShooterBottom.feedForward.sva(SHOOTER_BOTTOM_KS, SHOOTER_BOTTOM_KV, 0);
+        closedLoopConfigShooterTop.feedForward.sva(SHOOTER_BETA_TOP_KS, SHOOTER_BETA_TOP_KV, 0);
+        closedLoopConfigShooterBottom.feedForward.sva(SHOOTER_BETA_BOTTOM_KS, SHOOTER_BETA_BOTTOM_KV, 0);
 
         shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
         shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
@@ -143,5 +160,56 @@ public class ShooterHardwareBeta implements ShooterIO {
     }
 
     @Override
-    public void periodicUpdate() {}
+    public void periodicUpdate() {
+        // if tuning a value, update this chunk for that motor's p, i, OR d
+        // attempting to have this logic running with multiple causes a loop overrun :)
+        // if (TUNABLE_SHOOTER_BETA_BOTTOM_KS.hasChanged()) {
+        //     closedLoopConfigShooterBottom.feedForward.kS(TUNABLE_SHOOTER_BETA_BOTTOM_KS.get());
+        //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
+        //     shooterBottomSparkFlex.configure(
+        //             shooterBottomMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_TOP_KS.hasChanged()) {
+        //     closedLoopConfigShooterTop.feedForward.kS(TUNABLE_SHOOTER_BETA_TOP_KS.get());
+        //     shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
+        //     shooterTopSparkMax.configure(
+        //             shooterTopMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_BOTTOM_KV.hasChanged()) {
+        //     closedLoopConfigShooterBottom.feedForward.kV(TUNABLE_SHOOTER_BETA_BOTTOM_KV.get());
+        //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
+        //     shooterBottomSparkFlex.configure(
+        //             shooterBottomMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_TOP_KV.hasChanged()) {
+        //     closedLoopConfigShooterTop.feedForward.kV(TUNABLE_SHOOTER_BETA_TOP_KV.get());
+        //     shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
+        //     shooterTopSparkMax.configure(
+        //             shooterTopMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_BOTTOM_P.hasChanged()) {
+        //     shooterBottomMotorConfig.closedLoop.p(TUNABLE_SHOOTER_BETA_BOTTOM_P.get());
+        //     //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
+        //     shooterBottomSparkFlex.configure(
+        //             shooterBottomMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_TOP_P.hasChanged()) {
+        //     shooterTopMotorConfig.closedLoop.p(TUNABLE_SHOOTER_BETA_TOP_P.get());
+        //     //     shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
+        //     shooterTopSparkMax.configure(
+        //             shooterTopMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+    }
 }

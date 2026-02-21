@@ -21,7 +21,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
-import frc.robot.util.TunableNumber;
 
 public class ShooterHardwarePrototype implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
@@ -42,20 +41,18 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private final double SHOOTER_BOTTOM_KS = 0.154;
     private final double SHOOTER_BOTTOM_KV = 0.019691444431922856;
 
-    // have to removE the SHOOTER_ROLLER_PLACE_VALUE and replace with a number
-
     // private static final TunableNumber TUNABLE_SHOOTER_TOP_D =
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_TOP_D, true);
-//     private static final TunableNumber TUNABLE_SHOOTER_TOP_P =
-//             new TunableNumber("Shooter/shooter_top_p", .001, true);
+    //     private static final TunableNumber TUNABLE_SHOOTER_TOP_P =
+    //             new TunableNumber("Shooter/shooter_top_p", .001, true);
     //     private static final TunableNumber TUNABLE_SHOOTER_TOP_KS =
     //             new TunableNumber("Shooter/shooter_top_ks", 0.118, true);
     //     private static final TunableNumber TUNABLE_SHOOTER_TOP_KV =
     //             new TunableNumber("Shooter/shooter_top_kv", 0.01700044443192286, true);
     // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_D =
     // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_D, true);
-//     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
-//             new TunableNumber("Shooter/shooter_bottom_p", .001, true);
+    //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
+    //             new TunableNumber("Shooter/shooter_bottom_p", .001, true);
     //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KS =
     //             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
     //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KV =
