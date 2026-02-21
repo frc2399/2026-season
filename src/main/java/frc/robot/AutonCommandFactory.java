@@ -67,7 +67,6 @@ public class AutonCommandFactory {
                                         FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE
                                                 .pose())),
                 buildPathDeferred(
-<<<<<<< HEAD
                         FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP,
                         bumpAndDepotConstraints,
                         0.75),
@@ -88,6 +87,7 @@ public class AutonCommandFactory {
                 // drive.driveToPoseOnExecute(),
                 depotSideNeutralZoneToHubWaypoints());
         // drive.driveToPoseOnExecute());
+        // shooting command
     }
 
     public Command outpostSideBumpToNeutralZone() {
@@ -119,65 +119,6 @@ public class AutonCommandFactory {
                 // drive.driveToPoseOnExecute(),
                 outpostSideNeutralZoneToHubWaypoints());
         // drive.driveToPoseOnExecute());
-    }
-
-    public Command depotSideBumpToNeutralZoneShooting() {
-        return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE
-                                                .pose())),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP,
-                        bumpAndDepotConstraints,
-                        1.5),
-                // move into intaking position while driving
-                drive.driveToPoseOnExecute(),
-                Commands.parallel(
-                        intake.runIntake().withTimeout(6),
-                        buildPathDeferred(
-                                FieldConstants.PoseConstants.DEPOT_SIDE_IN_NEUTRAL_ZONE,
-                                intakeConstraints,
-                                0)),
-                intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER,
-                        constraints,
-                        1.5),
-                // get into shooting position while driving
-                drive.driveToPoseOnExecute(),
-                depotSideNeutralZoneToHubWaypoints());
-        // shooting command
-    }
-
-    public Command outpostSideBumpToNeutralZoneShooting() {
-        return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.OUTPOST_SIDE_BUMP_STARTING_LINE
-                                                .pose())),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.OUTPOST_SIDE_OVER_THE_BUMP,
-                        bumpAndDepotConstraints,
-                        1.5),
-                // move into intaking position while driving
-                drive.driveToPoseOnExecute(),
-                Commands.parallel(
-                        intake.runIntake().withTimeout(6),
-                        buildPathDeferred(
-                                FieldConstants.PoseConstants.OUTPOST_SIDE_IN_NEUTRAL_ZONE,
-                                intakeConstraints,
-                                0)),
-                intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER,
-                        constraints,
-                        1.5),
-                // get into shooting position while driving
-                drive.driveToPoseOnExecute(),
-                outpostSideNeutralZoneToHubWaypoints());
         // shooting command
     }
 
@@ -213,6 +154,46 @@ public class AutonCommandFactory {
                 drive.driveToPoseOnExecute(),
                 // shooting command
                 outpostSideHubToNeutralZoneWaypoints());
+    }
+
+    public Command depotSideNeutralZoneIntaking() {
+        return Commands.sequence(
+                Commands.runOnce(
+                        () ->
+                                drive.resetOdometry(
+                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE
+                                                .pose())),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP,
+                        bumpAndDepotConstraints,
+                        0.75),
+                // drive.driveToPoseOnExecute(),
+                // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
+                Commands.parallel(
+                        intake.runIntake().withTimeout(6), depotSideNeutralZoneIntaking()),
+                intake.defaultBehavior().withTimeout(0.01),
+                depotSideNeutralZoneToHubWaypoints());
+        // shooting command
+    }
+
+    public Command outpostSideNeutralZoneIntaking() {
+        return Commands.sequence(
+                Commands.runOnce(
+                        () ->
+                                drive.resetOdometry(
+                                        FieldConstants.PoseConstants.OUTPOST_SIDE_BUMP_STARTING_LINE
+                                                .pose())),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.OUTPOST_SIDE_OVER_THE_BUMP,
+                        bumpAndDepotConstraints,
+                        0.75),
+                // drive.driveToPoseOnExecute(),
+                // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
+                Commands.parallel(
+                        intake.runIntake().withTimeout(6), outpostSideNeutralZoneIntaking()),
+                intake.defaultBehavior().withTimeout(0.01),
+                outpostSideNeutralZoneToHubWaypoints());
+        // shooting command
     }
 
     public Command depotSideHubToNeutralZoneWaypoints() {
@@ -312,7 +293,7 @@ public class AutonCommandFactory {
                                             .pose(),
                                     FieldConstants.PoseConstants.HUB_MIDDLE.pose());
 
-                    PathPlannerPath outpostSideNeutralZoneToHub = 
+                    PathPlannerPath outpostSideNeutralZoneToHub =
                             new PathPlannerPath(
                                     waypoints,
                                     bumpAndDepotConstraints,
@@ -322,6 +303,68 @@ public class AutonCommandFactory {
                     outpostSideNeutralZoneToHub.preventFlipping = true;
 
                     AutoBuilder.followPath(outpostSideNeutralZoneToHub).schedule();
+                });
+    }
+
+    public Command depotSideNeutralZoneIntakingWaypoints() {
+        return Commands.runOnce(
+                () -> {
+                    drive.resetOdometry(
+                            FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER.pose());
+
+                    List<Waypoint> waypoints =
+                            PathPlannerPath.waypointsFromPoses(
+                                    FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER
+                                            .pose(),
+                                    FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_CENTER
+                                            .pose(),
+                                    FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE.pose(),
+                                    FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE_BORDER.pose(),
+                                    FieldConstants.PoseConstants.DEPOT_INTAKE_END.pose(),
+                                    FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER
+                                            .pose());
+
+                    PathPlannerPath depotSideNeutralZoneIntaking =
+                            new PathPlannerPath(
+                                    waypoints,
+                                    intakeConstraints,
+                                    null,
+                                    new GoalEndState(1.5, Rotation2d.fromDegrees(180)));
+
+                    depotSideNeutralZoneIntaking.preventFlipping = true;
+
+                    AutoBuilder.followPath(depotSideNeutralZoneIntaking).schedule();
+                });
+    }
+
+    public Command outpostSideNeutralZoneIntakingWaypoints() {
+        return Commands.runOnce(
+                () -> {
+                    drive.resetOdometry(
+                            FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER.pose());
+
+                    List<Waypoint> waypoints =
+                            PathPlannerPath.waypointsFromPoses(
+                                    FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER
+                                            .pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_CENTER
+                                            .pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE_BORDER.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_INTAKE_END.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER
+                                            .pose());
+
+                    PathPlannerPath outpostSideNeutralZoneIntaking =
+                            new PathPlannerPath(
+                                    waypoints,
+                                    intakeConstraints,
+                                    null,
+                                    new GoalEndState(1.5, Rotation2d.fromDegrees(180)));
+
+                    outpostSideNeutralZoneIntaking.preventFlipping = true;
+
+                    AutoBuilder.followPath(outpostSideNeutralZoneIntaking).schedule();
                 });
     }
 }

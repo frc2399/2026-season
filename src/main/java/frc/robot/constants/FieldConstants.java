@@ -36,6 +36,16 @@ public final class FieldConstants {
                 new Pose(
                         "depotSideOverTheBump",
                         new Pose2d(5.75, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose DEPOT_SIDE_NEUTRAL_ZONE_CENTER =
+                new Pose(
+                        "depotSideNeutralZoneCenter",
+                        new Pose2d(7.7, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose DEPOT_END_NEUTRAL_ZONE =
+                new Pose("depotEndNeutralZone", new Pose2d(7.7, 3.07, Rotation2d.fromDegrees(270)));
+        public static final Pose DEPOT_END_NEUTRAL_ZONE_BORDER = 
+                new Pose("depotEndNeutralZoneBorder", new Pose2d(7.4, 3.07, Rotation2d.fromDegrees(0)));
+        public static final Pose DEPOT_INTAKE_END = 
+                new Pose("depotIntakeEnd", new Pose2d(7.4, 5.356, Rotation2d.fromDegrees(90)));
         public static final Pose OUTPOST_SIDE_NEUTRAL_ZONE_BORDER =
                 new Pose(
                         "outpostSideNeutralZoneBorder",
@@ -52,6 +62,16 @@ public final class FieldConstants {
                 new Pose(
                         "outposeSideOverTheBump",
                         new Pose2d(5.75, 2.7, Rotation2d.fromDegrees(180)));
+        public static final Pose OUTPOST_SIDE_NEUTRAL_ZONE_CENTER =
+                new Pose(
+                        "outpostSideNeutralZoneCenter",
+                        new Pose2d(7.7, 2.7, Rotation2d.fromDegrees(180)));
+        public static final Pose OUTPOST_END_NEUTRAL_ZONE = 
+                new Pose("outpostEndNeutralZone", new Pose2d(7.7, 5.8, Rotation2d.fromDegrees(90)));
+        public static final Pose OUTPOST_END_NEUTRAL_ZONE_BORDER = 
+                new Pose("outpostEndNeutralZoneBorder", new Pose2d(7.4, 5.1, Rotation2d.fromDegrees(0)));
+        public static final Pose OUTPOST_INTAKE_END = 
+                new Pose("outpostIntakeEnd", new Pose2d(7.4, 2.7, Rotation2d.fromDegrees(90)));
     }
 
     public static class AllianceZoneBoundaries {

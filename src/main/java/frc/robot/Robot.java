@@ -6,6 +6,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,9 +21,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathfindingCommand;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
