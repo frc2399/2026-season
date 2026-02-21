@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -9,6 +10,7 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
+import frc.robot.subsystems.intake.IntakeArmHardwareBeta;
 import frc.robot.subsystems.intake.IntakeArmPlacebo;
 import frc.robot.subsystems.intake.IntakeRollerHardware;
 import frc.robot.subsystems.intake.IntakeRollerPlacebo;
@@ -136,7 +138,10 @@ public class SubsystemFactory {
 
     public IntakeSubsystem buildIntake() {
         if (robotType == RobotType.MOZART) {
-            return new IntakeSubsystem(new IntakeRollerHardware(), new IntakeArmPlacebo());
+            return new IntakeSubsystem(new IntakeRollerHardware(RobotConstants.MotorIdConstants.INTAKE_ROLLER_ALPHA_CAN_ID), new IntakeArmPlacebo());
+        } else if (robotType == RobotType.BETA) {
+            // start w placebo rollers bc design flaw means belt doesnt work :(
+            return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmHardwareBeta());
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }

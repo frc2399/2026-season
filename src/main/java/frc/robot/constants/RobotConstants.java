@@ -24,12 +24,14 @@ public final class RobotConstants {
         public static final int FRONT_RIGHT_TURNING_CAN_ID = 32;
         public static final int REAR_RIGHT_TURNING_CAN_ID = 42;
 
-        public static final int INTAKE_CAN_ID = 6;
+        public static final int INTAKE_ROLLER_ALPHA_CAN_ID = 6;
         public static final int SHOOTER_INDEXER_CAN_ID = 1;
         public static final int GYRO_CAN_ID = 3;
         public static final int SHOOTER_BOTTOM_CAN_ID = 3;
         public static final int SHOOTER_TOP_CAN_ID = 21;
 
+        public static final int INTAKE_ROLLER_CAN_ID = 7;
+        public static final int INTAKE_ARM_CAN_ID = 8;
         public static final int SHOOTER_BOTTOM_BETA_CAN_ID = 9;
         public static final int SHOOTER_TOP_BETA_CAN_ID = 10;
         public static final int SHOOTER_INDEXER_BETA_CAN_ID = 13;

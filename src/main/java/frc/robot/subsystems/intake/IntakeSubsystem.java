@@ -38,8 +38,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         rollerIO.updateState(rollerState);
 
-        SmartDashboard.putNumber("intake/roller/desired speed", rollerState.desiredSpeed);
-        SmartDashboard.putNumber("intake/roller/actual speed", rollerState.actualSpeed);
+        SmartDashboard.putNumber("intake/roller/desired speed (radians per second)", rollerState.desiredSpeedRadiansPerSecond);
+        SmartDashboard.putNumber("intake/roller/actual speed (radians per second)", rollerState.actualSpeedRadiansPerSecond);
         SmartDashboard.putNumber("intake/roller/current", rollerState.current);
         SmartDashboard.putNumber("intake/roller/applied output", rollerState.appliedVoltage);
     }

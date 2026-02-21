@@ -50,7 +50,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public IntakeRollerHardware() {
+    public IntakeRollerHardware(int rollerCanId) {
         SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
         intakeMotorConfig.idleMode(IdleMode.kBrake);
@@ -70,7 +70,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
         intakeMotorConfig.apply(closedLoopConfigIntake);
 
         intakeSparkFlex =
-                new SparkFlex(RobotConstants.MotorIdConstants.INTAKE_CAN_ID, MotorType.kBrushless);
+                new SparkFlex(rollerCanId, MotorType.kBrushless);
         intakeSparkFlex.configure(
                 intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -98,8 +98,8 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void updateState(IntakeRollerIOState state) {
-        state.actualSpeed = intakeEncoder.getVelocity();
-        state.desiredSpeed = desiredVelocity.in(RadiansPerSecond);
+        state.actualSpeedRadiansPerSecond = intakeEncoder.getVelocity();
+        state.desiredSpeedRadiansPerSecond = desiredVelocity.in(RadiansPerSecond);
         state.current = intakeSparkFlex.getOutputCurrent();
         state.appliedVoltage = intakeSparkFlex.getBusVoltage() * intakeSparkFlex.getAppliedOutput();
         // if tuning a value, update this chunk for that motor's p, i, OR d
