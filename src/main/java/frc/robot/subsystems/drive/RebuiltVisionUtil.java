@@ -15,8 +15,7 @@ public class RebuiltVisionUtil {
     }
 
     public static Pose2d getHubPose() {
-        if (FieldConstants.alliance.isPresent()
-                && FieldConstants.alliance.get() == Alliance.Blue) {
+        if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
             return FieldConstants.BLUE_CENTER_OF_HUB_POSE;
         } else {
             return FieldConstants.RED_CENTER_OF_HUB_POSE;

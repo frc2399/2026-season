@@ -55,7 +55,6 @@ import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
-import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -362,7 +361,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
-                            if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get()
+                                            == DriverStation.Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
 
@@ -569,7 +570,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
