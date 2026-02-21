@@ -63,7 +63,7 @@ public class GameState {
         if (timeRemaining < 105 - shooterTimeDelay) {
             return Period.SHIFT_2;
         }
-        if (timeRemaining < 13 - shooterTimeDelay) {
+        if (timeRemaining < 130 - shooterTimeDelay) {
             return Period.SHIFT_1;
         }
         if (timeRemaining < 140 - shooterTimeDelay) {

@@ -67,6 +67,7 @@ public class AutonCommandFactory {
                                         FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE
                                                 .pose())),
                 buildPathDeferred(
+<<<<<<< HEAD
                         FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP,
                         bumpAndDepotConstraints,
                         0.75),

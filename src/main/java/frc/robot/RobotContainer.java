@@ -27,7 +27,7 @@ import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
-    private Gyro gyro = subsystemFactory.buildGyro();
+    public Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
@@ -94,7 +94,7 @@ public class RobotContainer {
 
     private void configureButtonBindingsDriver() {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
-        driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
+        driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
@@ -102,8 +102,8 @@ public class RobotContainer {
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-
         autoChooser.addOption(
+<<<<<<< HEAD
                 "depotSideBumpToNeutralZoneShooting",
                 autonCommandFactory.depotSideBumpToNeutralZoneShooting());
         autoChooser.addOption(
