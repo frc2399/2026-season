@@ -103,7 +103,6 @@ public class RobotContainer {
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
         autoChooser.addOption(
-<<<<<<< HEAD
                 "depotSideBumpToNeutralZoneShooting",
                 autonCommandFactory.depotSideBumpToNeutralZoneShooting());
         autoChooser.addOption(
