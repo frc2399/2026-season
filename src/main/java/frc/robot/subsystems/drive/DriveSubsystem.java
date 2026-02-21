@@ -42,7 +42,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -96,10 +95,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private final LinearVelocity MAX_LINEAR_SPEED;
     private final AngularVelocity MAX_ANGULAR_VELOCITY;
 
-    private final Translation2d FRONT_LEFT_OFFSET;
-    private final Translation2d REAR_LEFT_OFFSET;
-    private final Translation2d FRONT_RIGHT_OFFSET;
-    private final Translation2d REAR_RIGHT_OFFSET;
+    public final Translation2d FRONT_LEFT_OFFSET;
+    public final Translation2d REAR_LEFT_OFFSET;
+    public final Translation2d FRONT_RIGHT_OFFSET;
+    public final Translation2d REAR_RIGHT_OFFSET;
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
@@ -126,6 +125,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private ChassisSpeeds relativeRobotSpeeds = new ChassisSpeeds();
 
     private Rotation2d lastAngle = new Rotation2d();
+
+    //     public static final RobotConfig CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, new
+    // ModuleConfig(
+    //         WHEEL_RADIUS, MAX_SPEED, WHEEL_COF, DRIVE_MOTOR, DRIVE_CURRENT_LIMIT, NUM_MOTORS),
+    // MODULE_OFFSETS);
 
     public static class DriveSubsystemStates {
         public Pose2d pose = new Pose2d();
@@ -248,7 +252,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     public void periodic() {
         SmartDashboard.putBoolean("/drive/atGoal", atGoal);
         SmartDashboard.putBoolean("/drive/isHubActive", GameState.isHubActive(0));
-        SmartDashboard.putNumber("/drive/matchTime", DriverStationSim.getMatchTime());
         // This will get the simulated sensor readings that we set
         // in the previous article while in simulation, but will use
         // real values on the robot itself.
@@ -303,7 +306,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                     DRIVE_KINEMATICS.toChassisSpeeds(swerveModuleStates).omegaRadiansPerSecond
                             * (1 / RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
             lastAngle = lastAngle.plus(Rotation2d.fromRadians(angleChange));
-            gyro.setYaw(Radians.of(lastAngle.getRadians()));
+            gyro.setYawCommand(Radians.of(lastAngle.getRadians()));
         }
 
         logAndUpdateDriveSubsystemStates();
