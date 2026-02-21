@@ -9,15 +9,21 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
-import frc.robot.subsystems.indexer.IndexerPlacebo;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.intakeArm.IntakeArmPlacebo;
 import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
+import frc.robot.subsystems.shooter.ShooterHardwareBeta;
+import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBeta;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwarePrototype;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerPlacebo;
+import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -30,7 +36,7 @@ public class SubsystemFactory {
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
     private static final String BETA_SERIAL_NUMBER = "";
     private static final String COMP_SERIAL_NUMBER = "";
-    private static final String PROTOTYPE_SERIAL_NUMBER = "";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
 
     public enum RobotType {
         MOZART,
@@ -46,11 +52,11 @@ public class SubsystemFactory {
     private String serialNum = System.getenv("serialnum");
 
     public SubsystemFactory() {
-        // if (serialNum.equals(ALPHA_SERIAL_NUMBER)) {
-        //     robotType = RobotType.ALPHA;
-        // } else
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
+        } else if (serialNum == null) {
+            robotType = null;
+            throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
@@ -77,28 +83,6 @@ public class SubsystemFactory {
         SwerveModule rearLeft;
         SwerveModule frontRight;
         SwerveModule rearRight;
-
-        // if (robotType == RobotType.ALPHA) {
-        //     frontLeft = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.FRONT_LEFT_DRIVING_CAN_ID,
-        //             MotorIdConstants.FRONT_LEFT_TURNING_CAN_ID,
-        //             FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left"));
-        //     frontRight = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.FRONT_RIGHT_DRIVING_CAN_ID,
-        //             MotorIdConstants.FRONT_RIGHT_TURNING_CAN_ID,
-        //             FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right"));
-        //     rearLeft = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.REAR_LEFT_DRIVING_CAN_ID,
-        //             MotorIdConstants.REAR_LEFT_TURNING_CAN_ID,
-        //             REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left"));
-        //     rearRight = new SwerveModule(new SwerveModuleHardwareNEO(
-        //             MotorIdConstants.REAR_RIGHT_DRIVING_CAN_ID,
-        //             MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
-        //             REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
-        //     return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro,
-        //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH,
-        //             Constants.DriveControlConstants.ALPHA_TRACK_WIDTH);
-        // } else
         if (robotType == RobotType.BETA
                 || robotType == RobotType.BUBBLES
                 || robotType == RobotType.MOZART) {
@@ -164,10 +148,26 @@ public class SubsystemFactory {
     }
 
     public ShooterSubsystem buildShooter() {
-        return new ShooterSubsystem(new ShooterPlacebo());
+        if (robotType == RobotType.PROTOTYPE) {
+            return new ShooterSubsystem(new ShooterHardwarePrototype());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterSubsystem(new ShooterHardwareBeta());
+        } else {
+            return new ShooterSubsystem(new ShooterPlacebo());
+        }
     }
 
-    public IndexerSubsystem buildIndexer() {
-        return new IndexerSubsystem(new IndexerPlacebo());
+    public SpindexerSubsystem buildSpindexer() {
+        return new SpindexerSubsystem(new SpindexerPlacebo());
+    }
+
+    public ShooterIndexerSubsystem buildShooterIndexer() {
+        if (robotType == RobotType.PROTOTYPE) {
+            return new ShooterIndexerSubsystem(new ShooterIndexerHardwarePrototype());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterIndexerSubsystem(new ShooterIndexerHardwareBeta());
+        } else {
+            return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
+        }
     }
 }
