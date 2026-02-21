@@ -20,6 +20,7 @@ import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
@@ -34,13 +35,14 @@ public class RobotContainer {
     private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
+    private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory =
             new CommandFactory(
-                    drive, gyro, shooterSubsystem, shooterIndexerSubsystem, spindexerSubsystem);
+                    drive, gyro, shooterSubsystem, shooterIndexerSubsystem, spindexerSubsystem, intakeSubsystem, intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 
@@ -96,7 +98,7 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
-        driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
+        driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());

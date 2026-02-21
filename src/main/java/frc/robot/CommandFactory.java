@@ -6,6 +6,8 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
 public class CommandFactory {
@@ -14,18 +16,27 @@ public class CommandFactory {
     private final ShooterSubsystem shooter;
     private final ShooterIndexerSubsystem shooterIndexer;
     private final SpindexerSubsystem spindexer;
+    private final IntakeSubsystem intakeSubsystem;
+    private final IntakeArmSubsystem intakeArmSubsystem;
 
-    public CommandFactory(
-            DriveSubsystem drive,
+    public CommandFactory(DriveSubsystem drive, 
             Gyro gyro,
             ShooterSubsystem shooter,
             ShooterIndexerSubsystem shooterIndexer,
-            SpindexerSubsystem spindexer) {
+            SpindexerSubsystem spindexer,
+            IntakeSubsystem intakeSubsystem,
+            IntakeArmSubsystem intakeArmSubsystem) {
         this.drive = drive;
         this.gyro = gyro;
         this.shooter = shooter;
         this.shooterIndexer = shooterIndexer;
         this.spindexer = spindexer;
+        this.intakeSubsystem = intakeSubsystem;
+        this.intakeArmSubsystem = intakeArmSubsystem;
+    }
+
+    public Command runIntakeandIntakeArm() {
+        return Commands.parallel(intakeSubsystem.runIntake(), intakeArmSubsystem.intakeArmDeploy());
     }
 
     public Command runSpindexShooterIndexAndShooter() {
