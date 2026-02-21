@@ -31,7 +31,7 @@ public class IntakeSubsystem extends SubsystemBase {
                             rollerIO.setZero();
                             armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                         })
-                .withName("intake defaultBehavior (arm stoed + roller at 0)");
+                .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
 
     @Override
