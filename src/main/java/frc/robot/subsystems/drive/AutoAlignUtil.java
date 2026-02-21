@@ -17,12 +17,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.constants.RobotConstants;
-import frc.robot.subsystems.drive.gyro.Gyro;
-
 import java.util.function.Supplier;
-
-import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class AutoAlignUtil {
     // profiled pid controllers for driving to a pose and related constants
@@ -179,5 +174,4 @@ public class AutoAlignUtil {
             return desiredRotRate;
         }
     }
-    
 }
