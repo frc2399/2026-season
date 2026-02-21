@@ -48,12 +48,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
-import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -109,8 +109,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private static final double ROTATION_P = 5.0;
     private static final double ROTATION_I = 0.0;
     private static final double ROTATION_D = 0.0;
-
-    private Optional<Alliance> alliance = DriverStation.getAlliance();
 
     // Slew rate filter variables for controlling lateral acceleration
     private double desiredAngle = 0;
@@ -236,8 +234,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             new PIDConstants(ROTATION_P, ROTATION_I, ROTATION_D)),
                     config, // The robot configuration
                     () -> {
-                        if (alliance.isPresent()) {
-                            return alliance.get() == DriverStation.Alliance.Red;
+                        if (FieldConstants.alliance.isPresent()) {
+                            return FieldConstants.alliance.get() == DriverStation.Alliance.Red;
                         }
                         return false;
                     },
@@ -366,7 +364,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
-                            if (alliance.get() == DriverStation.Alliance.Red) {
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get()
+                                            == DriverStation.Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
 
@@ -573,7 +573,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (alliance.get() == Alliance.Blue) {
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
@@ -645,9 +646,5 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
         SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
-    }
-
-    public void setAlliance(Optional<Alliance> allianceColor) {
-        alliance = allianceColor;
     }
 }

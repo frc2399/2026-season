@@ -2,15 +2,14 @@ package frc.robot.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import java.util.Optional;
+import frc.robot.constants.FieldConstants;
 
 public class GameState {
     public static Alliance getAlliance() {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-        if (alliance.isEmpty()) {
+        if (FieldConstants.alliance.isEmpty()) {
             return Alliance.Red;
         }
-        return alliance.get();
+        return FieldConstants.alliance.get();
     }
 
     public static Alliance getautonwinnerAlliance() {
@@ -63,7 +62,7 @@ public class GameState {
         if (timeRemaining < 105 - shooterTimeDelay) {
             return Period.SHIFT_2;
         }
-        if (timeRemaining < 13 - shooterTimeDelay) {
+        if (timeRemaining < 130 - shooterTimeDelay) {
             return Period.SHIFT_1;
         }
         if (timeRemaining < 140 - shooterTimeDelay) {

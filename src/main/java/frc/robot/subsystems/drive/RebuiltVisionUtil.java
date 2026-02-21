@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
 import java.util.function.BooleanSupplier;
@@ -20,8 +19,7 @@ public class RebuiltVisionUtil {
     }
 
     public static Pose2d getHubPose() {
-        if (DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == Alliance.Blue) {
+        if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
             return FieldConstants.BLUE_CENTER_OF_HUB_POSE;
         } else {
             return FieldConstants.RED_CENTER_OF_HUB_POSE;
