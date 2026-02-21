@@ -29,7 +29,7 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
     private final RelativeEncoder shooterIndexerEncoder;
     private final SparkClosedLoopController shooterIndexerPidController;
 
-    private static final boolean SHOOTER_INDEXER_MOTOR_INVERTED = false;
+    private static final boolean SHOOTER_INDEXER_MOTOR_INVERTED = true;
     private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kBrake;
 
     private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
