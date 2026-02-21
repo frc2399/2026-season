@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intakeArm;
+package frc.robot.subsystems.intake;
 
 public interface IntakeArmIO {
     public void setSetpoint(IntakeArmSetpoint setpoint);

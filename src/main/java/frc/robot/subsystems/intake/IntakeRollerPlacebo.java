@@ -1,6 +1,6 @@
 package frc.robot.subsystems.intake;
 
-public class IntakePlacebo implements IntakeIO {
+public class IntakeRollerPlacebo implements IntakeRollerIO {
     public void runIntake() {}
 
     public void setZero() {}

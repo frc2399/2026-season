@@ -63,7 +63,7 @@ public class AutonCommandFactory {
                 drive.driveToPoseOnExecute(),
                 // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(6),
+                        intake.deployAndRunIntake().withTimeout(6),
                         buildPathDeferred(
                                 FieldConstants.PoseConstants.IN_NEUTRAL_ZONE, intakeConstraints)),
                 intake.defaultBehavior().withTimeout(0.01),
@@ -87,7 +87,7 @@ public class AutonCommandFactory {
                 // move into intaking position while driving
                 drive.driveToPoseOnExecute(),
                 buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
-                intake.runIntake().withTimeout(1),
+                intake.deployAndRunIntake().withTimeout(1),
                 intake.defaultBehavior().withTimeout(0.01),
                 buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
                 // get into shooting position while driving

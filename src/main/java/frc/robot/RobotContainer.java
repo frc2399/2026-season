@@ -20,7 +20,6 @@ import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
@@ -35,19 +34,13 @@ public class RobotContainer {
     private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
-    private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory =
             new CommandFactory(
-                    drive,
-                    gyro,
-                    shooterSubsystem,
-                    shooterIndexerSubsystem,
-                    intakeSubsystem,
-                    intakeArmSubsystem);
+                    drive, gyro, shooterSubsystem, shooterIndexerSubsystem, intakeSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 

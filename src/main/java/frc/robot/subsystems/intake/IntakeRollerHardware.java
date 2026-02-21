@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
-public class IntakeHardware implements IntakeIO {
+public class IntakeRollerHardware implements IntakeRollerIO {
 
     private SparkFlex intakeSparkFlex;
     private final SparkClosedLoopController intakePidController;
@@ -50,7 +50,7 @@ public class IntakeHardware implements IntakeIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public IntakeHardware() {
+    public IntakeRollerHardware() {
         SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
         intakeMotorConfig.idleMode(IdleMode.kBrake);

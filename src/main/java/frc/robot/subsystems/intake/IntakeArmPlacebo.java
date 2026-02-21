@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intakeArm;
+package frc.robot.subsystems.intake;
 
 public class IntakeArmPlacebo implements IntakeArmIO {
 
