@@ -41,7 +41,13 @@ public class RobotContainer {
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory =
-            new CommandFactory(drive, gyro, shooterSubsystem, shooterIndexerSubsystem, intakeSubsystem, intakeArmSubsystem);
+            new CommandFactory(
+                    drive,
+                    gyro,
+                    shooterSubsystem,
+                    shooterIndexerSubsystem,
+                    intakeSubsystem,
+                    intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 

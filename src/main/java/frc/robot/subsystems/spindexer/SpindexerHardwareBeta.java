@@ -32,6 +32,9 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     private final double SPINDEXER_KS = 0.1;
     private final double SPINDEXER_KV = 0;
 
+    // private static final TunableNumber TUNABLE_SPINDEXER_KS =
+    //             new TunableNumber("Spindexer/spindexer_ks", 0.1, true);
+
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder spindexerEncoder;
 
@@ -85,5 +88,14 @@ public class SpindexerHardwareBeta implements SpindexerIO {
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
         state.spindexerAppliedVoltage =
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
+
+        // if (TUNABLE_SPINDEXER_KS.hasChanged()) {
+        //     spindexerClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
+        //     spindexerConfig.apply(spindexerClosedLoopConfig);
+        //     spindexerSparkFlexConfig.configure(
+        //             spindexSparkFlexConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
     }
 }

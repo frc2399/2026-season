@@ -17,6 +17,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
     }
 
     public Command intakeArmStow() {
-        return this.runOnce(() -> io.setSetpoint(IntakeArmSetpoint.STOWED)).withName("intakeArmStow");
+        return this.runOnce(() -> io.setSetpoint(IntakeArmSetpoint.STOWED))
+                .withName("intakeArmStow");
     }
 }
