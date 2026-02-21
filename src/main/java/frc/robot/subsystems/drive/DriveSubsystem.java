@@ -619,6 +619,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 });
     }
 
+    public Pose2d getRobotPose() {
+        return robotPose;
+    }
+
     private void logAndUpdateDriveSubsystemStates() {
         states.pose = getPose();
         states.poseTheta = states.pose.getRotation().getDegrees();

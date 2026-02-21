@@ -19,6 +19,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
@@ -110,7 +111,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         shooterTopEncoder = shooterTopSparkMax.getEncoder();
     }
 
-    public void runShooter() {
+    public void runShooter(Distance distanceToHub) {
         desiredBottomVelocity =
                 RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         desiredTopVelocity =

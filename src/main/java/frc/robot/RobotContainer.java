@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -96,7 +97,7 @@ public class RobotContainer {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
-        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
+        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getRobotPose())));
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
     }
 

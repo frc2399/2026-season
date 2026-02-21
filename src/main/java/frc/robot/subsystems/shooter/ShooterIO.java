@@ -1,7 +1,9 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.units.measure.Distance;
+
 public interface ShooterIO {
-    public void runShooter();
+    public void runShooter(Distance distanceToHub);
 
     public void defaultBehavior();
 

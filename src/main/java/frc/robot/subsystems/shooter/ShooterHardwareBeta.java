@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -17,6 +18,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
+import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
@@ -25,6 +28,9 @@ public class ShooterHardwareBeta implements ShooterIO {
     private SparkFlex shooterTopSparkFlex;
     private SparkClosedLoopController shooterBottomPIDController;
     private SparkClosedLoopController shooterTopPIDController;
+
+    private double topRollerCurveFitSlope = 1474.38483; // from desmos (natural log fit)
+    private double topRollerCurveFitIntercept = -2995.98209; // also from desmos (natural log fit)
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
@@ -109,14 +115,32 @@ public class ShooterHardwareBeta implements ShooterIO {
         shooterTopEncoder = shooterTopSparkFlex.getEncoder();
     }
 
-    public void runShooter() {
-        desiredBottomVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.5);
-        desiredTopVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.5);
+    public void runShooter(Distance distanceToHub) {
+        desiredBottomVelocity = getBottomRollerSpeed(distanceToHub);
+        desiredTopVelocity = getTopRollerSpeed(distanceToHub);
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    private AngularVelocity getBottomRollerSpeed(Distance distanceToHub) {
+        
+        return RadiansPerSecond.of(0);
+    }
+
+    private AngularVelocity getTopRollerSpeed(Distance distanceToHub) {
+        AngularVelocity calculatedDesiredVelocity = RadiansPerSecond.of(topRollerCurveFitSlope * Math.log(distanceToHub.in(Inches) - topRollerCurveFitIntercept));
+        // check to make sure it's not negative!
+        if (calculatedDesiredVelocity.in(RadiansPerSecond) < 0) {
+                return RadiansPerSecond.of(0);
+        }
+        // check to make sure it's not greater than max speed (.compareTo returns a number greater than 0 if what it's being called on is GREATER than the parameter)
+        if (calculatedDesiredVelocity.compareTo(RobotConstants.MotorConstants.VORTEX_FREE_SPEED) > 0) {
+                return RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+        }
+        return calculatedDesiredVelocity;
     }
 
     public void defaultBehavior() {
