@@ -48,6 +48,8 @@ public class IntakeHardware implements IntakeIO {
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
     private final RelativeEncoder intakeEncoder;
 
+    private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
+
     public IntakeHardware() {
         SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
@@ -95,7 +97,11 @@ public class IntakeHardware implements IntakeIO {
         SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
     }
 
-    public void periodicUpdate() {
+    public void updateState(IntakeRollerIOState state) {
+        state.actualSpeed = intakeEncoder.getVelocity();
+        state.desiredSpeed = desiredVelocity.in(RadiansPerSecond);
+        state.current = intakeSparkFlex.getOutputCurrent();
+        state.appliedVoltage = intakeSparkFlex.getBusVoltage() * intakeSparkFlex.getAppliedOutput();
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
         // if (TUNABLE_INTAKE_KS.hasChanged()) {
@@ -105,5 +111,6 @@ public class IntakeHardware implements IntakeIO {
         // intakeMotorConfig,
         // ResetMode.kResetSafeParameters,
         // PersistMode.kPersistParameters); }
+
     }
 }

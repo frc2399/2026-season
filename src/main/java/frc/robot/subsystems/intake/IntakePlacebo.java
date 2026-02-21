@@ -6,5 +6,5 @@ public class IntakePlacebo implements IntakeIO {
     public void setZero() {}
 
     @Override
-    public void periodicUpdate() {}
+    public void updateState(IntakeRollerIOState state) {}
 }
