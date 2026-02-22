@@ -84,9 +84,9 @@ public class SubsystemFactory {
         SwerveModule rearLeft;
         SwerveModule frontRight;
         SwerveModule rearRight;
-        if (
-        // robotType == RobotType.BETA
-        robotType == RobotType.BUBBLES || robotType == RobotType.MOZART) {
+        if (robotType == RobotType.BETA
+                || robotType == RobotType.BUBBLES
+                || robotType == RobotType.MOZART) {
             frontLeft =
                     new SwerveModule(
                             new SwerveModuleHardwareVortex(
