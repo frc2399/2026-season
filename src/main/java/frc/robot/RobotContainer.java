@@ -42,7 +42,13 @@ public class RobotContainer {
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory =
             new CommandFactory(
-                    drive, gyro, shooterSubsystem, shooterIndexerSubsystem, spindexerSubsystem, intakeSubsystem, intakeArmSubsystem);
+                    drive,
+                    gyro,
+                    shooterSubsystem,
+                    shooterIndexerSubsystem,
+                    spindexerSubsystem,
+                    intakeSubsystem,
+                    intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 
@@ -102,6 +108,7 @@ public class RobotContainer {
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
     private void setUpAuton() {
