@@ -28,10 +28,6 @@ public class CommandFactory {
         this.intakeSubsystem = intakeSubsystem;
     }
 
-    public Command runIntakeandIntakeArm() {
-        return Commands.parallel(intakeSubsystem.deployAndRunIntake());
-    }
-
     public Command runShooterAndShooterIndexer() {
         return Commands.parallel(shooter.shoot(), shooterIndexer.runShooterIndexer());
     }

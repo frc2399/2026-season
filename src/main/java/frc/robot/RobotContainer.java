@@ -96,7 +96,7 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
-        driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
+        driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
     }

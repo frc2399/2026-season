@@ -1,6 +1,9 @@
 package frc.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
@@ -8,12 +11,17 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.networktables.BooleanTopic;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.Encoder;
+import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 
 public class IntakeArmHardwareBeta implements IntakeArmIO{
@@ -29,28 +37,61 @@ public class IntakeArmHardwareBeta implements IntakeArmIO{
     private final SparkFlexConfig intakeArmSparkFlexConfig = new SparkFlexConfig();
     private final ClosedLoopConfig intakeArmClosedLoopConfig = new ClosedLoopConfig();
 
+    // inversions
+    private static final boolean INTAKE_ARM_MOTOR_INVERTED = false;
+    private static final boolean INTAKE_ARM_ENCODER_INVERTD = false;
+
+    // conversion factors (45:1 is our gear ratio)
+    private static final Angle INTAKE_ARM_POSITION_CONVERSION_FACTOR = Degrees.of(360 / 45); // this subsystem is in degrees because it's a rotational wrist, and this makes it easier to tune :)
+    private static final AngularVelocity INTAKE_ARM_VELOCITY_CONVERSION_FACTOR = DegreesPerSecond.of(360 / 60 / 45); // math more explicit to make conversion more understandable
+    
+    // pid
+    private static final double INTAKE_ARM_P = 0;
+    private static final double INTAKE_ARM_I = 0;
+    private static final double INTAKE_ARM_D = 0;
+    //feedforward
+    private static final double INTAKE_ARM_KS = 0;
+    private static final double INTAKE_ARM_KV = 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond);
+    private static final double INTAKE_ARM_KA = 0;
+    /*
+     * our arm is rotational, so the impact of gravity changes as we rotate, and our feedforward needs to compensate. the kcos is the factor to compensate by
+     * revlib demands that it can get from what we're logging in (degree/s) to rotations of mechanism / second to accurately compensate. that's kcosratio
+     */
+    private static final double INTAKE_ARM_KCOS = 0;
+    private static final double INTAKE_ARM_KCOS_RATIO = 1 / 360; // convert from mechanism degrees to rotation
+
+    //output
+    private static final double INTAKE_ARM_MIN_OUTPUT = -1;
+    private static final double INTAKE_ARM_MAX_OUTPUT = 1;
+
+    //soft limits
+    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(0);
+    private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = true;
+    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(0);
+    private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = true;
+
     public IntakeArmHardwareBeta() {
-        intakeArmSparkFlexConfig.inverted(false)
+        intakeArmSparkFlexConfig.inverted(INTAKE_ARM_MOTOR_INVERTED)
             .idleMode(IdleMode.kBrake)
             .smartCurrentLimit((int) RobotConstants.MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
-        intakeArmSparkFlexConfig.absoluteEncoder.inverted(false)
-            .positionConversionFactor(0)
-            .velocityConversionFactor(0);
+        intakeArmSparkFlexConfig.absoluteEncoder.inverted(INTAKE_ARM_ENCODER_INVERTD)
+            .positionConversionFactor(INTAKE_ARM_POSITION_CONVERSION_FACTOR.in(Degrees))
+            .velocityConversionFactor(INTAKE_ARM_VELOCITY_CONVERSION_FACTOR.in(DegreesPerSecond));
 
         intakeArmSparkFlexConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-            .pid(0, 0, 0)
-            .outputRange(0, 0);
+            .pid(INTAKE_ARM_P, INTAKE_ARM_I, INTAKE_ARM_D)
+            .outputRange(INTAKE_ARM_MIN_OUTPUT, INTAKE_ARM_MAX_OUTPUT);
 
         // soft limits are code-enforced limits on where the mechanism can go
         // they're called SOFT limits because the mechanism can still technically go past it
         // if the mechanism can't physically go past it, that's a HARD limit/stop
-        intakeArmSparkFlexConfig.softLimit.forwardSoftLimit(0)
-            .forwardSoftLimitEnabled(false)
-            .reverseSoftLimit(0)
-            .reverseSoftLimitEnabled(false);
+        intakeArmSparkFlexConfig.softLimit.forwardSoftLimit(INTAKE_ARM_FORWARD_MAX_ANGLE.in(Degrees))
+            .forwardSoftLimitEnabled(INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED)
+            .reverseSoftLimit(INTAKE_ARM_REVERSE_MAX_ANGLE.in(Degrees))
+            .reverseSoftLimitEnabled(INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED);
 
-        intakeArmClosedLoopConfig.feedForward.sva(0,0,0);
+        intakeArmClosedLoopConfig.feedForward.svacr(INTAKE_ARM_KS, INTAKE_ARM_KV, INTAKE_ARM_KA, INTAKE_ARM_KCOS, INTAKE_ARM_KCOS_RATIO);
 
         intakeArmSparkFlexConfig.apply(intakeArmClosedLoopConfig);
 
@@ -64,6 +105,18 @@ public class IntakeArmHardwareBeta implements IntakeArmIO{
 
     @Override
     public void setSetpoint(IntakeArmSetpoint setpoint) {
-        
+        // if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+        //     intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
+        // } else if (setpoint == IntakeArmSetpoint.STOWED) {
+        //     intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
+        // }
+        if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+            intakeArmClosedLoop.setSetpoint(0.1 * RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond), ControlType.kVelocity);
+            intakeArmClosedLoop.setSetpoint(-0.1 * RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond), ControlType.kVelocity);
+        }
     }
+
+
+
+
 }
