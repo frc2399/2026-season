@@ -10,7 +10,6 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
-import frc.robot.subsystems.intake.IntakeArmHardwareBeta;
 import frc.robot.subsystems.intake.IntakeArmPlacebo;
 import frc.robot.subsystems.intake.IntakeRollerHardware;
 import frc.robot.subsystems.intake.IntakeRollerPlacebo;
@@ -35,7 +34,7 @@ public class SubsystemFactory {
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
-    private static final String BETA_SERIAL_NUMBER = "";
+    private static final String BETA_SERIAL_NUMBER = "030589d5";
     private static final String COMP_SERIAL_NUMBER = "";
     private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
 
@@ -144,7 +143,9 @@ public class SubsystemFactory {
                     new IntakeArmPlacebo());
         } else if (robotType == RobotType.BETA) {
             // start w placebo rollers bc design flaw means belt doesnt work :(
-            return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmHardwareBeta());
+            return new IntakeSubsystem(
+                    new IntakeRollerHardware(RobotConstants.MotorIdConstants.INTAKE_ROLLER_CAN_ID),
+                    new IntakeArmPlacebo());
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }

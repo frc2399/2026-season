@@ -32,7 +32,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final int MAX_OUTPUT_RANGE = 1;
     private final double INTAKE_D = 0;
 
-    private static final double DEFAULT_INTAKE_P = 0.1;
+    private static final double DEFAULT_INTAKE_P = 0.001;
     private static final double DEFAULT_INTAKE_KS = 0.1;
     private static final double DEFAULT_INTAKE_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
@@ -51,8 +51,6 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
     public IntakeRollerHardware(int rollerCanId) {
-        SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
-
         intakeMotorConfig.idleMode(IdleMode.kBrake);
         intakeMotorConfig.inverted(true);
         intakeMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
@@ -70,6 +68,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
         intakeMotorConfig.apply(closedLoopConfigIntake);
 
         intakeSparkFlex = new SparkFlex(rollerCanId, MotorType.kBrushless);
+
         intakeSparkFlex.configure(
                 intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -79,14 +78,17 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntake() {
-        intakePidController.setSetpoint(
-                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond),
-                ControlType.kVelocity);
+        System.out.println("running the proper intake");
+        // intakePidController.setSetpoint(
+        //         1 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond),
+        // ControlType.kVelocity);
 
-        SmartDashboard.putNumber(
-                "Intake/desiredspeed",
-                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
-        SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+        intakePidController.setSetpoint(12, ControlType.kVoltage);
+
+        // SmartDashboard.putNumber(
+        //         "Intake/desiredspeed", 1 *
+        // MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+        // SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
     }
 
     public void setZero() {
