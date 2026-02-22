@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmIOState;
-import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmSetpoint;
 import frc.robot.subsystems.intake.IntakeRollerIO.IntakeRollerIOState;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -41,14 +40,19 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerIO.updateState(rollerState);
         armIO.updateState(armState);
 
-        SmartDashboard.putNumber("intake/roller/desired speed (radians per second)", rollerState.desiredSpeedRadiansPerSecond);
-        SmartDashboard.putNumber("intake/roller/actual speed (radians per second)", rollerState.actualSpeedRadiansPerSecond);
+        SmartDashboard.putNumber(
+                "intake/roller/desired speed (radians per second)",
+                rollerState.desiredSpeedRadiansPerSecond);
+        SmartDashboard.putNumber(
+                "intake/roller/actual speed (radians per second)",
+                rollerState.actualSpeedRadiansPerSecond);
         SmartDashboard.putNumber("intake/roller/current", rollerState.current);
         SmartDashboard.putNumber("intake/roller/applied output", rollerState.appliedVoltage);
 
         SmartDashboard.putNumber("intake/arm/desired angle (deg)", armState.desiredAngleDegrees);
         SmartDashboard.putNumber("intake/arm/actual angle (deg)", armState.actualAngleDegrees);
-        SmartDashboard.putNumber("intake/arm/velocity (deg/sec)", armState.velocityDegreesPerSecond);
+        SmartDashboard.putNumber(
+                "intake/arm/velocity (deg/sec)", armState.velocityDegreesPerSecond);
         SmartDashboard.putNumber("intake/arm/current", armState.current);
         SmartDashboard.putNumber("intake/arm/applied voltage", armState.appliedVoltage);
     }

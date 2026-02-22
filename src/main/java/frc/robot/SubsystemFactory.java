@@ -138,7 +138,10 @@ public class SubsystemFactory {
 
     public IntakeSubsystem buildIntake() {
         if (robotType == RobotType.MOZART) {
-            return new IntakeSubsystem(new IntakeRollerHardware(RobotConstants.MotorIdConstants.INTAKE_ROLLER_ALPHA_CAN_ID), new IntakeArmPlacebo());
+            return new IntakeSubsystem(
+                    new IntakeRollerHardware(
+                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_ALPHA_CAN_ID),
+                    new IntakeArmPlacebo());
         } else if (robotType == RobotType.BETA) {
             // start w placebo rollers bc design flaw means belt doesnt work :(
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmHardwareBeta());

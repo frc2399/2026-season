@@ -69,8 +69,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
         intakeMotorConfig.apply(closedLoopConfigIntake);
 
-        intakeSparkFlex =
-                new SparkFlex(rollerCanId, MotorType.kBrushless);
+        intakeSparkFlex = new SparkFlex(rollerCanId, MotorType.kBrushless);
         intakeSparkFlex.configure(
                 intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
