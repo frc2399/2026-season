@@ -70,6 +70,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO{
     private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(0);
     private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = true;
 
+    private Angle desiredAngle = Degrees.of(0);
+
     public IntakeArmHardwareBeta() {
         intakeArmSparkFlexConfig.inverted(INTAKE_ARM_MOTOR_INVERTED)
             .idleMode(IdleMode.kBrake)
@@ -105,18 +107,28 @@ public class IntakeArmHardwareBeta implements IntakeArmIO{
 
     @Override
     public void setSetpoint(IntakeArmSetpoint setpoint) {
-        // if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+        if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+            desiredAngle = Degrees.of(-10);
         //     intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
-        // } else if (setpoint == IntakeArmSetpoint.STOWED) {
+        } else if (setpoint == IntakeArmSetpoint.STOWED) {
+            desiredAngle = Degrees.of(80);
         //     intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
-        // }
+        }
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
             intakeArmClosedLoop.setSetpoint(0.1 * RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond), ControlType.kVelocity);
+        } else {
             intakeArmClosedLoop.setSetpoint(-0.1 * RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond), ControlType.kVelocity);
         }
     }
 
-
+    @Override
+    public void updateState(IntakeArmIOState state) {
+        state.desiredAngleDegrees = desiredAngle.in(Degrees);
+        state.actualAngleDegrees = intakeArmAbsoluteEncoder.getPosition();
+        state.velocityDegreesPerSecond = intakeArmAbsoluteEncoder.getVelocity();
+        state.appliedVoltage = intakeArmSparkFlex.getBusVoltage() * intakeArmSparkFlex.getAppliedOutput();
+        state.current = intakeArmSparkFlex.getOutputCurrent();
+    }
 
 
 }

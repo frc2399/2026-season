@@ -4,4 +4,7 @@ public class IntakeArmPlacebo implements IntakeArmIO {
 
     @Override
     public void setSetpoint(IntakeArmSetpoint setpoint) {}
+
+    @Override
+    public void updateState(IntakeArmIOState state) {}
 }
