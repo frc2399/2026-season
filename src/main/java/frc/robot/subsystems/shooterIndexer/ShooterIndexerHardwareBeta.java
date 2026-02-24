@@ -46,7 +46,6 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_KS = 0.01;
     private static final double SHOOTER_INDEXER_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
-    //      0.01;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
