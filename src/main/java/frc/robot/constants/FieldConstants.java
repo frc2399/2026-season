@@ -6,10 +6,14 @@ import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import java.util.Optional;
 
 public final class FieldConstants {
 
     public static record Pose(String name, Pose2d pose) {}
+
+    public static Optional<Alliance> alliance;
 
     public static class PoseConstants {
         public static final Pose DRIVE_STRAIGHT =
@@ -23,11 +27,13 @@ public final class FieldConstants {
         public static final Pose TOWER_L1 =
                 new Pose("towerL1", new Pose2d(1.608, 3.378, Rotation2d.fromDegrees(0)));
         public static final Pose NEUTRAL_ZONE_BORDER =
-                new Pose("neutralZoneBorder", new Pose2d(6.86, 5.356, Rotation2d.fromDegrees(0)));
+                new Pose("neutralZoneBorder", new Pose2d(6.86, 5.356, Rotation2d.fromDegrees(180)));
+        public static final Pose IN_NEUTRAL_ZONE =
+                new Pose("inNeutralZone", new Pose2d(8.63, 5.356, Rotation2d.fromDegrees(180)));
         public static final Pose BUMP_STARTING_LINE =
-                new Pose("bumpStartingLine", new Pose2d(3.482, 5.356, Rotation2d.fromDegrees(0)));
+                new Pose("bumpStartingLine", new Pose2d(3.482, 5.356, Rotation2d.fromDegrees(180)));
         public static final Pose OVER_THE_BUMP =
-                new Pose("overTheBump", new Pose2d(5.482, 5.356, Rotation2d.fromDegrees(0)));
+                new Pose("overTheBump", new Pose2d(5.482, 5.356, Rotation2d.fromDegrees(180)));
     }
 
     public static class AllianceZoneBoundaries {

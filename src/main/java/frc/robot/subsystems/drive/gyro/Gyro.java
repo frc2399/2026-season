@@ -22,8 +22,12 @@ public class Gyro {
         return io.getYaw(refresh);
     }
 
-    public Command setYaw(Angle yaw) {
+    public Command setYawCommand(Angle yaw) {
         return Commands.runOnce(() -> io.setYaw(yaw));
+    }
+
+    public void setYaw(Angle yaw) {
+        io.setYaw(yaw);
     }
 
     public StatusSignal<edu.wpi.first.units.measure.AngularVelocity> getAngularVelocity() {
