@@ -141,4 +141,7 @@ public class ShooterHardwareBeta implements ShooterIO {
         state.bottomRollerAppliedVoltage =
                 shooterBottomSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
     }
+
+    @Override
+    public void periodicUpdate() {}
 }
