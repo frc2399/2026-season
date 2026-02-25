@@ -156,6 +156,30 @@ public final class FieldConstants {
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
                                         Rotation2d.kZero)));
+        public static final Pose DEPOT_IN_NEUTRAL_ZONE =
+                new Pose(
+                        "depotInNeutralZone",
+                        FIELD_CENTER.plus(
+                                new Transform2d(
+                                        FUEL_PIT_HALF_WIDTH
+                                                .unaryMinus()
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
+                                        Rotation2d.kCCW_90deg)));
+        public static final Pose DEPOT_NEUTRAL_ZONE_CENTER =
+                new Pose(
+                        "depotNeutralZoneCenter",
+                        FIELD_CENTER.plus(
+                                new Transform2d(
+                                        ROBOT_HUB_MARGIN
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
+                                        Rotation2d.kZero)));
     }
 
     public static class AllianceZoneBoundaries {
@@ -172,6 +196,8 @@ public final class FieldConstants {
     public static final Distance HALF_WIDTH_OF_ROBOT_WITH_BUMPER = Inches.of(15);
     public static final Distance STARTING_LINE_TO_CENTER_DISTANCE = Inches.of(47 + 120);
     public static final Distance FUEL_PIT_HALF_WIDTH = Inches.of(35.95);
+    public static final Pose2d FIELD_CENTER =
+            new Pose2d(Inches.of(325.61), Inches.of(158.32), Rotation2d.kZero);
     public static final Pose2d RED_CENTER_OF_HUB_POSE =
             new Pose2d(Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
     public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
@@ -181,7 +207,8 @@ public final class FieldConstants {
                     new Transform2d(HALF_WIDTH_OF_HUB, Inches.of(0), Rotation2d.kZero));
     public static final Pose2d FRONT_OF_BLUE_HUB =
             BLUE_CENTER_OF_HUB_POSE.plus(
-                    new Transform2d(HALF_WIDTH_OF_HUB.unaryMinus(), Inches.of(0), Rotation2d.kZero));
+                    new Transform2d(
+                            HALF_WIDTH_OF_HUB.unaryMinus(), Inches.of(0), Rotation2d.kZero));
     public static final Pose2d FRONT_OF_DEPOT =
             new Pose2d(Inches.of(27.00), Inches.of(49.84 + 158.84 + 75.93), Rotation2d.k180deg);
 }
