@@ -166,12 +166,13 @@ public class AutonCommandFactory {
                 buildPathDeferred(
                         FieldConstants.PoseConstants.DEPOT_SIDE_OVER_THE_BUMP,
                         bumpAndDepotConstraints,
-                        0.75),
+                        1.5),
                 // drive.driveToPoseOnExecute(),
-                // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
+                buildPathDeferred(FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE_BORDER, constraints, 0.75),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(6), depotSideNeutralZoneIntaking()),
-                intake.defaultBehavior().withTimeout(0.01),
+                        intake.runIntake().withTimeout(6), depotSideNeutralZoneIntaking(),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        depotSideNeutralZoneIntakingWaypoints()),
                 depotSideNeutralZoneToHubWaypoints());
         // shooting command
     }
@@ -188,10 +189,11 @@ public class AutonCommandFactory {
                         bumpAndDepotConstraints,
                         0.75),
                 // drive.driveToPoseOnExecute(),
-                // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
+                buildPathDeferred(FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE_BORDER, constraints, 0.75),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(6), outpostSideNeutralZoneIntaking()),
-                intake.defaultBehavior().withTimeout(0.01),
+                        intake.runIntake().withTimeout(6), outpostSideNeutralZoneIntaking(),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        outpostSideNeutralZoneIntakingWaypoints()),
                 outpostSideNeutralZoneToHubWaypoints());
         // shooting command
     }
