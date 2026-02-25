@@ -37,7 +37,6 @@ public class RobotContainer {
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
     private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
-    private PoseConstants poseConstants = new PoseConstants();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
