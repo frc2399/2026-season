@@ -40,59 +40,59 @@ public class AutonCommandFactory {
     public Command hubToDepot() {
         return Commands.sequence(
                 Commands.runOnce(
-                        () -> drive.resetOdometry(FieldConstants.PoseConstants.HUB_MIDDLE.pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.DEPOT_TESTING, constraints),
+                        () -> drive.resetOdometry(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE.pose())),
+                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints),
                 // move into intake position while driving
                 drive.driveToPoseOnExecute(),
                 // intakeSubsystem.runIntake().withTimeout(3),
                 // intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, constraints),
+                buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints),
                 // move into shooting position while driving
                 drive.driveToPoseOnExecute());
     }
 
-    public Command bumpToNeutralZone() {
-        return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints),
-                // move into intaking position while driving
-                drive.driveToPoseOnExecute(),
-                // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
-                Commands.parallel(
-                        intake.runIntake().withTimeout(6),
-                        buildPathDeferred(
-                                FieldConstants.PoseConstants.IN_NEUTRAL_ZONE, intakeConstraints)),
-                intake.defaultBehavior().withTimeout(0.01),
-                // drive.driveToPoseOnExecute()),
-                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
-                // get into shooting position while driving
-                drive.driveToPoseOnExecute(),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.BUMP_STARTING_LINE, bumpAndDepotConstraints),
-                drive.driveToPoseOnExecute());
-    }
+//     public Command bumpToNeutralZone() {
+//         return Commands.sequence(
+//                 Commands.runOnce(
+//                         () ->
+//                                 drive.resetOdometry(
+//                                         FieldConstants.PoseConstants.BLUE_LEFT_STARTING_LINE.pose())),
+//                 buildPathDeferred(
+//                         FieldConstants.PoseConstants.DEPOT_OVER_THE_BUMP, bumpAndDepotConstraints),
+//                 // move into intaking position while driving
+//                 drive.driveToPoseOnExecute(),
+//                 // buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
+//                 Commands.parallel(
+//                         intake.runIntake().withTimeout(6),
+//                         buildPathDeferred(
+//                                 FieldConstants.PoseConstants.IN_NEUTRAL_ZONE, intakeConstraints)),
+//                 intake.defaultBehavior().withTimeout(0.01),
+//                 // drive.driveToPoseOnExecute()),
+//                 buildPathDeferred(FieldConstants.PoseConstants.DEPOT_OVER_THE_BUMP, constraints),
+//                 // get into shooting position while driving
+//                 drive.driveToPoseOnExecute(),
+//                 buildPathDeferred(
+//                         FieldConstants.PoseConstants.BUMP_STARTING_LINE, bumpAndDepotConstraints),
+//                 drive.driveToPoseOnExecute());
+//     }
 
-    public Command bumpToNeutralZoneShooting() {
-        return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints),
-                // move into intaking position while driving
-                drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
-                intake.runIntake().withTimeout(1),
-                intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
-                // get into shooting position while driving
-                drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, bumpAndDepotConstraints),
-                drive.driveToPoseOnExecute());
-    }
+//     public Command bumpToNeutralZoneShooting() {
+//         return Commands.sequence(
+//                 Commands.runOnce(
+//                         () ->
+//                                 drive.resetOdometry(
+//                                         FieldConstants.PoseConstants.BUMP_STARTING_LINE.pose())),
+//                 buildPathDeferred(
+//                         FieldConstants.PoseConstants.OVER_THE_BUMP, bumpAndDepotConstraints),
+//                 // move into intaking position while driving
+//                 drive.driveToPoseOnExecute(),
+//                 buildPathDeferred(FieldConstants.PoseConstants.NEUTRAL_ZONE_BORDER, constraints),
+//                 intake.runIntake().withTimeout(1),
+//                 intake.defaultBehavior().withTimeout(0.01),
+//                 buildPathDeferred(FieldConstants.PoseConstants.OVER_THE_BUMP, constraints),
+//                 // get into shooting position while driving
+//                 drive.driveToPoseOnExecute(),
+//                 buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, bumpAndDepotConstraints),
+//                 drive.driveToPoseOnExecute());
+//     }
 }
