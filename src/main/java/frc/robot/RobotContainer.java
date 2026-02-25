@@ -48,7 +48,6 @@ public class RobotContainer {
                     shooterIndexerSubsystem,
                     spindexerSubsystem,
                     intakeSubsystem,
-                   
                     intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
