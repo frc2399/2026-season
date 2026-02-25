@@ -10,6 +10,7 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
+import frc.robot.subsystems.intake.IntakeArmHardwareBeta;
 import frc.robot.subsystems.intake.IntakeArmPlacebo;
 import frc.robot.subsystems.intake.IntakeRollerHardware;
 import frc.robot.subsystems.intake.IntakeRollerPlacebo;
@@ -146,7 +147,7 @@ public class SubsystemFactory {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_CAN_ID),
-                    new IntakeArmPlacebo());
+                    new IntakeArmHardwareBeta());
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }

@@ -58,7 +58,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
      * our arm is rotational, so the impact of gravity changes as we rotate, and our feedforward needs to compensate. the kcos is the factor to compensate by
      * revlib demands that it can get from what we're logging in (degree/s) to rotations of mechanism / second to accurately compensate. that's kcosratio
      */
-    private static final double INTAKE_ARM_KCOS = 0;
+    private static final double INTAKE_ARM_KCOS = 0.001;
     private static final double INTAKE_ARM_KCOS_RATIO =
             1 / 360; // convert from mechanism degrees to rotation
 
@@ -67,10 +67,10 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_MAX_OUTPUT = 1;
 
     // soft limits
-    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(-10);
-    private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = true;
-    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(80);
-    private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = true;
+    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(80);
+    private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = false;
+    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(10);
+    private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = false;
 
     private Angle desiredAngle = Degrees.of(0);
 
@@ -141,20 +141,12 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
             desiredAngle = Degrees.of(80);
             //     intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
         }
-        if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-            intakeArmClosedLoop.setSetpoint(
-                    0.1 * RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond),
-                    ControlType.kVelocity);
-        } else {
-            intakeArmClosedLoop.setSetpoint(
-                    -0.1 * RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond),
-                    ControlType.kVelocity);
-        }
     }
 
     @Override
     public void runOffVolts() {
-        intakeArmClosedLoop.setSetpoint(DEFAULT_DESIRED_VOLTAGE, ControlType.kVoltage);
+        System.out.println("im a volt!");
+        intakeArmClosedLoop.setSetpoint(1, ControlType.kVoltage);
         // for testing, add backward voltage setpoint bc idk how to do that rn :)
     }
 
