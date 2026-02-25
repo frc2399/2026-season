@@ -40,10 +40,6 @@ public final class FieldConstants {
             new Pose2d(Inches.of(0), Inches.of(158.84 + 75.93), Rotation2d.k180deg);
 
     public static class PoseConstants {
-        public PoseConstants() {
-            System.out.println(OUTPOST_IN_NEUTRAL_ZONE);
-        }
-
         public static final Pose RED_HUB_MIDDLE =
                 new Pose(
                         "redHubMiddle",
