@@ -76,7 +76,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     // tunable numbers - for testing only! delete before pr
     private double DEFAULT_DESIRED_VOLTAGE = 1;
-    private TunableNumber TUNABLE_DESIRED_VOLTAGE = new TunableNumber("intake/arm/voltage", DEFAULT_DESIRED_VOLTAGE, true);
+    private TunableNumber TUNABLE_DESIRED_VOLTAGE =
+            new TunableNumber("intake/arm/voltage", DEFAULT_DESIRED_VOLTAGE, true);
 
     public IntakeArmHardwareBeta() {
         intakeArmSparkFlexConfig
@@ -151,17 +152,16 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         }
     }
 
-    
-        @Override
-        public void runOffVolts() {
-                intakeArmClosedLoop.setSetpoint(DEFAULT_DESIRED_VOLTAGE, ControlType.kVoltage);
-                // for testing, add backward voltage setpoint bc idk how to do that rn :)
-        }
+    @Override
+    public void runOffVolts() {
+        intakeArmClosedLoop.setSetpoint(DEFAULT_DESIRED_VOLTAGE, ControlType.kVoltage);
+        // for testing, add backward voltage setpoint bc idk how to do that rn :)
+    }
 
     @Override
     public void updateState(IntakeArmIOState state) {
         if (TUNABLE_DESIRED_VOLTAGE.hasChanged()) {
-                DEFAULT_DESIRED_VOLTAGE = TUNABLE_DESIRED_VOLTAGE.get();
+            DEFAULT_DESIRED_VOLTAGE = TUNABLE_DESIRED_VOLTAGE.get();
         }
 
         state.desiredAngleDegrees = desiredAngle.in(Degrees);

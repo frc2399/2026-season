@@ -29,7 +29,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
-    private final double INTAKE_D = 0;
+    private final double INTAKE_D = 0.0;
 
     private static final double DEFAULT_INTAKE_P = 0.001;
     private static final double DEFAULT_INTAKE_KS = 0.1;
