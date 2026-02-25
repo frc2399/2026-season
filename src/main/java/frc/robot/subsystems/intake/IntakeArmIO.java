@@ -10,6 +10,8 @@ public interface IntakeArmIO {
 
     public void updateState(IntakeArmIOState state);
 
+    public void runOffVolts();
+
     public static class IntakeArmIOState {
         public double desiredAngleDegrees = 0;
         public double actualAngleDegrees = 0;

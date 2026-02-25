@@ -7,4 +7,7 @@ public class IntakeArmPlacebo implements IntakeArmIO {
 
     @Override
     public void updateState(IntakeArmIOState state) {}
+
+    @Override
+    public void runOffVolts() {}
 }

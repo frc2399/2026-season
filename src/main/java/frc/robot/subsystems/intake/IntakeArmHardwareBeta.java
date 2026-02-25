@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
+import frc.robot.util.TunableNumber;
 
 public class IntakeArmHardwareBeta implements IntakeArmIO {
     // 45:1 ratio
@@ -34,15 +35,15 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     // inversions
     private static final boolean INTAKE_ARM_MOTOR_INVERTED = false;
-    private static final boolean INTAKE_ARM_ENCODER_INVERTD = false;
+    private static final boolean INTAKE_ARM_ENCODER_INVERTED = false;
 
     // conversion factors (45:1 is our gear ratio)
     private static final Angle INTAKE_ARM_POSITION_CONVERSION_FACTOR =
-            Degrees.of(360 / 45); // this subsystem is in degrees because it's a rotational wrist,
+            Degrees.of(360.0); // this subsystem is in degrees because it's a rotational wrist,
     // and this makes it easier to tune :)
     private static final AngularVelocity INTAKE_ARM_VELOCITY_CONVERSION_FACTOR =
             DegreesPerSecond.of(
-                    360 / 60 / 45); // math more explicit to make conversion more understandable
+                    360.0 / 60); // math more explicit to make conversion more understandable
 
     // pid
     private static final double INTAKE_ARM_P = 0;
@@ -66,12 +67,16 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_MAX_OUTPUT = 1;
 
     // soft limits
-    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(0);
+    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(-10);
     private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = true;
-    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(0);
+    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(80);
     private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = true;
 
     private Angle desiredAngle = Degrees.of(0);
+
+    // tunable numbers - for testing only! delete before pr
+    private double DEFAULT_DESIRED_VOLTAGE = 1;
+    private TunableNumber TUNABLE_DESIRED_VOLTAGE = new TunableNumber("intake/arm/voltage", DEFAULT_DESIRED_VOLTAGE, true);
 
     public IntakeArmHardwareBeta() {
         intakeArmSparkFlexConfig
@@ -82,7 +87,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
         intakeArmSparkFlexConfig
                 .absoluteEncoder
-                .inverted(INTAKE_ARM_ENCODER_INVERTD)
+                .inverted(INTAKE_ARM_ENCODER_INVERTED)
                 .positionConversionFactor(INTAKE_ARM_POSITION_CONVERSION_FACTOR.in(Degrees))
                 .velocityConversionFactor(
                         INTAKE_ARM_VELOCITY_CONVERSION_FACTOR.in(DegreesPerSecond));
@@ -114,7 +119,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
         intakeArmSparkFlex =
                 new SparkFlex(
-                        RobotConstants.MotorIdConstants.INTAKE_ARM_CAN_ID, MotorType.kBrushless);
+                        RobotConstants.MotorIdConstants.INTAKE_ARM_BETA_CAN_ID,
+                        MotorType.kBrushless);
 
         intakeArmSparkFlex.configure(
                 intakeArmSparkFlexConfig,
@@ -145,8 +151,19 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         }
     }
 
+    
+        @Override
+        public void runOffVolts() {
+                intakeArmClosedLoop.setSetpoint(DEFAULT_DESIRED_VOLTAGE, ControlType.kVoltage);
+                // for testing, add backward voltage setpoint bc idk how to do that rn :)
+        }
+
     @Override
     public void updateState(IntakeArmIOState state) {
+        if (TUNABLE_DESIRED_VOLTAGE.hasChanged()) {
+                DEFAULT_DESIRED_VOLTAGE = TUNABLE_DESIRED_VOLTAGE.get();
+        }
+
         state.desiredAngleDegrees = desiredAngle.in(Degrees);
         state.actualAngleDegrees = intakeArmAbsoluteEncoder.getPosition();
         state.velocityDegreesPerSecond = intakeArmAbsoluteEncoder.getVelocity();

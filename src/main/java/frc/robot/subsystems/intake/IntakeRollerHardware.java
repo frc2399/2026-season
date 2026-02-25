@@ -17,7 +17,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
@@ -50,7 +49,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public IntakeRollerHardware(int rollerCanId) {
+    public IntakeRollerHardware(int rollerCANId) {
         intakeMotorConfig.idleMode(IdleMode.kBrake);
         intakeMotorConfig.inverted(true);
         intakeMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
@@ -67,7 +66,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
         intakeMotorConfig.apply(closedLoopConfigIntake);
 
-        intakeSparkFlex = new SparkFlex(rollerCanId, MotorType.kBrushless);
+        intakeSparkFlex = new SparkFlex(rollerCANId, MotorType.kBrushless);
 
         intakeSparkFlex.configure(
                 intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -78,24 +77,16 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntake() {
-        System.out.println("running the proper intake");
-        // intakePidController.setSetpoint(
-        //         1 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond),
-        // ControlType.kVelocity);
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1);
 
-        intakePidController.setSetpoint(12, ControlType.kVoltage);
-
-        // SmartDashboard.putNumber(
-        //         "Intake/desiredspeed", 1 *
-        // MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
-        // SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+        intakePidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void setZero() {
-        intakePidController.setSetpoint(0, ControlType.kVelocity);
-
-        SmartDashboard.putNumber("Intake/desiredspeed", 0);
-        SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+        desiredVelocity = RadiansPerSecond.of(0);
+        intakePidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void updateState(IntakeRollerIOState state) {
