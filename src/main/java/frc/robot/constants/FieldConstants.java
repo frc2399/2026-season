@@ -16,179 +16,6 @@ public final class FieldConstants {
 
     public static Optional<Alliance> alliance;
 
-    public static class PoseConstants {
-        public static final Pose RED_HUB_MIDDLE =
-                new Pose(
-                        "redHubMiddle",
-                        FRONT_OF_RED_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER,
-                                        Inches.of(0),
-                                        Rotation2d.k180deg)));
-        // this position is when robot is up againt blue hub
-        public static final Pose BLUE_HUB_MIDDLE =
-                new Pose(
-                        "blueHubMiddle",
-                        FRONT_OF_BLUE_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.unaryMinus(),
-                                        Inches.of(0),
-                                        Rotation2d.k180deg)));
-        // this postion is when robot is on the blue alliance starting line closes to scroing table.
-        public static final Pose BLUE_LEFT_STARTING_LINE =
-                new Pose(
-                        "blueLeftStartingLine",
-                        FRONT_OF_BLUE_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.unaryMinus(),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
-                                        Rotation2d.kZero)));
-        // this postion is when robot is on the blue alliance starting line farthest from scroing
-        // table.
-        public static final Pose BLUE_RIGHT_STARTING_LINE =
-                new Pose(
-                        "blueRightStartingLine",
-                        FRONT_OF_BLUE_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.unaryMinus(),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
-                                                .unaryMinus(),
-                                        Rotation2d.kZero)));
-        // this postion is when robot is on the red alliance starting line closes to scroing table.
-        public static final Pose RED_LEFT_STARTING_LINE =
-                new Pose(
-                        "redLeftStartingLine",
-                        FRONT_OF_RED_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER,
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
-                                                .unaryMinus(),
-                                        Rotation2d.kZero)));
-        // this postion is when robot is on the red alliance starting line farthest from scroing
-        // table.
-        public static final Pose RED_RIGHT_STARTING_LINE =
-                new Pose(
-                        "redRightStartingLine",
-                        FRONT_OF_RED_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER,
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
-                                        Rotation2d.kZero)));
-        // this position is when robot is on red side of fuel edge closest to scoring table
-        public static final Pose RED_RIGHT_EDGE_FUEL =
-                new Pose(
-                        "redRightEdgeFuel",
-                        FRONT_OF_RED_HUB.plus(
-                                new Transform2d(
-                                        STARTING_LINE_TO_CENTER_DISTANCE
-                                                .unaryMinus()
-                                                .plus(FUEL_PIT_HALF_WIDTH),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
-                                        Rotation2d.kZero)));
-        // this position is when robot is on red side of fuel edge farthest to scoring table
-        public static final Pose RED_LEFT_EDGE_FUEL =
-                new Pose(
-                        "redLeftEdgeFuel",
-                        FRONT_OF_RED_HUB.plus(
-                                new Transform2d(
-                                        STARTING_LINE_TO_CENTER_DISTANCE
-                                                .unaryMinus()
-                                                .plus(FUEL_PIT_HALF_WIDTH),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
-                                                .unaryMinus(),
-                                        Rotation2d.kZero)));
-        // this position is when robot is on blue side of fuel edge closest to scoring table
-        public static final Pose BLUE_RIGHT_EDGE_FUEL =
-                new Pose(
-                        "blueRightEdgeFuel",
-                        FRONT_OF_BLUE_HUB.plus(
-                                new Transform2d(
-                                        STARTING_LINE_TO_CENTER_DISTANCE
-                                                .plus(FUEL_PIT_HALF_WIDTH)
-                                                .unaryMinus(),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
-                                                .unaryMinus(),
-                                        Rotation2d.k180deg)));
-        // this position is when robot is on blue side of fuel edge farthest to scoring table
-        public static final Pose BLUE_LEFT_EDGE_FUEL =
-                new Pose(
-                        "blueLeftEdgeFuel",
-                        FRONT_OF_BLUE_HUB.plus(
-                                new Transform2d(
-                                        STARTING_LINE_TO_CENTER_DISTANCE
-                                                .plus(FUEL_PIT_HALF_WIDTH)
-                                                .unaryMinus(),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
-                                        Rotation2d.k180deg)));
-        public static final Pose IN_THE_DEPOT =
-                new Pose(
-                        "inTheDepot",
-                        FRONT_OF_DEPOT.plus(
-                                new Transform2d(
-                                        HALF_WIDTH_OF_ROBOT_WITH_BUMPER,
-                                        Inches.of(0),
-                                        Rotation2d.k180deg)));
-        public static final Pose DEPOT_OVER_THE_BUMP =
-                new Pose(
-                        "overTheBump",
-                        BLUE_CENTER_OF_HUB_POSE.plus(
-                                new Transform2d(
-                                        (HALF_WIDTH_OF_HUB
-                                                .times(2)
-                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER)),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
-                                        Rotation2d.kZero)));
-        public static final Pose DEPOT_IN_NEUTRAL_ZONE =
-                new Pose(
-                        "depotInNeutralZone",
-                        FIELD_CENTER.plus(
-                                new Transform2d(
-                                        FUEL_PIT_HALF_WIDTH
-                                                .unaryMinus()
-                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
-                                        Rotation2d.kCCW_90deg)));
-        public static final Pose DEPOT_NEUTRAL_ZONE_CENTER =
-                new Pose(
-                        "depotNeutralZoneCenter",
-                        FIELD_CENTER.plus(
-                                new Transform2d(
-                                        ROBOT_HUB_MARGIN
-                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER)
-                                                .unaryMinus(),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
-                                        Rotation2d.kZero)));
-    }
-
-    public static class AllianceZoneBoundaries {
-        public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
-        public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
-        public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
-        public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
-    }
-
     // values taken from field drawings
     public static final Distance HALF_WIDTH_OF_HUB = Inches.of(47.0 / 2.0);
     public static final Distance HALF_LENGTH_OF_ROBOT_WITH_BUMPER = Inches.of(15);
@@ -209,6 +36,155 @@ public final class FieldConstants {
             BLUE_CENTER_OF_HUB_POSE.plus(
                     new Transform2d(
                             HALF_WIDTH_OF_HUB.unaryMinus(), Inches.of(0), Rotation2d.kZero));
-    public static final Pose2d FRONT_OF_DEPOT =
-            new Pose2d(Inches.of(27.00), Inches.of(49.84 + 158.84 + 75.93), Rotation2d.k180deg);
+    public static final Pose2d BACK_OF_DEPOT =
+            new Pose2d(Inches.of(0), Inches.of(158.84 + 75.93), Rotation2d.k180deg);
+
+    public static class PoseConstants {
+        public PoseConstants() {
+            System.out.println(OUTPOST_IN_NEUTRAL_ZONE);
+        }
+
+        public static final Pose RED_HUB_MIDDLE =
+                new Pose(
+                        "redHubMiddle",
+                        FRONT_OF_RED_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER,
+                                        Inches.of(0),
+                                        Rotation2d.k180deg)));
+        // this position is when robot is up againt blue hub
+        public static final Pose BLUE_HUB_MIDDLE =
+                new Pose(
+                        "blueHubMiddle",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.unaryMinus(),
+                                        Inches.of(0),
+                                        Rotation2d.k180deg)));
+        // this postion is when robot is on the blue alliance starting line closes to scroing table.
+        public static final Pose BLUE_DEPOT_STARTING_LINE =
+                new Pose(
+                        "blueDepotStartingLine",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
+                                        Rotation2d.kZero)));
+        // this postion is when robot is on the blue alliance starting line farthest from scroing
+        // table.
+        public static final Pose BLUE_OUTPOST_STARTING_LINE =
+                new Pose(
+                        "blueOutpostStartingLine",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
+                                        Rotation2d.kZero)));
+        public static final Pose BLUE_OUTPOST_EDGE_FUEL =
+                new Pose(
+                        "blueOutpostEdgeFuel",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        STARTING_LINE_TO_CENTER_DISTANCE
+                                                .minus(FUEL_PIT_HALF_WIDTH)
+                                                .minus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
+                                        Rotation2d.k180deg)));
+        // this position is when robot is on blue side of fuel edge farthest to scoring table
+        public static final Pose BLUE_DEPOT_EDGE_FUEL =
+                new Pose(
+                        "blueDepotEdgeFuel",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        STARTING_LINE_TO_CENTER_DISTANCE
+                                                .minus(FUEL_PIT_HALF_WIDTH)
+                                                .minus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
+                                        Rotation2d.k180deg)));
+        public static final Pose IN_THE_DEPOT =
+                new Pose(
+                        "inTheDepot",
+                        BACK_OF_DEPOT.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.plus(Inches.of(5)).unaryMinus(),
+                                        Inches.of(0),
+                                        Rotation2d.k180deg)));
+        public static final Pose DEPOT_OVER_THE_BUMP =
+                new Pose(
+                        "overTheBump",
+                        BLUE_CENTER_OF_HUB_POSE.plus(
+                                new Transform2d(
+                                        (HALF_WIDTH_OF_HUB
+                                                .times(2)
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER)),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
+                                        Rotation2d.kZero)));
+        public static final Pose DEPOT_NEUTRAL_ZONE_CENTER =
+                new Pose(
+                        "depotNeutralZoneCenter",
+                        FIELD_CENTER.plus(
+                                new Transform2d(
+                                        FUEL_PIT_HALF_WIDTH
+                                                .unaryMinus()
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
+                                        Rotation2d.kCCW_90deg)));
+        public static final Pose DEPOT_IN_NEUTRAL_ZONE =
+                new Pose(
+                        "depotInNeutralZone",
+                        FIELD_CENTER.plus(
+                                new Transform2d(
+                                        ROBOT_HUB_MARGIN
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
+                                        Rotation2d.kZero)));
+        public static final Pose OUTPOST_IN_NEUTRAL_ZONE =
+                new Pose(
+                        "outpostInNeutralZone",
+                        FIELD_CENTER.plus(
+                                new Transform2d(
+                                        ROBOT_HUB_MARGIN.plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER).unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
+                                        Rotation2d.kZero)));
+        public static final Pose OUTPOST_NEUTRAL_ZONE_CENTER =
+                new Pose(
+                        "outpostNeutralZoneCenter",
+                        FIELD_CENTER.plus(
+                                new Transform2d(
+                                        FUEL_PIT_HALF_WIDTH
+                                                .unaryMinus()
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
+                                        Rotation2d.kZero)));
+    }
+
+    public static class AllianceZoneBoundaries {
+        public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
+        public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
+        public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
+        public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
+    }
 }
