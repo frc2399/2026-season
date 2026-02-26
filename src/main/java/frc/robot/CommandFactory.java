@@ -8,10 +8,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
-<<<<<<< HEAD
-=======
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
->>>>>>> main
 
 public class CommandFactory {
     private final DriveSubsystem drive;
