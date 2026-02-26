@@ -27,11 +27,15 @@ public class IntakeSubsystem extends SubsystemBase {
                 .withName("intake: deploy arm and run roller");
     }
 
+    public Command stowArm() {
+        return this.run(() -> armIO.setSetpoint(IntakeArmSetpoint.STOWED));
+    }
+
     public Command defaultBehavior() {
         return this.run(
                         () -> {
                             rollerIO.setZero();
-                            armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                            armIO.setSetpoint(IntakeArmSetpoint.ZERO);
                         })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }

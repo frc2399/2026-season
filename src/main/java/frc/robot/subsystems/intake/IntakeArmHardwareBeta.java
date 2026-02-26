@@ -18,7 +18,6 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
-import frc.robot.util.TunableNumber;
 
 public class IntakeArmHardwareBeta implements IntakeArmIO {
     // 45:1 ratio
@@ -51,8 +50,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_D = 0;
     // feedforward
     private static final double INTAKE_ARM_KS = 0;
-    private static final double INTAKE_ARM_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond);
+    private static final double INTAKE_ARM_KV = 0;
+    //     12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond);
     private static final double INTAKE_ARM_KA = 0;
     /*
      * our arm is rotational, so the impact of gravity changes as we rotate, and our feedforward needs to compensate. the kcos is the factor to compensate by
@@ -75,9 +74,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private Angle desiredAngle = Degrees.of(0);
 
     // tunable numbers - for testing only! delete before pr
-    private double DEFAULT_DESIRED_VOLTAGE = 1;
-    private TunableNumber TUNABLE_DESIRED_VOLTAGE =
-            new TunableNumber("intake/arm/voltage", DEFAULT_DESIRED_VOLTAGE, true);
+    //     private double DEFAULT_KS = .001;
+    //     private TunableNumber TUNABLE_KS = new TunableNumber("intake/arm/voltage", DEFAULT_KS,
+    // true);
 
     public IntakeArmHardwareBeta() {
         intakeArmSparkFlexConfig
@@ -97,7 +96,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                 .closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .pid(INTAKE_ARM_P, INTAKE_ARM_I, INTAKE_ARM_D)
-                .outputRange(INTAKE_ARM_MIN_OUTPUT, INTAKE_ARM_MAX_OUTPUT);
+                .outputRange(INTAKE_ARM_MIN_OUTPUT, INTAKE_ARM_MAX_OUTPUT)
+                .positionWrappingEnabled(INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED)
+                .positionWrappingInputRange(-Math.PI / 2, Math.PI / 2);
 
         // soft limits are code-enforced limits on where the mechanism can go
         // they're called SOFT limits because the mechanism can still technically go past it
@@ -134,12 +135,23 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     @Override
     public void setSetpoint(IntakeArmSetpoint setpoint) {
+        // STRUCTURE SAVED FOR LATER IT HAS GOOD STUFF BUT NOT NECESSARY RN
+        // if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+        //     //     desiredAngle = Degrees.of(-10);
+        //     intakeArmClosedLoop.setSetpoint(-6, ControlType.kVelocity);
+        //     //     intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
+        // } else if (setpoint == IntakeArmSetpoint.STOWED) {
+        //     //     desiredAngle = Degrees.of(80);
+        //     intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
+        //     //     intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
+        // }
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-            desiredAngle = Degrees.of(-10);
-            //     intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
+            System.out.println("hi");
+            intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
-            desiredAngle = Degrees.of(80);
-            //     intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
+            intakeArmClosedLoop.setSetpoint(-6, ControlType.kVelocity);
+        } else {
+            intakeArmClosedLoop.setSetpoint(0, ControlType.kVelocity);
         }
     }
 
@@ -152,9 +164,15 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     @Override
     public void updateState(IntakeArmIOState state) {
-        if (TUNABLE_DESIRED_VOLTAGE.hasChanged()) {
-            DEFAULT_DESIRED_VOLTAGE = TUNABLE_DESIRED_VOLTAGE.get();
-        }
+        // if (TUNABLE_KS.hasChanged()) {
+        //     intakeArmClosedLoopConfig.feedForward.kS(TUNABLE_KS.get());
+        //     System.out.println("allegedly changing ks to " + TUNABLE_KS.get());
+        //     intakeArmSparkFlexConfig.apply(intakeArmClosedLoopConfig);
+        //     intakeArmSparkFlex.configure(
+        //             intakeArmSparkFlexConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kNoPersistParameters);
+        // }
 
         state.desiredAngleDegrees = desiredAngle.in(Degrees);
         state.actualAngleDegrees = intakeArmAbsoluteEncoder.getPosition();

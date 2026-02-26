@@ -5,7 +5,8 @@ public interface IntakeArmIO {
 
     public enum IntakeArmSetpoint {
         DEPLOYED,
-        STOWED
+        STOWED,
+        ZERO
     }
 
     public void updateState(IntakeArmIOState state);
