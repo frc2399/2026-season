@@ -112,7 +112,9 @@ public final class FieldConstants {
                         "inTheDepot",
                         BACK_OF_DEPOT.plus(
                                 new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.plus(Inches.of(5)).unaryMinus(),
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER
+                                                .plus(Inches.of(5))
+                                                .unaryMinus(),
                                         Inches.of(0),
                                         Rotation2d.k180deg)));
         public static final Pose DEPOT_OVER_THE_BUMP =
@@ -156,7 +158,9 @@ public final class FieldConstants {
                         "outpostInNeutralZone",
                         FIELD_CENTER.plus(
                                 new Transform2d(
-                                        ROBOT_HUB_MARGIN.plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER).unaryMinus(),
+                                        ROBOT_HUB_MARGIN
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
                                         HALF_WIDTH_OF_HUB
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
