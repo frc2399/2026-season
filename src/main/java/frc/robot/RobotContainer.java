@@ -47,6 +47,10 @@ public class RobotContainer {
                     gyro,
                     shooterSubsystem,
                     shooterIndexerSubsystem,
+<<<<<<< HEAD
+=======
+                    spindexerSubsystem,
+>>>>>>> main
                     intakeSubsystem,
                     intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
@@ -107,6 +111,8 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
     private void setUpAuton() {
