@@ -45,19 +45,19 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                     360.0 / 60); // math more explicit to make conversion more understandable
 
     // pid
-    private static final double INTAKE_ARM_P = 0;
+    private static final double INTAKE_ARM_P = 0.00;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
     // feedforward
     private static final double INTAKE_ARM_KS = 0;
-    private static final double INTAKE_ARM_KV = 0;
-    //     12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond);
+    private static final double INTAKE_ARM_KV = 0.0; // .25
+    //     12 / (RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond) / 45.0);
     private static final double INTAKE_ARM_KA = 0;
     /*
      * our arm is rotational, so the impact of gravity changes as we rotate, and our feedforward needs to compensate. the kcos is the factor to compensate by
      * revlib demands that it can get from what we're logging in (degree/s) to rotations of mechanism / second to accurately compensate. that's kcosratio
      */
-    private static final double INTAKE_ARM_KCOS = 0.001;
+    private static final double INTAKE_ARM_KCOS = 3;
     private static final double INTAKE_ARM_KCOS_RATIO =
             1 / 360; // convert from mechanism degrees to rotation
 
@@ -81,7 +81,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     public IntakeArmHardwareBeta() {
         intakeArmSparkFlexConfig
                 .inverted(INTAKE_ARM_MOTOR_INVERTED)
-                .idleMode(IdleMode.kBrake)
+                .idleMode(IdleMode.kCoast)
                 .smartCurrentLimit(
                         (int) RobotConstants.MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
@@ -97,8 +97,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .pid(INTAKE_ARM_P, INTAKE_ARM_I, INTAKE_ARM_D)
                 .outputRange(INTAKE_ARM_MIN_OUTPUT, INTAKE_ARM_MAX_OUTPUT)
-                .positionWrappingEnabled(INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED)
-                .positionWrappingInputRange(-Math.PI / 2, Math.PI / 2);
+                .positionWrappingEnabled(true)
+                .positionWrappingInputRange(-180, 180);
 
         // soft limits are code-enforced limits on where the mechanism can go
         // they're called SOFT limits because the mechanism can still technically go past it
