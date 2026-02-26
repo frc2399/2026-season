@@ -40,7 +40,6 @@ public final class FieldConstants {
     public static class HubConstants {
         public static final Distance HUB_RADIUS = Inches.of(23.5);
         public static final Distance FUEL_RADIUS = Inches.of(2.955);
-        public static final Distance HUB_RADIUS_MINUS_FUEL_RADIUS = HUB_RADIUS.minus(FUEL_RADIUS);
 
         // values taken from field drawings
         public static final Pose2d RED_CENTER_OF_HUB_POSE =

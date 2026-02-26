@@ -55,7 +55,7 @@ public class RebuiltVisionUtil {
 
     public static double getDiffOfAngleInDegrees(
             double actualAngleInDegrees, double desiredAngleInDegrees) {
-        double diffOfAngleInDegrees = Math.min(actualAngleInDegrees, desiredAngleInDegrees);
+        double diffOfAngleInDegrees = actualAngleInDegrees-desiredAngleInDegrees;
         return diffOfAngleInDegrees;
     }
 
@@ -74,9 +74,9 @@ public class RebuiltVisionUtil {
 
     public static boolean isShootingAngleAlignedToHub(Supplier<Pose2d> robotPose) {
 
-        double robotAngleToHubInDegrees = RebuiltVisionUtil.getDesiredAngleToHub(robotPose);
+        double robotAngleToHubInDegrees = getDesiredAngleToHub(robotPose);
         double diffOfAngleInDegrees =
-                RebuiltVisionUtil.getDiffOfAngleInDegrees(
+                getDiffOfAngleInDegrees(
                         getActualAngleToHub(robotPose), getDesiredAngleToHub(robotPose));
 
         if (Math.abs(diffOfAngleInDegrees) <= (Math.abs(robotAngleToHubInDegrees))) {
