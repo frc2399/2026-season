@@ -5,8 +5,11 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FlippingUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
@@ -20,6 +23,7 @@ import java.util.Set;
 public class AutonCommandFactory {
     private final DriveSubsystem drive;
     private final IntakeSubsystem intake;
+    private Pose2d finalPose;
 
     public final PathConstraints constraints =
             new PathConstraints(2, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
@@ -38,9 +42,13 @@ public class AutonCommandFactory {
 
     public Command buildPathDeferred(
             Pose pose, PathConstraints constraints, double goalEndVelocity) {
+        finalPose = pose.pose();
+        if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+            finalPose = FlippingUtil.flipFieldPose(finalPose);
+        }
         return new DeferredCommand(
                 () ->
-                        AutoBuilder.pathfindToPose(pose.pose(), constraints, goalEndVelocity)
+                        AutoBuilder.pathfindToPose(finalPose, constraints, goalEndVelocity)
                                 .withName(pose.name()),
                 Set.of(drive));
     }
@@ -168,9 +176,13 @@ public class AutonCommandFactory {
                         bumpAndDepotConstraints,
                         1.5),
                 // drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE_BORDER, constraints, 0.75),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE_BORDER,
+                        constraints,
+                        0.75),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(6), depotSideNeutralZoneIntaking(),
+                        intake.runIntake().withTimeout(6),
+                        depotSideNeutralZoneIntaking(),
                         intake.defaultBehavior().withTimeout(0.01),
                         depotSideNeutralZoneIntakingWaypoints()),
                 depotSideNeutralZoneToHubWaypoints());
@@ -189,9 +201,13 @@ public class AutonCommandFactory {
                         bumpAndDepotConstraints,
                         0.75),
                 // drive.driveToPoseOnExecute(),
-                buildPathDeferred(FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE_BORDER, constraints, 0.75),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE_BORDER,
+                        constraints,
+                        0.75),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(6), outpostSideNeutralZoneIntaking(),
+                        intake.runIntake().withTimeout(6),
+                        outpostSideNeutralZoneIntaking(),
                         intake.defaultBehavior().withTimeout(0.01),
                         outpostSideNeutralZoneIntakingWaypoints()),
                 outpostSideNeutralZoneToHubWaypoints());
@@ -321,7 +337,8 @@ public class AutonCommandFactory {
                                     FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_CENTER
                                             .pose(),
                                     FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE.pose(),
-                                    FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE_BORDER.pose(),
+                                    FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE_BORDER
+                                            .pose(),
                                     FieldConstants.PoseConstants.DEPOT_INTAKE_END.pose(),
                                     FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER
                                             .pose());
@@ -352,7 +369,8 @@ public class AutonCommandFactory {
                                     FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_CENTER
                                             .pose(),
                                     FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE.pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE_BORDER.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE_BORDER
+                                            .pose(),
                                     FieldConstants.PoseConstants.OUTPOST_INTAKE_END.pose(),
                                     FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER
                                             .pose());
