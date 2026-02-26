@@ -113,10 +113,10 @@ public class RobotContainer {
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption(
-                "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
+        // autoChooser.addOption(
+        //         "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
         autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
-        autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
+        // autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
