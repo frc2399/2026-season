@@ -123,7 +123,6 @@ public class AutonCommandFactory {
                         FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER,
                         constraints,
                         1.5),
-                // get into shooting position while driving
                 // drive.driveToPoseOnExecute(),
                 outpostSideNeutralZoneToHubWaypoints());
         // drive.driveToPoseOnExecute());
