@@ -47,10 +47,7 @@ public class RobotContainer {
                     gyro,
                     shooterSubsystem,
                     shooterIndexerSubsystem,
-<<<<<<< HEAD
-=======
                     spindexerSubsystem,
->>>>>>> main
                     intakeSubsystem,
                     intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
