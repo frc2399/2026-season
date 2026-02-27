@@ -42,19 +42,18 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
-import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -96,10 +95,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private final LinearVelocity MAX_LINEAR_SPEED;
     private final AngularVelocity MAX_ANGULAR_VELOCITY;
 
-    private final Translation2d FRONT_LEFT_OFFSET;
-    private final Translation2d REAR_LEFT_OFFSET;
-    private final Translation2d FRONT_RIGHT_OFFSET;
-    private final Translation2d REAR_RIGHT_OFFSET;
+    public final Translation2d FRONT_LEFT_OFFSET;
+    public final Translation2d REAR_LEFT_OFFSET;
+    public final Translation2d FRONT_RIGHT_OFFSET;
+    public final Translation2d REAR_RIGHT_OFFSET;
 
     private final SwerveDriveKinematics DRIVE_KINEMATICS;
 
@@ -110,8 +109,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private static final double ROTATION_P = 5.0;
     private static final double ROTATION_I = 0.0;
     private static final double ROTATION_D = 0.0;
-
-    private Optional<Alliance> alliance = DriverStation.getAlliance();
 
     // Slew rate filter variables for controlling lateral acceleration
     private double desiredAngle = 0;
@@ -128,6 +125,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private ChassisSpeeds relativeRobotSpeeds = new ChassisSpeeds();
 
     private Rotation2d lastAngle = new Rotation2d();
+
+    //     public static final RobotConfig CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, new
+    // ModuleConfig(
+    //         WHEEL_RADIUS, MAX_SPEED, WHEEL_COF, DRIVE_MOTOR, DRIVE_CURRENT_LIMIT, NUM_MOTORS),
+    // MODULE_OFFSETS);
 
     public static class DriveSubsystemStates {
         public Pose2d pose = new Pose2d();
@@ -232,8 +234,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             new PIDConstants(ROTATION_P, ROTATION_I, ROTATION_D)),
                     config, // The robot configuration
                     () -> {
-                        if (alliance.isPresent()) {
-                            return alliance.get() == DriverStation.Alliance.Red;
+                        if (FieldConstants.alliance.isPresent()) {
+                            return FieldConstants.alliance.get() == DriverStation.Alliance.Red;
                         }
                         return false;
                     },
@@ -250,7 +252,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     public void periodic() {
         SmartDashboard.putBoolean("/drive/atGoal", atGoal);
         SmartDashboard.putBoolean("/drive/isHubActive", GameState.isHubActive(0));
-        SmartDashboard.putNumber("/drive/matchTime", DriverStationSim.getMatchTime());
         // This will get the simulated sensor readings that we set
         // in the previous article while in simulation, but will use
         // real values on the robot itself.
@@ -305,7 +306,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                     DRIVE_KINEMATICS.toChassisSpeeds(swerveModuleStates).omegaRadiansPerSecond
                             * (1 / RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_HZ);
             lastAngle = lastAngle.plus(Rotation2d.fromRadians(angleChange));
-            gyro.setYaw(Radians.of(lastAngle.getRadians()));
+            gyro.setYawCommand(Radians.of(lastAngle.getRadians()));
         }
 
         logAndUpdateDriveSubsystemStates();
@@ -363,7 +364,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         return this.run(
                         () -> {
                             double currentAngle = gyro.getYaw(false).in(Radians);
-                            if (alliance.get() == DriverStation.Alliance.Red) {
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get()
+                                            == DriverStation.Alliance.Red) {
                                 currentAngle += Math.PI;
                             }
 
@@ -570,7 +573,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (alliance.get() == Alliance.Blue) {
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
@@ -638,9 +642,5 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
         SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
-    }
-
-    public void setAlliance(Optional<Alliance> allianceColor) {
-        alliance = allianceColor;
     }
 }
