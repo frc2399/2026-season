@@ -63,7 +63,7 @@ public final class DriveConfig {
                 break;
             case BETA:
                 kS = 0.1;
-                kV = 2.29;
+                kV = 2;
                 DRIVE_P = 0.4;
                 DRIVE_D = 0;
                 TURN_P = 1.0;
@@ -73,9 +73,9 @@ public final class DriveConfig {
                 PINION_TEETH = 13;
                 TRACK_WIDTH = Inches.of(20.5);
                 TRACK_LENGTH = Inches.of(26.5);
-                MAX_ACCELERATION = MetersPerSecondPerSecond.of(0);
-                MAX_SPEED = MetersPerSecond.of(0);
-                MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(0);
+                MAX_ACCELERATION = MetersPerSecondPerSecond.of(2); // TODO: characterize
+                MAX_SPEED = MetersPerSecond.of(1);
+                MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(0.5 * Math.PI);
                 break;
             case COMP:
                 kS = 0;

@@ -90,7 +90,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                 .inverted(INTAKE_ARM_ENCODER_INVERTED)
                 .positionConversionFactor(INTAKE_ARM_POSITION_CONVERSION_FACTOR.in(Degrees))
                 .velocityConversionFactor(
-                        INTAKE_ARM_VELOCITY_CONVERSION_FACTOR.in(DegreesPerSecond));
+                        INTAKE_ARM_VELOCITY_CONVERSION_FACTOR.in(DegreesPerSecond))
+                .zeroCentered(true);
 
         intakeArmSparkFlexConfig
                 .closedLoop
@@ -158,7 +159,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     @Override
     public void runOffVolts() {
         System.out.println("im a volt!");
-        intakeArmClosedLoop.setSetpoint(1, ControlType.kVoltage);
+        intakeArmClosedLoop.setSetpoint(0.5, ControlType.kVoltage);
         // for testing, add backward voltage setpoint bc idk how to do that rn :)
     }
 
