@@ -90,8 +90,8 @@ public class ShooterHardwareBeta implements ShooterIO {
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
         shooterTopMotorConfig.idleMode(IdleMode.kCoast);
-        shooterBottomMotorConfig.inverted(SHOOTER_BOTTOM_INVERTED);
-        shooterTopMotorConfig.inverted(SHOOTER_TOP_INVERTED);
+        shooterBottomMotorConfig.inverted(true);
+        shooterTopMotorConfig.inverted(true);
         shooterBottomMotorConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
         shooterTopMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
