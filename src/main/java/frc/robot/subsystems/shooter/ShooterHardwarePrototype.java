@@ -41,8 +41,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private final double SHOOTER_BOTTOM_KS = 0.154;
     private final double SHOOTER_BOTTOM_KV = 0.019691444431922856;
 
-
-   // tunable numbers, supposed to be saved 
+    // tunable numbers, supposed to be saved
     // private final TunableNumber TUNABLE_SHOOTER_TOP_D =
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_TOP_D, true);
     //     private final TunableNumber TUNABLE_SHOOTER_TOP_P =

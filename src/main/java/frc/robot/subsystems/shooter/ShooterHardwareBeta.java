@@ -45,7 +45,7 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final double SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED = 0;
     private final double SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED = 0;
 
-       // tunable numbers, supposed to be saved 
+    // tunable numbers, supposed to be saved
     // private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_D =
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_BETA_TOP_D, true);
     //     private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_P =
@@ -64,10 +64,15 @@ public class ShooterHardwareBeta implements ShooterIO {
     //             new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
 
     private final TunableNumber TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED =
-            new TunableNumber("Shooter/shooter_top_multiplier_desired_speed", SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED, true);
+            new TunableNumber(
+                    "Shooter/shooter_top_multiplier_desired_speed",
+                    SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
+                    true);
     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED =
             new TunableNumber(
-                    "Shooter/shooter_bottom_multiplier_desired_speed", SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED, true);
+                    "Shooter/shooter_bottom_multiplier_desired_speed",
+                    SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
+                    true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
@@ -224,14 +229,14 @@ public class ShooterHardwareBeta implements ShooterIO {
         //             ResetMode.kResetSafeParameters,
         //             PersistMode.kPersistParameters);
         // }
-        
-        
-        if (TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-            desiredTopVelocity = RadiansPerSecond.of(TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
 
+        if (TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
+            desiredTopVelocity =
+                    RadiansPerSecond.of(TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
         }
         if (TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-            desiredBottomVelocity = RadiansPerSecond.of(TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get());
+            desiredBottomVelocity =
+                    RadiansPerSecond.of(TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get());
         }
     }
 }
