@@ -6,4 +6,7 @@ public class ShooterIndexerPlacebo implements ShooterIndexerIO {
     public void backwardsRunShooterIndexer() {}
 
     public void defaultBehavior() {}
+
+    @Override
+    public void updateStates(ShooterIndexerIOState state) {}
 }

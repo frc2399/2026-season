@@ -5,46 +5,50 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 import frc.robot.vision.VisionPoseEstimator;
-import java.util.Optional;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
-    private Gyro gyro = subsystemFactory.buildGyro();
+    public Gyro gyro = subsystemFactory.buildGyro();
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
-    private IndexerSubsystem indexerSubsystem = subsystemFactory.buildIndexer();
+    private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
+    private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory =
-            new CommandFactory(drive, gyro, shooterSubsystem, shooterIndexerSubsystem);
+            new CommandFactory(
+                    drive,
+                    gyro,
+                    shooterSubsystem,
+                    shooterIndexerSubsystem,
+                    spindexerSubsystem,
+                    intakeSubsystem,
+                    intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 
@@ -67,6 +71,7 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindingsDriver();
         setUpAuton();
+        SmartDashboard.putData("robot/driverController", driverController.getHID());
     }
 
     public void disableSubsystems() {
@@ -92,59 +97,32 @@ public class RobotContainer {
                         () -> (driverController.a().getAsBoolean())));
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
-        indexerSubsystem.setDefaultCommand(indexerSubsystem.defaultBehavior());
+        spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
+        shooterIndexerSubsystem.setDefaultCommand(shooterIndexerSubsystem.defaultBehavior());
     }
 
     private void configureButtonBindingsDriver() {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
-        driverController.b().onTrue(gyro.setYaw(Degrees.of(0)));
-        driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
+        driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
+        driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
-        driverController.rightBumper().whileTrue(indexerSubsystem.runIndexer());
+        driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-
         autoChooser.addOption(
-                "bumpNeutralZoneShooting", autonCommandFactory.bumpNeutralZoneShooting());
-        autoChooser.addOption("hubDepot", autonCommandFactory.hubToDepot());
-        autoChooser.addOption("bumpNeutralZone", autonCommandFactory.bumpToNeutralZone());
+                "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
+        autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
+        autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
-    }
-
-    public Boolean shouldTargetHub(Pose2d robotLocation) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-        double poseX = robotLocation.getX();
-        if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Blue) {
-                if (FieldConstants.AllianceZoneBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters)
-                                <= poseX
-                        && poseX
-                                <= FieldConstants.AllianceZoneBoundaries.BLUE_ZONE_BOUNDARY_X.in(
-                                        Meters)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            if (alliance.get() == DriverStation.Alliance.Red) {
-                if (FieldConstants.AllianceZoneBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX
-                        && poseX
-                                <= FieldConstants.AllianceZoneBoundaries.RED_DRIVER_STATION_WALL_X
-                                        .in(Meters)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
     }
 
     public void setAlerts() {

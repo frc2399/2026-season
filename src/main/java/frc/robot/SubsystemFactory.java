@@ -9,15 +9,22 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
-import frc.robot.subsystems.indexer.IndexerPlacebo;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intakeArm.IntakeArmPlacebo;
+import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
+import frc.robot.subsystems.shooter.ShooterHardwareBeta;
+import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBeta;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwarePrototype;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerHardwareBeta;
+import frc.robot.subsystems.spindexer.SpindexerPlacebo;
+import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
 public class SubsystemFactory {
     private static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
@@ -28,9 +35,9 @@ public class SubsystemFactory {
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
-    private static final String BETA_SERIAL_NUMBER = "";
+    private static final String BETA_SERIAL_NUMBER = "030589d5";
     private static final String COMP_SERIAL_NUMBER = "";
-    private static final String PROTOTYPE_SERIAL_NUMBER = "";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
 
     public enum RobotType {
         MOZART,
@@ -48,6 +55,9 @@ public class SubsystemFactory {
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
+        } else if (serialNum == null) {
+            robotType = null;
+            throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
@@ -134,15 +144,35 @@ public class SubsystemFactory {
         }
     }
 
-    public ShooterSubsystem buildShooter() {
-        return new ShooterSubsystem(new ShooterPlacebo());
+    public IntakeArmSubsystem buildIntakeArm() {
+        return new IntakeArmSubsystem(new IntakeArmPlacebo());
     }
 
-    public IndexerSubsystem buildIndexer() {
-        return new IndexerSubsystem(new IndexerPlacebo());
+    public ShooterSubsystem buildShooter() {
+        if (robotType == RobotType.PROTOTYPE) {
+            return new ShooterSubsystem(new ShooterHardwarePrototype());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterSubsystem(new ShooterHardwareBeta());
+        } else {
+            return new ShooterSubsystem(new ShooterPlacebo());
+        }
+    }
+
+    public SpindexerSubsystem buildSpindexer() {
+        if (robotType == RobotType.BETA) {
+            return new SpindexerSubsystem(new SpindexerHardwareBeta());
+        } else {
+            return new SpindexerSubsystem(new SpindexerPlacebo());
+        }
     }
 
     public ShooterIndexerSubsystem buildShooterIndexer() {
-        return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
+        if (robotType == RobotType.PROTOTYPE) {
+            return new ShooterIndexerSubsystem(new ShooterIndexerHardwarePrototype());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterIndexerSubsystem(new ShooterIndexerHardwareBeta());
+        } else {
+            return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
+        }
     }
 }

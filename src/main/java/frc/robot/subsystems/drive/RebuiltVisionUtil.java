@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.HubConstants;
@@ -25,8 +24,7 @@ public class RebuiltVisionUtil {
     }
 
     public static Pose2d getHubPose() {
-        if (DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == Alliance.Blue) {
+        if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
             return FieldConstants.HubConstants.BLUE_CENTER_OF_HUB_POSE;
         } else {
             return FieldConstants.HubConstants.RED_CENTER_OF_HUB_POSE;
@@ -55,7 +53,7 @@ public class RebuiltVisionUtil {
 
     public static double getDiffOfAngleInDegrees(
             double actualAngleInDegrees, double desiredAngleInDegrees) {
-        double diffOfAngleInDegrees = actualAngleInDegrees-desiredAngleInDegrees;
+        double diffOfAngleInDegrees = actualAngleInDegrees - desiredAngleInDegrees;
         return diffOfAngleInDegrees;
     }
 

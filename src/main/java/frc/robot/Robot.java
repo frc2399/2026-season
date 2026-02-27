@@ -3,6 +3,11 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
+
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -13,8 +18,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.FieldConstants;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
@@ -39,7 +46,35 @@ public class Robot extends TimedRobot {
         DriverStation.startDataLog(DataLogManager.getLog());
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         DriverStation.silenceJoystickConnectionWarning(true);
+        FollowPathCommand.warmupCommand();
+        PathfindingCommand.warmupCommand();
     }
+
+    /**
+     * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+     * that you want ran during disabled, autonomous, teleoperated and test.
+     *
+     * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+     * SmartDashboard integrated updating.
+     */
+    @Override
+    public void robotPeriodic() {
+        SmartDashboard.putNumber("Robot/batteryVoltage", RobotController.getBatteryVoltage());
+        // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
+        // commands, running already-scheduled commands, removing finished or interrupted commands,
+        // and running subsystem periodic() methods.  This must be called from the robot's periodic
+        // block in order for anything in the Command-based framework to work.
+        CommandScheduler.getInstance().run();
+        robotContainer.visionPoseEstimator.periodic();
+        robotContainer.setAlerts();
+    }
+
+    /** This function is called once each time the robot enters Disabled mode. */
+    @Override
+    public void disabledInit() {}
+
+    @Override
+    public void disabledPeriodic() {}
 
     @Override
     public void robotInit() {
@@ -82,39 +117,15 @@ public class Robot extends TimedRobot {
                         });
     }
 
-    /**
-     * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-     * that you want ran during disabled, autonomous, teleoperated and test.
-     *
-     * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-     * SmartDashboard integrated updating.
-     */
-    @Override
-    public void robotPeriodic() {
-        SmartDashboard.putNumber("Robot/batteryVoltage", RobotController.getBatteryVoltage());
-        // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-        // commands, running already-scheduled commands, removing finished or interrupted commands,
-        // and running subsystem periodic() methods.  This must be called from the robot's periodic
-        // block in order for anything in the Command-based framework to work.
-        CommandScheduler.getInstance().run();
-        robotContainer.visionPoseEstimator.periodic();
-        robotContainer.setAlerts();
-    }
-
-    /** This function is called once each time the robot enters Disabled mode. */
-    @Override
-    public void disabledInit() {}
-
-    @Override
-    public void disabledPeriodic() {}
-
     @Override
     public void driverStationConnected() {
         if (DriverStation.getAlliance().isPresent()
                 && DriverStation.getAlliance().get() == Alliance.Red) {
-            // DriveSubsystem.setAlliance().get == Alliance.Red
+            FieldConstants.alliance = Optional.of(Alliance.Red);
+            robotContainer.gyro.setYaw(Degrees.of(0));
         } else {
-
+            FieldConstants.alliance = Optional.of(Alliance.Blue);
+            robotContainer.gyro.setYaw(Degree.of(180));
         }
     }
 
