@@ -36,10 +36,10 @@ public class RebuiltVisionUtil {
     public static double getDesiredAngleToHub(Supplier<Pose2d> robotPose) {
 
         Pose2d orientTargetPose = RebuiltVisionUtil.getHubPose();
-        Transform2d poseToOrientToTarget = TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM;
+        Transform2d robotToShooterTransform = TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM;
 
         Translation2d targetToRobotTranslation =
-                orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
+                orientTargetPose.getTranslation().minus(robotToShooterTransform.getTranslation());
         Angle desiredAngle =
                 Radians.of(
                         Math.atan2(

@@ -57,6 +57,6 @@ public final class RobotConstants {
     public static class TransformConstants {
         // these values should be edited once we have our robot to shooter transform
         public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM =
-                new Transform2d(0.0, 0.0, new Rotation2d(0));
+                new Transform2d(8.5, 12.63, new Rotation2d(0));
     }
 }

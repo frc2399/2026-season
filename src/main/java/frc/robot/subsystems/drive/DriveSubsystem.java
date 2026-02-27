@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
@@ -366,8 +367,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                 xSpeedDelivered, ySpeedDelivered, rotRateDelivered);
                             }
 
-                            SmartDashboard.putNumber("x speed delivered", xSpeedDelivered);
-                            SmartDashboard.putNumber("y speed delivered", ySpeedDelivered);
+                            SmartDashboard.putNumber("drive/xSpeedDelivered", xSpeedDelivered);
+                            SmartDashboard.putNumber("drive/ySpeedDelivered", ySpeedDelivered);
+                            SmartDashboard.putNumber("drive/PolarAngle", polarAngle);
 
                             var swerveModuleStates =
                                     DRIVE_KINEMATICS.toSwerveModuleStates(relativeRobotSpeeds);
@@ -521,8 +523,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> {
                             atGoal = false;
 
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == Alliance.Blue) {
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get() == Alliance.Blue) {
                                 isBlueAlliance = () -> true;
                             } else {
                                 isBlueAlliance = () -> false;
