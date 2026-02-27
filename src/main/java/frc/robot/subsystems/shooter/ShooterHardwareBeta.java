@@ -34,12 +34,14 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final double SHOOTER_TOP_D = 0;
     private final double SHOOTER_TOP_KS = 0.01;
     private final double SHOOTER_TOP_KV = 0.01;
-    // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private final double SHOOTER_BOTTOM_P = 0;
     private final double SHOOTER_BOTTOM_D = 0;
     private final double SHOOTER_BOTTOM_KS = 0.01;
-    private final double SHOOTER_BOTTOM_KV = 0.01;
-    // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private final double SHOOTER_BOTTOM_KV =
+            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+
+    private static final boolean SHOOTER_TOP_INVERTED = true;
+    private static final boolean SHOOTER_BOTTOM_INVERTED = false;
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
@@ -56,8 +58,8 @@ public class ShooterHardwareBeta implements ShooterIO {
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
         shooterTopMotorConfig.idleMode(IdleMode.kCoast);
-        shooterBottomMotorConfig.inverted(true);
-        shooterTopMotorConfig.inverted(true);
+        shooterBottomMotorConfig.inverted(SHOOTER_BOTTOM_INVERTED);
+        shooterTopMotorConfig.inverted(SHOOTER_TOP_INVERTED);
         shooterBottomMotorConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
         shooterTopMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
@@ -110,8 +112,8 @@ public class ShooterHardwareBeta implements ShooterIO {
     }
 
     public void runShooter() {
-        desiredBottomVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.5);
-        desiredTopVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.5);
+        desiredBottomVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.3522);
+        desiredTopVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.4627);
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -141,4 +143,7 @@ public class ShooterHardwareBeta implements ShooterIO {
         state.bottomRollerAppliedVoltage =
                 shooterBottomSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
     }
+
+    @Override
+    public void periodicUpdate() {}
 }
