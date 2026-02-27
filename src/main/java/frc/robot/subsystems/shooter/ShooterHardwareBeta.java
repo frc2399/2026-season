@@ -196,7 +196,7 @@ public class ShooterHardwareBeta implements ShooterIO {
                     shooterTopMotorConfig,
                     ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters);
-            // }
+            }
             // if (TUNABLE_SHOOTER_BETA_BOTTOM_KV.hasChanged()) {
             //
             // closedLoopConfigShooterBottom.feedForward.kV(TUNABLE_SHOOTER_BETA_BOTTOM_KV.get());
@@ -241,4 +241,3 @@ public class ShooterHardwareBeta implements ShooterIO {
             // }
         }
     }
-}
