@@ -115,10 +115,6 @@ public class RobotContainer {
         autoChooser = new SendableChooser<>();
         autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
         autoChooser.addOption(
-                "depotSideBumpToNeutralZone", autonCommandFactory.depotSideBumpToNeutralZone());
-        autoChooser.addOption(
-                "outpostSideBumpToNeutralZone", autonCommandFactory.outpostSideBumpToNeutralZone());
-        autoChooser.addOption(
                 "depotSideDepotToNeutralZone",
                 autonCommandFactory.depotSideDepotToNeutralZoneShooting());
         autoChooser.addOption(
