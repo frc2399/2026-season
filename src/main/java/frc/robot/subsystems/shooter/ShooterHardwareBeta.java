@@ -46,21 +46,21 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final double SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED = 0;
 
        // tunable numbers, supposed to be saved 
-    // private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_D =
+    // private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_D =
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_BETA_TOP_D, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_P =
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_P =
     //             new TunableNumber("Shooter/shooter_top_p", .001, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KS =
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KS =
     //             new TunableNumber("Shooter/shooter_top_ks", 0.118, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KV =
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KV =
     //             new TunableNumber("Shooter/shooter_top_kv", 0.01700044443192286, true);
-    // private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_D =
+    // private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_D =
     // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_D, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_P =
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_P =
     //             new TunableNumber("Shooter/shooter_bottom_p", .001, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KS =
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KS =
     //             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KV =
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KV =
     //             new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
 
     private final TunableNumber TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED =
@@ -77,10 +77,6 @@ public class ShooterHardwareBeta implements ShooterIO {
 
     private AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
     private AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
-
-    private boolean topMultiplierDesiredSpeed = new topMultiplierDesiredSpeed
-    private boolean bottomMultiplierDesiredSpeed = new bottomMultiplierDesiredSpeed
-
 
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
@@ -231,12 +227,11 @@ public class ShooterHardwareBeta implements ShooterIO {
         
         
         if (TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-            (TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
+            desiredTopVelocity = RadiansPerSecond.of(TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
 
         }
         if (TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-            (TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get());
-\
+            desiredBottomVelocity = RadiansPerSecond.of(TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get());
         }
     }
 }
