@@ -57,7 +57,7 @@ public class RobotContainer {
 
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
-    private static final CommandXboxController tuningController = 
+    private static final CommandXboxController tuningController =
             new CommandXboxController(DriveControlConstants.TUNING_CONTROLLER_PORT);
 
     private final Alert driverDisconnected =
@@ -76,7 +76,6 @@ public class RobotContainer {
         setUpAuton();
 
         SmartDashboard.putData("robot/driverController", driverController.getHID());
-        }
     }
 
     public void disableSubsystems() {
@@ -116,8 +115,7 @@ public class RobotContainer {
         driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
-    private void configureButtonBindingsTuningController() {
-    }
+    private void configureButtonBindingsTuningController() {}
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
