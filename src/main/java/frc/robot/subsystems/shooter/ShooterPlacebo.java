@@ -1,7 +1,9 @@
 package frc.robot.subsystems.shooter;
 
+import frc.robot.CommandFactory.TargetFuel;
+
 public class ShooterPlacebo implements ShooterIO {
-    public void runShooter() {}
+    public void runShooter(TargetFuel targetFuel) {}
 
     public void defaultBehavior() {}
 

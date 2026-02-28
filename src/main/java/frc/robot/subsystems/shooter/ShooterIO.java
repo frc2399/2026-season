@@ -1,7 +1,11 @@
 package frc.robot.subsystems.shooter;
 
+import java.util.function.Supplier;
+
+import frc.robot.CommandFactory.TargetFuel;
+
 public interface ShooterIO {
-    public void runShooter();
+    public void runShooter(Supplier<TargetFuel> targetFuel);
 
     public void defaultBehavior();
 
@@ -19,4 +23,6 @@ public interface ShooterIO {
         public double bottomRollerCurrent = 0.0;
         public double bottomRollerAppliedVoltage = 0.0;
     }
+
+    public void runShooter(TargetFuel targetFuel);
 }

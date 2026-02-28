@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import java.lang.annotation.Target;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -17,6 +19,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import frc.robot.CommandFactory.TargetFuel;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
@@ -143,7 +146,7 @@ public class ShooterHardwareBeta implements ShooterIO {
         shooterTopEncoder = shooterTopSparkFlex.getEncoder();
     }
 
-    public void runShooter() {
+    public void runShooter(TargetFuel targetFuel) {
         desiredBottomVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.3522);
         desiredTopVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.4627);
 

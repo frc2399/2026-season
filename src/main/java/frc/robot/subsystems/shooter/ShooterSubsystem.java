@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.CommandFactory.TargetFuel;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOState;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -13,8 +14,9 @@ public class ShooterSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command shoot() {
-        return this.run(() -> io.runShooter()).withName("runShooter");
+    public Command shoot(TargetFuel targetFuel) {
+        return this.run(() -> io.runShooter(targetFuel)).withName("runShooter");
+
     }
 
     public Command defaultBehavior() {
