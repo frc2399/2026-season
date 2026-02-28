@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -67,14 +68,22 @@ public class SpindexerHardwareBeta implements SpindexerIO {
                 new SparkFlex(
                         RobotConstants.MotorIdConstants.SPINDEXER_CAN_ID, MotorType.kBrushless);
 
-        spindexerSparkFlex.configure(
-                spindexerSparkFlexConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var spindexerStatus =
+                spindexerSparkFlex.configure(
+                        spindexerSparkFlexConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         spindexerPidController = spindexerSparkFlex.getClosedLoopController();
 
         spindexerEncoder = spindexerSparkFlex.getEncoder();
+
+        if (spindexerStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + spindexerStatus);
+        }
+        if (spindexerStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + spindexerStatus);
+        }
     }
 
     public void runSpindexer() {

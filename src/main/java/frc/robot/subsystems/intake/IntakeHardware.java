@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -70,12 +71,21 @@ public class IntakeHardware implements IntakeIO {
 
         intakeSparkFlex =
                 new SparkFlex(RobotConstants.MotorIdConstants.INTAKE_CAN_ID, MotorType.kBrushless);
-        intakeSparkFlex.configure(
-                intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        var intakeStatus =
+                intakeSparkFlex.configure(
+                        intakeMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         intakePidController = intakeSparkFlex.getClosedLoopController();
 
         intakeEncoder = intakeSparkFlex.getEncoder();
+        if (intakeStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + intakeStatus);
+        }
+        if (intakeStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + intakeStatus);
+        }
     }
 
     public void runIntake() {
@@ -106,5 +116,11 @@ public class IntakeHardware implements IntakeIO {
         // intakeMotorConfig,
         // ResetMode.kResetSafeParameters,
         // PersistMode.kPersistParameters); }
+    }
+
+    @Override
+    public void updateStates(IntakeIOStates states) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateStates'");
     }
 }

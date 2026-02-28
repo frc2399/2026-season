@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -204,20 +205,36 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
         sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
 
-        drivingSparkFlex.configure(
-                sparkFlexConfigDriving,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-        turningSparkMax.configure(
-                sparkMaxConfigTurning,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var drivingStatus =
+                drivingSparkFlex.configure(
+                        sparkFlexConfigDriving,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
+        var turningStatus =
+                turningSparkMax.configure(
+                        sparkMaxConfigTurning,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         drivingRelativeEncoder = drivingSparkFlex.getEncoder();
         turningAbsoluteEncoder = turningSparkMax.getAbsoluteEncoder();
 
         drivingPidController = drivingSparkFlex.getClosedLoopController();
         turningPidController = turningSparkMax.getClosedLoopController();
+
+        if (drivingStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + drivingStatus);
+        }
+        if (drivingStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + drivingStatus);
+        }
+
+        if (turningStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + turningStatus);
+        }
+        if (turningStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + turningStatus);
+        }
     }
 
     public void setDriveEncoderPosition(double position) {

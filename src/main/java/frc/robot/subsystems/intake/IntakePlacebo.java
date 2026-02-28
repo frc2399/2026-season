@@ -7,4 +7,7 @@ public class IntakePlacebo implements IntakeIO {
 
     @Override
     public void periodicUpdate() {}
+
+    @Override
+    public void updateStates(IntakeIOStates states) {}
 }
