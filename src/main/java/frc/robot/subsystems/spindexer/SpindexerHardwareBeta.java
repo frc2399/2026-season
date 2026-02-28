@@ -32,7 +32,7 @@ public class SpindexerHardwareBeta implements SpindexerIO {
     private final double SPINDEXER_KS = 0.1;
     private final double SPINDEXER_KV = 0;
 
-    // private static final TunableNumber TUNABLE_SPINDEXER_KS =
+    //     private static final TunableNumber TUNABLE_SPINDEXER_KS =
     //             new TunableNumber("Spindexer/spindexer_ks", 0.1, true);
 
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
@@ -40,8 +40,9 @@ public class SpindexerHardwareBeta implements SpindexerIO {
 
     private AngularVelocity desiredVelocity;
 
+    SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
+
     public SpindexerHardwareBeta() {
-        SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
 
         spindexSparkFlexConfig.idleMode(IdleMode.kBrake);
         spindexSparkFlexConfig.inverted(true);
@@ -90,9 +91,9 @@ public class SpindexerHardwareBeta implements SpindexerIO {
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
 
         // if (TUNABLE_SPINDEXER_KS.hasChanged()) {
-        //     spindexerClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
-        //     spindexerConfig.apply(spindexerClosedLoopConfig);
-        //     spindexerSparkFlexConfig.configure(
+        //     spindexClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
+        //     spindexSparkFlexConfig.apply(spindexClosedLoopConfig);
+        //     spindexerSparkFlex.configure(
         //             spindexSparkFlexConfig,
         //             ResetMode.kResetSafeParameters,
         //             PersistMode.kPersistParameters);
