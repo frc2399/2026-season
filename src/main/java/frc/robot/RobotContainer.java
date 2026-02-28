@@ -6,8 +6,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.revrobotics.spark.SparkBase.ControlType;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;

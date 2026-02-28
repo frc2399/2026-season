@@ -182,7 +182,7 @@ public class ShooterHardwareBeta implements ShooterIO {
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
-        
+
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
         if (TUNABLE_SHOOTER_BETA_BOTTOM_KS.hasChanged()) {
