@@ -231,9 +231,9 @@ public final class FieldConstants {
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .unaryMinus(),
                                         Rotation2d.kZero)));
-        public static final Pose PRELOADED_SHOOTING_SPOT =
+        public static final Pose DEPOT_SHOOTING_SPOT =
                 new Pose(
-                        "preloadedShootingSpot",
+                        "depotShootingSpot",
                         FRONT_OF_BLUE_HUB.plus(
                                 new Transform2d(
                                         HALF_LENGTH_OF_ROBOT_WITH_BUMPER
@@ -243,6 +243,20 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN),
+                                        Rotation2d.kZero)));
+        public static final Pose OUTPOST_SHOOTING_SPOT =
+                new Pose(
+                        "outpostShootingSpot",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(LENGTH_OF_BUMP)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .plus(ROBOT_HUB_MARGIN)
+                                                .unaryMinus(),
                                         Rotation2d.kZero)));
     }
 
