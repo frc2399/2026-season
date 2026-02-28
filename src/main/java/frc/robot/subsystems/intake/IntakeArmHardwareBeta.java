@@ -48,18 +48,17 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_P = 0.00;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
-    // feedforward
+    // feedforward (values calculated using the recalc link kevin shared in the discord in #programming on 2/26)
     private static final double INTAKE_ARM_KS = 0;
-    private static final double INTAKE_ARM_KV = 0.0; // .25
-    //     12 / (RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(DegreesPerSecond) / 45.0);
-    private static final double INTAKE_ARM_KA = 0;
+    private static final double INTAKE_ARM_KV = 0.0132; 
+    private static final double INTAKE_ARM_KA = 0.00011;
+    private static final double INTAKE_ARM_KCOS = 0.23;
     /*
      * our arm is rotational, so the impact of gravity changes as we rotate, and our feedforward needs to compensate. the kcos is the factor to compensate by
      * revlib demands that it can get from what we're logging in (degree/s) to rotations of mechanism / second to accurately compensate. that's kcosratio
      */
-    private static final double INTAKE_ARM_KCOS = 3;
     private static final double INTAKE_ARM_KCOS_RATIO =
-            1 / 360; // convert from mechanism degrees to rotation
+            1 / 360; // convert from mechanism degrees to rotations
 
     // output
     private static final double INTAKE_ARM_MIN_OUTPUT = -1;
