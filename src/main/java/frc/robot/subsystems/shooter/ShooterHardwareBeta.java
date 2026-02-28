@@ -140,7 +140,7 @@ public class ShooterHardwareBeta implements ShooterIO {
         if (distanceToHub.compareTo(bottomRollerCurveBoundary) < 0) {
             calculatedDesiredVelocity =
                     RPM.of(
-                            bottomRollerCloseToHubCurveIntercept * distanceToHub.in(Inches)
+                            bottomRollerCloseToHubCurveSlope * distanceToHub.in(Inches)
                                     + bottomRollerCloseToHubCurveIntercept);
         } else {
             calculatedDesiredVelocity =
@@ -157,7 +157,7 @@ public class ShooterHardwareBeta implements ShooterIO {
                 > 0) {
             return RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
         }
-        return RadiansPerSecond.of(0);
+        return calculatedDesiredVelocity;
     }
 
     private AngularVelocity getTopRollerSpeed(Distance distanceToHub) {
