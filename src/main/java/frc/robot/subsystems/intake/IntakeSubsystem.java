@@ -20,12 +20,8 @@ public class IntakeSubsystem extends SubsystemBase {
         return this.run(() -> io.setZero()).withName("defaultBehavior");
     }
 
-    public void updateStates() {
-        io.updateStates(states);
-    }
-
     @Override
     public void periodic() {
-        updateStates();
+        io.periodicUpdate();
     }
 }

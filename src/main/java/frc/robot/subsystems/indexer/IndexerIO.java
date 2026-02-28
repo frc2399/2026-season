@@ -1,8 +1,0 @@
-package frc.robot.subsystems.indexer;
-
-public interface IndexerIO {
-
-    public void runIndexer();
-
-    public void defaultBehavior();
-}

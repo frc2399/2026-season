@@ -12,4 +12,6 @@ public static class IntakeIOStates {
     public void runIntake();
 
     public void setZero();
+
+    public void periodicUpdate();
 }
