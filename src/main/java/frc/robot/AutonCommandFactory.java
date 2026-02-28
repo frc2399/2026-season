@@ -3,9 +3,9 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
@@ -14,7 +14,6 @@ import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import java.util.Set;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutonCommandFactory {
     private final DriveSubsystem drive;
@@ -56,12 +55,12 @@ public class AutonCommandFactory {
                         () ->
                                 drive.resetOdometry(
                                         FieldConstants.PoseConstants.BLUE_HUB_MIDDLE.pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints,0),
+                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
                 // move into intake position while driving
                 drive.driveToPoseOnExecute(),
                 // intakeSubsystem.runIntake().withTimeout(3),
                 // intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints,0),
+                buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints, 0),
                 // move into shooting position while driving
                 drive.driveToPoseOnExecute());
     }
