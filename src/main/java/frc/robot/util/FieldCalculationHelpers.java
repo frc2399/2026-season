@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.CommandFactory.TargetFuel;
 import frc.robot.constants.FieldConstants;
 
 public class FieldCalculationHelpers {
@@ -34,20 +35,20 @@ public class FieldCalculationHelpers {
     }
 
     // if return true then shoot right and if false shoot left
-    public static Boolean shouldRobotPassLeftOrRight(Pose2d robotLocation) {
+    public static TargetFuel shouldRobotPassLeftOrRight(Pose2d robotLocation) {
         double poseY = robotLocation.getY();
         if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
             if (FieldConstants.FieldBoundaries.CENTER_LINE.in(Meters) <= poseY) {
-                return true;
+                return TargetFuel.ALLIANCE_RIGHT;
             } else {
-                return false;
+                return TargetFuel.ALLIANCE_LEFT;
             }
         } else {
             if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
                 if (FieldConstants.FieldBoundaries.CENTER_LINE.in(Meters) >= poseY) {
-                    return true;
+                    return TargetFuel.ALLIANCE_RIGHT;
                 } else {
-                    return false;
+                    return TargetFuel.ALLIANCE_LEFT;
                 }
             }
         }
