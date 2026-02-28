@@ -25,6 +25,8 @@ import frc.robot.util.TunableNumber;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class ShooterHardwareBeta implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
@@ -68,16 +70,16 @@ public class ShooterHardwareBeta implements ShooterIO {
     //     private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KV =
     //             new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
 
-    //     private final TunableNumber TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED =
-    //             new TunableNumber(
-    //                     "Shooter/shooter_top_multiplier_desired_speed",
-    //                     SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
-    //                     true);
-    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED =
-    //             new TunableNumber(
-    //                     "Shooter/shooter_bottom_multiplier_desired_speed",
-    //                     SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
-    //                     true);
+        private final TunableNumber TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED =
+                new TunableNumber(
+                        "Shooter/shooter_top_multiplier_desired_speed",
+                        SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
+                        true);
+        private final TunableNumber TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED =
+                new TunableNumber(
+                        "Shooter/shooter_bottom_multiplier_desired_speed",
+                        SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
+                        true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
@@ -189,6 +191,16 @@ public class ShooterHardwareBeta implements ShooterIO {
             File csvFile = new File(Filesystem.getDeployDirectory(), "shooter-speeds.csv");
             FileWriter outputWriter = new FileWriter(csvFile);
             CSVWriter csvWriter = new CSVWriter(outputWriter);
+
+            double desiredSpeedTop = TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get();
+            double desiredSpeedBottom = TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get();
+            ZoneId zone = ZoneId.of("America/New York"); // so we can display in our local time zone
+            ZonedDateTime zonedDateTime = ZonedDateTime.now(zone);
+
+            String[] data = new String[] {"distance (currently unable to log", "" + desiredSpeedTop, "" + desiredSpeedBottom, zonedDateTime.toString()};
+            csvWriter.writeNext(data);
+            
+            csvWriter.close();
         } catch (IOException e) {
             System.out.println(
                     "********COULD NOT WRITE TO THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
