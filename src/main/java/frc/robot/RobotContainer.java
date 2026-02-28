@@ -57,6 +57,8 @@ public class RobotContainer {
 
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
+    private static final CommandXboxController tuningController =
+            new CommandXboxController(DriveControlConstants.TUNING_CONTROLLER_PORT);
 
     private final Alert driverDisconnected =
             new Alert("Driver controller disconnected!", AlertType.kWarning);
@@ -70,7 +72,9 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindingsDriver();
+        configureButtonBindingsTuningController();
         setUpAuton();
+
         SmartDashboard.putData("robot/driverController", driverController.getHID());
     }
 
@@ -111,12 +115,14 @@ public class RobotContainer {
         driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
+    private void configureButtonBindingsTuningController() {}
+
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption(
-                "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
+        // autoChooser.addOption(
+        //         "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
         autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
-        autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
+        // autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }

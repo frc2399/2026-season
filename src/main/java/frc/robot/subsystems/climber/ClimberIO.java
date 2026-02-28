@@ -1,7 +1,12 @@
 package frc.robot.subsystems.climber;
 
 public interface ClimberIO {
-    public void runClimber();
 
-    public void runClimberDefaultBehavior();
+    public void extend();
+
+    public void retract();
+
+    public void runForwards();
+
+    public void runBackwards();
 }
