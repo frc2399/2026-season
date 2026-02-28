@@ -30,9 +30,6 @@ public class AutonCommandFactory {
             new PathConstraints(
                     0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
-    public final PathConstraints bumpAndDepotConstraints =
-            new PathConstraints(1.5, 5, Units.degreesToRadians(360), Units.degreesToRadians(540));
-
     public AutonCommandFactory(DriveSubsystem drive, IntakeSubsystem intake) {
         this.drive = drive;
         this.intake = intake;
