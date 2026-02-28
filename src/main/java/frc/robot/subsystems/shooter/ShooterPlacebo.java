@@ -7,4 +7,7 @@ public class ShooterPlacebo implements ShooterIO {
 
     @Override
     public void updateStates(ShooterIOState state) {}
+
+    @Override
+    public void periodicUpdate() {}
 }

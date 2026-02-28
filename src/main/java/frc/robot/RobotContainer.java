@@ -46,6 +46,7 @@ public class RobotContainer {
                     gyro,
                     shooterSubsystem,
                     shooterIndexerSubsystem,
+                    spindexerSubsystem,
                     intakeSubsystem,
                     intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
@@ -106,14 +107,16 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
         driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption(
-                "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
+        // autoChooser.addOption(
+        //         "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
         autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
-        autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
+        // autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
