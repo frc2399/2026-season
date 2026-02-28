@@ -27,6 +27,7 @@ public class AutonCommandFactory {
     private final DriveSubsystem drive;
     private final IntakeSubsystem intake;
     private final CommandFactory commandFactory;
+
     private Pose2d finalPose;
 
     public final PathConstraints constraints =
