@@ -5,7 +5,6 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 
@@ -113,6 +112,8 @@ public class RobotContainer {
         driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
         driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
+
+    private void configureButtonBindingsTuningController() {}
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
