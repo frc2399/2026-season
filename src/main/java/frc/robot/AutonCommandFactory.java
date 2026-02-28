@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static frc.robot.constants.FieldConstants.PoseConstants.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
@@ -57,222 +59,128 @@ public class AutonCommandFactory {
 
     public Command trenchToDepot() {
         return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BLUE_DEPOT_STARTING_LINE
-                                                .pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
+                Commands.runOnce(() -> drive.resetOdometry(BLUE_DEPOT_STARTING_LINE.pose())),
+                buildPathDeferred(IN_THE_DEPOT, constraints, 0),
                 // drive.driveToPoseOnExecute(),
                 commandFactory.runIntakeandIntakeArm().withTimeout(3),
                 intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.DEPOT_SHOOTING_SPOT, constraints, 0),
+                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                 // drive.driveToPoseOnExecute(),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(6));
     }
 
     public Command depotSideDepotToNeutralZoneShooting() {
-        return Commands.sequence(trenchToDepot(), depotSideShootingSpotToNeutralZoneWaypoints());
+        return Commands.sequence(
+                trenchToDepot(),
+                followWaypoints(
+                        DEPOT_SHOOTING_SPOT.pose(),
+                        constraints,
+                        1.5,
+                        Rotation2d.fromDegrees(180),
+                        DEPOT_SHOOTING_SPOT.pose(),
+                        BLUE_DEPOT_STARTING_LINE.pose(),
+                        BLUE_DEPOT_WALL_FUEL_CENTER.pose()));
     }
 
     public Command depotSideNeutralZoneIntaking() {
         return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BLUE_DEPOT_STARTING_LINE
-                                                .pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.DEPOT_SHOOTING_SPOT, constraints, 0),
+                Commands.runOnce(() -> drive.resetOdometry(BLUE_DEPOT_STARTING_LINE.pose())),
+                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
-                depotSideShootingSpotToNeutralZoneWaypoints(),
+                followWaypoints(
+                        DEPOT_SHOOTING_SPOT.pose(),
+                        constraints,
+                        1.5,
+                        Rotation2d.fromDegrees(180),
+                        DEPOT_SHOOTING_SPOT.pose(),
+                        BLUE_DEPOT_STARTING_LINE.pose(),
+                        BLUE_DEPOT_WALL_FUEL_CENTER.pose()),
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(6),
+                        commandFactory.runIntakeandIntakeArm().withTimeout(6),
                         intake.defaultBehavior().withTimeout(0.01),
-                        depotSideNeutralZoneIntakingWaypoints()),
-                depotSideNeutralZoneToShootingSpotWaypoints(),
+                        followWaypoints(
+                                BLUE_DEPOT_WALL_FUEL_CENTER.pose(),
+                                intakeConstraints,
+                                1.5,
+                                Rotation2d.fromDegrees(180),
+                                BLUE_DEPOT_WALL_FUEL_CENTER.pose(),
+                                BLUE_DEPOT_BORDER_FUEL_CENTER.pose(),
+                                DEPOT_NEUTRAL_ZONE_CENTER.pose(),
+                                DEPOT_IN_NEUTRAL_ZONE.pose(),
+                                BLUE_DEPOT_BORDER_FUEL_EDGE.pose())),
+                followWaypoints(
+                        BLUE_DEPOT_BORDER_FUEL_EDGE.pose(),
+                        constraints,
+                        0,
+                        Rotation2d.fromDegrees(180),
+                        BLUE_DEPOT_BORDER_FUEL_EDGE.pose(),
+                        BLUE_DEPOT_WALL_FUEL_EDGE.pose(),
+                        BLUE_DEPOT_STARTING_LINE.pose(),
+                        DEPOT_SHOOTING_SPOT.pose()),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(5));
     }
 
     public Command outpostSideNeutralZoneIntaking() {
         return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE
-                                                .pose())),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.OUTPOST_SHOOTING_SPOT, constraints, 0),
+                Commands.runOnce(() -> drive.resetOdometry(BLUE_OUTPOST_STARTING_LINE.pose())),
+                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
-                outpostSideShootingSpotToNeutralZoneWaypoints(),
+                followWaypoints(
+                        OUTPOST_SHOOTING_SPOT.pose(),
+                        constraints,
+                        1.5,
+                        Rotation2d.fromDegrees(180),
+                        OUTPOST_SHOOTING_SPOT.pose(),
+                        BLUE_OUTPOST_STARTING_LINE.pose(),
+                        BLUE_OUTPOST_WALL_FUEL_CENTER.pose()),
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
-                        intake.runIntake().withTimeout(6),
+                        commandFactory.runIntakeandIntakeArm().withTimeout(6),
                         intake.defaultBehavior().withTimeout(0.01),
-                        outpostSideNeutralZoneIntakingWaypoints()),
-                outpostSideNeutralZoneToShootingSpotWaypoints(),
+                        followWaypoints(
+                                BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
+                                intakeConstraints,
+                                1.5,
+                                Rotation2d.fromDegrees(180),
+                                BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
+                                BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
+                                OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
+                                OUTPOST_IN_NEUTRAL_ZONE.pose(),
+                                BLUE_OUTPOST_BORDER_FUEL_EDGE.pose())),
+                followWaypoints(
+                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
+                        constraints,
+                        0,
+                        Rotation2d.fromDegrees(180),
+                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
+                        BLUE_OUTPOST_WALL_FUEL_EDGE.pose(),
+                        BLUE_OUTPOST_STARTING_LINE.pose(),
+                        OUTPOST_SHOOTING_SPOT.pose()),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(5));
     }
 
-    public Command depotSideShootingSpotToNeutralZoneWaypoints() {
+    public Command followWaypoints(
+            Pose2d startingPosition,
+            PathConstraints constraints,
+            double endVelocity,
+            Rotation2d endRotation,
+            Pose2d... poses) {
         return Commands.runOnce(
                 () -> {
-                    drive.resetOdometry(FieldConstants.PoseConstants.DEPOT_SHOOTING_SPOT.pose());
+                    drive.resetOdometry(startingPosition);
 
-                    List<Waypoint> waypoints =
-                            PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.DEPOT_SHOOTING_SPOT.pose(),
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_STARTING_LINE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_CENTER
-                                            .pose());
+                    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
 
-                    PathPlannerPath depotSideShootingSpotToNeutralZone =
+                    PathPlannerPath path =
                             new PathPlannerPath(
                                     waypoints,
                                     constraints,
                                     null,
-                                    new GoalEndState(0, Rotation2d.fromDegrees(180)));
+                                    new GoalEndState(endVelocity, endRotation));
 
-                    depotSideShootingSpotToNeutralZone.preventFlipping = true;
-                    CommandScheduler.getInstance()
-                            .schedule(AutoBuilder.followPath(depotSideShootingSpotToNeutralZone));
-                });
-    }
-
-    public Command outpostSideShootingSpotToNeutralZoneWaypoints() {
-        return Commands.runOnce(
-                () -> {
-                    drive.resetOdometry(FieldConstants.PoseConstants.OUTPOST_SHOOTING_SPOT.pose());
-
-                    List<Waypoint> waypoints =
-                            PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.OUTPOST_SHOOTING_SPOT.pose(),
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_CENTER
-                                            .pose());
-
-                    PathPlannerPath outpostSideShootingSpotToNeutralZone =
-                            new PathPlannerPath(
-                                    waypoints,
-                                    constraints,
-                                    null,
-                                    new GoalEndState(0, Rotation2d.fromDegrees(180)));
-
-                    outpostSideShootingSpotToNeutralZone.preventFlipping = true;
-                    CommandScheduler.getInstance()
-                            .schedule(AutoBuilder.followPath(outpostSideShootingSpotToNeutralZone));
-                });
-    }
-
-    public Command depotSideNeutralZoneToShootingSpotWaypoints() {
-        return Commands.runOnce(
-                () -> {
-                    drive.resetOdometry(
-                            FieldConstants.PoseConstants.BLUE_DEPOT_BORDER_FUEL_EDGE.pose());
-
-                    List<Waypoint> waypoints =
-                            PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_BORDER_FUEL_EDGE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_EDGE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_STARTING_LINE.pose(),
-                                    FieldConstants.PoseConstants.DEPOT_SHOOTING_SPOT.pose());
-
-                    PathPlannerPath depotSideNeutralZoneToShootingSpot =
-                            new PathPlannerPath(
-                                    waypoints,
-                                    constraints,
-                                    null,
-                                    new GoalEndState(0, Rotation2d.fromDegrees(180)));
-
-                    depotSideNeutralZoneToShootingSpot.preventFlipping = true;
-                    CommandScheduler.getInstance()
-                            .schedule(AutoBuilder.followPath(depotSideNeutralZoneToShootingSpot));
-                });
-    }
-
-    public Command outpostSideNeutralZoneToShootingSpotWaypoints() {
-        return Commands.runOnce(
-                () -> {
-                    drive.resetOdometry(
-                            FieldConstants.PoseConstants.BLUE_OUTPOST_BORDER_FUEL_EDGE.pose());
-
-                    List<Waypoint> waypoints =
-                            PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_BORDER_FUEL_EDGE
-                                            .pose(),
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_EDGE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE.pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_SHOOTING_SPOT.pose());
-
-                    PathPlannerPath outpostSideNeutralZoneToShootingSpot =
-                            new PathPlannerPath(
-                                    waypoints,
-                                    constraints,
-                                    null,
-                                    new GoalEndState(0, Rotation2d.fromDegrees(180)));
-
-                    outpostSideNeutralZoneToShootingSpot.preventFlipping = true;
-                    CommandScheduler.getInstance()
-                            .schedule(AutoBuilder.followPath(outpostSideNeutralZoneToShootingSpot));
-                });
-    }
-
-    public Command depotSideNeutralZoneIntakingWaypoints() {
-        return Commands.runOnce(
-                () -> {
-                    drive.resetOdometry(
-                            FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_CENTER.pose());
-
-                    List<Waypoint> waypoints =
-                            PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_CENTER.pose(),
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_BORDER_FUEL_CENTER
-                                            .pose(),
-                                    FieldConstants.PoseConstants.DEPOT_NEUTRAL_ZONE_CENTER.pose(),
-                                    FieldConstants.PoseConstants.DEPOT_IN_NEUTRAL_ZONE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_BORDER_FUEL_EDGE
-                                            .pose());
-
-                    PathPlannerPath depotSideNeutralZoneIntaking =
-                            new PathPlannerPath(
-                                    waypoints,
-                                    intakeConstraints,
-                                    null,
-                                    new GoalEndState(1.5, Rotation2d.fromDegrees(180)));
-
-                    depotSideNeutralZoneIntaking.preventFlipping = true;
-                    CommandScheduler.getInstance()
-                            .schedule(AutoBuilder.followPath(depotSideNeutralZoneIntaking));
-                });
-    }
-
-    public Command outpostSideNeutralZoneIntakingWaypoints() {
-        return Commands.runOnce(
-                () -> {
-                    drive.resetOdometry(
-                            FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_CENTER.pose());
-
-                    List<Waypoint> waypoints =
-                            PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_CENTER
-                                            .pose(),
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_BORDER_FUEL_CENTER
-                                            .pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_IN_NEUTRAL_ZONE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_BORDER_FUEL_EDGE
-                                            .pose());
-
-                    PathPlannerPath outpostSideNeutralZoneIntaking =
-                            new PathPlannerPath(
-                                    waypoints,
-                                    intakeConstraints,
-                                    null,
-                                    new GoalEndState(1.5, Rotation2d.fromDegrees(180)));
-
-                    outpostSideNeutralZoneIntaking.preventFlipping = true;
-                    CommandScheduler.getInstance()
-                            .schedule(AutoBuilder.followPath(outpostSideNeutralZoneIntaking));
+                    path.preventFlipping = false;
+                    CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
                 });
     }
 }
