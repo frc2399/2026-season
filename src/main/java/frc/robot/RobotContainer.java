@@ -109,6 +109,7 @@ public class RobotContainer {
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
         driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
+        driverController.povUp().onTrue(shooterSubsystem.logShooterSpeedsToCSV());
     }
 
     private void setUpAuton() {
