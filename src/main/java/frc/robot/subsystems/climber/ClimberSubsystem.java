@@ -1,17 +1,26 @@
 package frc.robot.subsystems.climber;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberSubsystem extends SubsystemBase {
     private ClimberIO io;
 
-    public void extend() {}
+    public Command extend() {
+        return this.run(() -> io.extend()).withName("extend");
+    }
 
-    public void retract() {}
+    public Command retract() {
+        return this.run(() -> io.retract()).withName("retract");
+    }
 
-    public void runForwards() {}
+    public Command runForwards() {
+        return this.run(() -> io.runForwards()).withName("runForwards");
+    }
 
-    public void runBackwards() {}
+    public Command runBackwards() {
+        return this.run(() -> io.runBackwards()).withName("runBackwards");
+    }
 
     public ClimberSubsystem(ClimberIO io) {
         this.io = io;
