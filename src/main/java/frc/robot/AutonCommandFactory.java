@@ -55,10 +55,6 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
-    public void scheduleCommand(Command command) {
-        CommandScheduler.getInstance().schedule(command);
-    }
-
     public Command trenchToDepot() {
         return Commands.sequence(
                 Commands.runOnce(
