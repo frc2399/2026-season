@@ -4,6 +4,11 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import com.opencsv.CSVWriter;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -17,6 +22,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
@@ -104,6 +110,18 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
         desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    public void logShooterSpeedsToCSV() {
+        // code modified from https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
+        try {
+                File csvFile = new File(Filesystem.getDeployDirectory(), "shooter-speeds.csv");
+                FileWriter outputWriter = new FileWriter(csvFile);
+                CSVWriter csvWriter = new CSVWriter(outputWriter);
+        } catch (IOException e) {
+                System.out.println("********COULD NOT WRITE TO THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
+                e.printStackTrace();
+        }
     }
 
     @Override

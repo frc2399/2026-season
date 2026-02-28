@@ -9,6 +9,8 @@ public interface ShooterIndexerIO {
 
     public void updateStates(ShooterIndexerIOState state);
 
+    public void logShooterSpeedsToCSV();
+
     public static class ShooterIndexerIOState {
         public double shooterIndexerDesiredSpeed = 0;
         public double shooterIndexerActualSpeed = 0;

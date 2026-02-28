@@ -9,4 +9,7 @@ public class ShooterIndexerPlacebo implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {}
+
+    @Override
+    public void logShooterSpeedsToCSV() {}
 }

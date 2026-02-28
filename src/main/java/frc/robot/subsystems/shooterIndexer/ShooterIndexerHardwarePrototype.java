@@ -103,4 +103,7 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkMax.getAppliedOutput() * shooterIndexerSparkMax.getBusVoltage();
     }
+
+        @Override
+        public void logShooterSpeedsToCSV() {}
 }
