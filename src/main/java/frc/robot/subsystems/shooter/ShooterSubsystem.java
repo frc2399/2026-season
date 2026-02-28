@@ -25,16 +25,16 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic() {
         io.updateStates(shooterStates);
         SmartDashboard.putNumber(
-                "shooter/topRollerDesiredSpeed", shooterStates.topRollerDesiredSpeedRad_P_S);
+                "shooter/topRollerDesiredSpeed", shooterStates.topRollerDesiredSpeed);
         SmartDashboard.putNumber(
-                "shooter/topRollerActualSpeed", shooterStates.topRollerActualSpeedRad_P_S);
+                "shooter/topRollerActualSpeed", shooterStates.topRollerActualSpeed);
         SmartDashboard.putNumber("shooter/topRollerCurrent", shooterStates.topRollerCurrent);
         SmartDashboard.putNumber(
                 "shooter/topRollerAppliedVoltage", shooterStates.topRollerAppliedVoltage);
         SmartDashboard.putNumber(
-                "shooter/bottomRollerDesiredSpeed", shooterStates.bottomRollerDesiredSpeedRad_P_S);
+                "shooter/bottomRollerDesiredSpeed", shooterStates.bottomRollerDesiredSpeed);
         SmartDashboard.putNumber(
-                "shooter/bottomRollerActualSpeed", shooterStates.bottomRollerActualSpeedRad_P_S);
+                "shooter/bottomRollerActualSpeed", shooterStates.bottomRollerActualSpeed);
         SmartDashboard.putNumber("shooter/bottomRollerCurrent", shooterStates.bottomRollerCurrent);
         SmartDashboard.putNumber(
                 "shooter/bottomRollerAppliedVoltage", shooterStates.bottomRollerAppliedVoltage);

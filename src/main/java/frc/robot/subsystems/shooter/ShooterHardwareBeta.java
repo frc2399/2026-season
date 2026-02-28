@@ -147,14 +147,14 @@ public class ShooterHardwareBeta implements ShooterIO {
     }
 
     public void updateStates(ShooterIOState state) {
-        state.topRollerDesiredSpeedRad_P_S = desiredTopVelocity.in(RadiansPerSecond);
-        state.topRollerActualSpeedRad_P_S = shooterTopEncoder.getVelocity();
+        state.topRollerDesiredSpeed = desiredTopVelocity.in(RadiansPerSecond);
+        state.topRollerActualSpeed = shooterTopEncoder.getVelocity();
         state.topRollerCurrent = shooterTopSparkFlex.getOutputCurrent();
         state.topRollerAppliedVoltage =
                 shooterTopSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
-        state.bottomRollerDesiredSpeedRad_P_S = desiredBottomVelocity.in(RadiansPerSecond);
+        state.bottomRollerDesiredSpeed = desiredBottomVelocity.in(RadiansPerSecond);
         state.bottomRollerCurrent = shooterBottomSparkFlex.getOutputCurrent();
-        state.bottomRollerActualSpeedRad_P_S = shooterBottomEncoder.getVelocity();
+        state.bottomRollerActualSpeed = shooterBottomEncoder.getVelocity();
         state.bottomRollerAppliedVoltage =
                 shooterBottomSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
     }
