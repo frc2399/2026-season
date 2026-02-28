@@ -9,6 +9,8 @@ public interface ShooterIO {
 
     public void updateStates(ShooterIOState state);
 
+    public void periodicUpdate();
+
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;
         public double topRollerActualSpeed = 0.0;

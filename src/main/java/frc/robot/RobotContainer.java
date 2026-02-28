@@ -21,6 +21,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
@@ -35,12 +36,20 @@ public class RobotContainer {
     private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
+    private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
             new VisionPoseEstimator(drive, subsystemFactory.getRobotType());
     public CommandFactory commandFactory =
-            new CommandFactory(drive, gyro, shooterSubsystem, shooterIndexerSubsystem);
+            new CommandFactory(
+                    drive,
+                    gyro,
+                    shooterSubsystem,
+                    shooterIndexerSubsystem,
+                    spindexerSubsystem,
+                    intakeSubsystem,
+                    intakeArmSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 
@@ -49,6 +58,8 @@ public class RobotContainer {
 
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
+    private static final CommandXboxController tuningController =
+            new CommandXboxController(DriveControlConstants.TUNING_CONTROLLER_PORT);
 
     private final Alert driverDisconnected =
             new Alert("Driver controller disconnected!", AlertType.kWarning);
@@ -62,7 +73,9 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindingsDriver();
+        configureButtonBindingsTuningController();
         setUpAuton();
+
         SmartDashboard.putData("robot/driverController", driverController.getHID());
     }
 
@@ -96,21 +109,25 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
-        driverController.rightTrigger().whileTrue(intakeSubsystem.runIntake());
         driverController
                 .leftTrigger()
                 .whileTrue(
                         shooterSubsystem.shoot(
                                 RebuiltVisionUtil.getDistanceToHub(() -> drive.getRobotPose())));
+        driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
         driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
+
+    private void configureButtonBindingsTuningController() {}
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption(
-                "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
+        // autoChooser.addOption(
+        //         "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
         autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
-        autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
+        // autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }

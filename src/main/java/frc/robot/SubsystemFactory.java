@@ -12,6 +12,8 @@ import frc.robot.subsystems.drive.gyro.GyroPlacebo;
 import frc.robot.subsystems.intake.IntakeHardware;
 import frc.robot.subsystems.intake.IntakePlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intakeArm.IntakeArmPlacebo;
+import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterHardwareBeta;
 import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
@@ -20,6 +22,7 @@ import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBeta;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwarePrototype;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerHardwareBeta;
 import frc.robot.subsystems.spindexer.SpindexerPlacebo;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
@@ -32,7 +35,7 @@ public class SubsystemFactory {
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
-    private static final String BETA_SERIAL_NUMBER = "";
+    private static final String BETA_SERIAL_NUMBER = "030589d5";
     private static final String COMP_SERIAL_NUMBER = "";
     private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
 
@@ -141,6 +144,10 @@ public class SubsystemFactory {
         }
     }
 
+    public IntakeArmSubsystem buildIntakeArm() {
+        return new IntakeArmSubsystem(new IntakeArmPlacebo());
+    }
+
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype());
@@ -152,7 +159,11 @@ public class SubsystemFactory {
     }
 
     public SpindexerSubsystem buildSpindexer() {
-        return new SpindexerSubsystem(new SpindexerPlacebo());
+        if (robotType == RobotType.BETA) {
+            return new SpindexerSubsystem(new SpindexerHardwareBeta());
+        } else {
+            return new SpindexerSubsystem(new SpindexerPlacebo());
+        }
     }
 
     public ShooterIndexerSubsystem buildShooterIndexer() {

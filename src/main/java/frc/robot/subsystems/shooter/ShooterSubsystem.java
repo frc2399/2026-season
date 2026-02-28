@@ -39,5 +39,6 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter/bottomRollerCurrent", shooterStates.bottomRollerCurrent);
         SmartDashboard.putNumber(
                 "shooter/bottomRollerAppliedVoltage", shooterStates.bottomRollerAppliedVoltage);
+        io.periodicUpdate();
     }
 }
