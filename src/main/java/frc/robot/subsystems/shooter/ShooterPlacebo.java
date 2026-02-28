@@ -10,4 +10,7 @@ public class ShooterPlacebo implements ShooterIO {
 
     @Override
     public void periodicUpdate() {}
+
+    @Override
+    public void logShooterSpeedsToCSV() {}
 }

@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import com.opencsv.CSVWriter;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -17,9 +18,13 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class ShooterHardwareBeta implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
@@ -177,6 +182,20 @@ public class ShooterHardwareBeta implements ShooterIO {
                 shooterBottomSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
     }
 
+    public void logShooterSpeedsToCSV() {
+        // code modified from
+        // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
+        try {
+            File csvFile = new File(Filesystem.getDeployDirectory(), "shooter-speeds.csv");
+            FileWriter outputWriter = new FileWriter(csvFile);
+            CSVWriter csvWriter = new CSVWriter(outputWriter);
+        } catch (IOException e) {
+            System.out.println(
+                    "********COULD NOT WRITE TO THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void periodicUpdate() {
         // if tuning a value, update this chunk for that motor's p, i, OR d
@@ -196,48 +215,48 @@ public class ShooterHardwareBeta implements ShooterIO {
                     shooterTopMotorConfig,
                     ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters);
-            }
-            // if (TUNABLE_SHOOTER_BETA_BOTTOM_KV.hasChanged()) {
-            //
-            // closedLoopConfigShooterBottom.feedForward.kV(TUNABLE_SHOOTER_BETA_BOTTOM_KV.get());
-            //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
-            //     shooterBottomSparkFlex.configure(
-            //             shooterBottomMotorConfig,
-            //             ResetMode.kResetSafeParameters,
-            //             PersistMode.kPersistParameters);
-            // }
-            // if (TUNABLE_SHOOTER_BETA_TOP_KV.hasChanged()) {
-            //     closedLoopConfigShooterTop.feedForward.kV(TUNABLE_SHOOTER_BETA_TOP_KV.get());
-            //     shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
-            //     shooterTopSparkFlex.configure(
-            //             shooterTopMotorConfig,
-            //             ResetMode.kResetSafeParameters,
-            //             PersistMode.kPersistParameters);
-            // }
-            // if (TUNABLE_SHOOTER_BETA_BOTTOM_P.hasChanged()) {
-            //     shooterBottomMotorConfig.closedLoop.p(TUNABLE_SHOOTER_BETA_BOTTOM_P.get());
-            //     //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
-            //     shooterBottomSparkFlex.configure(
-            //             shooterBottomMotorConfig,
-            //             ResetMode.kResetSafeParameters,
-            //             PersistMode.kPersistParameters);
-            // }
-            // if (TUNABLE_SHOOTER_BETA_TOP_P.hasChanged()) {
-            //     shooterTopMotorConfig.closedLoop.p(TUNABLE_SHOOTER_BETA_TOP_P.get());
-            //     //     shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
-            //     shooterTopSparkFlex.configure(
-            //             shooterTopMotorConfig,
-            //             ResetMode.kResetSafeParameters,
-            //             PersistMode.kPersistParameters);
-            // }
-            // if (TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-            //     desiredTopVelocity =
-            //             RadiansPerSecond.of(TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
-            // }
-            // if (TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-            //     desiredBottomVelocity =
-            //
-            // RadiansPerSecond.of(TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get());
-            // }
         }
+        // if (TUNABLE_SHOOTER_BETA_BOTTOM_KV.hasChanged()) {
+        //
+        // closedLoopConfigShooterBottom.feedForward.kV(TUNABLE_SHOOTER_BETA_BOTTOM_KV.get());
+        //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
+        //     shooterBottomSparkFlex.configure(
+        //             shooterBottomMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_TOP_KV.hasChanged()) {
+        //     closedLoopConfigShooterTop.feedForward.kV(TUNABLE_SHOOTER_BETA_TOP_KV.get());
+        //     shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
+        //     shooterTopSparkFlex.configure(
+        //             shooterTopMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_BOTTOM_P.hasChanged()) {
+        //     shooterBottomMotorConfig.closedLoop.p(TUNABLE_SHOOTER_BETA_BOTTOM_P.get());
+        //     //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
+        //     shooterBottomSparkFlex.configure(
+        //             shooterBottomMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_BETA_TOP_P.hasChanged()) {
+        //     shooterTopMotorConfig.closedLoop.p(TUNABLE_SHOOTER_BETA_TOP_P.get());
+        //     //     shooterTopMotorConfig.apply(closedLoopConfigShooterTop);
+        //     shooterTopSparkFlex.configure(
+        //             shooterTopMotorConfig,
+        //             ResetMode.kResetSafeParameters,
+        //             PersistMode.kPersistParameters);
+        // }
+        // if (TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
+        //     desiredTopVelocity =
+        //             RadiansPerSecond.of(TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
+        // }
+        // if (TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
+        //     desiredBottomVelocity =
+        //
+        // RadiansPerSecond.of(TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get());
+        // }
     }
+}

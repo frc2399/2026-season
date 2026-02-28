@@ -21,6 +21,10 @@ public class ShooterSubsystem extends SubsystemBase {
         return this.run(() -> io.defaultBehavior()).withName("shooterDefaultBehavior");
     }
 
+    public Command logShooterSpeedsToCSV() {
+        return this.runOnce(() -> io.logShooterSpeedsToCSV());
+    }
+
     @Override
     public void periodic() {
         io.updateStates(shooterStates);
