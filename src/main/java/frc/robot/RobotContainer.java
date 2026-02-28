@@ -109,13 +109,14 @@ public class RobotContainer {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
-        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
-        driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
-        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
-        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
-    private void configureButtonBindingsTuningController() {}
+    private void configureButtonBindingsTuningController() {
+        tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot());
+        tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        tuningController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
+    }
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
