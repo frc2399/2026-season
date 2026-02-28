@@ -11,21 +11,19 @@ public class FieldCalculationHelpers {
         double poseX = robotLocation.getX();
         if (FieldConstants.alliance.isPresent()) {
             if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
-                if (FieldConstants.AllianceZoneBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters)
-                                <= poseX
+                if (FieldConstants.FieldBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters) <= poseX
                         && poseX
-                                <= FieldConstants.AllianceZoneBoundaries.BLUE_ZONE_BOUNDARY_X.in(
-                                        Meters)) {
+                                <= FieldConstants.FieldBoundaries.BLUE_ZONE_BOUNDARY_X.in(Meters)) {
                     return true;
                 } else {
                     return false;
                 }
             }
             if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
-                if (FieldConstants.AllianceZoneBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX
+                if (FieldConstants.FieldBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX
                         && poseX
-                                <= FieldConstants.AllianceZoneBoundaries.RED_DRIVER_STATION_WALL_X
-                                        .in(Meters)) {
+                                <= FieldConstants.FieldBoundaries.RED_DRIVER_STATION_WALL_X.in(
+                                        Meters)) {
                     return true;
                 } else {
                     return false;
@@ -33,5 +31,26 @@ public class FieldCalculationHelpers {
             }
         }
         return false;
+    }
+
+    // if return true then shoot right and if false shoot left
+    public static Boolean shouldRobotPassLeftOrRight(Pose2d robotLocation) {
+        double poseY = robotLocation.getY();
+        if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
+            if (FieldConstants.FieldBoundaries.CENTER_LINE.in(Meters) <= poseY) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+                if (FieldConstants.FieldBoundaries.CENTER_LINE.in(Meters) >= poseY) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return null;
     }
 }

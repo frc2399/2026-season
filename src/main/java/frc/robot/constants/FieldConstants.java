@@ -246,10 +246,11 @@ public final class FieldConstants {
                                         Rotation2d.kZero)));
     }
 
-    public static class AllianceZoneBoundaries {
+    public static class FieldBoundaries {
         public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
         public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
         public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
         public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
+        public static final Distance CENTER_LINE = Meters.of(158.845);
     }
 }
