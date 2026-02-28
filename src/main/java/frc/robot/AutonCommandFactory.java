@@ -1,15 +1,24 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+
+import java.util.List;
 import java.util.Set;
 
 public class AutonCommandFactory {
@@ -51,5 +60,29 @@ public class AutonCommandFactory {
                 buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints),
                 // move into shooting position while driving
                 drive.driveToPoseOnExecute());
+    }
+
+    public Command followWaypoints(
+            Pose2d startingPosition,
+            PathConstraints constraints,
+            double endVelocity,
+            Rotation2d endRotation,
+            Pose2d... poses) {
+        return Commands.runOnce(
+                () -> {
+                    drive.resetOdometry(startingPosition);
+
+                    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
+
+                    PathPlannerPath path =
+                            new PathPlannerPath(
+                                    waypoints,
+                                    constraints,
+                                    null,
+                                    new GoalEndState(endVelocity, endRotation));
+
+                    path.preventFlipping = false;
+                    CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
+                });
     }
 }
