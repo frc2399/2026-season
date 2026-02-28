@@ -8,6 +8,7 @@ public interface ShooterIO {
     public void updateStates(ShooterIOState state);
 
     public boolean isUpToSpeed();
+    public void periodicUpdate();
 
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;

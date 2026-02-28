@@ -50,22 +50,22 @@ public class GameState {
         }
         double timeRemaining;
         timeRemaining = DriverStation.getMatchTime();
-        if (timeRemaining < 30 - shooterTimeDelay) {
+        if (timeRemaining < 30 + shooterTimeDelay) {
             return Period.ENDGAME;
         }
-        if (timeRemaining < 55 - shooterTimeDelay) {
+        if (timeRemaining < 55 + shooterTimeDelay) {
             return Period.SHIFT_4;
         }
-        if (timeRemaining < 80 - shooterTimeDelay) {
+        if (timeRemaining < 80 + shooterTimeDelay) {
             return Period.SHIFT_3;
         }
-        if (timeRemaining < 105 - shooterTimeDelay) {
+        if (timeRemaining < 105 + shooterTimeDelay) {
             return Period.SHIFT_2;
         }
-        if (timeRemaining < 130 - shooterTimeDelay) {
+        if (timeRemaining < 130 + shooterTimeDelay) {
             return Period.SHIFT_1;
         }
-        if (timeRemaining < 140 - shooterTimeDelay) {
+        if (timeRemaining < 140 + shooterTimeDelay) {
             return Period.TRANSITION;
         } else {
             return Period.UNDEFINED;

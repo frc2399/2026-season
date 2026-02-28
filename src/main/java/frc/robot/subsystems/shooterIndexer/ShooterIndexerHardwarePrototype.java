@@ -37,7 +37,7 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
     private final ClosedLoopConfig shooterIndexerClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder shooterIndexerEncoder;
 
-    private AngularVelocity desiredVelocity;
+    private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
     public ShooterIndexerHardwarePrototype() {
 
