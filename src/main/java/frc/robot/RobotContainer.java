@@ -29,6 +29,7 @@ import frc.robot.vision.VisionPoseEstimator;
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
     public Gyro gyro = subsystemFactory.buildGyro();
+
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
@@ -36,6 +37,7 @@ public class RobotContainer {
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
     private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
+
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
