@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.SubsystemFactory.RobotType;
 import frc.robot.subsystems.drive.DriveConfig;
 import java.util.Optional;
@@ -176,6 +177,21 @@ public final class VisionPoseEstimator {
         // Reject poses where we can see no tags or are at the "uh oh something went
         // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
         // possible
+        if (est != null) {
+
+            var estimator = est.get();
+            // Build a comma-separated string of tag IDs used in the pose estimate
+            StringBuilder tagIDs = new StringBuilder();
+
+            for (int i = 0; i < estimator.rawFiducials.length; i++) {
+                if (i > 0) tagIDs.append(", ");
+                tagIDs.append(estimator.rawFiducials[i].id);
+            }
+
+            String tagIDString = tagIDs.length() > 0 ? tagIDs.toString() : "None";
+            SmartDashboard.putString("vision/poseTagIDs", tagIDString);
+        }
+
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
 
