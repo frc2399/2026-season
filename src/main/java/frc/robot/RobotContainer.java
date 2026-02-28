@@ -118,9 +118,6 @@ public class RobotContainer {
                 "depotSideDepotToNeutralZone",
                 autonCommandFactory.depotSideDepotToNeutralZoneShooting());
         autoChooser.addOption(
-                "outpostSideDepotToNeutralZone",
-                autonCommandFactory.outpostSideDepotToNeutralZoneShooting());
-        autoChooser.addOption(
                 "hubToNeutralZone", autonCommandFactory.depotSideHubToNeutralZoneWaypoints());
         autoChooser.addOption(
                 "neutralZoneToHub", autonCommandFactory.depotSideNeutralZoneToHubWaypoints());

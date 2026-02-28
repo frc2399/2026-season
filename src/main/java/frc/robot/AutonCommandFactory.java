@@ -53,7 +53,7 @@ public class AutonCommandFactory {
     public Command hubToDepot() {
         return Commands.sequence(
                 Commands.runOnce(
-                        () -> drive.resetOdometry(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE.pose())),
+                        () -> drive.resetOdometry(FieldConstants.PoseConstants.BLUE_DEPOT_STARTING_LINE.pose())),
                 buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
                 // move into intake position while driving
                 drive.driveToPoseOnExecute(),
@@ -69,33 +69,16 @@ public class AutonCommandFactory {
                 Commands.runOnce(
                         () ->
                                 drive.resetOdometry(
-                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE
+                                        FieldConstants.PoseConstants.BLUE_DEPOT_STARTING_LINE
                                                 .pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.DEPOT, constraints, 0),
+                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
                 drive.driveToPoseOnExecute(),
                 intake.runIntake().withTimeout(3),
                 intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, constraints, 0),
+                buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints, 0),
                 drive.driveToPoseOnExecute(),
                 // shooting command
                 depotSideHubToNeutralZoneWaypoints());
-    }
-
-    public Command outpostSideDepotToNeutralZoneShooting() {
-        return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometry(
-                                        FieldConstants.PoseConstants.DEPOT_SIDE_BUMP_STARTING_LINE
-                                                .pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.DEPOT, constraints, 0),
-                drive.driveToPoseOnExecute(),
-                intake.runIntake().withTimeout(3),
-                intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.HUB_MIDDLE, constraints, 0),
-                drive.driveToPoseOnExecute(),
-                // shooting command
-                outpostSideHubToNeutralZoneWaypoints());
     }
 
     public Command depotSideNeutralZoneIntaking() {
@@ -252,20 +235,18 @@ public class AutonCommandFactory {
         return Commands.runOnce(
                 () -> {
                     drive.resetOdometry(
-                            FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER.pose());
+                            FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_CENTER.pose());
 
                     List<Waypoint> waypoints =
                             PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER
+                                    FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_CENTER
                                             .pose(),
-                                    FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_CENTER
+                                    FieldConstants.PoseConstants.BLUE_DEPOT_BORDER_FUEL_CENTER
                                             .pose(),
-                                    FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE.pose(),
-                                    FieldConstants.PoseConstants.DEPOT_END_NEUTRAL_ZONE_BORDER
+                                    FieldConstants.PoseConstants.DEPOT_NEUTRAL_ZONE_CENTER.pose(),
+                                    FieldConstants.PoseConstants.DEPOT_IN_NEUTRAL_ZONE
                                             .pose(),
-                                    FieldConstants.PoseConstants.DEPOT_INTAKE_END.pose(),
-                                    FieldConstants.PoseConstants.DEPOT_SIDE_NEUTRAL_ZONE_BORDER
-                                            .pose());
+                                    FieldConstants.PoseConstants.BLUE_DEPOT_BORDER_FUEL_EDGE.pose());
 
                     PathPlannerPath depotSideNeutralZoneIntaking =
                             new PathPlannerPath(
@@ -284,21 +265,19 @@ public class AutonCommandFactory {
         return Commands.runOnce(
                 () -> {
                     drive.resetOdometry(
-                            FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER.pose());
+                            FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_CENTER.pose());
 
                     List<Waypoint> waypoints =
                             PathPlannerPath.waypointsFromPoses(
-                                    FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER
+                                    FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_CENTER
                                             .pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_CENTER
+                                    FieldConstants.PoseConstants.BLUE_OUTPOST_BORDER_FUEL_CENTER
                                             .pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE.pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_END_NEUTRAL_ZONE_BORDER
+                                    FieldConstants.PoseConstants.OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
+                                    FieldConstants.PoseConstants.OUTPOST_IN_NEUTRAL_ZONE
                                             .pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_INTAKE_END.pose(),
-                                    FieldConstants.PoseConstants.OUTPOST_SIDE_NEUTRAL_ZONE_BORDER
-                                            .pose());
-
+                                    FieldConstants.PoseConstants.BLUE_OUTPOST_BORDER_FUEL_EDGE.pose());
+                                    
                     PathPlannerPath outpostSideNeutralZoneIntaking =
                             new PathPlannerPath(
                                     waypoints,
