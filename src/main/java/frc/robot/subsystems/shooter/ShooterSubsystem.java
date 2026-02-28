@@ -21,8 +21,9 @@ public class ShooterSubsystem extends SubsystemBase {
         return this.run(() -> io.defaultBehavior()).withName("shooterDefaultBehavior");
     }
 
-    // fake default command so it runs the tunable number speed setpoints instead of actual default command
-    public Command tuningSetpoint () {
+    // fake default command so it runs the tunable number speed setpoints instead of actual default
+    // command
+    public Command tuningSetpoint() {
         return this.run(() -> {}).withName("tuningDefaultCommand");
     }
 

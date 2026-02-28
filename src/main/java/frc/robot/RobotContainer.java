@@ -113,7 +113,11 @@ public class RobotContainer {
         driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
-    private void configureButtonBindingsTuningController() {}
+    private void configureButtonBindingsTuningController() {
+        // fake default command running on the tuning controller
+        // it runs the tunable number speed setpoints instead of actual default
+        tuningController.rightTrigger().onTrue(shooterSubsystem.tuningSetpoint());
+    }
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();

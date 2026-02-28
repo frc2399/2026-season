@@ -47,6 +47,7 @@ public class SubsystemFactory {
         COMP,
         PROTOTYPE
     }
+
     private static RobotType robotType;
 
     private String serialNum = System.getenv("serialnum");
