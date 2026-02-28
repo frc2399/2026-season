@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
-import com.opencsv.CSVWriter;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -18,15 +17,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 public class ShooterHardwareBeta implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
@@ -184,34 +177,10 @@ public class ShooterHardwareBeta implements ShooterIO {
                 shooterBottomSparkFlex.getBusVoltage() * shooterTopSparkFlex.getAppliedOutput();
     }
 
-    public void logShooterSpeedsToCSV() {
-        // code modified from
-        // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
-        try {
-            File csvFile = new File(Filesystem.getDeployDirectory(), "shooter-speeds.csv");
-            FileWriter outputWriter = new FileWriter(csvFile);
-            CSVWriter csvWriter = new CSVWriter(outputWriter);
-
-            double desiredSpeedTop = TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get();
-            double desiredSpeedBottom = TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get();
-            ZoneId zone = ZoneId.of("America/New York"); // so we can display in our local time zone
-            ZonedDateTime zonedDateTime = ZonedDateTime.now(zone);
-
-            String[] data =
-                    new String[] {
-                        "distance (currently unable to log",
-                        "" + desiredSpeedTop,
-                        "" + desiredSpeedBottom,
-                        zonedDateTime.toString()
-                    };
-            csvWriter.writeNext(data);
-
-            csvWriter.close();
-        } catch (IOException e) {
-            System.out.println(
-                    "********COULD NOT WRITE TO THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
-            e.printStackTrace();
-        }
+    public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
+        double topSpeedToLog = TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get();
+        double bottomSpeedToLog = TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get();
+        return new ShooterSpeeds(topSpeedToLog, bottomSpeedToLog);
     }
 
     @Override

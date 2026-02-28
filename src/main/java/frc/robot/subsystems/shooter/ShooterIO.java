@@ -9,7 +9,7 @@ public interface ShooterIO {
 
     public void periodicUpdate();
 
-    public void logShooterSpeedsToCSV();
+    public ShooterSpeeds getCurrentTopAndBottomSpeeds();
 
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;
@@ -21,4 +21,6 @@ public interface ShooterIO {
         public double bottomRollerCurrent = 0.0;
         public double bottomRollerAppliedVoltage = 0.0;
     }
+
+    public record ShooterSpeeds(double topSpeed, double bottomSpeed) {}
 }

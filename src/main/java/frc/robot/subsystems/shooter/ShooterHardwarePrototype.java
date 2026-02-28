@@ -150,7 +150,9 @@ public class ShooterHardwarePrototype implements ShooterIO {
     }
 
     @Override
-    public void logShooterSpeedsToCSV() {}
+    public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
+        return new ShooterSpeeds(0, 0);
+    }
 
     public void updateStates(ShooterIOState state) {
         state.topRollerDesiredSpeed = desiredTopVelocity.in(RadiansPerSecond);
