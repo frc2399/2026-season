@@ -34,6 +34,8 @@ public final class RobotConstants {
         public static final int SHOOTER_TOP_BETA_CAN_ID = 10;
         public static final int SHOOTER_INDEXER_BETA_CAN_ID = 13;
         public static final int SPINDEXER_CAN_ID = 14;
+
+        public static final int CLIMBER_CAN_ID = 0;
     }
 
     public static class SensorIdConstants {}

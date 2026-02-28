@@ -14,23 +14,21 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
 public class ClimberHardware implements ClimberIO {
     private SparkFlex climberSparkFlex;
     private final SparkClosedLoopController climberPidController;
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
-    //GEAR REDUCTION for climber motor:
-    //1:1 brake, 5:1, 5:1 --> 25 reduction
+    // GEAR REDUCTION for climber motor:
+    // 1:1 brake, 5:1, 5:1 --> 25 reduction
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
@@ -38,12 +36,10 @@ public class ClimberHardware implements ClimberIO {
     private static final double DEFAULT_CLIMBER_P = 0;
     private static final double DEFAULT_CLIMBER_D = 0;
     private static final double DEFAULT_CLIMBER_KS = 0;
-    private static final double DEFAULT_CLIMBER_KV = 
+    private static final double DEFAULT_CLIMBER_KV =
             (12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
 
     private static final Distance MAX_CLIMBER_EXTENSION = Inches.of(28.75);
-
-
 
     private SparkFlexConfig climberMotorConfig = new SparkFlexConfig();
     private final ClosedLoopConfig closedLoopConfigClimber = new ClosedLoopConfig();
@@ -58,7 +54,8 @@ public class ClimberHardware implements ClimberIO {
         climberMotorConfig.voltageCompensation(12);
 
         climberMotorConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
-        climberMotorConfig.encoder.velocityConversionFactor(ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
+        climberMotorConfig.encoder.velocityConversionFactor(
+                ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
         climberMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         climberMotorConfig.closedLoop.pid(DEFAULT_CLIMBER_P, 0, DEFAULT_CLIMBER_D);
@@ -100,5 +97,4 @@ public class ClimberHardware implements ClimberIO {
                 0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond),
                 ControlType.kVelocity);
     }
-    
 }
