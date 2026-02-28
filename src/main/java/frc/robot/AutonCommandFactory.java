@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
@@ -54,6 +55,10 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
+    public void scheduleCommand(Command command) {
+        CommandScheduler.getInstance().schedule(command);
+    }
+
     public Command trenchToDepot() {
         return Commands.sequence(
                 Commands.runOnce(
@@ -71,9 +76,7 @@ public class AutonCommandFactory {
     }
 
     public Command depotSideDepotToNeutralZoneShooting() {
-        return Commands.sequence(
-                trenchToDepot(),
-                depotSideShootingSpotToNeutralZoneWaypoints());
+        return Commands.sequence(trenchToDepot(), depotSideShootingSpotToNeutralZoneWaypoints());
     }
 
     public Command depotSideNeutralZoneIntaking() {
@@ -124,7 +127,8 @@ public class AutonCommandFactory {
                             PathPlannerPath.waypointsFromPoses(
                                     FieldConstants.PoseConstants.DEPOT_SHOOTING_SPOT.pose(),
                                     FieldConstants.PoseConstants.BLUE_DEPOT_STARTING_LINE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_CENTER.pose());
+                                    FieldConstants.PoseConstants.BLUE_DEPOT_WALL_FUEL_CENTER
+                                            .pose());
 
                     PathPlannerPath depotSideShootingSpotToNeutralZone =
                             new PathPlannerPath(
@@ -134,8 +138,8 @@ public class AutonCommandFactory {
                                     new GoalEndState(0, Rotation2d.fromDegrees(180)));
 
                     depotSideShootingSpotToNeutralZone.preventFlipping = true;
-
-                    AutoBuilder.followPath(depotSideShootingSpotToNeutralZone).schedule();
+                    CommandScheduler.getInstance()
+                            .schedule(AutoBuilder.followPath(depotSideShootingSpotToNeutralZone));
                 });
     }
 
@@ -148,7 +152,8 @@ public class AutonCommandFactory {
                             PathPlannerPath.waypointsFromPoses(
                                     FieldConstants.PoseConstants.OUTPOST_SHOOTING_SPOT.pose(),
                                     FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE.pose(),
-                                    FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_CENTER.pose());
+                                    FieldConstants.PoseConstants.BLUE_OUTPOST_WALL_FUEL_CENTER
+                                            .pose());
 
                     PathPlannerPath outpostSideShootingSpotToNeutralZone =
                             new PathPlannerPath(
@@ -158,8 +163,8 @@ public class AutonCommandFactory {
                                     new GoalEndState(0, Rotation2d.fromDegrees(180)));
 
                     outpostSideShootingSpotToNeutralZone.preventFlipping = true;
-
-                    AutoBuilder.followPath(outpostSideShootingSpotToNeutralZone).schedule();
+                    CommandScheduler.getInstance()
+                            .schedule(AutoBuilder.followPath(outpostSideShootingSpotToNeutralZone));
                 });
     }
 
@@ -184,8 +189,8 @@ public class AutonCommandFactory {
                                     new GoalEndState(0, Rotation2d.fromDegrees(180)));
 
                     depotSideNeutralZoneToShootingSpot.preventFlipping = true;
-
-                    AutoBuilder.followPath(depotSideNeutralZoneToShootingSpot).schedule();
+                    CommandScheduler.getInstance()
+                            .schedule(AutoBuilder.followPath(depotSideNeutralZoneToShootingSpot));
                 });
     }
 
@@ -211,8 +216,8 @@ public class AutonCommandFactory {
                                     new GoalEndState(0, Rotation2d.fromDegrees(180)));
 
                     outpostSideNeutralZoneToShootingSpot.preventFlipping = true;
-
-                    AutoBuilder.followPath(outpostSideNeutralZoneToShootingSpot).schedule();
+                    CommandScheduler.getInstance()
+                            .schedule(AutoBuilder.followPath(outpostSideNeutralZoneToShootingSpot));
                 });
     }
 
@@ -240,8 +245,8 @@ public class AutonCommandFactory {
                                     new GoalEndState(1.5, Rotation2d.fromDegrees(180)));
 
                     depotSideNeutralZoneIntaking.preventFlipping = true;
-
-                    AutoBuilder.followPath(depotSideNeutralZoneIntaking).schedule();
+                    CommandScheduler.getInstance()
+                            .schedule(AutoBuilder.followPath(depotSideNeutralZoneIntaking));
                 });
     }
 
@@ -270,8 +275,8 @@ public class AutonCommandFactory {
                                     new GoalEndState(1.5, Rotation2d.fromDegrees(180)));
 
                     outpostSideNeutralZoneIntaking.preventFlipping = true;
-
-                    AutoBuilder.followPath(outpostSideNeutralZoneIntaking).schedule();
+                    CommandScheduler.getInstance()
+                            .schedule(AutoBuilder.followPath(outpostSideNeutralZoneIntaking));
                 });
     }
 }
