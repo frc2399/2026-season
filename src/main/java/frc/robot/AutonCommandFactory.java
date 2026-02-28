@@ -5,9 +5,11 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -22,6 +24,7 @@ import java.util.Set;
 public class AutonCommandFactory {
     private final DriveSubsystem drive;
     private final IntakeSubsystem intake;
+    private Pose2d finalPose;
 
     public final PathConstraints constraints =
             new PathConstraints(2, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
@@ -35,9 +38,17 @@ public class AutonCommandFactory {
         this.intake = intake;
     }
 
-    public Command buildPathDeferred(Pose pose, PathConstraints constraints) {
+    public Command buildPathDeferred(
+            Pose pose, PathConstraints constraints, double goalEndVelocity) {
+        finalPose = pose.pose();
+        if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+            finalPose = FlippingUtil.flipFieldPose(finalPose);
+        }
+
         return new DeferredCommand(
-                () -> AutoBuilder.pathfindToPose(pose.pose(), constraints, 0).withName(pose.name()),
+                () ->
+                        AutoBuilder.pathfindToPose(finalPose, constraints, goalEndVelocity)
+                                .withName(pose.name()),
                 Set.of(drive));
     }
 
@@ -47,12 +58,12 @@ public class AutonCommandFactory {
                         () ->
                                 drive.resetOdometry(
                                         FieldConstants.PoseConstants.BLUE_HUB_MIDDLE.pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints),
+                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
                 // move into intake position while driving
                 drive.driveToPoseOnExecute(),
                 // intakeSubsystem.runIntake().withTimeout(3),
                 // intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints),
+                buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints, 0),
                 // move into shooting position while driving
                 drive.driveToPoseOnExecute());
     }
