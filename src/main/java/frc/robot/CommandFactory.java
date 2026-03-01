@@ -51,4 +51,8 @@ public class CommandFactory {
                 shooter.shoot().withTimeout(1.0),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
     }
+
+    public Command runSpindexerAndShooterIndexer() {
+        return Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer());
+    }
 }
