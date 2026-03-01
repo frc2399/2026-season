@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
@@ -24,6 +25,7 @@ import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
+import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
@@ -108,13 +110,11 @@ public class RobotContainer {
     }
 
     private void configureButtonBindingsDriver() {
+        Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
+        
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
-        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
-        driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
-        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
-        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
     private void configureButtonBindingsTuningController() {
@@ -122,6 +122,9 @@ public class RobotContainer {
         // it runs the tunable number speed setpoints instead of actual default
         tuningController.rightTrigger().whileTrue(shooterSubsystem.tuningSetpoint());
         tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot());
+        tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        tuningController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
     }
 
     private void setUpAuton() {

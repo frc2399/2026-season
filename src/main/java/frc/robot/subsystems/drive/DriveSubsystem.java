@@ -386,7 +386,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             double newRotRate =
                                     getRotRate(
                                             currentAngle,
-                                            Math.pow(rotRate.getAsDouble(), 5),
+                                            Math.pow(rotRate.getAsDouble(), 3),
                                             polarXSpeed,
                                             polarYSpeed,
                                             shouldAutoOrient);
