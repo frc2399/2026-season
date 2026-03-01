@@ -19,6 +19,12 @@ public class CommandFactory {
     private final IntakeSubsystem intakeSubsystem;
     private final IntakeArmSubsystem intakeArmSubsystem;
 
+    public enum TargetFuel {
+        HUB,
+        ALLIANCE_LEFT,
+        ALLIANCE_RIGHT
+    }
+
     public CommandFactory(
             DriveSubsystem drive,
             Gyro gyro,
