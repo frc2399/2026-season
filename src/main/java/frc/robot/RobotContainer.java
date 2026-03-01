@@ -118,6 +118,7 @@ public class RobotContainer {
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
         tuningController.y().whileTrue(intakeSubsystem.runVelocity(IntakeArmSetpoint.STOWED));
         tuningController.a().whileTrue(intakeSubsystem.runVelocity(IntakeArmSetpoint.DEPLOYED));
+        tuningController.b().whileTrue(intakeSubsystem.runRoller());
     }
 
     private void setUpAuton() {

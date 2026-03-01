@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -48,9 +49,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     // feedforward
     private static final double INTAKE_ARM_KS = 0;
-    private static final double INTAKE_ARM_KV = 0.0;
+    private static final double INTAKE_ARM_KV = 1.0;
     private static final double INTAKE_ARM_KA = 0.0;
-    private static final double INTAKE_ARM_KCOS = .0207;
+    private static final double INTAKE_ARM_KCOS = .255;
 
     // we use an outside feedforward, because arms also have a cosine factor (the
     // impact of gravity changes), and revlib's is poorly documented so it's not
@@ -140,29 +141,38 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     @Override
     public void runVelocity(IntakeArmSetpoint setpoint) {
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-            desiredAngularVelocity = RadiansPerSecond.of(-0.3);
-            AngularVelocity desiredSpeed =
-                    RadiansPerSecond.of(
-                            -0.3
-                                    + intakeArmFeedforward.calculate(
-                                            intakeArmAbsoluteEncoder.getPosition(), -0.3));
-            intakeArmClosedLoop.setSetpoint(desiredSpeed.in(RadiansPerSecond), ControlType.kVelocity);
+            desiredAngularVelocity = RadiansPerSecond.of(-0.5);
+            double setpointFF =
+                    intakeArmFeedforward.calculate(
+                            intakeArmAbsoluteEncoder.getPosition(),
+                            desiredAngularVelocity.in(RadiansPerSecond));
+            intakeArmClosedLoop.setSetpoint(
+                    desiredAngularVelocity.in(RadiansPerSecond),
+                    ControlType.kVelocity,
+                    ClosedLoopSlot.kSlot0,
+                    setpointFF);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
-            desiredAngularVelocity = RadiansPerSecond.of(0.3);
-            AngularVelocity desiredSpeed =
-                    RadiansPerSecond.of(
-                            0.3
-                                    + intakeArmFeedforward.calculate(
-                                            intakeArmAbsoluteEncoder.getPosition(), 0.3));
-                intakeArmClosedLoop.setSetpoint(desiredSpeed.in(RadiansPerSecond), ControlType.kVelocity);
+            desiredAngularVelocity = RadiansPerSecond.of(0.5);
+            double setpointFF =
+                    intakeArmFeedforward.calculate(
+                            intakeArmAbsoluteEncoder.getPosition(),
+                            desiredAngularVelocity.in(RadiansPerSecond));
+            intakeArmClosedLoop.setSetpoint(
+                    desiredAngularVelocity.in(RadiansPerSecond),
+                    ControlType.kVelocity,
+                    ClosedLoopSlot.kSlot0,
+                    setpointFF);
         } else {
             desiredAngularVelocity = RadiansPerSecond.of(0);
-            AngularVelocity desiredSpeed =
-                    RadiansPerSecond.of(
-                            0
-                                    + intakeArmFeedforward.calculate(
-                                            intakeArmAbsoluteEncoder.getPosition(), 0));
-                intakeArmClosedLoop.setSetpoint(desiredSpeed.in(RadiansPerSecond), ControlType.kVelocity);
+            double setpointFF =
+                    intakeArmFeedforward.calculate(
+                            intakeArmAbsoluteEncoder.getPosition(),
+                            desiredAngularVelocity.in(RadiansPerSecond));
+            intakeArmClosedLoop.setSetpoint(
+                    desiredAngularVelocity.in(RadiansPerSecond),
+                    ControlType.kVelocity,
+                    ClosedLoopSlot.kSlot0,
+                    setpointFF);
         }
     }
 

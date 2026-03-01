@@ -45,6 +45,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return this.run(() -> armIO.runOffVolts());
     }
 
+    public Command runRoller() {
+        return this.run(() -> rollerIO.runIntake());
+    }
+
     @Override
     public void periodic() {
         rollerIO.updateState(rollerState);

@@ -148,8 +148,10 @@ public class SubsystemFactory {
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_ALPHA_CAN_ID),
                     new IntakeArmPlacebo());
         } else if (robotType == RobotType.BETA) {
-            // start w placebo rollers bc design flaw means belt doesnt work :(
-            return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmHardwareBeta());
+            return new IntakeSubsystem(
+                    new IntakeRollerHardware(
+                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_CAN_ID),
+                    new IntakeArmHardwareBeta());
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
