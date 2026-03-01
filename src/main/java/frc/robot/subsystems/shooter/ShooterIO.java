@@ -22,5 +22,6 @@ public interface ShooterIO {
         public double bottomRollerAppliedVoltage = 0.0;
     }
 
-    public record ShooterSpeeds(double topSpeedRadiansPerSecond, double bottomSpeedRadiansPerSecond) {}
+    public record ShooterSpeeds(
+            double topSpeedRadiansPerSecond, double bottomSpeedRadiansPerSecond) {}
 }

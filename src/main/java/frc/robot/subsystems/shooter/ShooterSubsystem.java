@@ -12,10 +12,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOState shooterStates = new ShooterIOState();
+
+    // for csv logging
+    ZoneId LOGGING_TIMEZONE =
+            ZoneId.of("America/New_York"); // so we can display in our local time zone
+    private static final DateTimeFormatter LOGGING_TIME_FORMATTER =
+            DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     public ShooterSubsystem(ShooterIO io) {
         this.io = io;
@@ -42,18 +49,19 @@ public class ShooterSubsystem extends SubsystemBase {
             CSVWriter csvWriter = new CSVWriter(outputWriter);
 
             ShooterSpeeds desiredShooterSpeeds = io.getCurrentTopAndBottomSpeeds();
-            double desiredSpeedTopRadiansPerSecond = desiredShooterSpeeds.topSpeedRadiansPerSecond();
-            double desiredSpeedBottomRadiansPerSecond = desiredShooterSpeeds.bottomSpeedRadiansPerSecond();
+            double desiredSpeedTopRadiansPerSecond =
+                    desiredShooterSpeeds.topSpeedRadiansPerSecond();
+            double desiredSpeedBottomRadiansPerSecond =
+                    desiredShooterSpeeds.bottomSpeedRadiansPerSecond();
 
-            ZoneId zone = ZoneId.of("America/New_York"); // so we can display in our local time zone
-            ZonedDateTime zonedDateTime = ZonedDateTime.now(zone);
+            String timestamp = ZonedDateTime.now(LOGGING_TIMEZONE).format(LOGGING_TIME_FORMATTER);
 
             String[] data =
                     new String[] {
                         "distance (currently unable to log)",
-                        "" + desiredSpeedTopRadiansPerSecond,
-                        "" + desiredSpeedBottomRadiansPerSecond,
-                        zonedDateTime.toString()
+                        Double.toString(desiredSpeedTopRadiansPerSecond),
+                        Double.toString(desiredSpeedBottomRadiansPerSecond),
+                        timestamp
                     };
             csvWriter.writeNext(data);
 
