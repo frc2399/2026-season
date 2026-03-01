@@ -120,7 +120,8 @@ public class RobotContainer {
     private void configureButtonBindingsTuningController() {
         // fake default command running on the tuning controller
         // it runs the tunable number speed setpoints instead of actual default
-        tuningController.rightTrigger().onTrue(shooterSubsystem.tuningSetpoint());
+        tuningController.rightTrigger().whileTrue(shooterSubsystem.tuningSetpoint());
+        tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot());
     }
 
     private void setUpAuton() {
