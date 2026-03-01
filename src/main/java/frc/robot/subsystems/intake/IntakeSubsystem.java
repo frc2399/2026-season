@@ -63,6 +63,8 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("intake/arm/actual angle (deg)", armState.actualAngleDegrees);
         SmartDashboard.putNumber(
                 "intake/arm/velocity (deg/sec)", armState.velocityDegreesPerSecond);
+        SmartDashboard.putNumber(
+                "intake/arm/desired velocity (deg/sec)", armState.desiredVelocityDegreesPerSecond);
         SmartDashboard.putNumber("intake/arm/current", armState.current);
         SmartDashboard.putNumber("intake/arm/applied voltage", armState.appliedVoltage);
     }
