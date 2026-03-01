@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
@@ -22,153 +21,160 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
-import frc.robot.util.TunableNumber;
 
 public class IntakeArmHardwareBeta implements IntakeArmIO {
-        // ratios: motor to mechanism if 45:1
-        // encoder to mechanism is 1:1
-        private final SparkFlex intakeArmSparkFlex;
-        private final AbsoluteEncoder intakeArmAbsoluteEncoder;
-        private final SparkClosedLoopController intakeArmClosedLoop;
+    // ratios: motor to mechanism if 45:1
+    // encoder to mechanism is 1:1
+    private final SparkFlex intakeArmSparkFlex;
+    private final AbsoluteEncoder intakeArmAbsoluteEncoder;
+    private final SparkClosedLoopController intakeArmClosedLoop;
 
-        private final SparkFlexConfig intakeArmSparkFlexConfig = new SparkFlexConfig();
-        private final ClosedLoopConfig intakeArmClosedLoopConfig = new ClosedLoopConfig();
+    private final SparkFlexConfig intakeArmSparkFlexConfig = new SparkFlexConfig();
+    private final ClosedLoopConfig intakeArmClosedLoopConfig = new ClosedLoopConfig();
 
-        // inversions
-        private static final boolean INTAKE_ARM_MOTOR_INVERTED = true;
-        private static final boolean INTAKE_ARM_ENCODER_INVERTED = false;
+    // inversions
+    private static final boolean INTAKE_ARM_MOTOR_INVERTED = true;
+    private static final boolean INTAKE_ARM_ENCODER_INVERTED = false;
 
-        // conversion factors for the absolute encoder - that's why they're 1:1 rather than 45:1
-        private static final Angle INTAKE_ARM_POSITION_CONVERSION_FACTOR = Radians.of(2 * Math.PI);
-        private static final AngularVelocity INTAKE_ARM_VELOCITY_CONVERSION_FACTOR = RadiansPerSecond.of(
-                        2 * Math.PI / 60);
+    // conversion factors for the absolute encoder - that's why they're 1:1 rather than 45:1
+    private static final Angle INTAKE_ARM_POSITION_CONVERSION_FACTOR = Radians.of(2 * Math.PI);
+    private static final AngularVelocity INTAKE_ARM_VELOCITY_CONVERSION_FACTOR =
+            RadiansPerSecond.of(2 * Math.PI / 60);
 
-        // pid
-        private static final double INTAKE_ARM_P = 0.00;
-        private static final double INTAKE_ARM_I = 0;
-        private static final double INTAKE_ARM_D = 0;
+    // pid
+    private static final double INTAKE_ARM_P = 0.00;
+    private static final double INTAKE_ARM_I = 0;
+    private static final double INTAKE_ARM_D = 0;
 
-        // feedforward
-        private static final double INTAKE_ARM_KS = 0;
-        private static final double INTAKE_ARM_KV = 0.012;
-        private static final double INTAKE_ARM_KA = 0.00011;
-        private static final double INTAKE_ARM_KCOS = .13;
+    // feedforward
+    private static final double INTAKE_ARM_KS = 0;
+    private static final double INTAKE_ARM_KV = 0.0;
+    private static final double INTAKE_ARM_KA = 0.0;
+    private static final double INTAKE_ARM_KCOS = .0207;
 
-        // we use an outside feedforward, because arms also have a cosine factor (the
-        // impact of gravity changes), and revlib's is poorly documented so it's not
-        // properly working
-        private static final ArmFeedforward intakeArmFeedforward = new ArmFeedforward(INTAKE_ARM_KS, INTAKE_ARM_KCOS,
-                        INTAKE_ARM_KV, INTAKE_ARM_KA);
+    // we use an outside feedforward, because arms also have a cosine factor (the
+    // impact of gravity changes), and revlib's is poorly documented so it's not
+    // properly working
+    private static final ArmFeedforward intakeArmFeedforward =
+            new ArmFeedforward(INTAKE_ARM_KS, INTAKE_ARM_KCOS, INTAKE_ARM_KV, INTAKE_ARM_KA);
 
-        // output
-        private static final double INTAKE_ARM_MIN_OUTPUT = -1;
-        private static final double INTAKE_ARM_MAX_OUTPUT = 1;
+    // output
+    private static final double INTAKE_ARM_MIN_OUTPUT = -1;
+    private static final double INTAKE_ARM_MAX_OUTPUT = 1;
 
-        // soft limits
-        private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(3);
-        private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = false;
-        private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(-60);
-        private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = false;
+    // soft limits
+    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(3);
+    private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = false;
+    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(-60);
+    private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = false;
 
-        private Angle desiredAngle = Degrees.of(0);
-        private AngularVelocity desiredAngularVelocity = DegreesPerSecond.of(0);
+    private Angle desiredAngle = Degrees.of(0);
+    private AngularVelocity desiredAngularVelocity = DegreesPerSecond.of(0);
 
-        public IntakeArmHardwareBeta() {
-                intakeArmSparkFlexConfig
-                                .inverted(INTAKE_ARM_MOTOR_INVERTED)
-                                .idleMode(IdleMode.kBrake)
-                                .smartCurrentLimit(
-                                                (int) RobotConstants.MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
+    public IntakeArmHardwareBeta() {
+        intakeArmSparkFlexConfig
+                .inverted(INTAKE_ARM_MOTOR_INVERTED)
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(
+                        (int) RobotConstants.MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
-                intakeArmSparkFlexConfig.absoluteEncoder
-                                .inverted(INTAKE_ARM_ENCODER_INVERTED)
-                                .positionConversionFactor(INTAKE_ARM_POSITION_CONVERSION_FACTOR.in(Radians))
-                                .velocityConversionFactor(
-                                                INTAKE_ARM_VELOCITY_CONVERSION_FACTOR.in(RadiansPerSecond))
-                                .zeroCentered(true);
+        intakeArmSparkFlexConfig
+                .absoluteEncoder
+                .inverted(INTAKE_ARM_ENCODER_INVERTED)
+                .positionConversionFactor(INTAKE_ARM_POSITION_CONVERSION_FACTOR.in(Radians))
+                .velocityConversionFactor(
+                        INTAKE_ARM_VELOCITY_CONVERSION_FACTOR.in(RadiansPerSecond))
+                .zeroCentered(true);
 
-                intakeArmSparkFlexConfig.closedLoop
-                                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                                .pid(INTAKE_ARM_P, INTAKE_ARM_I, INTAKE_ARM_D)
-                                .outputRange(INTAKE_ARM_MIN_OUTPUT, INTAKE_ARM_MAX_OUTPUT)
-                                .positionWrappingEnabled(true)
-                                .positionWrappingInputRange(-Math.PI, Math.PI);
+        intakeArmSparkFlexConfig
+                .closedLoop
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .pid(INTAKE_ARM_P, INTAKE_ARM_I, INTAKE_ARM_D)
+                .outputRange(INTAKE_ARM_MIN_OUTPUT, INTAKE_ARM_MAX_OUTPUT)
+                .positionWrappingEnabled(true)
+                .positionWrappingInputRange(-Math.PI, Math.PI);
 
-                /*  soft limits are code-enforced limits on where the mechanism can go
-                * they're called SOFT limits because the mechanism can still technically go
-                * past it
-                * if the mechanism can't physically go past it, that's a HARD limit/stop
-                */ 
-                intakeArmSparkFlexConfig.softLimit
-                                .forwardSoftLimit(INTAKE_ARM_FORWARD_MAX_ANGLE.in(Radians))
-                                .forwardSoftLimitEnabled(INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED)
-                                .reverseSoftLimit(INTAKE_ARM_REVERSE_MAX_ANGLE.in(Radians))
-                                .reverseSoftLimitEnabled(INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED);
+        /*  soft limits are code-enforced limits on where the mechanism can go
+         * they're called SOFT limits because the mechanism can still technically go
+         * past it
+         * if the mechanism can't physically go past it, that's a HARD limit/stop
+         */
+        intakeArmSparkFlexConfig
+                .softLimit
+                .forwardSoftLimit(INTAKE_ARM_FORWARD_MAX_ANGLE.in(Radians))
+                .forwardSoftLimitEnabled(INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED)
+                .reverseSoftLimit(INTAKE_ARM_REVERSE_MAX_ANGLE.in(Radians))
+                .reverseSoftLimitEnabled(INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED);
 
-                intakeArmSparkFlex = new SparkFlex(
-                                RobotConstants.MotorIdConstants.INTAKE_ARM_BETA_CAN_ID,
-                                MotorType.kBrushless);
+        intakeArmSparkFlex =
+                new SparkFlex(
+                        RobotConstants.MotorIdConstants.INTAKE_ARM_BETA_CAN_ID,
+                        MotorType.kBrushless);
 
-                intakeArmSparkFlex.configure(
-                                intakeArmSparkFlexConfig,
-                                ResetMode.kResetSafeParameters,
-                                PersistMode.kPersistParameters);
+        intakeArmSparkFlex.configure(
+                intakeArmSparkFlexConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
 
-                intakeArmAbsoluteEncoder = intakeArmSparkFlex.getAbsoluteEncoder();
-                intakeArmClosedLoop = intakeArmSparkFlex.getClosedLoopController();
+        intakeArmAbsoluteEncoder = intakeArmSparkFlex.getAbsoluteEncoder();
+        intakeArmClosedLoop = intakeArmSparkFlex.getClosedLoopController();
+    }
+
+    @Override
+    public void setSetpoint(IntakeArmSetpoint setpoint) {
+        if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+            desiredAngle = Degrees.of(-10);
+            // commented because i dont want something crazy to happen
+            // intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
+        } else if (setpoint == IntakeArmSetpoint.STOWED) {
+            desiredAngle = Degrees.of(80);
+            // intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
         }
+    }
 
-        @Override
-        public void setSetpoint(IntakeArmSetpoint setpoint) {
-                if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-                        desiredAngle = Degrees.of(-10);
-                        // commented because i dont want something crazy to happen
-                        // intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
-                } else if (setpoint == IntakeArmSetpoint.STOWED) {
-                        desiredAngle = Degrees.of(80);
-                        // intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
-                }
+    @Override
+    public void runOffVolts() {
+        intakeArmClosedLoop.setSetpoint(0.5, ControlType.kVoltage);
+    }
+
+    @Override
+    public void runVelocity(IntakeArmSetpoint setpoint) {
+        if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+            desiredAngularVelocity = RadiansPerSecond.of(-0.3);
+            AngularVelocity desiredSpeed =
+                    RadiansPerSecond.of(
+                            -0.3
+                                    + intakeArmFeedforward.calculate(
+                                            intakeArmAbsoluteEncoder.getPosition(), -0.3));
+            intakeArmSparkFlex.set(desiredSpeed.in(RadiansPerSecond));
+        } else if (setpoint == IntakeArmSetpoint.STOWED) {
+            desiredAngularVelocity = RadiansPerSecond.of(0.3);
+            AngularVelocity desiredSpeed =
+                    RadiansPerSecond.of(
+                            0.3
+                                    + intakeArmFeedforward.calculate(
+                                            intakeArmAbsoluteEncoder.getPosition(), 0.3));
+            intakeArmSparkFlex.set(desiredSpeed.in(RadiansPerSecond));
+
+        } else {
+            desiredAngularVelocity = RadiansPerSecond.of(0);
+            AngularVelocity desiredSpeed =
+                    RadiansPerSecond.of(
+                            0
+                                    + intakeArmFeedforward.calculate(
+                                            intakeArmAbsoluteEncoder.getPosition(), 0));
+            intakeArmSparkFlex.set(desiredSpeed.in(RadiansPerSecond));
         }
+    }
 
-        @Override
-        public void runOffVolts() {
-                intakeArmClosedLoop.setSetpoint(0.5, ControlType.kVoltage);
-        }
-
-        @Override
-        public void runVelocity(IntakeArmSetpoint setpoint) {
-                if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-                        desiredAngularVelocity = RadiansPerSecond.of(-.2);
-                        AngularVelocity desiredSpeed = RadiansPerSecond.of(
-                                        -0.2
-                                                        + intakeArmFeedforward.calculate(
-                                                                        intakeArmAbsoluteEncoder.getPosition(), -0.2));
-                        intakeArmSparkFlex.set(desiredSpeed.in(RotationsPerSecond));
-                } else if (setpoint == IntakeArmSetpoint.STOWED) {
-                        desiredAngularVelocity = RadiansPerSecond.of(0.2);
-                        AngularVelocity desiredSpeed = RadiansPerSecond.of(
-                                        0.2
-                                                        + intakeArmFeedforward.calculate(
-                                                                        intakeArmAbsoluteEncoder.getPosition(), 0.2));
-                        intakeArmSparkFlex.set(desiredSpeed.in(RotationsPerSecond));
-
-                } else {
-                        desiredAngularVelocity = RadiansPerSecond.of(0);
-                        AngularVelocity desiredSpeed = RadiansPerSecond.of(
-                                        0
-                                                        + intakeArmFeedforward.calculate(
-                                                                        intakeArmAbsoluteEncoder.getPosition(), 0));
-                        intakeArmSparkFlex.set(desiredSpeed.in(RotationsPerSecond));
-                }
-        }
-
-        @Override
-        public void updateState(IntakeArmIOState state) {
-                state.desiredAngleDegrees = desiredAngle.in(Degrees);
-                state.actualAngleDegrees = intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI);
-                state.velocityDegreesPerSecond = intakeArmAbsoluteEncoder.getVelocity() * (180 / Math.PI);
-                state.desiredVelocityDegreesPerSecond = desiredAngularVelocity.in(DegreesPerSecond);
-                state.appliedVoltage = intakeArmSparkFlex.getBusVoltage() * intakeArmSparkFlex.getAppliedOutput();
-                state.current = intakeArmSparkFlex.getOutputCurrent();
-        }
+    @Override
+    public void updateState(IntakeArmIOState state) {
+        state.desiredAngleDegrees = desiredAngle.in(Degrees);
+        state.actualAngleDegrees = intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI);
+        state.velocityDegreesPerSecond = intakeArmAbsoluteEncoder.getVelocity() * (180 / Math.PI);
+        state.desiredVelocityDegreesPerSecond = desiredAngularVelocity.in(DegreesPerSecond);
+        state.appliedVoltage =
+                intakeArmSparkFlex.getBusVoltage() * intakeArmSparkFlex.getAppliedOutput();
+        state.current = intakeArmSparkFlex.getOutputCurrent();
+    }
 }
