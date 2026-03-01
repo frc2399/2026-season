@@ -34,7 +34,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void logShooterSpeedsToCSV() {
-        System.out.println("we are calling the method :(");
         // code modified from
         // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
         try {
@@ -43,8 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
             CSVWriter csvWriter = new CSVWriter(outputWriter);
 
             ShooterSpeeds desiredShooterSpeeds = io.getCurrentTopAndBottomSpeeds();
-            double desiredSpeedTop = desiredShooterSpeeds.topSpeed();
-            double desiredSpeedBottom = desiredShooterSpeeds.bottomSpeed();
+            double desiredSpeedTopRadiansPerSecond = desiredShooterSpeeds.topSpeedRadiansPerSecond();
+            double desiredSpeedBottomRadiansPerSecond = desiredShooterSpeeds.bottomSpeedRadiansPerSecond();
 
             ZoneId zone = ZoneId.of("America/New_York"); // so we can display in our local time zone
             ZonedDateTime zonedDateTime = ZonedDateTime.now(zone);
@@ -52,21 +51,13 @@ public class ShooterSubsystem extends SubsystemBase {
             String[] data =
                     new String[] {
                         "distance (currently unable to log)",
-                        "" + desiredSpeedTop,
-                        "" + desiredSpeedBottom,
+                        "" + desiredSpeedTopRadiansPerSecond,
+                        "" + desiredSpeedBottomRadiansPerSecond,
                         zonedDateTime.toString()
                     };
             csvWriter.writeNext(data);
 
             csvWriter.close();
-            System.out.println("yippee we logged!");
-            System.out.println(
-                    ""
-                            + desiredSpeedTop
-                            + " "
-                            + desiredSpeedBottom
-                            + " "
-                            + zonedDateTime.toString());
         } catch (IOException e) {
             System.out.println(
                     "********COULD NOT WRITE TO THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
