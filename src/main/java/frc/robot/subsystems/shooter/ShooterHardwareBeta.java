@@ -30,14 +30,14 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final double MIN_OUTPUT_RANGE = -1;
     private final double MAX_OUTPUT_RANGE = 1;
-    private final double SHOOTER_BETA_TOP_P = 0.00008; // .001
-    private final double SHOOTER_BETA_TOP_D = 0; //
-    private final double SHOOTER_BETA_TOP_KS = 0.16; // 0.118
+    private final double SHOOTER_BETA_TOP_P = 0.00008;
+    private final double SHOOTER_BETA_TOP_D = 0;
+    private final double SHOOTER_BETA_TOP_KS = 0.16;
     private final double SHOOTER_BETA_TOP_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
-    private final double SHOOTER_BETA_BOTTOM_P = 0.0003; // .001
-    private final double SHOOTER_BETA_BOTTOM_D = 0; //
-    private final double SHOOTER_BETA_BOTTOM_KS = 0.123; // 0.154
+    private final double SHOOTER_BETA_BOTTOM_P = 0.0003;
+    private final double SHOOTER_BETA_BOTTOM_D = 0;
+    private final double SHOOTER_BETA_BOTTOM_KS = 0.123;
     private final double SHOOTER_BETA_BOTTOM_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
@@ -177,10 +177,10 @@ public class ShooterHardwareBeta implements ShooterIO {
 
     @Override
     public void periodicUpdate() {
-        shooterBottomPIDController.setSetpoint(
-                desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
-        shooterTopPIDController.setSetpoint(
-                desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        // shooterBottomPIDController.setSetpoint(
+        //         desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        // shooterTopPIDController.setSetpoint(
+        //         desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
 
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
