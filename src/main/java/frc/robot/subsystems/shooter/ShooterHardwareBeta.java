@@ -38,8 +38,7 @@ public class ShooterHardwareBeta implements ShooterIO {
     private final double SHOOTER_BETA_BOTTOM_P = 0.0003;
     private final double SHOOTER_BETA_BOTTOM_D = 0;
     private final double SHOOTER_BETA_BOTTOM_KS = 0.123;
-    private final double SHOOTER_BETA_BOTTOM_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private final double SHOOTER_BETA_BOTTOM_KV = 0.01697538;
 
     private final double SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED = 0;
     private final double SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED = 0;
