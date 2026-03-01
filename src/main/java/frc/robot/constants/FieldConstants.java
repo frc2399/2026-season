@@ -14,7 +14,7 @@ public final class FieldConstants {
 
     public static record Pose(String name, Pose2d pose) {}
 
-    public static Optional<Alliance> alliance;
+    public static Optional<Alliance> alliance = Optional.empty();
 
     // values taken from field drawings
     public static final Distance HALF_WIDTH_OF_HUB = Inches.of(47.0 / 2.0);
