@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -56,6 +57,7 @@ public class SubsystemFactory {
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
+            serialNum = "simulation";
         } else if (serialNum == null) {
             robotType = null;
             throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
@@ -74,6 +76,8 @@ public class SubsystemFactory {
                     "UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: "
                             + serialNum);
         }
+        SmartDashboard.putString("robot/serialNum", serialNum);
+        SmartDashboard.putString("robot/robotType", robotType.name());
     }
 
     public static RobotType getRobotType() {
