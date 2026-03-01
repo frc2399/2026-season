@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
 
 public final class RobotConstants {
 
@@ -63,8 +64,10 @@ public final class RobotConstants {
     }
 
     public static class TransformConstants {
+        public static final Distance ROBOT_TRANSFORM_X = Inches.of(8.5);
+        public static final Distance ROBOT_TRANSFORM_Y = Inches.of(12.63);
         // these values should be edited once we have our robot to shooter transform
         public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM =
-                new Transform2d(8.5, 12.63, new Rotation2d(0));
+                new Transform2d(ROBOT_TRANSFORM_X, ROBOT_TRANSFORM_Y, new Rotation2d(0));
     }
 }
