@@ -48,9 +48,10 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_P = 0.00;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
-    // feedforward (values calculated using the recalc link kevin shared in the discord in #programming on 2/26)
+    // feedforward (values calculated using the recalc link kevin shared in the discord in
+    // #programming on 2/26)
     private static final double INTAKE_ARM_KS = 0;
-    private static final double INTAKE_ARM_KV = 0.0132; 
+    private static final double INTAKE_ARM_KV = 0.026;
     private static final double INTAKE_ARM_KA = 0.00011;
     private static final double INTAKE_ARM_KCOS = 0.23;
     /*
@@ -65,9 +66,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_MAX_OUTPUT = 1;
 
     // soft limits
-    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(80);
+    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(3);
     private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = false;
-    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(10);
+    private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(-60);
     private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = false;
 
     private Angle desiredAngle = Degrees.of(0);
@@ -80,7 +81,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     public IntakeArmHardwareBeta() {
         intakeArmSparkFlexConfig
                 .inverted(INTAKE_ARM_MOTOR_INVERTED)
-                .idleMode(IdleMode.kCoast)
+                .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(
                         (int) RobotConstants.MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
@@ -147,9 +148,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         // }
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
             System.out.println("hi");
-            intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
-        } else if (setpoint == IntakeArmSetpoint.STOWED) {
             intakeArmClosedLoop.setSetpoint(-6, ControlType.kVelocity);
+        } else if (setpoint == IntakeArmSetpoint.STOWED) {
+            intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
         } else {
             intakeArmClosedLoop.setSetpoint(0, ControlType.kVelocity);
         }
