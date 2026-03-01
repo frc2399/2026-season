@@ -7,28 +7,44 @@ import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
+import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
 public class CommandFactory {
     private final DriveSubsystem drive;
     private final Gyro gyro;
     private final ShooterSubsystem shooter;
     private final ShooterIndexerSubsystem shooterIndexer;
+    private final SpindexerSubsystem spindexer;
     private final IntakeSubsystem intakeSubsystem;
+
+    public enum TargetFuel {
+        HUB,
+        ALLIANCE_LEFT,
+        ALLIANCE_RIGHT
+    }
 
     public CommandFactory(
             DriveSubsystem drive,
             Gyro gyro,
             ShooterSubsystem shooter,
             ShooterIndexerSubsystem shooterIndexer,
+            SpindexerSubsystem spindexer,
             IntakeSubsystem intakeSubsystem) {
         this.drive = drive;
         this.gyro = gyro;
         this.shooter = shooter;
         this.shooterIndexer = shooterIndexer;
+        this.spindexer = spindexer;
         this.intakeSubsystem = intakeSubsystem;
     }
 
-    public Command runShooterAndShooterIndexer() {
-        return Commands.parallel(shooter.shoot(), shooterIndexer.runShooterIndexer());
+    public Command runIntakeandIntakeArm() {
+        return Commands.parallel(intakeSubsystem.deployAndRunIntake());
+    }
+
+    public Command runSpindexShooterIndexAndShooter() {
+        return Commands.sequence(
+                shooter.shoot().withTimeout(1.0),
+                Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
     }
 }

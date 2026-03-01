@@ -38,7 +38,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     // conversion factors (45:1 is our gear ratio)
     private static final Angle INTAKE_ARM_POSITION_CONVERSION_FACTOR =
-            Degrees.of(360.0); // this subsystem is in degrees because it's a rotational wrist,
+            Degrees.of(360.0); // this subsystem is in
+    // degrees because it's a
+    // rotational wrist,
     // and this makes it easier to tune :)
     private static final AngularVelocity INTAKE_ARM_VELOCITY_CONVERSION_FACTOR =
             DegreesPerSecond.of(
@@ -48,15 +50,18 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_P = 0.00;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
-    // feedforward (values calculated using the recalc link kevin shared in the discord in
+    // feedforward (values calculated using the recalc link kevin shared in the
+    // discord in
     // #programming on 2/26)
     private static final double INTAKE_ARM_KS = 0;
     private static final double INTAKE_ARM_KV = 0.026;
     private static final double INTAKE_ARM_KA = 0.00011;
     private static final double INTAKE_ARM_KCOS = 0.23;
     /*
-     * our arm is rotational, so the impact of gravity changes as we rotate, and our feedforward needs to compensate. the kcos is the factor to compensate by
-     * revlib demands that it can get from what we're logging in (degree/s) to rotations of mechanism / second to accurately compensate. that's kcosratio
+     * our arm is rotational, so the impact of gravity changes as we rotate, and our
+     * feedforward needs to compensate. the kcos is the factor to compensate by
+     * revlib demands that it can get from what we're logging in (degree/s) to
+     * rotations of mechanism / second to accurately compensate. that's kcosratio
      */
     private static final double INTAKE_ARM_KCOS_RATIO =
             1 / 360; // convert from mechanism degrees to rotations
@@ -74,8 +79,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private Angle desiredAngle = Degrees.of(0);
 
     // tunable numbers - for testing only! delete before pr
-    //     private double DEFAULT_KS = .001;
-    //     private TunableNumber TUNABLE_KS = new TunableNumber("intake/arm/voltage", DEFAULT_KS,
+    // private double DEFAULT_KS = .001;
+    // private TunableNumber TUNABLE_KS = new TunableNumber("intake/arm/voltage",
+    // DEFAULT_KS,
     // true);
 
     public IntakeArmHardwareBeta() {
@@ -102,7 +108,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                 .positionWrappingInputRange(-180, 180);
 
         // soft limits are code-enforced limits on where the mechanism can go
-        // they're called SOFT limits because the mechanism can still technically go past it
+        // they're called SOFT limits because the mechanism can still technically go
+        // past it
         // if the mechanism can't physically go past it, that's a HARD limit/stop
         intakeArmSparkFlexConfig
                 .softLimit
@@ -137,22 +144,13 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     @Override
     public void setSetpoint(IntakeArmSetpoint setpoint) {
         // STRUCTURE SAVED FOR LATER IT HAS GOOD STUFF BUT NOT NECESSARY RN
-        // if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-        //     //     desiredAngle = Degrees.of(-10);
-        //     intakeArmClosedLoop.setSetpoint(-6, ControlType.kVelocity);
-        //     //     intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
-        // } else if (setpoint == IntakeArmSetpoint.STOWED) {
-        //     //     desiredAngle = Degrees.of(80);
-        //     intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
-        //     //     intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
-        // }
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-            System.out.println("hi");
-            intakeArmClosedLoop.setSetpoint(-6, ControlType.kVelocity);
+            desiredAngle = Degrees.of(-10);
+            // commented because i dont want something crazy to happen
+            // intakeArmClosedLoop.setSetpoint(-10,ControlType.kPosition);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
-            intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
-        } else {
-            intakeArmClosedLoop.setSetpoint(0, ControlType.kVelocity);
+            desiredAngle = Degrees.of(80);
+            // intakeArmClosedLoop.setSetpoint(80, ControlType.kPosition);
         }
     }
 
@@ -164,15 +162,27 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     }
 
     @Override
+    public void runVelocity(IntakeArmSetpoint setpoint) {
+        if (setpoint == IntakeArmSetpoint.DEPLOYED) {
+            System.out.println("hi");
+            intakeArmClosedLoop.setSetpoint(-6, ControlType.kVelocity);
+        } else if (setpoint == IntakeArmSetpoint.STOWED) {
+            intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
+        } else {
+            intakeArmClosedLoop.setSetpoint(0, ControlType.kVelocity);
+        }
+    }
+
+    @Override
     public void updateState(IntakeArmIOState state) {
         // if (TUNABLE_KS.hasChanged()) {
-        //     intakeArmClosedLoopConfig.feedForward.kS(TUNABLE_KS.get());
-        //     System.out.println("allegedly changing ks to " + TUNABLE_KS.get());
-        //     intakeArmSparkFlexConfig.apply(intakeArmClosedLoopConfig);
-        //     intakeArmSparkFlex.configure(
-        //             intakeArmSparkFlexConfig,
-        //             ResetMode.kResetSafeParameters,
-        //             PersistMode.kNoPersistParameters);
+        // intakeArmClosedLoopConfig.feedForward.kS(TUNABLE_KS.get());
+        // System.out.println("allegedly changing ks to " + TUNABLE_KS.get());
+        // intakeArmSparkFlexConfig.apply(intakeArmClosedLoopConfig);
+        // intakeArmSparkFlex.configure(
+        // intakeArmSparkFlexConfig,
+        // ResetMode.kResetSafeParameters,
+        // PersistMode.kNoPersistParameters);
         // }
 
         state.desiredAngleDegrees = desiredAngle.in(Degrees);
