@@ -19,6 +19,7 @@ public interface IntakeArmIO {
         public double desiredAngleDegrees = 0;
         public double actualAngleDegrees = 0;
         public double velocityDegreesPerSecond = 0;
+        public double desiredVelocityDegreesPerSecond = 0;
         public double appliedVoltage = 0;
         public double current = 0;
     }

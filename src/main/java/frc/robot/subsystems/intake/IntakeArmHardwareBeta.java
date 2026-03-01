@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -59,7 +60,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final double INTAKE_ARM_KS = 0;
     private static final double INTAKE_ARM_KV = 3.20;
     private static final double INTAKE_ARM_KA = 0.00011;
-    private static final double INTAKE_ARM_KCOS = .14;
+    private static final double INTAKE_ARM_KCOS = .13;
 
     private static final ArmFeedforward intakeArmFeedforward =
             new ArmFeedforward(INTAKE_ARM_KS, INTAKE_ARM_KCOS, INTAKE_ARM_KV, INTAKE_ARM_KA);
@@ -87,6 +88,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = false;
 
     private Angle desiredAngle = Degrees.of(0);
+    private AngularVelocity desiredAngularVelocity = DegreesPerSecond.of(0);
 
     // tunable numbers - for testing only! delete before pr
     // private double DEFAULT_KS = .001;
@@ -175,6 +177,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     public void runVelocity(IntakeArmSetpoint setpoint) {
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
             // intakeArmClosedLoop.setSetpoint(-6, ControlType.kVelocity);
+            desiredAngularVelocity = RadiansPerSecond.of(-.1);
             AngularVelocity desiredSpeed =
                     RadiansPerSecond.of(
                             -0.1
@@ -183,6 +186,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
             intakeArmSparkFlex.set(desiredSpeed.in(RotationsPerSecond));
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             // intakeArmClosedLoop.setSetpoint(6, ControlType.kVelocity);
+            desiredAngularVelocity = RadiansPerSecond.of(0.1);
             AngularVelocity desiredSpeed =
                     RadiansPerSecond.of(
                             0.1
@@ -191,7 +195,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
             intakeArmSparkFlex.set(desiredSpeed.in(RotationsPerSecond));
 
         } else {
-            // intakeArmClosedLoop.setSetpoint(0, ControlType.kVelocity);
+            desiredAngularVelocity = RadiansPerSecond.of(0);
             AngularVelocity desiredSpeed =
                     RadiansPerSecond.of(
                             0
@@ -216,6 +220,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         state.desiredAngleDegrees = desiredAngle.in(Degrees);
         state.actualAngleDegrees = intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI);
         state.velocityDegreesPerSecond = intakeArmAbsoluteEncoder.getVelocity() * (180 / Math.PI);
+        state.desiredVelocityDegreesPerSecond = desiredAngularVelocity.in(DegreesPerSecond);
         state.appliedVoltage =
                 intakeArmSparkFlex.getBusVoltage() * intakeArmSparkFlex.getAppliedOutput();
         state.current = intakeArmSparkFlex.getOutputCurrent();
