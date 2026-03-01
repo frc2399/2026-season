@@ -146,7 +146,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                             -0.3
                                     + intakeArmFeedforward.calculate(
                                             intakeArmAbsoluteEncoder.getPosition(), -0.3));
-            intakeArmSparkFlex.set(desiredSpeed.in(RadiansPerSecond));
+            intakeArmClosedLoop.setSetpoint(desiredSpeed.in(RadiansPerSecond), ControlType.kVelocity);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             desiredAngularVelocity = RadiansPerSecond.of(0.3);
             AngularVelocity desiredSpeed =
@@ -154,8 +154,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                             0.3
                                     + intakeArmFeedforward.calculate(
                                             intakeArmAbsoluteEncoder.getPosition(), 0.3));
-            intakeArmSparkFlex.set(desiredSpeed.in(RadiansPerSecond));
-
+                intakeArmClosedLoop.setSetpoint(desiredSpeed.in(RadiansPerSecond), ControlType.kVelocity);
         } else {
             desiredAngularVelocity = RadiansPerSecond.of(0);
             AngularVelocity desiredSpeed =
@@ -163,7 +162,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                             0
                                     + intakeArmFeedforward.calculate(
                                             intakeArmAbsoluteEncoder.getPosition(), 0));
-            intakeArmSparkFlex.set(desiredSpeed.in(RadiansPerSecond));
+                intakeArmClosedLoop.setSetpoint(desiredSpeed.in(RadiansPerSecond), ControlType.kVelocity);
         }
     }
 
