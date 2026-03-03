@@ -12,5 +12,11 @@ public class IntakeArmPlacebo implements IntakeArmIO {
     public void runOffVolts() {}
 
     @Override
-    public void runVelocity(IntakeArmSetpoint setpoint) {}
+    public void runIntakeArmOutVelocity() {}
+
+    @Override
+    public void runIntakeArmInVelocity() {}
+
+    @Override
+    public void runIntakeArmZeroVelocity() {}
 }

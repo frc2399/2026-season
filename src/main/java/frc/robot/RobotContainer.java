@@ -116,8 +116,8 @@ public class RobotContainer {
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
-        tuningController.y().whileTrue(intakeSubsystem.runVelocity(IntakeArmSetpoint.STOWED));
-        tuningController.a().whileTrue(intakeSubsystem.runVelocity(IntakeArmSetpoint.DEPLOYED));
+        tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
+        tuningController.a().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
         tuningController.b().whileTrue(intakeSubsystem.runRoller());
     }
 
