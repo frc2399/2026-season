@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
-import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmSetpoint;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
@@ -112,6 +111,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindingsTuningController() {
+        tuningController.rightTrigger().onTrue(intakeSubsystem.deployArm());
         tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());

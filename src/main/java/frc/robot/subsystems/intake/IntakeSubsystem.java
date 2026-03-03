@@ -31,14 +31,13 @@ public class IntakeSubsystem extends SubsystemBase {
         return this.run(
                         () -> {
                             rollerIO.setZero();
-                            armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                            // armIO.runIntakeArmZeroVelocity();
                         })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
 
     public Command runIntakeArmOutVelocity() {
-        return this.run(() -> armIO.runIntakeArmOutVelocity())
-                .withName("arm out (manual)");
+        return this.run(() -> armIO.runIntakeArmOutVelocity()).withName("arm out (manual)");
     }
 
     public Command runIntakeArmInVelocity() {
@@ -51,6 +50,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command runRoller() {
         return this.run(() -> rollerIO.runIntake());
+    }
+
+    public Command deployArm() {
+        return this.runOnce(() -> armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED));
     }
 
     @Override
