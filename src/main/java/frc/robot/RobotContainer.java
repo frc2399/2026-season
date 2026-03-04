@@ -79,6 +79,7 @@ public class RobotContainer {
 
     public void disableSubsystems() {
         drive.disableDriveToPose();
+        intakeSubsystem.armProfiledPidEnabled = false;
     }
 
     public void configureDefaultCommands() {

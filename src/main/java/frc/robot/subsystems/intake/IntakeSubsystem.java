@@ -13,6 +13,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private IntakeRollerIOState rollerState = new IntakeRollerIOState();
     private IntakeArmIOState armState = new IntakeArmIOState();
 
+    public boolean armProfiledPidEnabled = false;
+
     public IntakeSubsystem(IntakeRollerIO rollerIO, IntakeArmIO armIO) {
         this.rollerIO = rollerIO;
         this.armIO = armIO;
@@ -21,6 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command deployAndRunIntake() {
         return this.run(
                         () -> {
+                            armProfiledPidEnabled = true;
                             armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
                             rollerIO.runIntake();
                         })
@@ -30,6 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command defaultBehavior() {
         return this.run(
                         () -> {
+                            armProfiledPidEnabled = true;
                             rollerIO.setZero();
                             // armIO.runIntakeArmZeroVelocity();
                         })
@@ -53,11 +57,21 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command deployArm() {
-        return this.runOnce(() -> armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED));
+        return this.runOnce(() -> {
+            armProfiledPidEnabled = true;
+            armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
+        });
     }
 
     @Override
     public void periodic() {
+
+        if (!armProfiledPidEnabled) {
+            armIO.resetSetpointsToCurrentPosition();
+        } else {
+            armIO.calculateNextIntermediateSetpoint();
+        }
+
         rollerIO.updateState(rollerState);
         armIO.updateState(armState);
 

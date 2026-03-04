@@ -19,4 +19,10 @@ public class IntakeArmPlacebo implements IntakeArmIO {
 
     @Override
     public void runIntakeArmZeroVelocity() {}
+
+    @Override
+    public void calculateNextIntermediateSetpoint() {}
+
+    @Override
+    public void resetSetpointsToCurrentPosition() {}
 }

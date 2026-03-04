@@ -9,6 +9,10 @@ public interface IntakeArmIO {
 
     public void runIntakeArmZeroVelocity();
 
+    public void calculateNextIntermediateSetpoint();
+
+    public void resetSetpointsToCurrentPosition();
+
     public enum IntakeArmSetpoint {
         DEPLOYED,
         STOWED,
