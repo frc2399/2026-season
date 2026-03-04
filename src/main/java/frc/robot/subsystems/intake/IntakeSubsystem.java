@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command deployAndRunIntake() {
         return this.run(
                         () -> {
-                            armIO.runIntakeArmZeroVelocity();
+                            armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
                             rollerIO.runIntake();
                         })
                 .withName("intake: deploy arm and run roller");

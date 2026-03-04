@@ -44,12 +44,12 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
             RadiansPerSecond.of(2 * Math.PI / 60);
 
     // pid
-    private static final double INTAKE_ARM_P = 0.00;
+    private static final double INTAKE_ARM_P = .6;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
 
     // feedforward
-    private static final double INTAKE_ARM_KS = 0;
+    private static final double INTAKE_ARM_KS = 0.0;
     private static final double INTAKE_ARM_KV = 1.0;
     private static final double INTAKE_ARM_KA = 0.0;
     private static final double INTAKE_ARM_KCOS = .255;
@@ -127,8 +127,14 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     public void setSetpoint(IntakeArmSetpoint setpoint) {
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
             desiredAngle = Degrees.of(-25);
-            double calculatedFeedforward = intakeArmFeedforward.calculate(desiredAngle.in(Radians), 0);
-            intakeArmClosedLoop.setSetpoint(desiredAngle.in(Radians), ControlType.kPosition, ClosedLoopSlot.kSlot0, calculatedFeedforward);
+            double calculatedFeedforward =
+                    intakeArmFeedforward.calculate(
+                            desiredAngle.in(Radians), intakeArmAbsoluteEncoder.getVelocity());
+            intakeArmClosedLoop.setSetpoint(
+                    desiredAngle.in(Radians),
+                    ControlType.kPosition,
+                    ClosedLoopSlot.kSlot0,
+                    calculatedFeedforward);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             desiredAngle = Degrees.of(80);
             // intakeArmClosedLoop.setSetpoint(desiredAngle.in(Radians), ControlType.kPosition);
@@ -150,7 +156,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         intakeArmClosedLoop.setSetpoint(
                 desiredAngularVelocity.in(RadiansPerSecond),
                 ControlType.kVelocity,
-                ClosedLoopSlot.kSlot0,
+                ClosedLoopSlot.kSlot1,
                 setpointFF);
     }
 
@@ -164,7 +170,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         intakeArmClosedLoop.setSetpoint(
                 desiredAngularVelocity.in(RadiansPerSecond),
                 ControlType.kVelocity,
-                ClosedLoopSlot.kSlot0,
+                ClosedLoopSlot.kSlot1,
                 setpointFF);
     }
 
@@ -178,7 +184,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         intakeArmClosedLoop.setSetpoint(
                 desiredAngularVelocity.in(RadiansPerSecond),
                 ControlType.kVelocity,
-                ClosedLoopSlot.kSlot0,
+                ClosedLoopSlot.kSlot1,
                 setpointFF);
     }
 
