@@ -89,8 +89,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private TrapezoidProfile.State goalState = new TrapezoidProfile.State();
     private TrapezoidProfile.State intermediateSetpointState = new TrapezoidProfile.State();
     private Angle pidDeadband =
-            Degrees.of(
-                    1); // due to significant backlash on the mechanism, we don't want to adjust as
+            Degrees.of(2); // due to significant backlash on the mechanism, we don't want to adjust
+
+    // as
 
     // much if we are within 1 degree of the goal
 
