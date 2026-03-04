@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Time;
 
 public final class RobotConstants {
 
@@ -51,7 +52,8 @@ public final class RobotConstants {
 
     public static class SpeedConstants {
         public static final double MAIN_LOOP_FREQUENCY_HZ = 50;
-        public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
+        public static final Time MAIN_LOOP_FREQUENCY =
+                Milliseconds.of(1000 / MAIN_LOOP_FREQUENCY_HZ);
         public static final double LOGGING_FREQUENCY_HZ = 10;
         public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
     }

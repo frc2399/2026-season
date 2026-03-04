@@ -57,10 +57,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command deployArm() {
-        return this.runOnce(() -> {
-            armProfiledPidEnabled = true;
-            armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
-        });
+        return this.runOnce(
+                () -> {
+                    armProfiledPidEnabled = true;
+                    armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
+                });
     }
 
     @Override
@@ -85,9 +86,14 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("intake/roller/applied output", rollerState.appliedVoltage);
 
         SmartDashboard.putNumber("intake/arm/desired angle (deg)", armState.desiredAngleDegrees);
+        SmartDashboard.putNumber(
+                "intake/arm/intermediate angle (deg)", armState.intermediateAngleDegrees);
         SmartDashboard.putNumber("intake/arm/actual angle (deg)", armState.actualAngleDegrees);
         SmartDashboard.putNumber(
                 "intake/arm/velocity (deg/sec)", armState.velocityDegreesPerSecond);
+        SmartDashboard.putNumber(
+                "intake/arm/intermediate velocity (deg/s)",
+                armState.intermediateVelocityDegreesPerSecond);
         SmartDashboard.putNumber(
                 "intake/arm/desired velocity (deg/sec)", armState.desiredVelocityDegreesPerSecond);
         SmartDashboard.putNumber("intake/arm/current", armState.current);
