@@ -1,13 +1,12 @@
 package frc.robot;
 
-import static frc.robot.constants.FieldConstants.PoseConstants.*;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -17,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
+import static frc.robot.constants.FieldConstants.PoseConstants.*;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -27,7 +27,6 @@ public class AutonCommandFactory {
     private final DriveSubsystem drive;
     private final IntakeSubsystem intake;
     private final CommandFactory commandFactory;
-
     private Pose2d finalPose;
 
     public final PathConstraints constraints =
@@ -37,8 +36,7 @@ public class AutonCommandFactory {
             new PathConstraints(
                     0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
-    public AutonCommandFactory(
-            DriveSubsystem drive, IntakeSubsystem intake, CommandFactory commandFactory) {
+    public AutonCommandFactory(DriveSubsystem drive, IntakeSubsystem intake, CommandFactory commandFactory) {
         this.drive = drive;
         this.intake = intake;
         this.commandFactory = commandFactory;
@@ -83,7 +81,7 @@ public class AutonCommandFactory {
                         BLUE_DEPOT_WALL_FUEL_CENTER.pose()));
     }
 
-    public Command depotSideNeutralZoneIntaking() {
+        public Command depotSideNeutralZoneIntaking() {
         return Commands.sequence(
                 Commands.runOnce(() -> drive.resetOdometry(BLUE_DEPOT_STARTING_LINE.pose())),
                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
@@ -160,6 +158,7 @@ public class AutonCommandFactory {
                         OUTPOST_SHOOTING_SPOT.pose()),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(5));
     }
+    
 
     public Command followWaypoints(
             Pose2d startingPosition,
@@ -183,5 +182,5 @@ public class AutonCommandFactory {
                     path.preventFlipping = false;
                     CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
                 });
-    }
+}
 }
