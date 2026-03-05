@@ -7,19 +7,19 @@ public class ClimberSubsystem extends SubsystemBase {
     private ClimberIO io;
 
     public Command extend() {
-        return this.run(() -> io.extend()).withName("extend");
+        return this.run(() -> io.extend()).withName("climberExtend");
     }
 
     public Command retract() {
-        return this.run(() -> io.retract()).withName("retract");
+        return this.run(() -> io.retract()).withName("climberRetract");
     }
 
     public Command runForwards() {
-        return this.run(() -> io.runForwards()).withName("runForwards");
+        return this.run(() -> io.runForwards()).withName("climberRunForwards");
     }
 
     public Command runBackwards() {
-        return this.run(() -> io.runBackwards()).withName("runBackwards");
+        return this.run(() -> io.runBackwards()).withName("climberRunBackwards");
     }
 
     public ClimberSubsystem(ClimberIO io) {
