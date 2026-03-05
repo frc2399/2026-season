@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -63,16 +62,16 @@ public class ShooterHardwareBeta implements ShooterIO {
             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
     // private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KV =
     // new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
-    private final TunableNumber TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM =
-            new TunableNumber(
-                    "Shooter/shooter_top_desired_speed (rpm)",
-                    SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
-                    true);
-    private final TunableNumber TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM =
-            new TunableNumber(
-                    "Shooter/shooter_bottom_desired_speed (rpm)",
-                    SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
-                    true);
+    //     private final TunableNumber TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM =
+    //             new TunableNumber(
+    //                     "Shooter/shooter_top_desired_speed (rpm)",
+    //                     SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
+    //                     true);
+    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM =
+    //             new TunableNumber(
+    //                     "Shooter/shooter_bottom_desired_speed (rpm)",
+    //                     SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
+    //                     true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
@@ -185,8 +184,8 @@ public class ShooterHardwareBeta implements ShooterIO {
 
     @Override
     public void runTunableNumberSetpoints() {
-        desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM.get());
-        desiredBottomVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get());
+        // desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM.get());
+        // desiredBottomVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get());
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
