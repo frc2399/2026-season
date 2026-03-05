@@ -11,7 +11,6 @@ import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -45,10 +44,9 @@ public class SpindexerHardwareBeta implements SpindexerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    SparkFlexConfig spindexSparkFlexConfig = new SparkFlexConfig();
+    SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
 
     public SpindexerHardwareBeta() {
-        SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
 
         spindexerSparkFlexConfig.idleMode(IdleMode.kCoast);
         spindexerSparkFlexConfig.inverted(SPINDEXER_INVERTED);
@@ -67,10 +65,6 @@ public class SpindexerHardwareBeta implements SpindexerIO {
         spindexClosedLoopConfig.feedForward.sva(SPINDEXER_KS, SPINDEXER_KV, 0);
 
         spindexerSparkFlexConfig.apply(spindexClosedLoopConfig);
-
-        spindexerSparkFlex =
-                new SparkFlex(
-                        RobotConstants.MotorIdConstants.SPINDEXER_CAN_ID, MotorType.kBrushless);
 
         spindexerSparkFlex.configure(
                 spindexerSparkFlexConfig,
@@ -102,12 +96,11 @@ public class SpindexerHardwareBeta implements SpindexerIO {
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
 
         // if (TUNABLE_SPINDEXER_KS.hasChanged()) {
-        //     spindexClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
-        //     spindexSparkFlexConfig.apply(spindexClosedLoopConfig);
-        //     spindexerSparkFlex.configure(
-        //             spindexSparkFlexConfig,
-        //             ResetMode.kResetSafeParameters,
-        //             PersistMode.kPersistParameters);
-        // }
+        //   spindexClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
+        // spindexerSparkFlexConfig.apply(spindexClosedLoopConfig);
+        //  spindexerSparkFlex.configure(
+        //     spindexerSparkFlexConfig,
+        //     ResetMode.kResetSafeParameters,
+        //    PersistMode.kPersistParameters);
     }
 }
