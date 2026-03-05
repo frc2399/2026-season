@@ -62,17 +62,16 @@ public class ShooterHardwareBeta implements ShooterIO {
             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
     //     private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KV =
     //             new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
-
-    private final TunableNumber TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED =
-            new TunableNumber(
-                    "Shooter/shooter_top_multiplier_desired_speed",
-                    SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
-                    true);
-    private final TunableNumber TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED =
-            new TunableNumber(
-                    "Shooter/shooter_bottom_multiplier_desired_speed",
-                    SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
-                    true);
+    // private final TunableNumber TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED =
+    //         new TunableNumber(
+    //                 "Shooter/shooter_top_multiplier_desired_speed",
+    //                 SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
+    //                 true);
+    // private final TunableNumber TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED =
+    //         new TunableNumber(
+    //                 "Shooter/shooter_bottom_multiplier_desired_speed",
+    //                 SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
+    //                 true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
@@ -80,8 +79,8 @@ public class ShooterHardwareBeta implements ShooterIO {
     private RelativeEncoder shooterBottomEncoder;
     private RelativeEncoder shooterTopEncoder;
 
-    private AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
-    private AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
+    public AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
+    public AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
 
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
@@ -185,6 +184,11 @@ public class ShooterHardwareBeta implements ShooterIO {
 
     @Override
     public void periodicUpdate() {
+        shooterBottomPIDController.setSetpoint(
+                desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        shooterTopPIDController.setSetpoint(
+                desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
         if (TUNABLE_SHOOTER_BETA_BOTTOM_KS.hasChanged()) {
@@ -204,7 +208,6 @@ public class ShooterHardwareBeta implements ShooterIO {
                     PersistMode.kPersistParameters);
         }
         // if (TUNABLE_SHOOTER_BETA_BOTTOM_KV.hasChanged()) {
-        //
         // closedLoopConfigShooterBottom.feedForward.kV(TUNABLE_SHOOTER_BETA_BOTTOM_KV.get());
         //     shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
         //     shooterBottomSparkFlex.configure(
@@ -237,12 +240,11 @@ public class ShooterHardwareBeta implements ShooterIO {
         //             PersistMode.kPersistParameters);
         // }
         // if (TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-        //     desiredTopVelocity =
-        //             RadiansPerSecond.of(TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
+        //         desiredTopVelocity =
+        //                 RadiansPerSecond.of(TUNABLE_SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED.get());
         // }
         // if (TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.hasChanged()) {
-        //     desiredBottomVelocity =
-        //
+        //         desiredBottomVelocity =
         // RadiansPerSecond.of(TUNABLE_SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED.get());
         // }
     }
