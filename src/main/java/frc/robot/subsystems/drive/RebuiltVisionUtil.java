@@ -1,15 +1,13 @@
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Robot;
-import frc.robot.constants.FieldConstants;
-import frc.robot.constants.RobotConstants;
-
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.constants.FieldConstants;
+import frc.robot.constants.RobotConstants;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -26,7 +24,10 @@ public class RebuiltVisionUtil {
         if (robotPose.get() == null) {
             return Inches.of(0);
         }
-        Pose2d shooterPose = robotPose.get().transformBy(RobotConstants.TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
+        Pose2d shooterPose =
+                robotPose
+                        .get()
+                        .transformBy(RobotConstants.TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
         double distanceBetweenRobotAndHub =
                 hubPose.getTranslation().getDistance(shooterPose.getTranslation());
         return Meters.of(distanceBetweenRobotAndHub);

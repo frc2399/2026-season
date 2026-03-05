@@ -1,6 +1,9 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import com.opencsv.CSVWriter;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,7 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //         this.runOnce(() -> logShooterSpeedsToCSV());
     //     }
 
-    public void logShooterSpeedsToCSV() {
+    public void logShooterSpeedsToCSV(Distance distanceToHub) {
         // code modified from
         // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
         try {
@@ -63,7 +66,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
             String[] data =
                     new String[] {
-                        "distance (currently unable to log)",
+                        Double.toString(distanceToHub.in(Inches)),
                         Double.toString(desiredSpeedTopRadiansPerSecond),
                         Double.toString(desiredSpeedBottomRadiansPerSecond),
                         timestamp
