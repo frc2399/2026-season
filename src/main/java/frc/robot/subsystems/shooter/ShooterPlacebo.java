@@ -15,4 +15,7 @@ public class ShooterPlacebo implements ShooterIO {
     public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
         return new ShooterSpeeds(50 * Math.random(), 50 * Math.random());
     }
+
+    @Override
+    public void runTunableNumberSetpoints() {}
 }

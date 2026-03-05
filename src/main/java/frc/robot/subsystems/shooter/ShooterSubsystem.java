@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import com.opencsv.CSVWriter;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,18 +38,18 @@ public class ShooterSubsystem extends SubsystemBase {
     // fake default command so it runs the tunable number speed setpoints instead of actual default
     // command
     public Command tuningSetpoint() {
-        return this.run(() -> {}).withName("tuningDefaultCommand");
+        return this.run(() -> io.runTunableNumberSetpoints()).withName("tuningDefaultCommand");
     }
 
-    public Command logShooterSpeedsToCSVCommand() {
-        return this.runOnce(() -> logShooterSpeedsToCSV());
-    }
+    //     public void logShooterSpeedsToCSVCommand() {
+    //         this.runOnce(() -> logShooterSpeedsToCSV());
+    //     }
 
     public void logShooterSpeedsToCSV() {
         // code modified from
         // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
         try {
-            File csvFile = new File(Filesystem.getDeployDirectory(), "shooter-speeds.csv");
+            File csvFile = new File("/home/lvuser/shooter-speeds.csv");
             FileWriter outputWriter = new FileWriter(csvFile, true);
             CSVWriter csvWriter = new CSVWriter(outputWriter);
 

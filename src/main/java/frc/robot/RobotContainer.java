@@ -111,7 +111,7 @@ public class RobotContainer {
 
     private void configureButtonBindingsDriver() {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
-        
+
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
@@ -122,7 +122,11 @@ public class RobotContainer {
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
-        tuningController.povUp().onTrue(shooterSubsystem.logShooterSpeedsToCSVCommand());
+        tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
+        tuningController
+                .povUp()
+                // .and(tuningController.a())
+                .onTrue(Commands.runOnce(() -> shooterSubsystem.logShooterSpeedsToCSV()));
     }
 
     private void setUpAuton() {

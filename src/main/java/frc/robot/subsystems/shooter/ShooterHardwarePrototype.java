@@ -219,4 +219,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         //             PersistMode.kPersistParameters);
         // }
     }
+
+    @Override
+    public void runTunableNumberSetpoints() {}
 }
