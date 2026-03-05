@@ -45,7 +45,8 @@ public class AutonCommandFactory {
     public Command buildPathDeferred(
             Pose pose, PathConstraints constraints, double goalEndVelocity) {
         finalPose = pose.pose();
-        if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+        if (FieldConstants.alliance.isPresent()
+                && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
             finalPose = FlippingUtil.flipFieldPose(finalPose);
         }
 
