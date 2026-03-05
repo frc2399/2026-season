@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -50,5 +51,10 @@ public class CommandFactory {
         return Commands.sequence(
                 shooter.shoot().withTimeout(1.0),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
+    }
+
+    public Command resetHeading(Angle yaw) {
+        return Commands.parallel(
+                gyro.setYawCommand(yaw), Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
     }
 }

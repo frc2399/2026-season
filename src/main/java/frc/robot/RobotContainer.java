@@ -113,7 +113,7 @@ public class RobotContainer {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
         // note! do not bind to the a button; it is used in drive command for auto-orient!
-        driverController.b().onTrue(gyro.setYawCommand(Degrees.of(0)));
+        driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(180)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
     }
 
