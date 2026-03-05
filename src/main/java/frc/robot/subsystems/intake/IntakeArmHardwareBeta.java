@@ -49,7 +49,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
             RadiansPerSecond.of(2 * Math.PI / 60);
 
     // pid
-    private static final double INTAKE_ARM_P = .5;
+    private static final double INTAKE_ARM_P = .25;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
 
@@ -89,7 +89,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private TrapezoidProfile.State goalState = new TrapezoidProfile.State();
     private TrapezoidProfile.State intermediateSetpointState = new TrapezoidProfile.State();
     private Angle pidDeadband =
-            Degrees.of(2); // due to significant backlash on the mechanism, we don't want to adjust
+            Degrees.of(3); // due to significant backlash on the mechanism, we don't want to adjust
 
     // as
 
@@ -151,7 +151,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
             desiredAngle = Degrees.of(-25);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
-            desiredAngle = Degrees.of(80);
+            desiredAngle = Degrees.of(10);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         }
     }

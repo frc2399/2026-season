@@ -64,6 +64,14 @@ public class IntakeSubsystem extends SubsystemBase {
                 });
     }
 
+    public Command stowArm() {
+        return this.runOnce(
+                () -> {
+                    armProfiledPidEnabled = true;
+                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                });
+    }
+
     @Override
     public void periodic() {
 
