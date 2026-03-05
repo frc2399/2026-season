@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
@@ -113,7 +114,7 @@ public class RobotContainer {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
         // note! do not bind to the a button; it is used in drive command for auto-orient!
-        driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(180)));
+        driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
     }
 
@@ -122,6 +123,17 @@ public class RobotContainer {
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
+        tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
+        tuningController
+                .povUp()
+                // .and(tuningController.a())
+                .onTrue(
+                        Commands.runOnce(
+                                () ->
+                                        shooterSubsystem.logShooterSpeedsToCSV(
+                                                RebuiltVisionUtil.getDistanceToHub(
+                                                        () -> drive.getPose()))));
+        tuningController.povDown().onTrue(commandFactory.resetHeading(Degrees.of(180)));
     }
 
     private void setUpAuton() {
