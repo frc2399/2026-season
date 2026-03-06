@@ -15,8 +15,13 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.Interpolator;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
@@ -84,6 +89,12 @@ public class ShooterHardwareBeta implements ShooterIO {
 
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
+
+    // for linear interpolating between distances for shooter
+    Interpolator<Double> topInterpolator = Interpolator.forDouble();
+    InverseInterpolator<Double> bottomInterpolator = InverseInterpolator.forDouble();
+    InterpolatingTreeMap<Double, Double> topShooterSpeedTreeMap = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
+    InterpolatingTreeMap<Double, Double> bottomShooterSpeedTreeMap = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
 
     public ShooterHardwareBeta() {
 
