@@ -162,6 +162,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
                         < 25;
 
         return isTopRollerDesiredSpeed && isBottomRollerDesiredSpeed;
+    }
+
     @Override
     public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
         return new ShooterSpeeds(0, 0);
