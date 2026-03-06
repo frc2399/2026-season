@@ -15,13 +15,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
@@ -90,11 +88,6 @@ public class ShooterHardwareBeta implements ShooterIO {
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
-    // for linear interpolating between distances for shooter
-    // if we want to allow things besides Double, we have to write custom implementations as far as i can tell, so they're doubles, with the key as inches and the value as RPM
-    InterpolatingTreeMap<Double, Double> topShooterSpeedTreeMapInchesRPM = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
-    InterpolatingTreeMap<Double, Double> bottomShooterSpeedTreeMapInchesRPM = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
-
     public ShooterHardwareBeta() {
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
@@ -153,7 +146,7 @@ public class ShooterHardwareBeta implements ShooterIO {
         shooterTopEncoder = shooterTopSparkFlex.getEncoder();
     }
 
-    public void runShooter() {
+    public void runShooter(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
         desiredBottomVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.3522);
         desiredTopVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.4627);
 

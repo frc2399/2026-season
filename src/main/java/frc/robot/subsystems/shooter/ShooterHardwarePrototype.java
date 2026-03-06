@@ -127,7 +127,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         shooterTopEncoder = shooterTopSparkMax.getEncoder();
     }
 
-    public void runShooter() {
+    public void runShooter(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
         desiredBottomVelocity =
                 RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         desiredTopVelocity =

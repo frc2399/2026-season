@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
@@ -60,12 +61,13 @@ public class SubsystemFactory {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
             serialNum = "simulation";
+            csvFilepath = Filesystem.getDeployDirectory() + "\\beta-shooter-speeds.csv";
         } else if (serialNum == null) {
             robotType = null;
             throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
-            csvFilepath = "beta-shooter-speeds.csv";
+            csvFilepath = Filesystem.getDeployDirectory() + "\\beta-shooter-speeds.csv";
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType = RobotType.COMP;
         } else if (serialNum.equals(BUBBLES_SERIAL_NUMBER)) {

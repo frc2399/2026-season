@@ -1,8 +1,18 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.Interpolator;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOState;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterSpeeds;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.ZoneId;
@@ -27,13 +38,29 @@ public class ShooterSubsystem extends SubsystemBase {
     private static final DateTimeFormatter LOGGING_TIME_FORMATTER =
             DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
+    // for linear interpolating between distances for shooter
+    // if we want to allow things besides Double, we have to write custom implementations as far as
+    // i can tell, so they're doubles, with the key as inches and the value as RPM
+    InterpolatingTreeMap<Double, Double> topShooterSpeedTreeMapMeterRadS =
+            new InterpolatingTreeMap<Double, Double>(
+                    InverseInterpolator.forDouble(), Interpolator.forDouble());
+    InterpolatingTreeMap<Double, Double> bottomShooterSpeedTreeMapMeterRadS =
+            new InterpolatingTreeMap<Double, Double>(
+                    InverseInterpolator.forDouble(), Interpolator.forDouble());
+
     public ShooterSubsystem(ShooterIO io, String csvFilepath) {
         this.io = io;
         this.csvFilepath = csvFilepath;
+        readCSV();
     }
 
-    public Command shoot() {
-        return this.run(() -> io.runShooter()).withName("runShooter");
+    public Command shoot(Distance distFromHub) {
+        return this.run(() -> 
+        {
+                AngularVelocity topSpeed = RadiansPerSecond.of(topShooterSpeedTreeMapMeterRadS.get(distFromHub.in(Meters)));
+                AngularVelocity bottomSpeed = RadiansPerSecond.of(bottomShooterSpeedTreeMapMeterRadS.get(distFromHub.in(Meters)));
+                io.runShooter(topSpeed, bottomSpeed);
+        }).withName("runShooter");
     }
 
     public Command defaultBehavior() {
@@ -46,9 +73,34 @@ public class ShooterSubsystem extends SubsystemBase {
         return this.run(() -> io.runTunableNumberSetpoints()).withName("tuningDefaultCommand");
     }
 
-    //     public void logShooterSpeedsToCSVCommand() {
-    //         this.runOnce(() -> logShooterSpeedsToCSV());
-    //     }
+    public void readCSV() {
+        try {
+            File csvFile = new File(csvFilepath);
+            FileReader fileReader = new FileReader(csvFile);
+            // skips the header
+            CSVReaderBuilder builder = new CSVReaderBuilder(fileReader).withSkipLines(1);
+            CSVReader reader = builder.build();
+            String[] line;
+            System.out.println("i am the csv");
+            while ((line = reader.readNext()) != null) {
+                // order: distance (inches), top speed (rad/s), bottom speed (rad/s), timestamp
+                Distance distanceToHub = Inches.of(Double.valueOf(line[0]));
+                AngularVelocity topSpeed = RadiansPerSecond.of(Double.valueOf(line[1]));
+                AngularVelocity bottomSpeed = RadiansPerSecond.of(Double.valueOf(line[1]));
+
+                topShooterSpeedTreeMapMeterRadS.put(distanceToHub.in(Meters), topSpeed.in(RadiansPerSecond));
+                bottomShooterSpeedTreeMapMeterRadS.put(distanceToHub.in(Meters), bottomSpeed.in(RadiansPerSecond));
+            }
+        } catch (IOException e) {
+            System.out.println(
+                    "********COULD NOT READ FROM THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
+            e.printStackTrace();
+        } catch (CsvValidationException c) {
+            System.out.println(
+                    "********INVALID LINE IN SHOOTER SPEEDS CSV - SEE STACK TRACE********");
+            c.printStackTrace();
+        }
+    }
 
     public void logShooterSpeedsToCSV(Distance distanceToHub) {
         // code modified from
