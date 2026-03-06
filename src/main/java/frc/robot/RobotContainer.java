@@ -119,7 +119,7 @@ public class RobotContainer {
 
     private void configureButtonBindingsTuningController() {
         tuningController.rightTrigger().onTrue(intakeSubsystem.deployArm());
-        tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot());
+        tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose())));
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().onTrue(intakeSubsystem.stowArm());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
