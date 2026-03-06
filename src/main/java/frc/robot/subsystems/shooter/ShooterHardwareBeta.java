@@ -145,8 +145,8 @@ public class ShooterHardwareBeta implements ShooterIO {
     }
 
     public void runShooter() {
-        desiredBottomVelocity = RPM.of(314.1592653589793);
-        desiredTopVelocity = RPM.of(230.3834612632515);
+        desiredBottomVelocity = RadiansPerSecond.of(230.3834612632515);
+        desiredTopVelocity = RadiansPerSecond.of(314.1592653589793);
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
