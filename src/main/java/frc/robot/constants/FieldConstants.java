@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.*;
-import static edu.wpi.first.units.Units.Inches;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -246,10 +245,11 @@ public final class FieldConstants {
                                         Rotation2d.kZero)));
     }
 
-    public static class AllianceZoneBoundaries {
+    public static class FieldBoundaries {
         public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
         public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
         public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
         public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
+        public static final Distance HORIZONTAL_CENTER_LINE = Meters.of(4.034663);
     }
 }
