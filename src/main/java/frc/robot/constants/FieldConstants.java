@@ -252,4 +252,15 @@ public final class FieldConstants {
         public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
         public static final Distance HORIZONTAL_CENTER_LINE = Meters.of(4.034663);
     }
+
+    public static class HubConstants {
+        public static final Distance HUB_RADIUS = Inches.of(23.5);
+        public static final Distance FUEL_RADIUS = Inches.of(2.955);
+
+        // values taken from field drawings
+        public static final Pose2d RED_CENTER_OF_HUB_POSE =
+                new Pose2d(Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
+        public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
+                new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
+    }
 }
