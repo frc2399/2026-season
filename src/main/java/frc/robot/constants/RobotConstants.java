@@ -64,10 +64,13 @@ public final class RobotConstants {
     }
 
     public static class TransformConstants {
-        public static final Distance ROBOT_TRANSFORM_X = Inches.of(8.5);
-        public static final Distance ROBOT_TRANSFORM_Y = Inches.of(12.63);
+        public static final Distance ROBOT_TO_SHOOTER_X = Inches.of(-12.63);
+        public static final Distance ROBOT_TO_SHOOTER_Y = Inches.of(-8.5);
         // these values should be edited once we have our robot to shooter transform
         public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM =
-                new Transform2d(ROBOT_TRANSFORM_X, ROBOT_TRANSFORM_Y, new Rotation2d(0));
+                new Transform2d(
+                        ROBOT_TO_SHOOTER_X.in(Meters),
+                        ROBOT_TO_SHOOTER_Y.in(Meters),
+                        new Rotation2d(0));
     }
 }

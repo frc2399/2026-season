@@ -9,6 +9,10 @@ public interface ShooterIO {
 
     public void periodicUpdate();
 
+    public ShooterSpeeds getCurrentTopAndBottomSpeeds();
+
+    public void runTunableNumberSetpoints();
+
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;
         public double topRollerActualSpeed = 0.0;
@@ -19,4 +23,7 @@ public interface ShooterIO {
         public double bottomRollerCurrent = 0.0;
         public double bottomRollerAppliedVoltage = 0.0;
     }
+
+    public record ShooterSpeeds(
+            double topSpeedRadiansPerSecond, double bottomSpeedRadiansPerSecond) {}
 }
