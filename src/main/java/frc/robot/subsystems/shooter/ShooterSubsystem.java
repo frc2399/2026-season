@@ -8,7 +8,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
@@ -55,12 +54,19 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public Command shoot(Distance distFromHub) {
-        return this.run(() -> 
-        {
-                AngularVelocity topSpeed = RadiansPerSecond.of(topShooterSpeedTreeMapMeterRadS.get(distFromHub.in(Meters)));
-                AngularVelocity bottomSpeed = RadiansPerSecond.of(bottomShooterSpeedTreeMapMeterRadS.get(distFromHub.in(Meters)));
-                io.runShooter(topSpeed, bottomSpeed);
-        }).withName("runShooter");
+        return this.run(
+                        () -> {
+                            AngularVelocity topSpeed =
+                                    RadiansPerSecond.of(
+                                            topShooterSpeedTreeMapMeterRadS.get(
+                                                    distFromHub.in(Meters)));
+                            AngularVelocity bottomSpeed =
+                                    RadiansPerSecond.of(
+                                            bottomShooterSpeedTreeMapMeterRadS.get(
+                                                    distFromHub.in(Meters)));
+                            io.runShooter(topSpeed, bottomSpeed);
+                        })
+                .withName("runShooter");
     }
 
     public Command defaultBehavior() {
@@ -88,8 +94,10 @@ public class ShooterSubsystem extends SubsystemBase {
                 AngularVelocity topSpeed = RadiansPerSecond.of(Double.valueOf(line[1]));
                 AngularVelocity bottomSpeed = RadiansPerSecond.of(Double.valueOf(line[1]));
 
-                topShooterSpeedTreeMapMeterRadS.put(distanceToHub.in(Meters), topSpeed.in(RadiansPerSecond));
-                bottomShooterSpeedTreeMapMeterRadS.put(distanceToHub.in(Meters), bottomSpeed.in(RadiansPerSecond));
+                topShooterSpeedTreeMapMeterRadS.put(
+                        distanceToHub.in(Meters), topSpeed.in(RadiansPerSecond));
+                bottomShooterSpeedTreeMapMeterRadS.put(
+                        distanceToHub.in(Meters), bottomSpeed.in(RadiansPerSecond));
             }
         } catch (IOException e) {
             System.out.println(
