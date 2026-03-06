@@ -22,7 +22,6 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
@@ -39,7 +38,6 @@ public class RobotContainer {
     private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
-    private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
 
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
@@ -52,8 +50,7 @@ public class RobotContainer {
                     shooterSubsystem,
                     shooterIndexerSubsystem,
                     spindexerSubsystem,
-                    intakeSubsystem,
-                    intakeArmSubsystem);
+                    intakeSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 
@@ -85,6 +82,7 @@ public class RobotContainer {
 
     public void disableSubsystems() {
         drive.disableDriveToPose();
+        intakeSubsystem.armProfiledPidEnabled = false;
     }
 
     public void configureDefaultCommands() {
@@ -116,13 +114,18 @@ public class RobotContainer {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
+        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
     }
 
     private void configureButtonBindingsTuningController() {
+        tuningController.rightTrigger().onTrue(intakeSubsystem.deployArm());
         tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot());
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
-        tuningController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        tuningController.leftBumper().onTrue(intakeSubsystem.stowArm());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
+        tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
+        tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
+        tuningController.b().whileTrue(intakeSubsystem.runRoller());
         tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
         tuningController
                 .povUp()

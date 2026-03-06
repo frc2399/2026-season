@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
@@ -18,7 +17,6 @@ public class CommandFactory {
     private final ShooterIndexerSubsystem shooterIndexer;
     private final SpindexerSubsystem spindexer;
     private final IntakeSubsystem intakeSubsystem;
-    private final IntakeArmSubsystem intakeArmSubsystem;
 
     public enum TargetFuel {
         HUB,
@@ -32,19 +30,17 @@ public class CommandFactory {
             ShooterSubsystem shooter,
             ShooterIndexerSubsystem shooterIndexer,
             SpindexerSubsystem spindexer,
-            IntakeSubsystem intakeSubsystem,
-            IntakeArmSubsystem intakeArmSubsystem) {
+            IntakeSubsystem intakeSubsystem) {
         this.drive = drive;
         this.gyro = gyro;
         this.shooter = shooter;
         this.shooterIndexer = shooterIndexer;
         this.spindexer = spindexer;
         this.intakeSubsystem = intakeSubsystem;
-        this.intakeArmSubsystem = intakeArmSubsystem;
     }
 
     public Command runIntakeandIntakeArm() {
-        return Commands.parallel(intakeSubsystem.runIntake(), intakeArmSubsystem.intakeArmDeploy());
+        return Commands.parallel(intakeSubsystem.deployAndRunIntake());
     }
 
     public Command runSpindexShooterIndexAndShooter() {
