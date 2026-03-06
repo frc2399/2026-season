@@ -38,20 +38,17 @@ public class FieldCalculationHelpers {
     public static TargetFuel shouldRobotPassLeftOrRight(Pose2d robotLocation) {
         double poseY = robotLocation.getY();
         if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
-            if (FieldConstants.FieldBoundaries.CENTER_LINE.in(Meters) <= poseY) {
-                return TargetFuel.ALLIANCE_RIGHT;
+            if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) <= poseY) {
+                return TargetFuel.OUTPOST_SIDE;
             } else {
-                return TargetFuel.ALLIANCE_LEFT;
+                return TargetFuel.DEPOT_SIDE;
             }
         } else {
-            if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
-                if (FieldConstants.FieldBoundaries.CENTER_LINE.in(Meters) >= poseY) {
-                    return TargetFuel.ALLIANCE_RIGHT;
-                } else {
-                    return TargetFuel.ALLIANCE_LEFT;
-                }
+            if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) >= poseY) {
+                return TargetFuel.OUTPOST_SIDE;
+            } else {
+                return TargetFuel.DEPOT_SIDE;
             }
         }
-        return null;
     }
 }

@@ -21,8 +21,8 @@ public class CommandFactory {
 
     public enum TargetFuel {
         HUB,
-        ALLIANCE_LEFT,
-        ALLIANCE_RIGHT
+        DEPOT_SIDE,
+        OUTPOST_SIDE
     }
 
     public CommandFactory(
