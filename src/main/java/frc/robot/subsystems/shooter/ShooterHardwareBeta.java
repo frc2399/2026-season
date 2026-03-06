@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -50,28 +51,28 @@ public class ShooterHardwareBeta implements ShooterIO {
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_BETA_TOP_D, true);
     // private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_P =
     // new TunableNumber("Shooter/shooter_top_p", .001, true);
-    private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KS =
-            new TunableNumber("Shooter/shooter_top_ks", 0.118, true);
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KS =
+    //             new TunableNumber("Shooter/shooter_top_ks", 0.118, true);
     // private final TunableNumber TUNABLE_SHOOTER_BETA_TOP_KV =
     // new TunableNumber("Shooter/shooter_top_kv", 0.01700044443192286, true);
     // private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_D =
     // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_D, true);
     // private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_P =
     // new TunableNumber("Shooter/shooter_bottom_p", .001, true);
-    private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KS =
-            new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
+    //     private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KS =
+    //             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
     // private final TunableNumber TUNABLE_SHOOTER_BETA_BOTTOM_KV =
     // new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
-    //     private final TunableNumber TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM =
-    //             new TunableNumber(
-    //                     "Shooter/shooter_top_desired_speed (rpm)",
-    //                     SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
-    //                     true);
-    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM =
-    //             new TunableNumber(
-    //                     "Shooter/shooter_bottom_desired_speed (rpm)",
-    //                     SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
-    //                     true);
+    private final TunableNumber TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM =
+            new TunableNumber(
+                    "Shooter/shooter_top_desired_speed (rpm)",
+                    SHOOTER_TOP_MULTIPLIER_DESIRED_SPEED,
+                    true);
+    private final TunableNumber TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM =
+            new TunableNumber(
+                    "Shooter/shooter_bottom_desired_speed (rpm)",
+                    SHOOTER_BOTTOM_MULTIPLIER_DESIRED_SPEED,
+                    true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
     private final ClosedLoopConfig closedLoopConfigShooterBottom = new ClosedLoopConfig();
@@ -144,8 +145,8 @@ public class ShooterHardwareBeta implements ShooterIO {
     }
 
     public void runShooter() {
-        desiredBottomVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.3522);
-        desiredTopVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0.4627);
+        desiredBottomVelocity = RadiansPerSecond.of(230.3834612632515);
+        desiredTopVelocity = RadiansPerSecond.of(314.1592653589793);
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -184,8 +185,8 @@ public class ShooterHardwareBeta implements ShooterIO {
 
     @Override
     public void runTunableNumberSetpoints() {
-        // desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM.get());
-        // desiredBottomVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get());
+        desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM.get());
+        desiredBottomVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get());
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
