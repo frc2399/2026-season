@@ -40,7 +40,8 @@ public class Robot extends TimedRobot {
      * initialization code.
      */
     public Robot() {
-        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+        // Instantiate our RobotContainer. This will perform all our button bindings,
+        // and put our
         // autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
         DataLogManager.start();
@@ -60,22 +61,24 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        SmartDashboard.putNumber("Robot/batteryVoltage", RobotController.getBatteryVoltage());
-        SmartDashboard.putBoolean("robot/0 second delay", GameState.isHubActive(0));
-        // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-        // commands, running already-scheduled commands, removing finished or interrupted commands,
-        // and running subsystem periodic() methods.  This must be called from the robot's periodic
+        // Runs the Scheduler. This is responsible for polling buttons, adding
+        // newly-scheduled
+        // commands, running already-scheduled commands, removing finished or
+        // interrupted commands,
+        // and running subsystem periodic() methods. This must be called from the
+        // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
         robotContainer.visionPoseEstimator.periodic();
         robotContainer.setAlerts();
+        SmartDashboard.putNumber("Robot/batteryVoltage", RobotController.getBatteryVoltage());
+        SmartDashboard.putBoolean("robot/0 second delay", GameState.isHubActive(0));
+        SmartDashboard.putBoolean("robot/1 second delay", GameState.isHubActive(1));
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
-    public void disabledInit() {
-        robotContainer.disableSubsystems();
-    }
+    public void disabledInit() {}
 
     @Override
     public void disabledPeriodic() {}
