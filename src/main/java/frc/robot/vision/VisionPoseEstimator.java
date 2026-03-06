@@ -174,24 +174,25 @@ public final class VisionPoseEstimator {
         var est =
                 Optional.ofNullable(
                         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightToEstimate));
-        // Reject poses where we can see no tags or are at the "uh oh something went
-        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
-        // possible
-        if (est != null) {
+        if (est.isPresent()) {
 
             var estimator = est.get();
             // Build a comma-separated string of tag IDs used in the pose estimate
             StringBuilder tagIDs = new StringBuilder();
-
-            for (int i = 0; i < estimator.rawFiducials.length; i++) {
-                if (i > 0) tagIDs.append(", ");
-                tagIDs.append(estimator.rawFiducials[i].id);
+            if (estimator.rawFiducials != null) {
+                for (int i = 0; i < estimator.rawFiducials.length; i++) {
+                    if (i > 0) tagIDs.append(", ");
+                    tagIDs.append(estimator.rawFiducials[i].id);
+                }
             }
 
             String tagIDString = tagIDs.length() > 0 ? tagIDs.toString() : "None";
             SmartDashboard.putString("vision/poseTagIDs", tagIDString);
         }
 
+        // Reject poses where we can see no tags or are at the "uh oh something went
+        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
+        // possible
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
 
