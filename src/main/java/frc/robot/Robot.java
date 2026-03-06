@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.FieldConstants;
+import frc.robot.util.GameState;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -60,6 +61,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         SmartDashboard.putNumber("Robot/batteryVoltage", RobotController.getBatteryVoltage());
+        SmartDashboard.putBoolean("robot/0 second delay", GameState.isHubActive(0));
         // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
         // commands, running already-scheduled commands, removing finished or interrupted commands,
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
