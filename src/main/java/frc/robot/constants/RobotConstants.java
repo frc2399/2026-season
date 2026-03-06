@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
 
 public final class RobotConstants {
 
@@ -25,12 +26,14 @@ public final class RobotConstants {
         public static final int FRONT_RIGHT_TURNING_CAN_ID = 32;
         public static final int REAR_RIGHT_TURNING_CAN_ID = 42;
 
-        public static final int INTAKE_CAN_ID = 6;
+        public static final int INTAKE_ROLLER_ALPHA_CAN_ID = 6;
         public static final int SHOOTER_INDEXER_CAN_ID = 1;
         public static final int GYRO_CAN_ID = 3;
         public static final int SHOOTER_BOTTOM_CAN_ID = 3;
         public static final int SHOOTER_TOP_CAN_ID = 21;
 
+        public static final int INTAKE_ROLLER_BETA_CAN_ID = 7;
+        public static final int INTAKE_ARM_BETA_CAN_ID = 8;
         public static final int SHOOTER_BOTTOM_BETA_CAN_ID = 9;
         public static final int SHOOTER_TOP_BETA_CAN_ID = 10;
         public static final int SHOOTER_INDEXER_BETA_CAN_ID = 13;
@@ -50,7 +53,8 @@ public final class RobotConstants {
 
     public static class SpeedConstants {
         public static final double MAIN_LOOP_FREQUENCY_HZ = 50;
-        public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
+        public static final Time MAIN_LOOP_FREQUENCY =
+                Milliseconds.of(1000 / MAIN_LOOP_FREQUENCY_HZ);
         public static final double LOGGING_FREQUENCY_HZ = 10;
         public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
     }
