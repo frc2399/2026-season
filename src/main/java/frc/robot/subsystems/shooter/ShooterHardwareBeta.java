@@ -91,10 +91,9 @@ public class ShooterHardwareBeta implements ShooterIO {
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
     // for linear interpolating between distances for shooter
-    Interpolator<Double> topInterpolator = Interpolator.forDouble();
-    InverseInterpolator<Double> bottomInterpolator = InverseInterpolator.forDouble();
-    InterpolatingTreeMap<Double, Double> topShooterSpeedTreeMap = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
-    InterpolatingTreeMap<Double, Double> bottomShooterSpeedTreeMap = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
+    // if we want to allow things besides Double, we have to write custom implementations as far as i can tell, so they're doubles, with the key as inches and the value as RPM
+    InterpolatingTreeMap<Double, Double> topShooterSpeedTreeMapInchesRPM = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
+    InterpolatingTreeMap<Double, Double> bottomShooterSpeedTreeMapInchesRPM = new InterpolatingTreeMap<Double, Double>(InverseInterpolator.forDouble(), Interpolator.forDouble());
 
     public ShooterHardwareBeta() {
 

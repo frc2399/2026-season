@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOState shooterStates = new ShooterIOState();
+    private String csvFilepath;
 
     // for csv logging
     ZoneId LOGGING_TIMEZONE =
@@ -26,8 +27,9 @@ public class ShooterSubsystem extends SubsystemBase {
     private static final DateTimeFormatter LOGGING_TIME_FORMATTER =
             DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-    public ShooterSubsystem(ShooterIO io) {
+    public ShooterSubsystem(ShooterIO io, String csvFilepath) {
         this.io = io;
+        this.csvFilepath = csvFilepath;
     }
 
     public Command shoot() {
@@ -52,7 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // code modified from
         // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
         try {
-            File csvFile = new File("/home/lvuser/shooter-speeds.csv");
+            File csvFile = new File(csvFilepath);
             FileWriter outputWriter = new FileWriter(csvFile, true);
             CSVWriter csvWriter = new CSVWriter(outputWriter);
 

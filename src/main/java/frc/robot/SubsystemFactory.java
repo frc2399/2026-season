@@ -53,6 +53,9 @@ public class SubsystemFactory {
 
     private String serialNum = System.getenv("serialnum");
 
+    // for csv solution for shooter
+    private String csvFilepath = "";
+
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
@@ -62,6 +65,7 @@ public class SubsystemFactory {
             throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
+            csvFilepath = "beta-shooter-speeds.csv";
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType = RobotType.COMP;
         } else if (serialNum.equals(BUBBLES_SERIAL_NUMBER)) {
@@ -154,11 +158,11 @@ public class SubsystemFactory {
 
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
-            return new ShooterSubsystem(new ShooterHardwarePrototype());
+            return new ShooterSubsystem(new ShooterHardwarePrototype(), csvFilepath);
         } else if (robotType == RobotType.BETA) {
-            return new ShooterSubsystem(new ShooterHardwareBeta());
+            return new ShooterSubsystem(new ShooterHardwareBeta(), csvFilepath);
         } else {
-            return new ShooterSubsystem(new ShooterPlacebo());
+            return new ShooterSubsystem(new ShooterPlacebo(), csvFilepath);
         }
     }
 
