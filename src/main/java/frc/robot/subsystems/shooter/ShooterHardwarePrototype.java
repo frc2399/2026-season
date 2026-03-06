@@ -41,23 +41,22 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private final double SHOOTER_BOTTOM_KS = 0.154;
     private final double SHOOTER_BOTTOM_KV = 0.019691444431922856;
 
-    // have to removE the SHOOTER_ROLLER_PLACE_VALUE and replace with a number
-
-    // private static final TunableNumber TUNABLE_SHOOTER_TOP_D =
+    // tunable numbers, supposed to be saved
+    // private final TunableNumber TUNABLE_SHOOTER_TOP_D =
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_TOP_D, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_TOP_P =
+    //     private final TunableNumber TUNABLE_SHOOTER_TOP_P =
     //             new TunableNumber("Shooter/shooter_top_p", .001, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_TOP_KS =
+    //     private final TunableNumber TUNABLE_SHOOTER_TOP_KS =
     //             new TunableNumber("Shooter/shooter_top_ks", 0.118, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_TOP_KV =
+    //     private final TunableNumber TUNABLE_SHOOTER_TOP_KV =
     //             new TunableNumber("Shooter/shooter_top_kv", 0.01700044443192286, true);
-    // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_D =
+    // private final TunableNumber TUNABLE_SHOOTER_BOTTOM_D =
     // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_D, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
+    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
     //             new TunableNumber("Shooter/shooter_bottom_p", .001, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KS =
+    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_KS =
     //             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KV =
+    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_KV =
     //             new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
@@ -163,6 +162,9 @@ public class ShooterHardwarePrototype implements ShooterIO {
                         < 25;
 
         return isTopRollerDesiredSpeed && isBottomRollerDesiredSpeed;
+    @Override
+    public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
+        return new ShooterSpeeds(0, 0);
     }
 
     public void updateStates(ShooterIOState state) {
@@ -230,4 +232,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         //             PersistMode.kPersistParameters);
         // }
     }
+
+    @Override
+    public void runTunableNumberSetpoints() {}
 }
