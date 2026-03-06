@@ -16,26 +16,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
+import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
     public Gyro gyro = subsystemFactory.buildGyro();
+
     private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
     private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();
     private ShooterIndexerSubsystem shooterIndexerSubsystem =
             subsystemFactory.buildShooterIndexer();
-    private IntakeArmSubsystem intakeArmSubsystem = subsystemFactory.buildIntakeArm();
+
     // this is public because we need to run the visionPoseEstimator periodic from
     // Robot
     public VisionPoseEstimator visionPoseEstimator =
@@ -47,8 +50,7 @@ public class RobotContainer {
                     shooterSubsystem,
                     shooterIndexerSubsystem,
                     spindexerSubsystem,
-                    intakeSubsystem,
-                    intakeArmSubsystem);
+                    intakeSubsystem);
     public AutonCommandFactory autonCommandFactory =
             new AutonCommandFactory(drive, intakeSubsystem);
 
@@ -57,6 +59,8 @@ public class RobotContainer {
 
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
+    private static final CommandXboxController tuningController =
+            new CommandXboxController(DriveControlConstants.TUNING_CONTROLLER_PORT);
 
     private final Alert driverDisconnected =
             new Alert("Driver controller disconnected!", AlertType.kWarning);
@@ -70,12 +74,15 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindingsDriver();
+        configureButtonBindingsTuningController();
         setUpAuton();
+
         SmartDashboard.putData("robot/driverController", driverController.getHID());
     }
 
     public void disableSubsystems() {
         drive.disableDriveToPose();
+        intakeSubsystem.armProfiledPidEnabled = false;
     }
 
     public void configureDefaultCommands() {
@@ -102,13 +109,34 @@ public class RobotContainer {
     }
 
     private void configureButtonBindingsDriver() {
+        Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
+
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
-        driverController.leftTrigger().whileTrue(shooterSubsystem.shoot());
-        driverController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
-        driverController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
+    }
+
+    private void configureButtonBindingsTuningController() {
+        tuningController.rightTrigger().onTrue(intakeSubsystem.deployArm());
+        tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot());
+        tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        tuningController.leftBumper().onTrue(intakeSubsystem.stowArm());
+        tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
+        tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
+        tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
+        tuningController.b().whileTrue(intakeSubsystem.runRoller());
+        tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
+        tuningController
+                .povUp()
+                // .and(tuningController.a())
+                .onTrue(
+                        Commands.runOnce(
+                                () ->
+                                        shooterSubsystem.logShooterSpeedsToCSV(
+                                                RebuiltVisionUtil.getDistanceToHub(
+                                                        () -> drive.getPose()))));
+        tuningController.povDown().onTrue(commandFactory.resetHeading(Degrees.of(180)));
     }
 
     private void setUpAuton() {
