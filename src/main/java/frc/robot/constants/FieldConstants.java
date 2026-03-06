@@ -83,7 +83,19 @@ public final class FieldConstants {
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.divide(2))
                                                 .unaryMinus(),
-                                        Rotation2d.kZero)));
+                                        Rotation2d.k180deg)));
+        public static final Pose DRIVE_STRAIGHT_TESTING =
+                new Pose(
+                        "driveStraightTesting",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.times(4).unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(LENGTH_OF_BUMP)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .plus(ROBOT_HUB_MARGIN.divide(2))
+                                                .unaryMinus(),
+                                        Rotation2d.k180deg)));
         public static final Pose BLUE_OUTPOST_WALL_FUEL_CENTER =
                 new Pose(
                         "blueOutpostWallFuelCenter",
