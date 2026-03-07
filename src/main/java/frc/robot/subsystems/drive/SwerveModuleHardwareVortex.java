@@ -224,17 +224,10 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         turningPidController = turningSparkMax.getClosedLoopController();
 
         if (drivingStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter bottom motor: " + drivingStatus);
-        }
-        if (drivingStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter top motor: " + drivingStatus);
-        }
-
-        if (turningStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter bottom motor: " + turningStatus);
+            System.err.println("Failed to configure driving motor: " + name + " " + drivingStatus);
         }
         if (turningStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter top motor: " + turningStatus);
+            System.err.println("Failed to configure turning motor: " + name + " " + turningStatus);
         }
     }
 
