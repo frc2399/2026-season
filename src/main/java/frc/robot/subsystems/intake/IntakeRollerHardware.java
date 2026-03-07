@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -46,6 +47,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
     private final RelativeEncoder intakeEncoder;
+    private double desiredSpeed;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
@@ -68,12 +70,18 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
         intakeSparkFlex = new SparkFlex(rollerCANId, MotorType.kBrushless);
 
-        intakeSparkFlex.configure(
-                intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        var intakeStatus =
+                intakeSparkFlex.configure(
+                        intakeMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         intakePidController = intakeSparkFlex.getClosedLoopController();
 
         intakeEncoder = intakeSparkFlex.getEncoder();
+        if (intakeStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure intake roller motor: " + intakeStatus);
+        }
     }
 
     public void runIntake() {
