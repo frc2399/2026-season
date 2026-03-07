@@ -68,7 +68,6 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5)),
-                                                .plus(ROBOT_HUB_MARGIN.div(2)),
                                         Rotation2d.kZero)));
         // this postion is when robot is on the blue alliance starting line farthest from scroing
         // table.
@@ -125,7 +124,6 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5)),
-                                                .plus(ROBOT_HUB_MARGIN.div(2)),
                                         Rotation2d.k180deg)));
         public static final Pose BLUE_DEPOT_BORDER_FUEL_CENTER =
                 new Pose(
@@ -186,7 +184,6 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5)),
-                                                .plus(ROBOT_HUB_MARGIN.div(2)),
                                         Rotation2d.k180deg)));
         public static final Pose IN_THE_DEPOT =
                 new Pose(
