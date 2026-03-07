@@ -53,6 +53,7 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
+import frc.robot.util.FieldCalculationHelpers;
 import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import java.util.function.BooleanSupplier;
@@ -268,6 +269,15 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         robotPose = getPose();
         field2d.setRobotPose(robotPose);
+
+        SmartDashboard.putBoolean(
+                "robot/should Target Hub", FieldCalculationHelpers.shouldTargetHub(robotPose));
+        SmartDashboard.putBoolean(
+                "robot/isShootingAngleAlignedToHub",
+                RebuiltVisionUtil.isShootingAngleAlignedToHub(() -> robotPose));
+        SmartDashboard.putString(
+                "robot/shouldRobotpassLeftOrRight",
+                FieldCalculationHelpers.shouldRobotPassLeftOrRight(robotPose).toString());
 
         frontLeftField2dModule.setPose(
                 robotPose.transformBy(
