@@ -79,10 +79,7 @@ public class SpindexerHardwareBeta implements SpindexerIO {
         spindexerEncoder = spindexerSparkFlex.getEncoder();
 
         if (spindexerStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter bottom motor: " + spindexerStatus);
-        }
-        if (spindexerStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter top motor: " + spindexerStatus);
+            System.err.println("Failed to configure spindexer motor: " + spindexerStatus);
         }
     }
 

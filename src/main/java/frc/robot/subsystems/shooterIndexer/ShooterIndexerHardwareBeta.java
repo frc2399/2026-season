@@ -87,10 +87,7 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
         shooterIndexerPidController = shooterIndexerSparkFlex.getClosedLoopController();
 
         if (shooterIndexerStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter bottom motor: " + shooterIndexerStatus);
-        }
-        if (shooterIndexerStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter top motor: " + shooterIndexerStatus);
+            System.err.println("Failed to configure shooter indexer motor: " + shooterIndexerStatus);
         }
     }
 

@@ -116,13 +116,7 @@ public class ShooterHardwareBeta implements ShooterIO {
         if (shooterBottomStatus != REVLibError.kOk) {
             System.err.println("Failed to configure shooter bottom motor: " + shooterBottomStatus);
         }
-        if (shooterBottomStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter top motor: " + shooterBottomStatus);
-        }
 
-        if (shooterTopStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter bottom motor: " + shooterTopStatus);
-        }
         if (shooterTopStatus != REVLibError.kOk) {
             System.err.println("Failed to configure shooter top motor: " + shooterTopStatus);
         }

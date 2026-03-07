@@ -81,10 +81,7 @@ public class IntakeHardware implements IntakeIO {
 
         intakeEncoder = intakeSparkFlex.getEncoder();
         if (intakeStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter bottom motor: " + intakeStatus);
-        }
-        if (intakeStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter top motor: " + intakeStatus);
+            System.err.println("Failed to configure intake roller motor: " + intakeStatus);
         }
     }
 
