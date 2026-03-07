@@ -90,12 +90,14 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private TrapezoidProfile.State intermediateSetpointState = new TrapezoidProfile.State();
     private Angle pidDeadband =
             Degrees.of(3); // due to significant backlash on the mechanism, we don't want to adjust
-
     // as
 
     // much if we are within 1 degree of the goal
 
-    public IntakeArmHardwareBeta() {
+    private boolean shouldDeadband;
+
+    public IntakeArmHardwareBeta( boolean shouldDeadband ) {
+        this.shouldDeadband = shouldDeadband;
         intakeArmSparkFlexConfig
                 .inverted(INTAKE_ARM_MOTOR_INVERTED)
                 .idleMode(IdleMode.kBrake)
@@ -212,7 +214,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                         goalState);
         double calculatedFeedforward;
         if (Math.abs(goalState.position - intakeArmAbsoluteEncoder.getPosition())
-                < pidDeadband.in(Radians)) {
+                < pidDeadband.in(Radians) && shouldDeadband == true) {
             calculatedFeedforward =
                     intakeArmFeedforward.calculate(intermediateSetpointState.position, 0);
         } else {
