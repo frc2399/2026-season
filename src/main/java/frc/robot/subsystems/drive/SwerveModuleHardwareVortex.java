@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.PersistMode;
@@ -195,7 +196,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
                         TURNING_ENCODER_POSITION_PID_MIN_INPUT,
                         TURNING_ENCODER_POSITION_PID_MAX_INPUT);
         sparkMaxConfigTurning.signals.absoluteEncoderPositionPeriodMs(
-                RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY_MS);
+                (int) RobotConstants.SpeedConstants.MAIN_LOOP_FREQUENCY.in(Milliseconds));
 
         sparkMaxClosedLoopConfigTurning
                 .pid(TURNING_P, TURNING_I, TURNING_D)

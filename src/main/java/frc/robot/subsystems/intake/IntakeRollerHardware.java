@@ -18,11 +18,10 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
-public class IntakeHardware implements IntakeIO {
+public class IntakeRollerHardware implements IntakeRollerIO {
 
     private SparkFlex intakeSparkFlex;
     private final SparkClosedLoopController intakePidController;
@@ -50,10 +49,10 @@ public class IntakeHardware implements IntakeIO {
     private final RelativeEncoder intakeEncoder;
     private double desiredSpeed;
 
-    public IntakeHardware() {
-        SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
+    private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-        intakeMotorConfig.idleMode(IdleMode.kCoast);
+    public IntakeRollerHardware(int rollerCANId) {
+        intakeMotorConfig.idleMode(IdleMode.kBrake);
         intakeMotorConfig.inverted(true);
         intakeMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
 
@@ -69,8 +68,8 @@ public class IntakeHardware implements IntakeIO {
 
         intakeMotorConfig.apply(closedLoopConfigIntake);
 
-        intakeSparkFlex =
-                new SparkFlex(RobotConstants.MotorIdConstants.INTAKE_CAN_ID, MotorType.kBrushless);
+        intakeSparkFlex = new SparkFlex(rollerCANId, MotorType.kBrushless);
+
         var intakeStatus =
                 intakeSparkFlex.configure(
                         intakeMotorConfig,
@@ -86,24 +85,23 @@ public class IntakeHardware implements IntakeIO {
     }
 
     public void runIntake() {
-        intakePidController.setSetpoint(
-                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond),
-                ControlType.kVelocity);
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1);
 
-        SmartDashboard.putNumber(
-                "Intake/desiredspeed",
-                0.75 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
-        SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+        intakePidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void setZero() {
-        intakePidController.setSetpoint(0, ControlType.kVelocity);
-
-        SmartDashboard.putNumber("Intake/desiredspeed", 0);
-        SmartDashboard.putNumber("Intake/actualspeed", intakeEncoder.getVelocity());
+        desiredVelocity = RadiansPerSecond.of(0);
+        intakePidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
-    public void periodicUpdate() {
+    public void updateState(IntakeRollerIOState state) {
+        state.actualSpeedRadiansPerSecond = intakeEncoder.getVelocity();
+        state.desiredSpeedRadiansPerSecond = desiredVelocity.in(RadiansPerSecond);
+        state.current = intakeSparkFlex.getOutputCurrent();
+        state.appliedVoltage = intakeSparkFlex.getBusVoltage() * intakeSparkFlex.getAppliedOutput();
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
         // if (TUNABLE_INTAKE_KS.hasChanged()) {
@@ -113,11 +111,6 @@ public class IntakeHardware implements IntakeIO {
         // intakeMotorConfig,
         // ResetMode.kResetSafeParameters,
         // PersistMode.kPersistParameters); }
-    }
 
-    @Override
-    public void updateStates(IntakeIOStates states) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateStates'");
     }
 }

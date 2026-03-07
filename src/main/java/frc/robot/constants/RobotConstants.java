@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
 
 public final class RobotConstants {
 
@@ -24,12 +26,14 @@ public final class RobotConstants {
         public static final int FRONT_RIGHT_TURNING_CAN_ID = 32;
         public static final int REAR_RIGHT_TURNING_CAN_ID = 42;
 
-        public static final int INTAKE_CAN_ID = 6;
+        public static final int INTAKE_ROLLER_ALPHA_CAN_ID = 6;
         public static final int SHOOTER_INDEXER_CAN_ID = 1;
         public static final int GYRO_CAN_ID = 3;
         public static final int SHOOTER_BOTTOM_CAN_ID = 3;
         public static final int SHOOTER_TOP_CAN_ID = 21;
 
+        public static final int INTAKE_ROLLER_BETA_CAN_ID = 7;
+        public static final int INTAKE_ARM_BETA_CAN_ID = 8;
         public static final int SHOOTER_BOTTOM_BETA_CAN_ID = 9;
         public static final int SHOOTER_TOP_BETA_CAN_ID = 10;
         public static final int SHOOTER_INDEXER_BETA_CAN_ID = 13;
@@ -49,7 +53,8 @@ public final class RobotConstants {
 
     public static class SpeedConstants {
         public static final double MAIN_LOOP_FREQUENCY_HZ = 50;
-        public static final int MAIN_LOOP_FREQUENCY_MS = (int) (1000 / MAIN_LOOP_FREQUENCY_HZ);
+        public static final Time MAIN_LOOP_FREQUENCY =
+                Milliseconds.of(1000 / MAIN_LOOP_FREQUENCY_HZ);
         public static final double LOGGING_FREQUENCY_HZ = 10;
         public static final int LOGGING_FREQUENCY_MS = (int) (1000 / LOGGING_FREQUENCY_HZ);
     }
@@ -63,8 +68,13 @@ public final class RobotConstants {
     }
 
     public static class TransformConstants {
+        public static final Distance ROBOT_TO_SHOOTER_X = Inches.of(-12.63);
+        public static final Distance ROBOT_TO_SHOOTER_Y = Inches.of(-8.5);
         // these values should be edited once we have our robot to shooter transform
         public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM =
-                new Transform2d(0.0, 0.0, new Rotation2d(0));
+                new Transform2d(
+                        ROBOT_TO_SHOOTER_X.in(Meters),
+                        ROBOT_TO_SHOOTER_Y.in(Meters),
+                        new Rotation2d(0));
     }
 }

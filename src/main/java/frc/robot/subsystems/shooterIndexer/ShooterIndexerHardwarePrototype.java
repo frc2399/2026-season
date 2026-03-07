@@ -78,7 +78,8 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
         shooterIndexerEncoder = shooterIndexerSparkMax.getEncoder();
 
         if (shooterIndexerStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure shooter indexer prototype motor: " + shooterIndexerStatus);
+            System.err.println(
+                    "Failed to configure shooter indexer prototype motor: " + shooterIndexerStatus);
         }
     }
 
