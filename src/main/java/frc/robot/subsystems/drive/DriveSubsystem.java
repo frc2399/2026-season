@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.FlippingUtil;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -341,6 +342,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 pose);
     }
 
+    public void resetOdometryFlipped(Pose2d pose) {
+        boolean red = FieldConstants.alliance.get() == Alliance.Red;
+        if (red) {
+            pose = FlippingUtil.flipFieldPose(pose);
+        }
+        resetOdometry(pose);
+    }
+
     // basically, when we reset gyro, m_gyroOffset in SwerveDrivePoseEstimator does
     // NOT reset so the pose does not reset properly :(
     public void resetOdometryAfterGyro() {
@@ -386,7 +395,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             double newRotRate =
                                     getRotRate(
                                             currentAngle,
-                                            Math.pow(rotRate.getAsDouble(), 5),
+                                            Math.pow(rotRate.getAsDouble(), 3),
                                             polarXSpeed,
                                             polarYSpeed,
                                             shouldAutoOrient);

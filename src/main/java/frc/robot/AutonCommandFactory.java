@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class AutonCommandFactory {
         return Commands.sequence(
                 Commands.runOnce(
                         () ->
-                                drive.resetOdometry(
+                                drive.resetOdometryFlipped(
                                         FieldConstants.PoseConstants.BLUE_HUB_MIDDLE.pose())),
                 buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
                 // move into intake position while driving
@@ -67,6 +68,18 @@ public class AutonCommandFactory {
                 // intakeSubsystem.defaultBehavior().withTimeout(0.01),
                 buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints, 0),
                 // move into shooting position while driving
+                drive.driveToPoseOnExecute());
+    }
+
+    public Command driveStraightTesting() {
+        return Commands.sequence(
+                Commands.runOnce(
+                        () ->
+                                drive.resetOdometryFlipped(
+                                        FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE
+                                                .pose())),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.DRIVE_STRAIGHT_TESTING, intakeConstraints, 0),
                 drive.driveToPoseOnExecute());
     }
 
@@ -79,6 +92,7 @@ public class AutonCommandFactory {
         return Commands.runOnce(
                 () -> {
                     drive.resetOdometry(startingPosition);
+                    drive.resetOdometryFlipped(startingPosition);
 
                     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
 

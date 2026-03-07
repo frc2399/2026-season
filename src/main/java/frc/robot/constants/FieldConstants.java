@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.*;
-import static edu.wpi.first.units.Units.Inches;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,7 +13,7 @@ public final class FieldConstants {
 
     public static record Pose(String name, Pose2d pose) {}
 
-    public static Optional<Alliance> alliance;
+    public static Optional<Alliance> alliance = Optional.empty();
 
     // values taken from field drawings
     public static final Distance HALF_WIDTH_OF_HUB = Inches.of(47.0 / 2.0);
@@ -69,6 +68,7 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5)),
+                                                .plus(ROBOT_HUB_MARGIN.div(2)),
                                         Rotation2d.kZero)));
         // this postion is when robot is on the blue alliance starting line farthest from scroing
         // table.
@@ -82,8 +82,21 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
+                                                .plus(ROBOT_HUB_MARGIN.div(2))
                                                 .unaryMinus(),
-                                        Rotation2d.kZero)));
+                                        Rotation2d.k180deg)));
+        public static final Pose DRIVE_STRAIGHT_TESTING =
+                new Pose(
+                        "driveStraightTesting",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.times(4).unaryMinus(),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(LENGTH_OF_BUMP)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .plus(ROBOT_HUB_MARGIN.div(2))
+                                                .unaryMinus(),
+                                        Rotation2d.k180deg)));
         public static final Pose BLUE_OUTPOST_WALL_FUEL_CENTER =
                 new Pose(
                         "blueOutpostWallFuelCenter",
@@ -96,6 +109,7 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
+                                                .plus(ROBOT_HUB_MARGIN.div(2))
                                                 .unaryMinus(),
                                         Rotation2d.k180deg)));
         // this position is when robot is on blue side of fuel edge farthest to scoring table
@@ -111,6 +125,7 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5)),
+                                                .plus(ROBOT_HUB_MARGIN.div(2)),
                                         Rotation2d.k180deg)));
         public static final Pose BLUE_DEPOT_BORDER_FUEL_CENTER =
                 new Pose(
@@ -150,6 +165,7 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
+                                                .plus(ROBOT_HUB_MARGIN.div(2))
                                                 .unaryMinus(),
                                         Rotation2d.k180deg)));
         public static final Pose BLUE_DEPOT_BORDER_FUEL_EDGE =
@@ -170,6 +186,7 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5)),
+                                                .plus(ROBOT_HUB_MARGIN.div(2)),
                                         Rotation2d.k180deg)));
         public static final Pose IN_THE_DEPOT =
                 new Pose(
@@ -246,10 +263,22 @@ public final class FieldConstants {
                                         Rotation2d.kZero)));
     }
 
-    public static class AllianceZoneBoundaries {
+    public static class FieldBoundaries {
         public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
         public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
         public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
         public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
+        public static final Distance HORIZONTAL_CENTER_LINE = Meters.of(4.034663);
+    }
+
+    public static class HubConstants {
+        public static final Distance HUB_RADIUS = Inches.of(23.5);
+        public static final Distance FUEL_RADIUS = Inches.of(2.955);
+
+        // values taken from field drawings
+        public static final Pose2d RED_CENTER_OF_HUB_POSE =
+                new Pose2d(Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
+        public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
+                new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
     }
 }

@@ -1,6 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -9,11 +11,11 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
-import frc.robot.subsystems.intake.IntakeHardware;
-import frc.robot.subsystems.intake.IntakePlacebo;
+import frc.robot.subsystems.intake.IntakeArmHardwareBeta;
+import frc.robot.subsystems.intake.IntakeArmPlacebo;
+import frc.robot.subsystems.intake.IntakeRollerHardware;
+import frc.robot.subsystems.intake.IntakeRollerPlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.intakeArm.IntakeArmPlacebo;
-import frc.robot.subsystems.intakeArm.IntakeArmSubsystem;
 import frc.robot.subsystems.shooter.ShooterHardwareBeta;
 import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
@@ -55,6 +57,7 @@ public class SubsystemFactory {
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
+            serialNum = "simulation";
         } else if (serialNum == null) {
             robotType = null;
             throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
@@ -73,6 +76,8 @@ public class SubsystemFactory {
                     "UNKNOWN SERIAL NUMBER (cannot identify robot based on rio) \nserial number of current rio: "
                             + serialNum);
         }
+        SmartDashboard.putString("robot/serialNum", serialNum);
+        SmartDashboard.putString("robot/robotType", robotType.name());
     }
 
     public static RobotType getRobotType() {
@@ -138,14 +143,18 @@ public class SubsystemFactory {
 
     public IntakeSubsystem buildIntake() {
         if (robotType == RobotType.MOZART) {
-            return new IntakeSubsystem(new IntakeHardware());
+            return new IntakeSubsystem(
+                    new IntakeRollerHardware(
+                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_ALPHA_CAN_ID),
+                    new IntakeArmPlacebo());
+        } else if (robotType == RobotType.BETA) {
+            return new IntakeSubsystem(
+                    new IntakeRollerHardware(
+                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_CAN_ID),
+                    new IntakeArmHardwareBeta());
         } else {
-            return new IntakeSubsystem(new IntakePlacebo());
+            return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
-    }
-
-    public IntakeArmSubsystem buildIntakeArm() {
-        return new IntakeArmSubsystem(new IntakeArmPlacebo());
     }
 
     public ShooterSubsystem buildShooter() {
