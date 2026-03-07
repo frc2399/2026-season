@@ -143,9 +143,15 @@ public class ShooterHardwareBeta implements ShooterIO {
         shooterTopEncoder = shooterTopSparkFlex.getEncoder();
     }
 
-    public void runShooter(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
-        desiredBottomVelocity = bottomSpeed;
-        desiredTopVelocity = topSpeed;
+    public void runShooterWithSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {
+        if (shouldInterpolate) {
+            desiredBottomVelocity = bottomSpeed;
+            desiredTopVelocity = topSpeed;
+        } else {
+            desiredBottomVelocity = RadiansPerSecond.of(230.3834612632515);
+            desiredTopVelocity = RadiansPerSecond.of(314.1592653589793);
+        }
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);

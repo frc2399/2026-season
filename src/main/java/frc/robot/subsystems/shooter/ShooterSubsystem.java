@@ -30,6 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOState shooterStates = new ShooterIOState();
     private String csvFilepath;
+    private boolean shouldInterpolate = false;
 
     // for csv logging
     ZoneId LOGGING_TIMEZONE =
@@ -50,7 +51,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(ShooterIO io, String csvFilepath) {
         this.io = io;
         this.csvFilepath = csvFilepath;
-        readCSV();
+        if (!csvFilepath.equals("")) {
+            readCSV();
+        }
     }
 
     public Command shoot(Distance distFromHub) {
@@ -64,7 +67,8 @@ public class ShooterSubsystem extends SubsystemBase {
                                     RadiansPerSecond.of(
                                             bottomShooterSpeedTreeMapMeterRadS.get(
                                                     distFromHub.in(Meters)));
-                            io.runShooter(topSpeed, bottomSpeed);
+                            io.runShooterWithSpeeds(topSpeed, bottomSpeed, shouldInterpolate);
+                            System.out.println("run...?");
                         })
                 .withName("runShooter");
     }
@@ -99,13 +103,14 @@ public class ShooterSubsystem extends SubsystemBase {
                 bottomShooterSpeedTreeMapMeterRadS.put(
                         distanceToHub.in(Meters), bottomSpeed.in(RadiansPerSecond));
             }
+            shouldInterpolate = true;
         } catch (IOException e) {
             System.out.println(
                     "********COULD NOT READ FROM THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
             e.printStackTrace();
         } catch (CsvValidationException c) {
             System.out.println(
-                    "********INVALID LINE IN SHOOTER SPEEDS CSV - SEE STACK TRACE********");
+                    "********INVALID ENTRY IN SHOOTER SPEEDS CSV - SEE STACK TRACE********");
             c.printStackTrace();
         }
     }
@@ -146,6 +151,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         io.updateStates(shooterStates);
+        SmartDashboard.putBoolean("shooter/should interpolate", shouldInterpolate);
         SmartDashboard.putNumber(
                 "shooter/topRollerDesiredSpeed", shooterStates.topRollerDesiredSpeed);
         SmartDashboard.putNumber(
