@@ -71,9 +71,10 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         robotContainer.visionPoseEstimator.periodic();
         robotContainer.setAlerts();
-        SmartDashboard.putNumber("Robot/batteryVoltage", RobotController.getBatteryVoltage());
-        SmartDashboard.putBoolean("robot/0 second delay", GameState.isHubActive(0));
-        SmartDashboard.putBoolean("robot/1 second delay", GameState.isHubActive(1));
+        SmartDashboard.putNumber(
+                "Robot/batteryVoltageIsHubActive", RobotController.getBatteryVoltage());
+        SmartDashboard.putBoolean("robot/0 second delayIsHubActive", GameState.isHubActive(0));
+        SmartDashboard.putBoolean("robot/1 second delayIsHubActive", GameState.isHubActive(1));
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
