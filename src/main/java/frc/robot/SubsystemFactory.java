@@ -151,8 +151,15 @@ public class SubsystemFactory {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_CAN_ID),
-                    new IntakeArmHardwareBeta());
-        } else {
+                    new IntakeArmHardwareBeta(true));
+        } 
+        else if (robotType == RobotType.COMP) {
+            return new IntakeSubsystem(
+                    new IntakeRollerHardware(
+                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_CAN_ID),
+                    new IntakeArmHardwareBeta(false));
+        } 
+        else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
     }
