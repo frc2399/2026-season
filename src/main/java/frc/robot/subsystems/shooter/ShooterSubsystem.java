@@ -96,7 +96,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 // order: distance (inches), top speed (rad/s), bottom speed (rad/s), timestamp
                 Distance distanceToHub = Inches.of(Double.valueOf(line[0]));
                 AngularVelocity topSpeed = RadiansPerSecond.of(Double.valueOf(line[1]));
-                AngularVelocity bottomSpeed = RadiansPerSecond.of(Double.valueOf(line[1]));
+                AngularVelocity bottomSpeed = RadiansPerSecond.of(Double.valueOf(line[2]));
 
                 topShooterSpeedTreeMapMeterRadS.put(
                         distanceToHub.in(Meters), topSpeed.in(RadiansPerSecond));
