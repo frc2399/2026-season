@@ -135,8 +135,7 @@ public class SubsystemFactory {
         if (robotType == RobotType.COMP
                 || robotType == RobotType.BETA
                 || robotType == RobotType.BUBBLES
-                || robotType == RobotType.MOZART
-                || robotType == RobotType.COMP) {
+                || robotType == RobotType.MOZART) {
             return new Gyro(new GyroHardware());
         } else {
             return new Gyro(new GyroPlacebo());
