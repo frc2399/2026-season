@@ -149,6 +149,7 @@ public class ShooterHardwareBeta implements ShooterIO {
             desiredBottomVelocity = bottomSpeed;
             desiredTopVelocity = topSpeed;
         } else {
+            // default values
             desiredBottomVelocity = RadiansPerSecond.of(230.3834612632515);
             desiredTopVelocity = RadiansPerSecond.of(314.1592653589793);
         }

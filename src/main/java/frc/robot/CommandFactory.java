@@ -1,11 +1,10 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Inches;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -47,8 +46,8 @@ public class CommandFactory {
 
     public Command runSpindexShooterIndexAndShooter() {
         return Commands.sequence(
-                // CHANGE THIS BACK TO RBU
-                shooter.shoot(Inches.of(80)).withTimeout(1.0),
+                shooter.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()))
+                        .withTimeout(1.0),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
     }
 
