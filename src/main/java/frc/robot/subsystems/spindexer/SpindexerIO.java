@@ -8,6 +8,8 @@ public interface SpindexerIO {
 
     public void updateStates(SpindexerIOState state);
 
+    public void runSpindexerBackwards();
+
     public static class SpindexerIOState {
         public double spindexerDesiredSpeed = 0;
         public double spindexerActualSpeed = 0;

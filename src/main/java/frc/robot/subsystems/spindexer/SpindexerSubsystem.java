@@ -19,6 +19,10 @@ public class SpindexerSubsystem extends SubsystemBase {
         return this.run(() -> io.runSpindexer()).withName("runSpindexer");
     }
 
+    public Command runSpindexerBackwards() {
+        return this.run(() -> io.runSpindexer()).withName("runSpindexerBackwards");
+    }
+
     public Command defaultBehavior() {
         return this.run(() -> io.defaultBehavior()).withName("spindexerDefaultBehavior");
     }

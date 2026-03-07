@@ -84,6 +84,13 @@ public class SpindexerHardwareBeta implements SpindexerIO {
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
+    public void runSpindexerBackwards() {
+        desiredVelocity =
+                RadiansPerSecond.of(-0.10 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+        spindexerPidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
     public void defaultBehavior() {
         desiredVelocity = RadiansPerSecond.of(0);
         spindexerPidController.setSetpoint(0, ControlType.kVelocity);

@@ -116,6 +116,7 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
         driverController.leftTrigger().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
         driverController.x().whileTrue(drive.setX());
+        driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
     }
 
     private void configureButtonBindingsTuningController() {
