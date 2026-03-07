@@ -101,7 +101,7 @@ public class RobotContainer {
                                         driverController.getRightX(),
                                         DriveControlConstants.DRIVE_DEADBAND)),
                         true,
-                        () -> (driverController.rightBumper().getAsBoolean())));
+                        () -> (driverController.leftBumper().getAsBoolean())));
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
         spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());

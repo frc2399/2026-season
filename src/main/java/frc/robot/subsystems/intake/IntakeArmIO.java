@@ -16,7 +16,7 @@ public interface IntakeArmIO {
     public enum IntakeArmSetpoint {
         DEPLOYED,
         STOWED,
-        ZERO
+        FEED_FUEL
     }
 
     public void updateState(IntakeArmIOState state);
