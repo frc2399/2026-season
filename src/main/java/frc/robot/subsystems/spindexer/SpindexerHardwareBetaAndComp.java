@@ -43,11 +43,11 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public SpindexerHardwareBetaAndComp(int SPINDEXER_GEAR_RATIO) {
+    public SpindexerHardwareBetaAndComp(int spindexerGearRatio) {
 
-        this.SPINDEXER_GEAR_RATIO = SPINDEXER_GEAR_RATIO;
-        ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / SPINDEXER_GEAR_RATIO);
-        ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60 / SPINDEXER_GEAR_RATIO);
+        this.SPINDEXER_GEAR_RATIO = spindexerGearRatio;
+        ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / spindexerGearRatio);
+        ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60 / spindexerGearRatio);
 
         SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
 
