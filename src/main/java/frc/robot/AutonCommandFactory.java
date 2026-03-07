@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import java.util.List;
 import java.util.Set;
@@ -40,16 +41,17 @@ public class AutonCommandFactory {
 
     public Command buildPathDeferred(
             Pose pose, PathConstraints constraints, double goalEndVelocity) {
-        finalPose = pose.pose();
-        if (FieldConstants.alliance.isPresent()
-                && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
-            finalPose = FlippingUtil.flipFieldPose(finalPose);
-        }
 
         return new DeferredCommand(
-                () ->
-                        AutoBuilder.pathfindToPose(finalPose, constraints, goalEndVelocity)
-                                .withName(pose.name()),
+                () -> {
+                    finalPose = pose.pose();
+                    if (FieldConstants.alliance.isPresent()
+                            && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+                        finalPose = FlippingUtil.flipFieldPose(finalPose);
+                    }
+                    return AutoBuilder.pathfindToPose(finalPose, constraints, goalEndVelocity)
+                            .withName(pose.name());
+                },
                 Set.of(drive));
     }
 
@@ -57,7 +59,7 @@ public class AutonCommandFactory {
         return Commands.sequence(
                 Commands.runOnce(
                         () ->
-                                drive.resetOdometry(
+                                drive.resetOdometryFlipped(
                                         FieldConstants.PoseConstants.BLUE_HUB_MIDDLE.pose())),
                 buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
                 // move into intake position while driving
@@ -69,6 +71,18 @@ public class AutonCommandFactory {
                 drive.driveToPoseOnExecute());
     }
 
+    public Command driveStraightTesting() {
+        return Commands.sequence(
+                Commands.runOnce(
+                        () ->
+                                drive.resetOdometryFlipped(
+                                        FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE
+                                                .pose())),
+                buildPathDeferred(
+                        FieldConstants.PoseConstants.DRIVE_STRAIGHT_TESTING, intakeConstraints, 0),
+                drive.driveToPoseOnExecute());
+    }
+
     public Command followWaypoints(
             Pose2d startingPosition,
             PathConstraints constraints,
@@ -77,7 +91,7 @@ public class AutonCommandFactory {
             Pose2d... poses) {
         return Commands.runOnce(
                 () -> {
-                    drive.resetOdometry(startingPosition);
+                    drive.resetOdometryFlipped(startingPosition);
 
                     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
 
