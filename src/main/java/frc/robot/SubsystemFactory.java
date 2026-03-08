@@ -38,8 +38,8 @@ public class SubsystemFactory {
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
     private static final String BETA_SERIAL_NUMBER = "030589d5";
-    private static final String COMP_SERIAL_NUMBER = "";
-    private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
+    private static final String COMP_SERIAL_NUMBER = "03260A64";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "";
 
     public enum RobotType {
         MOZART,
@@ -91,7 +91,8 @@ public class SubsystemFactory {
         SwerveModule rearRight;
         if (robotType == RobotType.BETA
                 || robotType == RobotType.BUBBLES
-                || robotType == RobotType.MOZART) {
+                || robotType == RobotType.MOZART
+                || robotType == RobotType.COMP) {
             frontLeft =
                     new SwerveModule(
                             new SwerveModuleHardwareVortex(
@@ -160,7 +161,7 @@ public class SubsystemFactory {
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype());
-        } else if (robotType == RobotType.BETA) {
+        } else if (robotType == RobotType.BETA || robotType == RobotType.COMP) {
             return new ShooterSubsystem(new ShooterHardwareBeta());
         } else {
             return new ShooterSubsystem(new ShooterPlacebo());
@@ -168,7 +169,7 @@ public class SubsystemFactory {
     }
 
     public SpindexerSubsystem buildSpindexer() {
-        if (robotType == RobotType.BETA) {
+        if (robotType == RobotType.BETA || robotType == RobotType.COMP) {
             return new SpindexerSubsystem(new SpindexerHardwareBeta());
         } else {
             return new SpindexerSubsystem(new SpindexerPlacebo());
@@ -178,7 +179,7 @@ public class SubsystemFactory {
     public ShooterIndexerSubsystem buildShooterIndexer() {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterIndexerSubsystem(new ShooterIndexerHardwarePrototype());
-        } else if (robotType == RobotType.BETA) {
+        } else if (robotType == RobotType.BETA || robotType == RobotType.COMP) {
             return new ShooterIndexerSubsystem(new ShooterIndexerHardwareBeta());
         } else {
             return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
