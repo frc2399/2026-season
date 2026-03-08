@@ -17,7 +17,7 @@ import frc.robot.subsystems.intake.IntakeArmPlacebo;
 import frc.robot.subsystems.intake.IntakeRollerHardware;
 import frc.robot.subsystems.intake.IntakeRollerPlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.ShooterHardwareBeta;
+import frc.robot.subsystems.shooter.ShooterHardwareBetaAndComp;
 import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -162,8 +162,14 @@ public class SubsystemFactory {
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype());
-        } else if (robotType == RobotType.BETA || robotType == RobotType.COMP) {
-            return new ShooterSubsystem(new ShooterHardwareBeta());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterSubsystem(
+                    new ShooterHardwareBetaAndComp(
+                            RobotConstants.InversionConstants.INVERT_BETA_SHOOTER_BOTTOM_ROLLER));
+        } else if (robotType == RobotType.COMP) {
+            return new ShooterSubsystem(
+                    new ShooterHardwareBetaAndComp(
+                            RobotConstants.InversionConstants.INVERT_COMP_SHOOTER_BOTTOM_ROLLER));
         } else {
             return new ShooterSubsystem(new ShooterPlacebo());
         }
