@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.GearRatios;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -24,7 +25,7 @@ import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBeta;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwarePrototype;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
-import frc.robot.subsystems.spindexer.SpindexerHardwareBeta;
+import frc.robot.subsystems.spindexer.SpindexerHardwareBetaAndComp;
 import frc.robot.subsystems.spindexer.SpindexerPlacebo;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
@@ -169,8 +170,12 @@ public class SubsystemFactory {
     }
 
     public SpindexerSubsystem buildSpindexer() {
-        if (robotType == RobotType.BETA || robotType == RobotType.COMP) {
-            return new SpindexerSubsystem(new SpindexerHardwareBeta());
+        if (robotType == RobotType.BETA) {
+            return new SpindexerSubsystem(
+                    new SpindexerHardwareBetaAndComp(GearRatios.BETA_SPINDEXER_GEAR_RATIO));
+        } else if (robotType == RobotType.COMP) {
+            return new SpindexerSubsystem(
+                    new SpindexerHardwareBetaAndComp(GearRatios.COMP_SPINDEXER_GEAR_RATIO));
         } else {
             return new SpindexerSubsystem(new SpindexerPlacebo());
         }

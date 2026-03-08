@@ -77,4 +77,9 @@ public final class RobotConstants {
                         ROBOT_TO_SHOOTER_Y.in(Meters),
                         new Rotation2d(0));
     }
+
+    public static class GearRatios {
+        public static final int BETA_SPINDEXER_GEAR_RATIO = 6; // 6 : 1 gear ratio
+        public static final int COMP_SPINDEXER_GEAR_RATIO = 9; // 9 : 1 gear ratio
+    }
 }

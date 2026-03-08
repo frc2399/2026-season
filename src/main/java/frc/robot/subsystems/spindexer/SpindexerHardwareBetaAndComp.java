@@ -21,14 +21,15 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
-public class SpindexerHardwareBeta implements SpindexerIO {
+public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
     private SparkFlex spindexerSparkFlex;
     private final SparkClosedLoopController spindexerPidController;
 
-    private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / 6); // 6 : 1 gear ratio
-    private final AngularVelocity ENCODER_VELOCITY_FACTOR =
-            RadiansPerSecond.of(2 * Math.PI / 60 / 6);
+    private final Angle ENCODER_POSITION_FACTOR;
+    private final AngularVelocity ENCODER_VELOCITY_FACTOR;
+    private final int SPINDEXER_GEAR_RATIO;
+
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
     private final double SPINDEXER_P = 0;
@@ -43,7 +44,12 @@ public class SpindexerHardwareBeta implements SpindexerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public SpindexerHardwareBeta() {
+    public SpindexerHardwareBetaAndComp(int spindexerGearRatio) {
+
+        this.SPINDEXER_GEAR_RATIO = spindexerGearRatio;
+        ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / spindexerGearRatio);
+        ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60 / spindexerGearRatio);
+
         SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
 
         spindexerSparkFlexConfig.idleMode(IdleMode.kCoast);
@@ -85,7 +91,10 @@ public class SpindexerHardwareBeta implements SpindexerIO {
 
     public void runSpindexer() {
         desiredVelocity =
-                RadiansPerSecond.of(0.30 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+                RadiansPerSecond.of(
+                        0.085
+                                * SPINDEXER_GEAR_RATIO
+                                * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         spindexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
