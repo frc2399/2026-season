@@ -22,7 +22,7 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 
-public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
+public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     private SparkFlex shooterIndexerSparkFlex;
     private final SparkFlexConfig shooterIndexerSparkFlexConfig;
@@ -51,7 +51,7 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public ShooterIndexerHardwareBeta() {
+    public ShooterIndexerHardwareBetaAndComp() {
         shooterIndexerSparkFlexConfig = new SparkFlexConfig();
         shooterIndexerClosedLoopConfig = new ClosedLoopConfig();
 
