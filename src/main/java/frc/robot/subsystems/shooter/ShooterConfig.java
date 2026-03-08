@@ -27,12 +27,11 @@ public class ShooterConfig {
                 break;
             case COMP:
                 BOTTOM_KS = .122;
-                BOTTOM_KV =
-                        12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
-                BOTTOM_P = 0;
+                BOTTOM_KV = 0.0171;
+                BOTTOM_P = 0.0004;
                 TOP_KS = .155;
-                TOP_KV = 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
-                TOP_P = 0;
+                TOP_KV = 0.017;
+                TOP_P = 0.00006;
                 BOTTOM_ROLLER_INVERTED = true;
                 break;
             default:
