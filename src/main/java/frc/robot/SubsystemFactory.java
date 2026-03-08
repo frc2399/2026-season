@@ -163,13 +163,9 @@ public class SubsystemFactory {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype());
         } else if (robotType == RobotType.BETA) {
-            return new ShooterSubsystem(
-                    new ShooterHardwareBetaAndComp(
-                            RobotConstants.InversionConstants.INVERT_BETA_SHOOTER_BOTTOM_ROLLER));
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
         } else if (robotType == RobotType.COMP) {
-            return new ShooterSubsystem(
-                    new ShooterHardwareBetaAndComp(
-                            RobotConstants.InversionConstants.INVERT_COMP_SHOOTER_BOTTOM_ROLLER));
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
         } else {
             return new ShooterSubsystem(new ShooterPlacebo());
         }

@@ -33,25 +33,21 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
     private final double MIN_OUTPUT_RANGE = -1;
     private final double MAX_OUTPUT_RANGE = 1;
-    private final double SHOOTER_BETA_TOP_P = 0.00008;
-    private final double SHOOTER_BETA_TOP_D = 0;
-    private final double SHOOTER_BETA_TOP_KS = 0.16;
-    private final double SHOOTER_BETA_TOP_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
-    private final double SHOOTER_BETA_BOTTOM_P = 0.0003;
-    private final double SHOOTER_BETA_BOTTOM_D = 0;
-    private final double SHOOTER_BETA_BOTTOM_KS = 0.123;
-    private final double SHOOTER_BETA_BOTTOM_KV = 0.01697538;
-    // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private final double SHOOTER_TOP_P;
+    private final double SHOOTER_TOP_D = 0;
+    private final double SHOOTER_TOP_KS;
+    private final double SHOOTER_TOP_KV;
+    private final double SHOOTER_BOTTOM_P;
+    private final double SHOOTER_BOTTOM_D = 0;
+    private final double SHOOTER_BOTTOM_KS;
+    private final double SHOOTER_BOTTOM_KV;
 
     private final double SHOOTER_TOP_DESIRED_SPEED = 0;
     private final double SHOOTER_BOTTOM_DESIRED_SPEED = 0;
 
     private final TunableNumber TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM =
             new TunableNumber(
-                    "Shooter/shooter_top_desired_speed (rpm)",
-                    SHOOTER_TOP_DESIRED_SPEED,
-                    true);
+                    "Shooter/shooter_top_desired_speed (rpm)", SHOOTER_TOP_DESIRED_SPEED, true);
     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM =
             new TunableNumber(
                     "Shooter/shooter_bottom_desired_speed (rpm)",
@@ -70,11 +66,22 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
-    public ShooterHardwareBetaAndComp(boolean shouldInvertBottomRoller) {
+    public ShooterHardwareBetaAndComp() {
+
+        // unpack config!
+        SHOOTER_TOP_P = ShooterConfig.TOP_P;
+        SHOOTER_TOP_KS = ShooterConfig.TOP_KS;
+        SHOOTER_TOP_KV = ShooterConfig.TOP_KV;
+        SHOOTER_BOTTOM_P = ShooterConfig.BOTTOM_P;
+        SHOOTER_BOTTOM_KS = ShooterConfig.BOTTOM_KS;
+        SHOOTER_BOTTOM_KV = ShooterConfig.BOTTOM_KV;
+        System.out.println(SHOOTER_TOP_P);
+        System.out.println(SHOOTER_TOP_KS);
+        System.out.println(SHOOTER_TOP_KV);
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
         shooterTopMotorConfig.idleMode(IdleMode.kCoast);
-        shooterBottomMotorConfig.inverted(shouldInvertBottomRoller);
+        shooterBottomMotorConfig.inverted(ShooterConfig.BOTTOM_ROLLER_INVERTED);
         shooterTopMotorConfig.inverted(true);
         shooterBottomMotorConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
@@ -91,14 +98,13 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
 
         shooterBottomMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         shooterTopMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        shooterBottomMotorConfig.closedLoop.pid(SHOOTER_BETA_BOTTOM_P, 0, SHOOTER_BETA_BOTTOM_D);
-        shooterTopMotorConfig.closedLoop.pid(SHOOTER_BETA_TOP_P, 0, SHOOTER_BETA_TOP_D);
+        shooterBottomMotorConfig.closedLoop.pid(SHOOTER_BOTTOM_P, 0, SHOOTER_BOTTOM_D);
+        shooterTopMotorConfig.closedLoop.pid(SHOOTER_TOP_P, 0, SHOOTER_TOP_D);
         shooterBottomMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
         shooterTopMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
 
-        closedLoopConfigShooterTop.feedForward.sva(SHOOTER_BETA_TOP_KS, SHOOTER_BETA_TOP_KV, 0);
-        closedLoopConfigShooterBottom.feedForward.sva(
-                SHOOTER_BETA_BOTTOM_KS, SHOOTER_BETA_BOTTOM_KV, 0);
+        closedLoopConfigShooterTop.feedForward.sva(SHOOTER_TOP_KS, SHOOTER_TOP_KV, 0);
+        closedLoopConfigShooterBottom.feedForward.sva(SHOOTER_BOTTOM_KS, SHOOTER_BOTTOM_KV, 0);
 
         shooterBottomMotorConfig.apply(closedLoopConfigShooterBottom);
         shooterTopMotorConfig.apply(closedLoopConfigShooterTop);

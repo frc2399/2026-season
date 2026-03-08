@@ -18,10 +18,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
-import frc.robot.util.TunableNumber;
 
 public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
@@ -34,12 +32,13 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final boolean SHOOTER_INDEXER_MOTOR_INVERTED = false;
     private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kCoast;
 
+    private static final int SHOOTER_INDEXER_GEAR_RATIO = 3;
     private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
-            Radians.of(2 * Math.PI / 3); // 3 : 1
+            Radians.of(2 * Math.PI / SHOOTER_INDEXER_GEAR_RATIO); // 3 : 1
     // gear
     // ratio
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
-            RadiansPerSecond.of(2 * Math.PI / 60 / 3);
+            RadiansPerSecond.of(2 * Math.PI / 60 / SHOOTER_INDEXER_GEAR_RATIO);
 
     private static final double SHOOTER_INDEXER_P = 0;
     private static final double SHOOTER_INDEXER_I = 0;
@@ -48,8 +47,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
     private static final double SHOOTER_INDEXER_KS = 0.1355;
-    private static final double SHOOTER_INDEXER_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private static final double SHOOTER_INDEXER_KV = 0.035;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
@@ -118,7 +116,8 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
+        state.shooterIndexerDesiredSpeed =
+                desiredVelocity.in(RadiansPerSecond) / SHOOTER_INDEXER_GEAR_RATIO;
         state.shooterIndexerActualSpeed = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkFlex.getBusVoltage()
