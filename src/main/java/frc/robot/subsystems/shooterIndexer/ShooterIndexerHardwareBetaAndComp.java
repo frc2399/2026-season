@@ -21,6 +21,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
+import frc.robot.util.TunableNumber;
 
 public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
@@ -34,7 +35,9 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kBrake;
 
     private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
-            Radians.of(2 * Math.PI / 3); // 3 : 1 gear ratio
+            Radians.of(2 * Math.PI / 3); // 3 : 1
+    // gear
+    // ratio
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
             RadiansPerSecond.of(2 * Math.PI / 60 / 3);
 
@@ -48,6 +51,9 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private static final double SHOOTER_INDEXER_KA = 0;
+
+    private static final TunableNumber TUNABLE_SHOOTER_INDEXER_KS =
+            new TunableNumber("shooterindexer/ks", SHOOTER_INDEXER_KS, true);
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
@@ -121,5 +127,14 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
                 shooterIndexerSparkFlex.getBusVoltage()
                         * shooterIndexerSparkFlex.getAppliedOutput();
         state.shooterIndexerCurrent = shooterIndexerSparkFlex.getOutputCurrent();
+
+        if (TUNABLE_SHOOTER_INDEXER_KS.hasChanged()) {
+            shooterIndexerClosedLoopConfig.feedForward.kS(TUNABLE_SHOOTER_INDEXER_KS.get());
+            shooterIndexerSparkFlexConfig.apply(shooterIndexerClosedLoopConfig);
+            shooterIndexerSparkFlex.configure(
+                    shooterIndexerSparkFlexConfig,
+                    ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters);
+        }
     }
 }
