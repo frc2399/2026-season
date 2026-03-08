@@ -32,7 +32,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private final SparkClosedLoopController shooterIndexerPidController;
 
     private static final boolean SHOOTER_INDEXER_MOTOR_INVERTED = false;
-    private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kBrake;
+    private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kCoast;
 
     private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
             Radians.of(2 * Math.PI / 3); // 3 : 1
@@ -47,13 +47,10 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_MIN_OUTPUT = -1;
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
-    private static final double SHOOTER_INDEXER_KS = 0.01;
+    private static final double SHOOTER_INDEXER_KS = 0.1355;
     private static final double SHOOTER_INDEXER_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private static final double SHOOTER_INDEXER_KA = 0;
-
-    private static final TunableNumber TUNABLE_SHOOTER_INDEXER_KS =
-            new TunableNumber("shooterindexer/ks", SHOOTER_INDEXER_KS, true);
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
@@ -127,14 +124,5 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
                 shooterIndexerSparkFlex.getBusVoltage()
                         * shooterIndexerSparkFlex.getAppliedOutput();
         state.shooterIndexerCurrent = shooterIndexerSparkFlex.getOutputCurrent();
-
-        if (TUNABLE_SHOOTER_INDEXER_KS.hasChanged()) {
-            shooterIndexerClosedLoopConfig.feedForward.kS(TUNABLE_SHOOTER_INDEXER_KS.get());
-            shooterIndexerSparkFlexConfig.apply(shooterIndexerClosedLoopConfig);
-            shooterIndexerSparkFlex.configure(
-                    shooterIndexerSparkFlexConfig,
-                    ResetMode.kResetSafeParameters,
-                    PersistMode.kPersistParameters);
-        }
     }
 }

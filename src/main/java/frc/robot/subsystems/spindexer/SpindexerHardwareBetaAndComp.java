@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
+import frc.robot.util.TunableNumber;
 
 public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
@@ -34,13 +35,10 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     private final int MAX_OUTPUT_RANGE = 1;
     private final double SPINDEXER_P = 0;
     private final double SPINDEXER_D = 0;
-    private final double SPINDEXER_KS = 0.1;
+    private final double SPINDEXER_KS = 0.175;
     private final double SPINDEXER_KV =
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private final boolean SPINDEXER_INVERTED = false;
-
-    //     private static final TunableNumber TUNABLE_SPINDEXER_KS =
-    //             new TunableNumber("Spindexer/spindexer_ks", 0.1, true);
 
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder spindexerEncoder;
@@ -113,13 +111,5 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
         state.spindexerAppliedVoltage =
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
-
-        // if (TUNABLE_SPINDEXER_KS.hasChanged()) {
-        //   spindexClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
-        // spindexerSparkFlexConfig.apply(spindexClosedLoopConfig);
-        //  spindexerSparkFlex.configure(
-        //     spindexerSparkFlexConfig,
-        //     ResetMode.kResetSafeParameters,
-        //    PersistMode.kPersistParameters);
     }
 }
