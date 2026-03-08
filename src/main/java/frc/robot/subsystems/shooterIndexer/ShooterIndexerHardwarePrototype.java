@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -66,14 +67,20 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
                         RobotConstants.MotorIdConstants.SHOOTER_INDEXER_CAN_ID,
                         MotorType.kBrushless);
 
-        shooterIndexerSparkMax.configure(
-                shooterIndexerSparkMaxConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var shooterIndexerStatus =
+                shooterIndexerSparkMax.configure(
+                        shooterIndexerSparkMaxConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         shooterIndexerPidController = shooterIndexerSparkMax.getClosedLoopController();
 
         shooterIndexerEncoder = shooterIndexerSparkMax.getEncoder();
+
+        if (shooterIndexerStatus != REVLibError.kOk) {
+            System.err.println(
+                    "Failed to configure shooter indexer prototype motor: " + shooterIndexerStatus);
+        }
     }
 
     public void runShooterIndexer() {

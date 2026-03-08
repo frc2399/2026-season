@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -205,20 +206,29 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         sparkFlexConfigDriving.apply(sparkFlexClosedLoopConfigDriving);
         sparkMaxConfigTurning.apply(sparkMaxClosedLoopConfigTurning);
 
-        drivingSparkFlex.configure(
-                sparkFlexConfigDriving,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-        turningSparkMax.configure(
-                sparkMaxConfigTurning,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var drivingStatus =
+                drivingSparkFlex.configure(
+                        sparkFlexConfigDriving,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
+        var turningStatus =
+                turningSparkMax.configure(
+                        sparkMaxConfigTurning,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         drivingRelativeEncoder = drivingSparkFlex.getEncoder();
         turningAbsoluteEncoder = turningSparkMax.getAbsoluteEncoder();
 
         drivingPidController = drivingSparkFlex.getClosedLoopController();
         turningPidController = turningSparkMax.getClosedLoopController();
+
+        if (drivingStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure driving motor: " + name + " " + drivingStatus);
+        }
+        if (turningStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure turning motor: " + name + " " + turningStatus);
+        }
     }
 
     public void setDriveEncoderPosition(double position) {

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.FieldConstants;
+import frc.robot.util.GameState;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -39,7 +40,8 @@ public class Robot extends TimedRobot {
      * initialization code.
      */
     public Robot() {
-        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+        // Instantiate our RobotContainer. This will perform all our button bindings,
+        // and put our
         // autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
         DataLogManager.start();
@@ -59,14 +61,20 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        SmartDashboard.putNumber("Robot/batteryVoltage", RobotController.getBatteryVoltage());
-        // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-        // commands, running already-scheduled commands, removing finished or interrupted commands,
-        // and running subsystem periodic() methods.  This must be called from the robot's periodic
+        // Runs the Scheduler. This is responsible for polling buttons, adding
+        // newly-scheduled
+        // commands, running already-scheduled commands, removing finished or
+        // interrupted commands,
+        // and running subsystem periodic() methods. This must be called from the
+        // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
         robotContainer.visionPoseEstimator.periodic();
         robotContainer.setAlerts();
+        SmartDashboard.putNumber(
+                "Robot/batteryVoltageIsHubActive", RobotController.getBatteryVoltage());
+        SmartDashboard.putBoolean("robot/0 second delayIsHubActive", GameState.isHubActive(0));
+        SmartDashboard.putBoolean("robot/1 second delayIsHubActive", GameState.isHubActive(1));
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

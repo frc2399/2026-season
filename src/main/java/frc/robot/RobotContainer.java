@@ -144,6 +144,7 @@ public class RobotContainer {
         // autoChooser.addOption(
         //         "bumpToNeutralZoneShooting", autonCommandFactory.bumpToNeutralZoneShooting());
         autoChooser.addOption("hubToDepot", autonCommandFactory.hubToDepot());
+        autoChooser.addOption("driveStraightTesting", autonCommandFactory.driveStraightTesting());
         // autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
