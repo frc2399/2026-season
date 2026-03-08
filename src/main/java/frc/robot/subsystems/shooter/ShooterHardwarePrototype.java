@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -41,23 +42,22 @@ public class ShooterHardwarePrototype implements ShooterIO {
     private final double SHOOTER_BOTTOM_KS = 0.154;
     private final double SHOOTER_BOTTOM_KV = 0.019691444431922856;
 
-    // have to removE the SHOOTER_ROLLER_PLACE_VALUE and replace with a number
-
-    // private static final TunableNumber TUNABLE_SHOOTER_TOP_D =
+    // tunable numbers, supposed to be saved
+    // private final TunableNumber TUNABLE_SHOOTER_TOP_D =
     // new TunableNumber("Shooter/shooter_top_p", SHOOTER_TOP_D, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_TOP_P =
+    //     private final TunableNumber TUNABLE_SHOOTER_TOP_P =
     //             new TunableNumber("Shooter/shooter_top_p", .001, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_TOP_KS =
+    //     private final TunableNumber TUNABLE_SHOOTER_TOP_KS =
     //             new TunableNumber("Shooter/shooter_top_ks", 0.118, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_TOP_KV =
+    //     private final TunableNumber TUNABLE_SHOOTER_TOP_KV =
     //             new TunableNumber("Shooter/shooter_top_kv", 0.01700044443192286, true);
-    // private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_D =
+    // private final TunableNumber TUNABLE_SHOOTER_BOTTOM_D =
     // new TunableNumber("Shooter/shooter_bottom_p", SHOOTER_BOTTOM_D, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
+    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_P =
     //             new TunableNumber("Shooter/shooter_bottom_p", .001, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KS =
+    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_KS =
     //             new TunableNumber("Shooter/shooter_bottom_ks", 0.154, true);
-    //     private static final TunableNumber TUNABLE_SHOOTER_BOTTOM_KV =
+    //     private final TunableNumber TUNABLE_SHOOTER_BOTTOM_KV =
     //             new TunableNumber("Shooter/shooter_bottom_kv", 0.019691444431922856, true);
 
     private final ClosedLoopConfig closedLoopConfigShooterTop = new ClosedLoopConfig();
@@ -112,20 +112,36 @@ public class ShooterHardwarePrototype implements ShooterIO {
                 new SparkMax(
                         RobotConstants.MotorIdConstants.SHOOTER_TOP_CAN_ID, MotorType.kBrushless);
 
-        shooterBottomSparkFlex.configure(
-                shooterBottomMotorConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-        shooterTopSparkMax.configure(
-                shooterTopMotorConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var shooterBottomStatus =
+                shooterBottomSparkFlex.configure(
+                        shooterBottomMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
+        var shooterTopStatus =
+                shooterTopSparkMax.configure(
+                        shooterTopMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         shooterBottomPIDController = shooterBottomSparkFlex.getClosedLoopController();
         shooterTopPIDController = shooterTopSparkMax.getClosedLoopController();
 
         shooterBottomEncoder = shooterBottomSparkFlex.getEncoder();
         shooterTopEncoder = shooterTopSparkMax.getEncoder();
+
+        if (shooterBottomStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + shooterBottomStatus);
+        }
+        if (shooterBottomStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + shooterBottomStatus);
+        }
+
+        if (shooterTopStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + shooterTopStatus);
+        }
+        if (shooterTopStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + shooterTopStatus);
+        }
     }
 
     public void runShooter() {
@@ -148,6 +164,11 @@ public class ShooterHardwarePrototype implements ShooterIO {
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    @Override
+    public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
+        return new ShooterSpeeds(0, 0);
     }
 
     public void updateStates(ShooterIOState state) {
@@ -215,4 +236,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         //             PersistMode.kPersistParameters);
         // }
     }
+
+    @Override
+    public void runTunableNumberSetpoints() {}
 }
