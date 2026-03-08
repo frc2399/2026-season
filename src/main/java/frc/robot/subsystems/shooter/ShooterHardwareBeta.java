@@ -87,11 +87,11 @@ public class ShooterHardwareBeta implements ShooterIO {
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
-    public ShooterHardwareBeta() {
+    public ShooterHardwareBeta(boolean shouldInvertBottomRoller) {
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
         shooterTopMotorConfig.idleMode(IdleMode.kCoast);
-        shooterBottomMotorConfig.inverted(false);
+        shooterBottomMotorConfig.inverted(shouldInvertBottomRoller);
         shooterTopMotorConfig.inverted(true);
         shooterBottomMotorConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));

@@ -34,6 +34,10 @@ public class SubsystemFactory {
     private static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI;
     private static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
 
+    // shooter bottom roller inversions
+    private static final boolean invertBetaShooterBottomRoller = false;
+    private static final boolean invertCompShooterBottomRoller = true;
+
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
@@ -161,8 +165,10 @@ public class SubsystemFactory {
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype());
-        } else if (robotType == RobotType.BETA || robotType == RobotType.COMP) {
-            return new ShooterSubsystem(new ShooterHardwareBeta());
+        } else if (robotType == RobotType.BETA) {
+            return new ShooterSubsystem(new ShooterHardwareBeta(invertBetaShooterBottomRoller));
+        } else if (robotType == RobotType.COMP) {
+            return new ShooterSubsystem(new ShooterHardwareBeta(invertCompShooterBottomRoller));
         } else {
             return new ShooterSubsystem(new ShooterPlacebo());
         }
