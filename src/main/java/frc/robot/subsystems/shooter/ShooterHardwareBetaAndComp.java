@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -22,7 +23,7 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
 
-public class ShooterHardwareBeta implements ShooterIO {
+public class ShooterHardwareBetaAndComp implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
     private SparkFlex shooterTopSparkFlex;
     private SparkClosedLoopController shooterBottomPIDController;
@@ -86,11 +87,11 @@ public class ShooterHardwareBeta implements ShooterIO {
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
-    public ShooterHardwareBeta() {
+    public ShooterHardwareBetaAndComp(boolean shouldInvertBottomRoller) {
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
         shooterTopMotorConfig.idleMode(IdleMode.kCoast);
-        shooterBottomMotorConfig.inverted(false);
+        shooterBottomMotorConfig.inverted(shouldInvertBottomRoller);
         shooterTopMotorConfig.inverted(true);
         shooterBottomMotorConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
@@ -128,20 +129,30 @@ public class ShooterHardwareBeta implements ShooterIO {
                         RobotConstants.MotorIdConstants.SHOOTER_TOP_BETA_CAN_ID,
                         MotorType.kBrushless);
 
-        shooterBottomSparkFlex.configure(
-                shooterBottomMotorConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-        shooterTopSparkFlex.configure(
-                shooterTopMotorConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var shooterBottomStatus =
+                shooterBottomSparkFlex.configure(
+                        shooterBottomMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
+        var shooterTopStatus =
+                shooterTopSparkFlex.configure(
+                        shooterTopMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         shooterBottomPIDController = shooterBottomSparkFlex.getClosedLoopController();
         shooterTopPIDController = shooterTopSparkFlex.getClosedLoopController();
 
         shooterBottomEncoder = shooterBottomSparkFlex.getEncoder();
         shooterTopEncoder = shooterTopSparkFlex.getEncoder();
+
+        if (shooterBottomStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + shooterBottomStatus);
+        }
+
+        if (shooterTopStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + shooterTopStatus);
+        }
     }
 
     public void runShooter() {
@@ -162,6 +173,21 @@ public class ShooterHardwareBeta implements ShooterIO {
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    public boolean isUpToSpeed() {
+        boolean isTopRollerDesiredSpeed =
+                Math.abs(
+                                (shooterTopEncoder.getVelocity())
+                                        - (desiredTopVelocity.in(RadiansPerSecond)))
+                        < 25;
+        boolean isBottomRollerDesiredSpeed =
+                Math.abs(
+                                (shooterBottomEncoder.getVelocity())
+                                        - (desiredBottomVelocity.in(RadiansPerSecond)))
+                        < 25;
+
+        return isTopRollerDesiredSpeed && isBottomRollerDesiredSpeed;
     }
 
     public void updateStates(ShooterIOState state) {

@@ -67,6 +67,12 @@ public final class RobotConstants {
         public static final double LOW_BATTERY_VOLTAGE = 11.0;
     }
 
+    public static class InversionConstants {
+        // shooter bottom roller inversions
+        public static final boolean INVERT_BETA_SHOOTER_BOTTOM_ROLLER = false;
+        public static final boolean INVERT_COMP_SHOOTER_BOTTOM_ROLLER = true;
+    }
+
     public static class TransformConstants {
         public static final Distance ROBOT_TO_SHOOTER_X = Inches.of(-12.63);
         public static final Distance ROBOT_TO_SHOOTER_Y = Inches.of(-8.5);
@@ -76,5 +82,10 @@ public final class RobotConstants {
                         ROBOT_TO_SHOOTER_X.in(Meters),
                         ROBOT_TO_SHOOTER_Y.in(Meters),
                         new Rotation2d(0));
+    }
+
+    public static class GearRatios {
+        public static final int BETA_SPINDEXER_GEAR_RATIO = 6; // 6 : 1 gear ratio
+        public static final int COMP_SPINDEXER_GEAR_RATIO = 9; // 9 : 1 gear ratio
     }
 }

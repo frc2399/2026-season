@@ -11,8 +11,8 @@ public interface SpindexerIO {
     public void runSpindexerBackwards();
 
     public static class SpindexerIOState {
-        public double spindexerDesiredSpeed = 0;
-        public double spindexerActualSpeed = 0;
+        public double spindexerDesiredSpeedRad_P_S = 0;
+        public double spindexerActualSpeedRad_P_S = 0;
         public double spindexerAppliedVoltage = 0;
         public double spindexerCurrent = 0;
     }
