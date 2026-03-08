@@ -39,18 +39,21 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
             12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
     private final boolean SPINDEXER_INVERTED = false;
 
+    //     private static final TunableNumber TUNABLE_SPINDEXER_KS =
+    //             new TunableNumber("Spindexer/spindexer_ks", 0.1, true);
+
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder spindexerEncoder;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
+
+    SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
 
     public SpindexerHardwareBetaAndComp(int spindexerGearRatio) {
 
         this.SPINDEXER_GEAR_RATIO = spindexerGearRatio;
         ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / spindexerGearRatio);
         ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60 / spindexerGearRatio);
-
-        SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
 
         spindexerSparkFlexConfig.idleMode(IdleMode.kCoast);
         spindexerSparkFlexConfig.inverted(SPINDEXER_INVERTED);
@@ -110,5 +113,13 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
         state.spindexerAppliedVoltage =
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
+
+        // if (TUNABLE_SPINDEXER_KS.hasChanged()) {
+        //   spindexClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
+        // spindexerSparkFlexConfig.apply(spindexClosedLoopConfig);
+        //  spindexerSparkFlex.configure(
+        //     spindexerSparkFlexConfig,
+        //     ResetMode.kResetSafeParameters,
+        //    PersistMode.kPersistParameters);
     }
 }
