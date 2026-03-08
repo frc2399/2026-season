@@ -71,6 +71,7 @@ public class SubsystemFactory {
             csvFilepath = Filesystem.getDeployDirectory() + "\\beta-shooter-speeds.csv";
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType = RobotType.COMP;
+            csvFilepath = Filesystem.getDeployDirectory() + "\\comp-shooter-speeds.csv";
         } else if (serialNum.equals(BUBBLES_SERIAL_NUMBER)) {
             robotType = RobotType.BUBBLES;
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
