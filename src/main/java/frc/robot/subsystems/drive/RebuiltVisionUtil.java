@@ -100,16 +100,4 @@ public class RebuiltVisionUtil {
             return false;
         }
     }
-
-
-
-
-    public static boolean isPassingAlignedWithAllianceZone() {
- 
-        if () {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
