@@ -36,6 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
                             armProfiledPidEnabled = true;
                             rollerIO.setZero();
                             // armIO.runIntakeArmZeroVelocity();
+                            armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                         })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
@@ -71,6 +72,16 @@ public class IntakeSubsystem extends SubsystemBase {
                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                 });
     }
+
+    // public Command feedFuelToSpindexer() {
+    //      return this.run(
+    //             () -> {
+    //                 armProfiledPidEnabled = true;
+    //                 armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+
+    //             });
+
+    // }
 
     @Override
     public void periodic() {

@@ -101,7 +101,7 @@ public class RobotContainer {
                                         driverController.getRightX(),
                                         DriveControlConstants.DRIVE_DEADBAND)),
                         true,
-                        () -> (driverController.a().getAsBoolean())));
+                        () -> (driverController.leftBumper().getAsBoolean())));
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
         spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
@@ -114,7 +114,9 @@ public class RobotContainer {
         // note! do not bind to the a button; it is used in drive command for auto-orient!
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
-        driverController.leftBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController.leftTrigger().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController.x().whileTrue(drive.setX());
+        driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
     }
 
     private void configureButtonBindingsTuningController() {
