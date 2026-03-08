@@ -115,8 +115,8 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
-        state.shooterIndexerActualSpeed = shooterIndexerEncoder.getVelocity();
+        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
+        state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkFlex.getBusVoltage()
                         * shooterIndexerSparkFlex.getAppliedOutput();

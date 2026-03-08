@@ -104,8 +104,8 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
     }
 
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
-        state.shooterIndexerActualSpeed = shooterIndexerEncoder.getVelocity();
+        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
+        state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerCurrent = shooterIndexerSparkMax.getOutputCurrent();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkMax.getAppliedOutput() * shooterIndexerSparkMax.getBusVoltage();
