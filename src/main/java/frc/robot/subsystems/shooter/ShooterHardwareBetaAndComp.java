@@ -23,7 +23,7 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
 
-public class ShooterHardwareBeta implements ShooterIO {
+public class ShooterHardwareBetaAndComp implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
     private SparkFlex shooterTopSparkFlex;
     private SparkClosedLoopController shooterBottomPIDController;
@@ -87,7 +87,7 @@ public class ShooterHardwareBeta implements ShooterIO {
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
-    public ShooterHardwareBeta(boolean shouldInvertBottomRoller) {
+    public ShooterHardwareBetaAndComp(boolean shouldInvertBottomRoller) {
 
         shooterBottomMotorConfig.idleMode(IdleMode.kCoast);
         shooterTopMotorConfig.idleMode(IdleMode.kCoast);

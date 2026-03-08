@@ -16,7 +16,7 @@ import frc.robot.subsystems.intake.IntakeArmPlacebo;
 import frc.robot.subsystems.intake.IntakeRollerHardware;
 import frc.robot.subsystems.intake.IntakeRollerPlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.ShooterHardwareBeta;
+import frc.robot.subsystems.shooter.ShooterHardwareBetaAndComp;
 import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -33,10 +33,6 @@ public class SubsystemFactory {
     private static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0;
     private static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI;
     private static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
-
-    // shooter bottom roller inversions
-    private static final boolean invertBetaShooterBottomRoller = false;
-    private static final boolean invertCompShooterBottomRoller = true;
 
     // we may need more, depending on how many subsystem + rio we have
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
@@ -166,9 +162,13 @@ public class SubsystemFactory {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype());
         } else if (robotType == RobotType.BETA) {
-            return new ShooterSubsystem(new ShooterHardwareBeta(invertBetaShooterBottomRoller));
+            return new ShooterSubsystem(
+                    new ShooterHardwareBetaAndComp(
+                            RobotConstants.InversionConstants.INVERT_BETA_SHOOTER_BOTTOM_ROLLER));
         } else if (robotType == RobotType.COMP) {
-            return new ShooterSubsystem(new ShooterHardwareBeta(invertCompShooterBottomRoller));
+            return new ShooterSubsystem(
+                    new ShooterHardwareBetaAndComp(
+                            RobotConstants.InversionConstants.INVERT_COMP_SHOOTER_BOTTOM_ROLLER));
         } else {
             return new ShooterSubsystem(new ShooterPlacebo());
         }
