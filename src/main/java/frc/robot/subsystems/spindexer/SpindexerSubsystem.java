@@ -20,7 +20,7 @@ public class SpindexerSubsystem extends SubsystemBase {
     }
 
     public Command runSpindexerBackwards() {
-        return this.run(() -> io.runSpindexer()).withName("runSpindexerBackwards");
+        return this.run(() -> io.runSpindexerBackwards()).withName("runSpindexerBackwards");
     }
 
     public Command defaultBehavior() {
