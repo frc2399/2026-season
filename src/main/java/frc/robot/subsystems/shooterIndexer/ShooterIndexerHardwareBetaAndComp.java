@@ -40,14 +40,14 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
             RadiansPerSecond.of(2 * Math.PI / 60 / SHOOTER_INDEXER_GEAR_RATIO);
 
-    private static final double SHOOTER_INDEXER_P = 0;
+    private static final double SHOOTER_INDEXER_P = 0.0001;
     private static final double SHOOTER_INDEXER_I = 0;
     private static final double SHOOTER_INDEXER_D = 0;
     private static final double SHOOTER_INDEXER_MIN_OUTPUT = -1;
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
     private static final double SHOOTER_INDEXER_KS = 0.1355;
-    private static final double SHOOTER_INDEXER_KV = 0.035;
+    private static final double SHOOTER_INDEXER_KV = 0.030;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
@@ -95,7 +95,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     @Override
     public void runShooterIndexer() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(.9);
+        desiredVelocity = RadiansPerSecond.of(215 * 3);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
