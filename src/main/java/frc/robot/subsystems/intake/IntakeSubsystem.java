@@ -72,6 +72,16 @@ public class IntakeSubsystem extends SubsystemBase {
                 });
     }
 
+    // public Command feedFuelToSpindexer() {
+    //      return this.run(
+    //             () -> {
+    //                 armProfiledPidEnabled = true;
+    //                 armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+
+    //             });
+
+    // }
+
     @Override
     public void periodic() {
 
