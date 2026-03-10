@@ -28,7 +28,7 @@ import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.RobotConstants;
 
-public class IntakeArmHardwareBeta implements IntakeArmIO {
+public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     // ratios: motor to mechanism if 45:1
     // encoder to mechanism is 1:1
     private final SparkFlex intakeArmSparkFlex;
@@ -55,9 +55,9 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     // feedforward
     private static final double INTAKE_ARM_KS = 0.0;
-    private static final double INTAKE_ARM_KV = 1.0;
+    private static final double INTAKE_ARM_KV = .95;
     private static final double INTAKE_ARM_KA = 0.0;
-    private static final double INTAKE_ARM_KCOS = .255;
+    private static final double INTAKE_ARM_KCOS = .29;
 
     // we use an outside feedforward, because arms also have a cosine factor (the
     // impact of gravity changes), and revlib's is poorly documented so it's not
@@ -95,7 +95,7 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
 
     // much if we are within 1 degree of the goal
 
-    public IntakeArmHardwareBeta() {
+    public IntakeArmHardwareBetaAndComp() {
         intakeArmSparkFlexConfig
                 .inverted(INTAKE_ARM_MOTOR_INVERTED)
                 .idleMode(IdleMode.kBrake)

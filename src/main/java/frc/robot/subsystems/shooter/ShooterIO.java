@@ -7,8 +7,6 @@ public interface ShooterIO {
 
     public void updateStates(ShooterIOState state);
 
-    public void periodicUpdate();
-
     public ShooterSpeeds getCurrentTopAndBottomSpeeds();
 
     public void runTunableNumberSetpoints();
