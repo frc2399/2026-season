@@ -67,7 +67,7 @@ public class AutonCommandFactory {
                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                 // drive.driveToPoseOnExecute(),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(6));
-    }
+    } 
 
     public Command depotSideDepotToNeutralZoneShooting() {
         return Commands.sequence(
