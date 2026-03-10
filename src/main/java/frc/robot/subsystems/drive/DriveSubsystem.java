@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.FlippingUtil;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -52,6 +53,7 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.subsystems.drive.gyro.Gyro;
+import frc.robot.util.FieldCalculationHelpers;
 import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator.DriveBase;
 import java.util.function.BooleanSupplier;
@@ -268,6 +270,15 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         robotPose = getPose();
         field2d.setRobotPose(robotPose);
 
+        SmartDashboard.putBoolean(
+                "robot/should Target Hub", FieldCalculationHelpers.shouldTargetHub(robotPose));
+        SmartDashboard.putBoolean(
+                "robot/isShootingAngleAlignedToHub",
+                RebuiltVisionUtil.isShootingAngleAlignedToHub(() -> robotPose));
+        SmartDashboard.putString(
+                "robot/shouldRobotpassLeftOrRight",
+                FieldCalculationHelpers.shouldRobotPassLeftOrRight(robotPose).toString());
+
         frontLeftField2dModule.setPose(
                 robotPose.transformBy(
                         new Transform2d(
@@ -339,6 +350,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                     rearRight.getPosition()
                 },
                 pose);
+    }
+
+    public void resetOdometryFlipped(Pose2d pose) {
+        boolean red = FieldConstants.alliance.get() == Alliance.Red;
+        if (red) {
+            pose = FlippingUtil.flipFieldPose(pose);
+        }
+        resetOdometry(pose);
     }
 
     // basically, when we reset gyro, m_gyroOffset in SwerveDrivePoseEstimator does

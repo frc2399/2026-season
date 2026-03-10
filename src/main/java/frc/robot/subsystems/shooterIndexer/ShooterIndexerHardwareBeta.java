@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -76,13 +77,19 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
         shooterIndexerSparkFlex =
                 new SparkFlex(MotorIdConstants.SHOOTER_INDEXER_BETA_CAN_ID, MotorType.kBrushless);
-        shooterIndexerSparkFlex.configure(
-                shooterIndexerSparkFlexConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var shooterIndexerStatus =
+                shooterIndexerSparkFlex.configure(
+                        shooterIndexerSparkFlexConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         shooterIndexerEncoder = shooterIndexerSparkFlex.getEncoder();
         shooterIndexerPidController = shooterIndexerSparkFlex.getClosedLoopController();
+
+        if (shooterIndexerStatus != REVLibError.kOk) {
+            System.err.println(
+                    "Failed to configure shooter indexer motor: " + shooterIndexerStatus);
+        }
     }
 
     @Override
@@ -108,8 +115,8 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
-        state.shooterIndexerActualSpeed = shooterIndexerEncoder.getVelocity();
+        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
+        state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkFlex.getBusVoltage()
                         * shooterIndexerSparkFlex.getAppliedOutput();
