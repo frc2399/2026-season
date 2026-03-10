@@ -1,12 +1,13 @@
 package frc.robot;
 
+import static frc.robot.constants.FieldConstants.PoseConstants.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -16,10 +17,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
-import static frc.robot.constants.FieldConstants.PoseConstants.*;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmSetpoint;
+
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +38,8 @@ public class AutonCommandFactory {
             new PathConstraints(
                     0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
-    public AutonCommandFactory(DriveSubsystem drive, IntakeSubsystem intake, CommandFactory commandFactory) {
+    public AutonCommandFactory(
+            DriveSubsystem drive, IntakeSubsystem intake, CommandFactory commandFactory) {
         this.drive = drive;
         this.intake = intake;
         this.commandFactory = commandFactory;
@@ -60,15 +63,16 @@ public class AutonCommandFactory {
 
     public Command trenchToDepot() {
         return Commands.sequence(
+                intake.stowArm(),
                 Commands.runOnce(() -> drive.resetOdometryFlipped(BLUE_DEPOT_STARTING_LINE.pose())),
                 buildPathDeferred(IN_THE_DEPOT, constraints, 0),
-                // drive.driveToPoseOnExecute(),
+                drive.driveToPoseOnExecute(),
                 commandFactory.runIntakeandIntakeArm().withTimeout(3),
                 intake.defaultBehavior().withTimeout(0.01),
                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                // drive.driveToPoseOnExecute(),
+                drive.driveToPoseOnExecute(),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(6));
-    } 
+    }
 
     public Command depotSideDepotToNeutralZoneShooting() {
         return Commands.sequence(
@@ -83,8 +87,9 @@ public class AutonCommandFactory {
                         BLUE_DEPOT_WALL_FUEL_CENTER.pose()));
     }
 
-        public Command depotSideNeutralZoneIntaking() {
+    public Command depotSideNeutralZoneIntaking() {
         return Commands.sequence(
+                intake.stowArm(),
                 Commands.runOnce(() -> drive.resetOdometryFlipped(BLUE_DEPOT_STARTING_LINE.pose())),
                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
@@ -124,7 +129,9 @@ public class AutonCommandFactory {
 
     public Command outpostSideNeutralZoneIntaking() {
         return Commands.sequence(
-                Commands.runOnce(() -> drive.resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
+                intake.stowArm(),
+                Commands.runOnce(
+                        () -> drive.resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
                 followWaypoints(
@@ -163,6 +170,7 @@ public class AutonCommandFactory {
 
     public Command driveStraightTesting() {
         return Commands.sequence(
+                intake.stowArm(),
                 Commands.runOnce(
                         () ->
                                 drive.resetOdometryFlipped(
@@ -196,5 +204,5 @@ public class AutonCommandFactory {
                     path.preventFlipping = false;
                     CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
                 });
-}
+    }
 }
