@@ -158,7 +158,7 @@ public class SubsystemFactory {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
-                    new IntakeArmHardwareBetaAndComp());
+                    new IntakeArmPlacebo());
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
