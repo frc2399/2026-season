@@ -166,6 +166,21 @@ public class ShooterHardwarePrototype implements ShooterIO {
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
+    public boolean isUpToSpeed() {
+        boolean isTopRollerDesiredSpeed =
+                Math.abs(
+                                (shooterTopEncoder.getVelocity())
+                                        - (desiredTopVelocity.in(RadiansPerSecond)))
+                        < 25;
+        boolean isBottomRollerDesiredSpeed =
+                Math.abs(
+                                (shooterBottomEncoder.getVelocity())
+                                        - (desiredBottomVelocity.in(RadiansPerSecond)))
+                        < 25;
+
+        return isTopRollerDesiredSpeed && isBottomRollerDesiredSpeed;
+    }
+
     @Override
     public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
         return new ShooterSpeeds(0, 0);

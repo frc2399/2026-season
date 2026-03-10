@@ -109,8 +109,8 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     }
 
     public void updateStates(SpindexerIOState state) {
-        state.spindexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond) / SPINDEXER_GEAR_RATIO;
-        state.spindexerActualSpeed = spindexerEncoder.getVelocity();
+        state.spindexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
+        state.spindexerActualSpeedRad_P_S = spindexerEncoder.getVelocity();
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
         state.spindexerAppliedVoltage =
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
