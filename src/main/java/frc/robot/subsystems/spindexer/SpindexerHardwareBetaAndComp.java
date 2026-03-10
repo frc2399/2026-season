@@ -3,6 +3,7 @@ package frc.robot.subsystems.spindexer;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.REVLibError;
@@ -18,6 +19,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Time;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 
@@ -32,15 +34,13 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
-    private final double SPINDEXER_P = 0;
+    private final double SPINDEXER_P = 0.00001;
     private final double SPINDEXER_D = 0;
-    private final double SPINDEXER_KS = 0.1;
-    private final double SPINDEXER_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private final double SPINDEXER_KS = 0.175;
+    private final double SPINDEXER_KV = 0.017;
     private final boolean SPINDEXER_INVERTED = false;
 
-    //     private static final TunableNumber TUNABLE_SPINDEXER_KS =
-    //             new TunableNumber("Spindexer/spindexer_ks", 0.1, true);
+    private final Time CLOSED_LOOP_RAMP_RATE = Seconds.of(0.1);
 
     private final ClosedLoopConfig spindexClosedLoopConfig = new ClosedLoopConfig();
     private final RelativeEncoder spindexerEncoder;
@@ -59,6 +59,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
         spindexerSparkFlexConfig.inverted(SPINDEXER_INVERTED);
         spindexerSparkFlexConfig.smartCurrentLimit(
                 (int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
+        spindexerSparkFlexConfig.closedLoopRampRate(CLOSED_LOOP_RAMP_RATE.in(Seconds));
 
         spindexerSparkFlexConfig.encoder.positionConversionFactor(
                 ENCODER_POSITION_FACTOR.in(Radians));
@@ -120,13 +121,5 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
         state.spindexerAppliedVoltage =
                 spindexerSparkFlex.getAppliedOutput() * spindexerSparkFlex.getBusVoltage();
-
-        // if (TUNABLE_SPINDEXER_KS.hasChanged()) {
-        //   spindexClosedLoopConfig.feedForward.kS(TUNABLE_SPINDEXER_KS.get());
-        // spindexerSparkFlexConfig.apply(spindexClosedLoopConfig);
-        //  spindexerSparkFlex.configure(
-        //     spindexerSparkFlexConfig,
-        //     ResetMode.kResetSafeParameters,
-        //    PersistMode.kPersistParameters);
     }
 }

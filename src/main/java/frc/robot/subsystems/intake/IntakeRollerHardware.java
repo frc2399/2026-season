@@ -26,8 +26,10 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private SparkFlex intakeSparkFlex;
     private final SparkClosedLoopController intakePidController;
 
-    private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
-    private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
+    private static final double ROLLER_GEAR_RATIO = 3.0 / 2.0;
+    private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / ROLLER_GEAR_RATIO);
+    private final AngularVelocity ENCODER_VELOCITY_FACTOR =
+            RadiansPerSecond.of((2 * Math.PI / 60) / ROLLER_GEAR_RATIO);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
     private final double INTAKE_D = 0.0;
