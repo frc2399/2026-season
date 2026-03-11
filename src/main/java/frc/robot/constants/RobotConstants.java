@@ -32,7 +32,7 @@ public final class RobotConstants {
         public static final int SHOOTER_BOTTOM_CAN_ID = 3;
         public static final int SHOOTER_TOP_CAN_ID = 21;
 
-        public static final int INTAKE_ROLLER_BETA_CAN_ID = 7;
+        public static final int INTAKE_ROLLER_BETA_AND_COMP_CAN_ID = 7;
         public static final int INTAKE_ARM_BETA_CAN_ID = 8;
         public static final int SHOOTER_BOTTOM_BETA_CAN_ID = 9;
         public static final int SHOOTER_TOP_BETA_CAN_ID = 10;
@@ -67,14 +67,8 @@ public final class RobotConstants {
         public static final double LOW_BATTERY_VOLTAGE = 11.0;
     }
 
-    public static class InversionConstants {
-        // shooter bottom roller inversions
-        public static final boolean INVERT_BETA_SHOOTER_BOTTOM_ROLLER = false;
-        public static final boolean INVERT_COMP_SHOOTER_BOTTOM_ROLLER = true;
-    }
-
     public static class TransformConstants {
-        public static final Distance ROBOT_TO_SHOOTER_X = Inches.of(-12.63);
+        public static final Distance ROBOT_TO_SHOOTER_X = Inches.of(-10.425726);
         public static final Distance ROBOT_TO_SHOOTER_Y = Inches.of(-8.5);
         // these values should be edited once we have our robot to shooter transform
         public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM =
