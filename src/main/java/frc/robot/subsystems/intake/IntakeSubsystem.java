@@ -1,7 +1,11 @@
 package frc.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Seconds;
+
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmIOState;
 import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmSetpoint;
@@ -13,6 +17,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private IntakeRollerIOState rollerState = new IntakeRollerIOState();
     private IntakeArmIOState armState = new IntakeArmIOState();
 
+    private Time feedFuelTimeoutSeconds = Seconds.of(1);
     public boolean armProfiledPidEnabled = false;
 
     public IntakeSubsystem(IntakeRollerIO rollerIO, IntakeArmIO armIO) {
@@ -70,6 +75,19 @@ public class IntakeSubsystem extends SubsystemBase {
                     // armProfiledPidEnabled = true;
                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                 });
+    }
+
+    public Command feedFuelSetpoint() {
+        return this.runOnce(() -> {
+                armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+        });
+    }
+
+    public Command feedFuel() {
+        return Commands.sequence(
+            feedFuel().withTimeout(feedFuelTimeoutSeconds),
+            stowArm().withTimeout(feedFuelTimeoutSeconds)
+        ).repeatedly();
     }
 
     // public Command feedFuelToSpindexer() {
