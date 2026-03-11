@@ -7,8 +7,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,7 +26,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 import frc.robot.util.GameState;
-import frc.robot.vision.LimelightHelpers.PoseEstimate;
 import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
@@ -153,33 +150,6 @@ public class RobotContainer {
         // autoChooser.addOption("bumpToNeutralZone", autonCommandFactory.bumpToNeutralZone());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
-
-        // PELASE PLEASE PLEASE DELETE BEFORE PR
-        SmartDashboard.putData("reset odometry for facing blue wall", resetOdometryBlue());
-    }
-
-    public Command resetOdometryBlue() {
-
-        return (gyro.setYawCommand(Degrees.of(180)).ignoringDisable(true))
-                .andThen(
-                        Commands.runOnce(
-                                        () -> {
-                                            SmartDashboard.putBoolean(
-                                                    "reseting odometry blue", true);
-                                            var poseEstimate =
-                                                    visionPoseEstimator.getPoseEstimate("");
-                                            poseEstimate.ifPresent(
-                                                    (PoseEstimate pose) -> {
-                                                        var poseCopy = pose.pose;
-                                                        drive.resetOdometry(
-                                                                new Pose2d(
-                                                                        poseCopy.getTranslation(),
-                                                                        new Rotation2d(
-                                                                                gyro.getYaw(
-                                                                                        false))));
-                                                    });
-                                        })
-                                .ignoringDisable(true));
     }
 
     public Command getAutonomousCommand() {
