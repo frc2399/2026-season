@@ -78,6 +78,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private Angle desiredAngle = Degrees.of(0);
     private AngularVelocity desiredAngularVelocity = DegreesPerSecond.of(0);
 
+    private Angle desiredArmAngleBelowTrench = Degrees.of(30);
+
     // profiled PID control
     private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(1.6);
     private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(.8);
@@ -90,12 +92,14 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
     private TrapezoidProfile.State intermediateSetpointState = new TrapezoidProfile.State();
     private Angle pidDeadband =
             Degrees.of(3); // due to significant backlash on the mechanism, we don't want to adjust
-
     // as
 
     // much if we are within 1 degree of the goal
 
-    public IntakeArmHardwareBeta() {
+    private boolean shouldDeadband;
+
+    public IntakeArmHardwareBeta(boolean shouldDeadband) {
+        this.shouldDeadband = shouldDeadband;
         intakeArmSparkFlexConfig
                 .inverted(INTAKE_ARM_MOTOR_INVERTED)
                 .idleMode(IdleMode.kBrake)
@@ -151,9 +155,6 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
             desiredAngle = Degrees.of(-25);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
-            desiredAngle = Degrees.of(10);
-            goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
-        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL) {
             desiredAngle = Degrees.of(10);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         }
@@ -215,7 +216,8 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
                         goalState);
         double calculatedFeedforward;
         if (Math.abs(goalState.position - intakeArmAbsoluteEncoder.getPosition())
-                < pidDeadband.in(Radians)) {
+                        < pidDeadband.in(Radians)
+                && shouldDeadband == true) {
             calculatedFeedforward =
                     intakeArmFeedforward.calculate(intermediateSetpointState.position, 0);
         } else {
@@ -251,5 +253,14 @@ public class IntakeArmHardwareBeta implements IntakeArmIO {
         state.appliedVoltage =
                 intakeArmSparkFlex.getBusVoltage() * intakeArmSparkFlex.getAppliedOutput();
         state.current = intakeArmSparkFlex.getOutputCurrent();
+    }
+
+    @Override
+    public boolean ifArmIsBelowTrench() {
+        if (desiredArmAngleBelowTrench.in(Degrees) <= intakeArmAbsoluteEncoder.getPosition()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
