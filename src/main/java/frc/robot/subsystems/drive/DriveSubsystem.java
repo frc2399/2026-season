@@ -653,6 +653,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         posePublisher.set(states.pose);
 
         SmartDashboard.putBoolean("vision/orient/shouldAutoOrient", isAutoOrienting);
+        SmartDashboard.putNumber(
+                "shooter/distance to hub (in)",
+                RebuiltVisionUtil.getDistanceToHub(() -> robotPose).in(Inches));
         SmartDashboard.putNumber("drive/Pose X(m)", states.pose.getX());
         SmartDashboard.putNumber("drive/Pose Y(m)", states.pose.getY());
         SmartDashboard.putNumber("drive/Pose Theta(deg)", states.poseTheta);
