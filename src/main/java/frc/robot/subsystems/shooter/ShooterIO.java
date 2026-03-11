@@ -11,6 +11,8 @@ public interface ShooterIO {
 
     public void runTunableNumberSetpoints();
 
+    public boolean isUpToSpeed();
+
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;
         public double topRollerActualSpeed = 0.0;

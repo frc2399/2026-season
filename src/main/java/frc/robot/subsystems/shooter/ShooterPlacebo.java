@@ -9,6 +9,11 @@ public class ShooterPlacebo implements ShooterIO {
     public void updateStates(ShooterIOState state) {}
 
     @Override
+    public boolean isUpToSpeed() {
+        return true;
+    }
+
+    @Override
     public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
         return new ShooterSpeeds(50 * Math.random(), 50 * Math.random());
     }
