@@ -104,7 +104,6 @@ public class AutonCommandFactory {
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
                         commandFactory.runIntakeandIntakeArm().withTimeout(6),
-                        intake.defaultBehavior().withTimeout(0.01),
                         followWaypoints(
                                 BLUE_DEPOT_WALL_FUEL_CENTER.pose(),
                                 intakeConstraints,
@@ -115,6 +114,7 @@ public class AutonCommandFactory {
                                 DEPOT_NEUTRAL_ZONE_CENTER.pose(),
                                 DEPOT_IN_NEUTRAL_ZONE.pose(),
                                 BLUE_DEPOT_BORDER_FUEL_EDGE.pose())),
+                        intake.defaultBehavior().withTimeout(0.01),
                 followWaypoints(
                         BLUE_DEPOT_BORDER_FUEL_EDGE.pose(),
                         constraints,
@@ -145,7 +145,6 @@ public class AutonCommandFactory {
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
                         commandFactory.runIntakeandIntakeArm().withTimeout(6),
-                        intake.defaultBehavior().withTimeout(0.01),
                         followWaypoints(
                                 BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
                                 intakeConstraints,
@@ -156,8 +155,9 @@ public class AutonCommandFactory {
                                 OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
                                 OUTPOST_IN_NEUTRAL_ZONE.pose(),
                                 BLUE_OUTPOST_BORDER_FUEL_EDGE.pose())),
+                        intake.defaultBehavior().withTimeout(0.01),
                 followWaypoints(
-                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
+                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(), 
                         constraints,
                         0,
                         Rotation2d.fromDegrees(180),
