@@ -175,9 +175,9 @@ public class SubsystemFactory {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype(), csvFilepath);
         } else if (robotType == RobotType.BETA) {
-            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp(), csvFilepath);
         } else if (robotType == RobotType.COMP) {
-            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp(), csvFilepath);
         } else {
             return new ShooterSubsystem(new ShooterPlacebo(), csvFilepath);
         }
