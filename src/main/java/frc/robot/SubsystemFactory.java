@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConstants.GearRatios;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -12,20 +13,20 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
-import frc.robot.subsystems.intake.IntakeArmHardwareBeta;
+import frc.robot.subsystems.intake.IntakeArmHardwareBetaAndComp;
 import frc.robot.subsystems.intake.IntakeArmPlacebo;
 import frc.robot.subsystems.intake.IntakeRollerHardware;
 import frc.robot.subsystems.intake.IntakeRollerPlacebo;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.ShooterHardwareBeta;
+import frc.robot.subsystems.shooter.ShooterHardwareBetaAndComp;
 import frc.robot.subsystems.shooter.ShooterHardwarePrototype;
 import frc.robot.subsystems.shooter.ShooterPlacebo;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBeta;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwareBetaAndComp;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerHardwarePrototype;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerPlacebo;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
-import frc.robot.subsystems.spindexer.SpindexerHardwareBeta;
+import frc.robot.subsystems.spindexer.SpindexerHardwareBetaAndComp;
 import frc.robot.subsystems.spindexer.SpindexerPlacebo;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 
@@ -39,8 +40,8 @@ public class SubsystemFactory {
     private static final String MOZART_SERIAL_NUMBER = "030ee8c8";
     private static final String BUBBLES_SERIAL_NUMBER = "030fc267";
     private static final String BETA_SERIAL_NUMBER = "030589d5";
-    private static final String COMP_SERIAL_NUMBER = "";
-    private static final String PROTOTYPE_SERIAL_NUMBER = "03260A64";
+    private static final String COMP_SERIAL_NUMBER = "03260A64";
+    private static final String PROTOTYPE_SERIAL_NUMBER = "";
 
     public enum RobotType {
         MOZART,
@@ -98,7 +99,8 @@ public class SubsystemFactory {
         SwerveModule rearRight;
         if (robotType == RobotType.BETA
                 || robotType == RobotType.BUBBLES
-                || robotType == RobotType.MOZART) {
+                || robotType == RobotType.MOZART
+                || robotType == RobotType.COMP) {
             frontLeft =
                     new SwerveModule(
                             new SwerveModuleHardwareVortex(
@@ -157,8 +159,13 @@ public class SubsystemFactory {
         } else if (robotType == RobotType.BETA) {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
-                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_CAN_ID),
-                    new IntakeArmHardwareBeta());
+                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
+                    new IntakeArmHardwareBetaAndComp());
+        } else if (robotType == RobotType.COMP) {
+            return new IntakeSubsystem(
+                    new IntakeRollerHardware(
+                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
+                    new IntakeArmPlacebo());
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
@@ -168,7 +175,9 @@ public class SubsystemFactory {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterSubsystem(new ShooterHardwarePrototype(), csvFilepath);
         } else if (robotType == RobotType.BETA) {
-            return new ShooterSubsystem(new ShooterHardwareBeta(), csvFilepath);
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
+        } else if (robotType == RobotType.COMP) {
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
         } else {
             return new ShooterSubsystem(new ShooterPlacebo(), csvFilepath);
         }
@@ -176,7 +185,11 @@ public class SubsystemFactory {
 
     public SpindexerSubsystem buildSpindexer() {
         if (robotType == RobotType.BETA) {
-            return new SpindexerSubsystem(new SpindexerHardwareBeta());
+            return new SpindexerSubsystem(
+                    new SpindexerHardwareBetaAndComp(GearRatios.BETA_SPINDEXER_GEAR_RATIO));
+        } else if (robotType == RobotType.COMP) {
+            return new SpindexerSubsystem(
+                    new SpindexerHardwareBetaAndComp(GearRatios.COMP_SPINDEXER_GEAR_RATIO));
         } else {
             return new SpindexerSubsystem(new SpindexerPlacebo());
         }
@@ -185,8 +198,8 @@ public class SubsystemFactory {
     public ShooterIndexerSubsystem buildShooterIndexer() {
         if (robotType == RobotType.PROTOTYPE) {
             return new ShooterIndexerSubsystem(new ShooterIndexerHardwarePrototype());
-        } else if (robotType == RobotType.BETA) {
-            return new ShooterIndexerSubsystem(new ShooterIndexerHardwareBeta());
+        } else if (robotType == RobotType.BETA || robotType == RobotType.COMP) {
+            return new ShooterIndexerSubsystem(new ShooterIndexerHardwareBetaAndComp());
         } else {
             return new ShooterIndexerSubsystem(new ShooterIndexerPlacebo());
         }

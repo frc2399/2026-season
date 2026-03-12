@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -111,20 +112,36 @@ public class ShooterHardwarePrototype implements ShooterIO {
                 new SparkMax(
                         RobotConstants.MotorIdConstants.SHOOTER_TOP_CAN_ID, MotorType.kBrushless);
 
-        shooterBottomSparkFlex.configure(
-                shooterBottomMotorConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-        shooterTopSparkMax.configure(
-                shooterTopMotorConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var shooterBottomStatus =
+                shooterBottomSparkFlex.configure(
+                        shooterBottomMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
+        var shooterTopStatus =
+                shooterTopSparkMax.configure(
+                        shooterTopMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         shooterBottomPIDController = shooterBottomSparkFlex.getClosedLoopController();
         shooterTopPIDController = shooterTopSparkMax.getClosedLoopController();
 
         shooterBottomEncoder = shooterBottomSparkFlex.getEncoder();
         shooterTopEncoder = shooterTopSparkMax.getEncoder();
+
+        if (shooterBottomStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + shooterBottomStatus);
+        }
+        if (shooterBottomStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + shooterBottomStatus);
+        }
+
+        if (shooterTopStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter bottom motor: " + shooterTopStatus);
+        }
+        if (shooterTopStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure shooter top motor: " + shooterTopStatus);
+        }
     }
 
     public void runShooterWithSpeeds(
@@ -148,6 +165,21 @@ public class ShooterHardwarePrototype implements ShooterIO {
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    public boolean isUpToSpeed() {
+        boolean isTopRollerDesiredSpeed =
+                Math.abs(
+                                (shooterTopEncoder.getVelocity())
+                                        - (desiredTopVelocity.in(RadiansPerSecond)))
+                        < 25;
+        boolean isBottomRollerDesiredSpeed =
+                Math.abs(
+                                (shooterBottomEncoder.getVelocity())
+                                        - (desiredBottomVelocity.in(RadiansPerSecond)))
+                        < 25;
+
+        return isTopRollerDesiredSpeed && isBottomRollerDesiredSpeed;
     }
 
     @Override

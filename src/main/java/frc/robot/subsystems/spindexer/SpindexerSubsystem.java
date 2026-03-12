@@ -19,6 +19,10 @@ public class SpindexerSubsystem extends SubsystemBase {
         return this.run(() -> io.runSpindexer()).withName("runSpindexer");
     }
 
+    public Command runSpindexerBackwards() {
+        return this.run(() -> io.runSpindexerBackwards()).withName("runSpindexerBackwards");
+    }
+
     public Command defaultBehavior() {
         return this.run(() -> io.defaultBehavior()).withName("spindexerDefaultBehavior");
     }
@@ -26,8 +30,10 @@ public class SpindexerSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         io.updateStates(spindexerState);
-        SmartDashboard.putNumber("Spindexer/desiredSpeed", spindexerState.spindexerDesiredSpeed);
-        SmartDashboard.putNumber("Spindexer/actualSpeed", spindexerState.spindexerActualSpeed);
+        SmartDashboard.putNumber(
+                "Spindexer/desiredSpeed", spindexerState.spindexerDesiredSpeedRad_P_S);
+        SmartDashboard.putNumber(
+                "Spindexer/actualSpeed", spindexerState.spindexerActualSpeedRad_P_S);
         SmartDashboard.putNumber("Spindexer/driveVoltage", spindexerState.spindexerAppliedVoltage);
         SmartDashboard.putNumber("Spindexer/driveCurrent", spindexerState.spindexerCurrent);
     }

@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -17,11 +18,10 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 
-public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
+public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     private SparkFlex shooterIndexerSparkFlex;
     private final SparkFlexConfig shooterIndexerSparkFlexConfig;
@@ -30,27 +30,29 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
     private final SparkClosedLoopController shooterIndexerPidController;
 
     private static final boolean SHOOTER_INDEXER_MOTOR_INVERTED = false;
-    private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kBrake;
+    private static final IdleMode SHOOTER_INDEXER_IDLE_MODE = IdleMode.kCoast;
 
+    private static final int SHOOTER_INDEXER_GEAR_RATIO = 3;
     private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
-            Radians.of(2 * Math.PI / 3); // 3 : 1 gear ratio
+            Radians.of(2 * Math.PI / SHOOTER_INDEXER_GEAR_RATIO); // 3 : 1
+    // gear
+    // ratio
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
-            RadiansPerSecond.of(2 * Math.PI / 60 / 3);
+            RadiansPerSecond.of(2 * Math.PI / 60 / SHOOTER_INDEXER_GEAR_RATIO);
 
-    private static final double SHOOTER_INDEXER_P = 0;
+    private static final double SHOOTER_INDEXER_P = 0.0001;
     private static final double SHOOTER_INDEXER_I = 0;
     private static final double SHOOTER_INDEXER_D = 0;
     private static final double SHOOTER_INDEXER_MIN_OUTPUT = -1;
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
-    private static final double SHOOTER_INDEXER_KS = 0.01;
-    private static final double SHOOTER_INDEXER_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private static final double SHOOTER_INDEXER_KS = 0.1355;
+    private static final double SHOOTER_INDEXER_KV = 0.030;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public ShooterIndexerHardwareBeta() {
+    public ShooterIndexerHardwareBetaAndComp() {
         shooterIndexerSparkFlexConfig = new SparkFlexConfig();
         shooterIndexerClosedLoopConfig = new ClosedLoopConfig();
 
@@ -76,18 +78,24 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
         shooterIndexerSparkFlex =
                 new SparkFlex(MotorIdConstants.SHOOTER_INDEXER_BETA_CAN_ID, MotorType.kBrushless);
-        shooterIndexerSparkFlex.configure(
-                shooterIndexerSparkFlexConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        var shooterIndexerStatus =
+                shooterIndexerSparkFlex.configure(
+                        shooterIndexerSparkFlexConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         shooterIndexerEncoder = shooterIndexerSparkFlex.getEncoder();
         shooterIndexerPidController = shooterIndexerSparkFlex.getClosedLoopController();
+
+        if (shooterIndexerStatus != REVLibError.kOk) {
+            System.err.println(
+                    "Failed to configure shooter indexer motor: " + shooterIndexerStatus);
+        }
     }
 
     @Override
     public void runShooterIndexer() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1);
+        desiredVelocity = RadiansPerSecond.of(215 * 3);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
@@ -108,8 +116,8 @@ public class ShooterIndexerHardwareBeta implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeed = desiredVelocity.in(RadiansPerSecond);
-        state.shooterIndexerActualSpeed = shooterIndexerEncoder.getVelocity();
+        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
+        state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkFlex.getBusVoltage()
                         * shooterIndexerSparkFlex.getAppliedOutput();

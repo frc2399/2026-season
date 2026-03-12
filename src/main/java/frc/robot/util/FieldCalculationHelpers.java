@@ -37,7 +37,8 @@ public class FieldCalculationHelpers {
     // if return true then shoot right and if false shoot left
     public static TargetFuel shouldRobotPassLeftOrRight(Pose2d robotLocation) {
         double poseY = robotLocation.getY();
-        if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
+        if (FieldConstants.alliance.isPresent()
+                && FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
             if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) <= poseY) {
                 return TargetFuel.OUTPOST_SIDE;
             } else {

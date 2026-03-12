@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
@@ -25,8 +26,10 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private SparkFlex intakeSparkFlex;
     private final SparkClosedLoopController intakePidController;
 
-    private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
-    private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
+    private static final double ROLLER_GEAR_RATIO = 3.0 / 2.0;
+    private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / ROLLER_GEAR_RATIO);
+    private final AngularVelocity ENCODER_VELOCITY_FACTOR =
+            RadiansPerSecond.of((2 * Math.PI / 60) / ROLLER_GEAR_RATIO);
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
     private final double INTAKE_D = 0.0;
@@ -46,6 +49,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
     private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
     private final RelativeEncoder intakeEncoder;
+    private double desiredSpeed;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
@@ -68,12 +72,18 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
         intakeSparkFlex = new SparkFlex(rollerCANId, MotorType.kBrushless);
 
-        intakeSparkFlex.configure(
-                intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        var intakeStatus =
+                intakeSparkFlex.configure(
+                        intakeMotorConfig,
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
         intakePidController = intakeSparkFlex.getClosedLoopController();
 
         intakeEncoder = intakeSparkFlex.getEncoder();
+        if (intakeStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure intake roller motor: " + intakeStatus);
+        }
     }
 
     public void runIntake() {

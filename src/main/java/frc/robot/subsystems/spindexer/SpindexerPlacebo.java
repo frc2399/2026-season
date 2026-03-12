@@ -6,6 +6,8 @@ public class SpindexerPlacebo implements SpindexerIO {
 
     public void defaultBehavior() {}
 
+    public void runSpindexerBackwards() {}
+
     @Override
     public void updateStates(SpindexerIOState state) {}
 }
