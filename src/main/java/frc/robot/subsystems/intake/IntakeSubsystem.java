@@ -100,21 +100,22 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(
                 "intake/roller/actual speed (radians per second)",
                 rollerState.actualSpeedRadiansPerSecond);
-        SmartDashboard.putNumber("intake/roller/current", rollerState.current);
-        SmartDashboard.putNumber("intake/roller/applied output", rollerState.appliedVoltage);
+        SmartDashboard.putNumber("intake/roller/current (volt)", rollerState.current);
+        SmartDashboard.putNumber("intake/roller/applied output (volt)", rollerState.appliedVoltage);
 
         SmartDashboard.putNumber("intake/arm/desired angle (deg)", armState.desiredAngleDegrees);
         SmartDashboard.putNumber(
                 "intake/arm/intermediate angle (deg)", armState.intermediateAngleDegrees);
         SmartDashboard.putNumber("intake/arm/actual angle (deg)", armState.actualAngleDegrees);
         SmartDashboard.putNumber(
-                "intake/arm/velocity (deg/sec)", armState.velocityDegreesPerSecond);
+                "intake/arm/velocity (deg per s)", armState.velocityDegreesPerSecond);
         SmartDashboard.putNumber(
-                "intake/arm/intermediate velocity (deg/s)",
+                "intake/arm/intermediate velocity (deg per s)",
                 armState.intermediateVelocityDegreesPerSecond);
         SmartDashboard.putNumber(
-                "intake/arm/desired velocity (deg/sec)", armState.desiredVelocityDegreesPerSecond);
-        SmartDashboard.putNumber("intake/arm/current", armState.current);
-        SmartDashboard.putNumber("intake/arm/applied voltage", armState.appliedVoltage);
+                "intake/arm/desired velocity (deg per s)",
+                armState.desiredVelocityDegreesPerSecond);
+        SmartDashboard.putNumber("intake/arm/current (amps)", armState.current);
+        SmartDashboard.putNumber("intake/arm/applied voltage (volt)", armState.appliedVoltage);
     }
 }

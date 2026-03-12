@@ -31,14 +31,15 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
     public void periodic() {
         io.updateStates(shooterIndexerState);
         SmartDashboard.putNumber(
-                "shooterIndexer/desiredSpeedRad_P_S",
+                "shooterIndexer/desiredSpeed (rad per s)",
                 shooterIndexerState.shooterIndexerDesiredSpeedRad_P_S);
         SmartDashboard.putNumber(
-                "shooterIndexer/actualSpeedRad_P_S",
+                "shooterIndexer/actualSpeed (rad per s)",
                 shooterIndexerState.shooterIndexerActualSpeedRad_P_S);
         SmartDashboard.putNumber(
-                "shooterIndexer/driveVoltage", shooterIndexerState.shooterIndexerAppliedVoltage);
+                "shooterIndexer/driveVoltage (volt)",
+                shooterIndexerState.shooterIndexerAppliedVoltage);
         SmartDashboard.putNumber(
-                "shooterIndexer/driveCurrent", shooterIndexerState.shooterIndexerCurrent);
+                "shooterIndexer/driveCurrent (amps)", shooterIndexerState.shooterIndexerCurrent);
     }
 }
