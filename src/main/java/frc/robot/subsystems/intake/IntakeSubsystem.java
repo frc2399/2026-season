@@ -82,6 +82,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // }
 
+    public Command ifArmIsBelowTrench() {
+        return this.run(() -> armIO.ifArmIsBelowTrench());
+    }
+
     @Override
     public void periodic() {
 

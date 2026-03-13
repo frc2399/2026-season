@@ -155,6 +155,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             desiredAngle = Degrees.of(10);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
+ } else if (setpoint == IntakeArmSetpoint.FEED_FUEL) {
         }
     }
 
@@ -254,7 +255,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     @Override
     public boolean ifArmIsBelowTrench() {
-        if (desiredArmAngleBelowTrench.in(Degrees) <= intakeArmAbsoluteEncoder.getPosition()) {
+        if (desiredArmAngleBelowTrench.in(Degrees) <= intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI)) {
             return true;
         } else {
             return false;
