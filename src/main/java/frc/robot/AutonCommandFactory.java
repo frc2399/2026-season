@@ -188,7 +188,6 @@ public class AutonCommandFactory {
             Pose2d... poses) {
         return Commands.runOnce(
                 () -> {
-                    drive.resetOdometry(startingPosition);
                     drive.resetOdometryFlipped(startingPosition);
 
                     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
