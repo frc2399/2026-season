@@ -153,6 +153,7 @@ public class RobotContainer {
                 "outpostSideNeutralZoneIntaking",
                 autonCommandFactory.outpostSideNeutralZoneIntaking());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
+        autoChooser.setDefaultOption("drive straight", autonCommandFactory.driveStraightTesting());
         SmartDashboard.putData("Autos/Selector", autoChooser);
     }
 

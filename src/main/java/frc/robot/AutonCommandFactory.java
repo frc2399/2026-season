@@ -20,8 +20,6 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmSetpoint;
-
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +30,7 @@ public class AutonCommandFactory {
     private Pose2d finalPose;
 
     public final PathConstraints constraints =
-            new PathConstraints(2, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
+            new PathConstraints(1, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints intakeConstraints =
             new PathConstraints(
@@ -114,7 +112,7 @@ public class AutonCommandFactory {
                                 DEPOT_NEUTRAL_ZONE_CENTER.pose(),
                                 DEPOT_IN_NEUTRAL_ZONE.pose(),
                                 BLUE_DEPOT_BORDER_FUEL_EDGE.pose())),
-                        intake.defaultBehavior().withTimeout(0.01),
+                intake.defaultBehavior().withTimeout(0.01),
                 followWaypoints(
                         BLUE_DEPOT_BORDER_FUEL_EDGE.pose(),
                         constraints,
@@ -133,13 +131,14 @@ public class AutonCommandFactory {
                 Commands.runOnce(
                         () -> drive.resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
+                Commands.print("shooting spot"),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
                 followWaypoints(
                         OUTPOST_SHOOTING_SPOT.pose(),
                         constraints,
                         1.5,
                         Rotation2d.fromDegrees(180),
-                        OUTPOST_SHOOTING_SPOT.pose(),
+                        // OUTPOST_SHOOTING_SPOT.pose(),
                         BLUE_OUTPOST_STARTING_LINE.pose(),
                         BLUE_OUTPOST_WALL_FUEL_CENTER.pose()),
                 // drive.driveToPoseOnExecute(),
@@ -150,18 +149,18 @@ public class AutonCommandFactory {
                                 intakeConstraints,
                                 1.5,
                                 Rotation2d.fromDegrees(180),
-                                BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
+                                // BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
                                 BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
                                 OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
                                 OUTPOST_IN_NEUTRAL_ZONE.pose(),
                                 BLUE_OUTPOST_BORDER_FUEL_EDGE.pose())),
-                        intake.defaultBehavior().withTimeout(0.01),
+                intake.defaultBehavior().withTimeout(0.01),
                 followWaypoints(
-                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(), 
+                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
                         constraints,
                         0,
                         Rotation2d.fromDegrees(180),
-                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
+                        // BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
                         BLUE_OUTPOST_WALL_FUEL_EDGE.pose(),
                         BLUE_OUTPOST_STARTING_LINE.pose(),
                         OUTPOST_SHOOTING_SPOT.pose()),
