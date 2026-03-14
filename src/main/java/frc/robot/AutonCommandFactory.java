@@ -135,18 +135,18 @@ public class AutonCommandFactory {
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
                         Commands.print("going along to pick up fuel"),
-                        intake.deployAndRunIntake().withTimeout(6),
+                        intake.runRoller().withTimeout(6),
                         followWaypoints(
                                 BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
                                 intakeConstraints,
                                 1.5,
-                                Rotation2d.fromDegrees(90),
+                                Rotation2d.fromDegrees(0),
                                 // BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
                                 BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
                                 OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
                                 OUTPOST_IN_NEUTRAL_ZONE.pose(),
                                 BLUE_OUTPOST_BORDER_FUEL_EDGE.pose())),
-                intake.defaultBehavior().withTimeout(0.01),
+                // intake.defaultBehavior().withTimeout(0.01),
                 Commands.print("defaulted intake"),
                 followWaypoints(
                         BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
