@@ -49,6 +49,9 @@ public class AutonCommandFactory {
         return new DeferredCommand(
                 () -> {
                     finalPose = pose.pose();
+                    System.out.println("building deferred + going to " + pose.name());
+                    System.out.println(pose.pose().getX());
+                    System.out.println(pose.pose().getY());
                     if (FieldConstants.alliance.isPresent()
                             && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
                         finalPose = FlippingUtil.flipFieldPose(finalPose);
@@ -128,11 +131,13 @@ public class AutonCommandFactory {
     public Command outpostSideNeutralZoneIntaking() {
         return Commands.sequence(
                 intake.stowArm(),
+                Commands.print("arm stowed"),
                 Commands.runOnce(
                         () -> drive.resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                Commands.print("shooting spot"),
+                Commands.print("at shooting spot"),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
+                Commands.print("done shooting"),
                 followWaypoints(
                         OUTPOST_SHOOTING_SPOT.pose(),
                         constraints,
@@ -143,6 +148,7 @@ public class AutonCommandFactory {
                         BLUE_OUTPOST_WALL_FUEL_CENTER.pose()),
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
+                        Commands.print("going along to pick up fuel"),
                         commandFactory.runIntakeandIntakeArm().withTimeout(6),
                         followWaypoints(
                                 BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
@@ -155,6 +161,7 @@ public class AutonCommandFactory {
                                 OUTPOST_IN_NEUTRAL_ZONE.pose(),
                                 BLUE_OUTPOST_BORDER_FUEL_EDGE.pose())),
                 intake.defaultBehavior().withTimeout(0.01),
+                Commands.print("defaulted intake"),
                 followWaypoints(
                         BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
                         constraints,
@@ -164,7 +171,9 @@ public class AutonCommandFactory {
                         BLUE_OUTPOST_WALL_FUEL_EDGE.pose(),
                         BLUE_OUTPOST_STARTING_LINE.pose(),
                         OUTPOST_SHOOTING_SPOT.pose()),
-                commandFactory.runSpindexShooterIndexAndShooter().withTimeout(5));
+                Commands.print("gone back!"),
+                commandFactory.runSpindexShooterIndexAndShooter().withTimeout(5),
+                Commands.print("final shooting done"));
     }
 
     public Command driveStraightTesting() {
