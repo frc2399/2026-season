@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Seconds;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmIOState;
 import frc.robot.subsystems.intake.IntakeArmIO.IntakeArmSetpoint;
@@ -86,24 +85,19 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command feedFuel() {
         Command feedFuelCommand =
-                Commands.runOnce(
-                                () ->
-                                        this.run(
-                                                        () -> {
-                                                            armIO.setSetpoint(
-                                                                    IntakeArmSetpoint.FEED_FUEL);
-                                                            System.out.println("feed fuel!");
-                                                        })
-                                                .withTimeout(Seconds.of(1))
-                                                .andThen(
-                                                        () -> {
-                                                            armIO.setSetpoint(
-                                                                    IntakeArmSetpoint.STOWED);
-                                                            System.out.println("stow!");
-                                                        })
-                                                .withTimeout(Seconds.of(1))
-                                                .execute())
-                        .repeatedly();
+                this.run(
+                                () -> {
+                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                                    System.out.println("feed fuel!");
+                                })
+                        .withTimeout(Seconds.of(1))
+                        .andThen(
+                                () -> {
+                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                                    System.out.println("stow!");
+                                })
+                        .withTimeout(Seconds.of(1));
+
         return feedFuelCommand;
     }
 
