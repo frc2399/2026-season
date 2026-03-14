@@ -209,7 +209,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
 
     @Override
     public void runTunableNumberSetpoints() {
-        desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM.get());
+        desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get() - 100);
         desiredBottomVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get());
 
         shooterBottomPIDController.setSetpoint(

@@ -63,16 +63,16 @@ public class SubsystemFactory {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
             serialNum = "simulation";
-            csvFilepath = Filesystem.getDeployDirectory() + "\\beta-shooter-speeds.csv";
+            csvFilepath = Filesystem.getDeployDirectory() + "/beta-shooter-speeds.csv";
         } else if (serialNum == null) {
             robotType = null;
             throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
-            csvFilepath = Filesystem.getDeployDirectory() + "\\beta-shooter-speeds.csv";
+            csvFilepath = Filesystem.getDeployDirectory() + "/beta-shooter-speeds.csv";
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType = RobotType.COMP;
-            csvFilepath = Filesystem.getDeployDirectory() + "\\comp-shooter-speeds.csv";
+            csvFilepath = Filesystem.getDeployDirectory() + "/comp-shooter-speeds.csv";
         } else if (serialNum.equals(BUBBLES_SERIAL_NUMBER)) {
             robotType = RobotType.BUBBLES;
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {

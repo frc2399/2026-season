@@ -124,6 +124,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
         try {
             File csvFile = new File(csvFilepath);
+            System.out.println("file " + csvFilepath);
             FileWriter outputWriter = new FileWriter(csvFile, true);
             CSVWriter csvWriter = new CSVWriter(outputWriter);
 
@@ -135,6 +136,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
             String timestamp = ZonedDateTime.now(LOGGING_TIMEZONE).format(LOGGING_TIME_FORMATTER);
 
+            System.out.println(distanceToHub.in(Inches));
+            System.out.println(desiredSpeedTopRadiansPerSecond);
+            System.out.println(desiredSpeedBottomRadiansPerSecond);
+            System.out.println(timestamp);
+
             String[] data =
                     new String[] {
                         Double.toString(distanceToHub.in(Inches)),
@@ -143,8 +149,8 @@ public class ShooterSubsystem extends SubsystemBase {
                         timestamp
                     };
             csvWriter.writeNext(data);
-
             csvWriter.close();
+            System.out.println("written!");
         } catch (IOException e) {
             System.out.println(
                     "********COULD NOT WRITE TO THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
