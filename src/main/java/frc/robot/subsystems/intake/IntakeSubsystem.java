@@ -79,6 +79,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command feedFuelSetpoint() {
         return this.runOnce(
                 () -> {
+                    armProfiledPidEnabled = true;
                     armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
                 });
     }
@@ -87,16 +88,19 @@ public class IntakeSubsystem extends SubsystemBase {
         Command feedFuelCommand =
                 this.run(
                                 () -> {
+                                    armProfiledPidEnabled = true;
                                     armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
                                     System.out.println("feed fuel!");
                                 })
                         .withTimeout(Seconds.of(1))
                         .andThen(
-                                () -> {
-                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
-                                    System.out.println("stow!");
-                                })
-                        .withTimeout(Seconds.of(1));
+                                this.run(
+                                                () -> {
+                                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                                                    System.out.println("stow!");
+                                                })
+                                        .withTimeout(Seconds.of(1)))
+                        .repeatedly();
 
         return feedFuelCommand;
     }
