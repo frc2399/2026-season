@@ -46,8 +46,7 @@ public class CommandFactory {
 
     public Command runSpindexShooterIndexAndShooter() {
         return Commands.sequence(
-                shooter.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()))
-                        .withTimeout(1.0),
+                shooter.shoot(RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose())).until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
     }
 

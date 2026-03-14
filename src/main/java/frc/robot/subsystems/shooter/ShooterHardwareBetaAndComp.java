@@ -63,6 +63,8 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     public AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
     public AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
 
+    public AngularVelocity shooterSpeedTolerance = RadiansPerSecond.of(75);
+
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
@@ -176,12 +178,12 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
                 Math.abs(
                                 (shooterTopEncoder.getVelocity())
                                         - (desiredTopVelocity.in(RadiansPerSecond)))
-                        < 25;
+                        < shooterSpeedTolerance.in(RadiansPerSecond);
         boolean isBottomRollerDesiredSpeed =
                 Math.abs(
                                 (shooterBottomEncoder.getVelocity())
                                         - (desiredBottomVelocity.in(RadiansPerSecond)))
-                        < 25;
+                        < shooterSpeedTolerance.in(RadiansPerSecond);
 
         return isTopRollerDesiredSpeed && isBottomRollerDesiredSpeed;
     }

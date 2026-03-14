@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -81,5 +82,10 @@ public final class RobotConstants {
     public static class GearRatios {
         public static final int BETA_SPINDEXER_GEAR_RATIO = 6; // 6 : 1 gear ratio
         public static final int COMP_SPINDEXER_GEAR_RATIO = 9; // 9 : 1 gear ratio
+    }
+
+    public static class DeadbandConstants {
+        public static final Angle BETA_INTAKE_ARM_DEADBAND = Degrees.of(3.0);
+        public static final Angle COMP_INTAKE_ARM_DEADBAND = Degrees.of(2.0);
     }
 }

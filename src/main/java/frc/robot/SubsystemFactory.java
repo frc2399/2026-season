@@ -160,12 +160,14 @@ public class SubsystemFactory {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
-                    new IntakeArmHardwareBetaAndComp());
+                    new IntakeArmHardwareBetaAndComp(
+                            RobotConstants.DeadbandConstants.BETA_INTAKE_ARM_DEADBAND));
         } else if (robotType == RobotType.COMP) {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
-                    new IntakeArmPlacebo());
+                    new IntakeArmHardwareBetaAndComp(
+                            RobotConstants.DeadbandConstants.COMP_INTAKE_ARM_DEADBAND));
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
