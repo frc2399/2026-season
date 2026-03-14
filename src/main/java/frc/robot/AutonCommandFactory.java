@@ -139,8 +139,7 @@ public class AutonCommandFactory {
                         buildPathDeferred(OUTPOST_NEUTRAL_ZONE_CENTER, constraints, 0)),
                 Commands.parallel(
                         intake.runRoller().withTimeout(3),
-                        buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)
-                ),
+                        buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)),
                 // intake.defaultBehavior().withTimeout(0.01),
                 Commands.print("defaulted intake"),
                 buildPathDeferred(BLUE_OUTPOST_STARTING_LINE, constraints, 0),
