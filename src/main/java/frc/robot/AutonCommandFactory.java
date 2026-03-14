@@ -91,9 +91,6 @@ public class AutonCommandFactory {
     public Command depotSideNeutralZoneIntaking() {
         return Commands.sequence(
                 intake.stowArm(),
-                Commands.runOnce(() -> drive.resetOdometryFlipped(BLUE_DEPOT_STARTING_LINE.pose())),
-                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
                 followWaypoints(
                         DEPOT_SHOOTING_SPOT.pose(),
                         constraints,
@@ -134,18 +131,7 @@ public class AutonCommandFactory {
                 Commands.print("arm stowed"),
                 Commands.runOnce(
                         () -> drive.resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
-                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                Commands.print("at shooting spot"),
-                commandFactory.runSpindexShooterIndexAndShooter().withTimeout(2),
-                Commands.print("done shooting"),
-                followWaypoints(
-                        OUTPOST_SHOOTING_SPOT.pose(),
-                        constraints,
-                        1.5,
-                        Rotation2d.fromDegrees(180),
-                        // OUTPOST_SHOOTING_SPOT.pose(),
-                        BLUE_OUTPOST_STARTING_LINE.pose(),
-                        BLUE_OUTPOST_WALL_FUEL_CENTER.pose()),
+                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0),
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
                         Commands.print("going along to pick up fuel"),

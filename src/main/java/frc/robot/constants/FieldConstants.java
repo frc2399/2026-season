@@ -68,7 +68,7 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5)),
-                                        Rotation2d.kZero)));
+                                        Rotation2d.kCW_90deg)));
         // this postion is when robot is on the blue alliance starting line farthest from scroing
         // table.
         public static final Pose BLUE_OUTPOST_STARTING_LINE =
@@ -83,7 +83,7 @@ public final class FieldConstants {
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
                                                 .plus(ROBOT_HUB_MARGIN.div(2))
                                                 .unaryMinus(),
-                                        Rotation2d.k180deg)));
+                                        Rotation2d.kCCW_90deg)));
         public static final Pose DRIVE_STRAIGHT_TESTING =
                 new Pose(
                         "driveStraightTesting",
@@ -143,7 +143,7 @@ public final class FieldConstants {
                                                 .minus(FUEL_PIT_HALF_WIDTH)
                                                 .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
                                         HALF_WIDTH_OF_HUB.plus(LENGTH_OF_BUMP).unaryMinus(),
-                                        Rotation2d.k180deg)));
+                                        Rotation2d.kCCW_90deg)));
         public static final Pose BLUE_OUTPOST_BORDER_FUEL_EDGE =
                 new Pose(
                         "blueOutpostBorderFuelEdge",
@@ -151,7 +151,7 @@ public final class FieldConstants {
                                 new Transform2d(
                                         STARTING_LINE_TO_CENTER_DISTANCE.minus(FUEL_PIT_HALF_WIDTH),
                                         HALF_WIDTH_OF_HUB.plus(LENGTH_OF_BUMP).unaryMinus(),
-                                        Rotation2d.k180deg)));
+                                        Rotation2d.kCCW_90deg)));
         public static final Pose BLUE_OUTPOST_WALL_FUEL_EDGE =
                 new Pose(
                         "blueOutpostWallFuelEdge",
@@ -164,7 +164,7 @@ public final class FieldConstants {
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
                                                 .plus(ROBOT_HUB_MARGIN.div(2))
                                                 .unaryMinus(),
-                                        Rotation2d.k180deg)));
+                                        Rotation2d.kCW_90deg)));
         public static final Pose BLUE_DEPOT_BORDER_FUEL_EDGE =
                 new Pose(
                         "blueDepotBorderFuelEdge",
@@ -230,7 +230,7 @@ public final class FieldConstants {
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .unaryMinus(),
-                                        Rotation2d.kZero)));
+                                        Rotation2d.kCCW_90deg)));
         public static final Pose OUTPOST_NEUTRAL_ZONE_CENTER =
                 new Pose(
                         "outpostNeutralZoneCenter",
@@ -243,7 +243,7 @@ public final class FieldConstants {
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .unaryMinus(),
-                                        Rotation2d.kZero)));
+                                        Rotation2d.kCCW_90deg)));
         public static final Pose DEPOT_SHOOTING_SPOT =
                 new Pose(
                         "depotShootingSpot",
@@ -270,7 +270,7 @@ public final class FieldConstants {
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .unaryMinus(),
-                                        Rotation2d.k180deg)));
+                                        Rotation2d.kCCW_90deg)));
     }
 
     public static class FieldBoundaries {
