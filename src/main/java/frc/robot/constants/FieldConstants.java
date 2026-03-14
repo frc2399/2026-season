@@ -270,7 +270,7 @@ public final class FieldConstants {
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .unaryMinus(),
-                                        new Rotation2d(Degrees.of(80)))));
+                                        new Rotation2d(Degrees.of(40)))));
     }
 
     public static class FieldBoundaries {
