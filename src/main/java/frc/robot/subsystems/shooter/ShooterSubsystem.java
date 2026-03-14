@@ -30,8 +30,12 @@ public class ShooterSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command shoot() {
-        return this.run(() -> io.runShooter()).withName("runShooter");
+    public Command shoot(boolean shouldPassFuel) {
+        if (shouldPassFuel) {
+            return this.run(() -> io.passFuel()).withName("passFuel");
+        } else {
+            return this.run(() -> io.runShooter()).withName("runShooter");
+        }
     }
 
     public Command defaultBehavior() {

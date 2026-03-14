@@ -144,6 +144,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
         }
     }
 
+    public void passFuel() {}
+
     public void runShooter() {
         desiredBottomVelocity =
                 RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
