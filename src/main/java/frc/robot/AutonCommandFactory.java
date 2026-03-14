@@ -146,7 +146,9 @@ public class AutonCommandFactory {
                 Commands.print("starting line!"),
                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 Commands.print("gone back!"),
+                Commands.waitSeconds(.0),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(5),
+                Commands.waitSeconds(0.0),
                 Commands.print("final shooting done"));
     }
 
