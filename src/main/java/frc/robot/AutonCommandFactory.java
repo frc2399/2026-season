@@ -30,7 +30,7 @@ public class AutonCommandFactory {
     private Pose2d finalPose;
 
     public final PathConstraints constraints =
-            new PathConstraints(1, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
+            new PathConstraints(1.5, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints intakeConstraints =
             new PathConstraints(
