@@ -135,28 +135,17 @@ public class AutonCommandFactory {
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
                         Commands.print("going along to pick up fuel"),
-                        intake.runRoller().withTimeout(6),
-                        followWaypoints(
-                                BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
-                                intakeConstraints,
-                                1.5,
-                                Rotation2d.fromDegrees(0),
-                                // BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
-                                BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
-                                OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
-                                OUTPOST_IN_NEUTRAL_ZONE.pose(),
-                                BLUE_OUTPOST_BORDER_FUEL_EDGE.pose())),
+                        intake.runRoller().withTimeout(3),
+                        buildPathDeferred(OUTPOST_NEUTRAL_ZONE_CENTER, constraints, 0)),
+                Commands.parallel(
+                        intake.runRoller().withTimeout(3),
+                        buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)
+                ),
                 // intake.defaultBehavior().withTimeout(0.01),
                 Commands.print("defaulted intake"),
-                followWaypoints(
-                        BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
-                        constraints,
-                        0,
-                        Rotation2d.fromDegrees(180),
-                        // BLUE_OUTPOST_BORDER_FUEL_EDGE.pose(),
-                        BLUE_OUTPOST_WALL_FUEL_EDGE.pose(),
-                        BLUE_OUTPOST_STARTING_LINE.pose(),
-                        OUTPOST_SHOOTING_SPOT.pose()),
+                buildPathDeferred(BLUE_OUTPOST_STARTING_LINE, constraints, 0),
+                Commands.print("starting line!"),
+                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 Commands.print("gone back!"),
                 commandFactory.runSpindexShooterIndexAndShooter().withTimeout(5),
                 Commands.print("final shooting done"));
