@@ -64,30 +64,47 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command deployArm() {
         return this.runOnce(
                 () -> {
-                    // armProfiledPidEnabled = true;
+                    armProfiledPidEnabled = true;
                     armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
                 });
     }
 
-    public Command stowArm() {
+    public Command stowArmSetpoint() {
         return this.runOnce(
                 () -> {
-                    // armProfiledPidEnabled = true;
+                    armProfiledPidEnabled = true;
                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                 });
     }
 
     public Command feedFuelSetpoint() {
-        return this.runOnce(() -> {
-                armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
-        });
+        return this.runOnce(
+                () -> {
+                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                });
     }
 
     public Command feedFuel() {
-        return Commands.sequence(
-            feedFuel().withTimeout(feedFuelTimeoutSeconds),
-            stowArm().withTimeout(feedFuelTimeoutSeconds)
-        ).repeatedly();
+        Command feedFuelCommand =
+                Commands.runOnce(
+                                () ->
+                                        this.run(
+                                                        () -> {
+                                                            armIO.setSetpoint(
+                                                                    IntakeArmSetpoint.FEED_FUEL);
+                                                            System.out.println("feed fuel!");
+                                                        })
+                                                .withTimeout(Seconds.of(1))
+                                                .andThen(
+                                                        () -> {
+                                                            armIO.setSetpoint(
+                                                                    IntakeArmSetpoint.STOWED);
+                                                            System.out.println("stow!");
+                                                        })
+                                                .withTimeout(Seconds.of(1))
+                                                .execute())
+                        .repeatedly();
+        return feedFuelCommand;
     }
 
     // public Command feedFuelToSpindexer() {
