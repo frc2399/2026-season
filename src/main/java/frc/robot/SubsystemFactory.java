@@ -12,7 +12,6 @@ import frc.robot.subsystems.drive.SwerveModulePlacebo;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
-import frc.robot.subsystems.intake.IntakeArmHardwareBetaAndComp;
 import frc.robot.subsystems.intake.IntakeArmPlacebo;
 import frc.robot.subsystems.intake.IntakeRollerHardware;
 import frc.robot.subsystems.intake.IntakeRollerPlacebo;

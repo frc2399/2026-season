@@ -68,7 +68,7 @@ public class AutonCommandFactory {
                 Commands.runOnce(() -> drive.resetOdometryFlipped(BLUE_DEPOT_STARTING_LINE.pose())),
                 buildPathDeferred(IN_THE_DEPOT, constraints, 0),
                 drive.driveToPoseOnExecute(),
-                commandFactory.runIntakeandIntakeArm().withTimeout(3),
+                intake.deployAndRunIntake().withTimeout(3),
                 intake.defaultBehavior().withTimeout(0.01),
                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                 drive.driveToPoseOnExecute(),
@@ -101,7 +101,7 @@ public class AutonCommandFactory {
                         BLUE_DEPOT_WALL_FUEL_CENTER.pose()),
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
-                        commandFactory.runIntakeandIntakeArm().withTimeout(6),
+                        intake.deployAndRunIntake().withTimeout(6),
                         followWaypoints(
                                 BLUE_DEPOT_WALL_FUEL_CENTER.pose(),
                                 intakeConstraints,
@@ -135,12 +135,12 @@ public class AutonCommandFactory {
                 // drive.driveToPoseOnExecute(),
                 Commands.parallel(
                         Commands.print("going along to pick up fuel"),
-                        commandFactory.runIntakeandIntakeArm().withTimeout(6),
+                        intake.deployAndRunIntake().withTimeout(6),
                         followWaypoints(
-                                BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
+                                BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
                                 intakeConstraints,
                                 1.5,
-                                Rotation2d.fromDegrees(180),
+                                Rotation2d.fromDegrees(90),
                                 // BLUE_OUTPOST_WALL_FUEL_CENTER.pose(),
                                 BLUE_OUTPOST_BORDER_FUEL_CENTER.pose(),
                                 OUTPOST_NEUTRAL_ZONE_CENTER.pose(),
@@ -183,8 +183,6 @@ public class AutonCommandFactory {
             Pose2d... poses) {
         return Commands.runOnce(
                 () -> {
-                    drive.resetOdometryFlipped(startingPosition);
-
                     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
 
                     PathPlannerPath path =

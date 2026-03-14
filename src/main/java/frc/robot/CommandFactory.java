@@ -39,10 +39,6 @@ public class CommandFactory {
         this.intakeSubsystem = intakeSubsystem;
     }
 
-    public Command runIntakeandIntakeArm() {
-        return Commands.parallel(intakeSubsystem.deployAndRunIntake());
-    }
-
     public Command runSpindexShooterIndexAndShooter() {
         return Commands.sequence(
                 shooter.shoot().withTimeout(0.5),
