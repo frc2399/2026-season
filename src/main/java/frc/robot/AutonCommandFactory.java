@@ -142,8 +142,6 @@ public class AutonCommandFactory {
                         buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)),
                 intake.defaultBehavior().withTimeout(0.01),
                 Commands.print("defaulted intake"),
-                buildPathDeferred(BLUE_OUTPOST_STARTING_LINE, constraints, 0),
-                Commands.print("starting line!"),
                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 Commands.print("gone back!"),
                 Commands.waitSeconds(.0),
