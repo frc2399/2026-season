@@ -155,18 +155,22 @@ public class ShooterSubsystem extends SubsystemBase {
         io.updateStates(shooterStates);
         SmartDashboard.putBoolean("shooter/should interpolate", shouldInterpolate);
         SmartDashboard.putNumber(
-                "shooter/topRollerDesiredSpeed", shooterStates.topRollerDesiredSpeed);
+                "shooter/topRollerDesiredSpeed (rad per s)", shooterStates.topRollerDesiredSpeed);
         SmartDashboard.putNumber(
-                "shooter/topRollerActualSpeed", shooterStates.topRollerActualSpeed);
-        SmartDashboard.putNumber("shooter/topRollerCurrent", shooterStates.topRollerCurrent);
+                "shooter/topRollerActualSpeed (rad per s)", shooterStates.topRollerActualSpeed);
+        SmartDashboard.putNumber("shooter/topRollerCurrent (amps)", shooterStates.topRollerCurrent);
         SmartDashboard.putNumber(
-                "shooter/topRollerAppliedVoltage", shooterStates.topRollerAppliedVoltage);
+                "shooter/topRollerAppliedVoltage (volt)", shooterStates.topRollerAppliedVoltage);
         SmartDashboard.putNumber(
-                "shooter/bottomRollerDesiredSpeed", shooterStates.bottomRollerDesiredSpeed);
+                "shooter/bottomRollerDesiredSpeed (rad per s)",
+                shooterStates.bottomRollerDesiredSpeed);
         SmartDashboard.putNumber(
-                "shooter/bottomRollerActualSpeed", shooterStates.bottomRollerActualSpeed);
-        SmartDashboard.putNumber("shooter/bottomRollerCurrent", shooterStates.bottomRollerCurrent);
+                "shooter/bottomRollerActualSpeed (rad per s)",
+                shooterStates.bottomRollerActualSpeed);
         SmartDashboard.putNumber(
-                "shooter/bottomRollerAppliedVoltage", shooterStates.bottomRollerAppliedVoltage);
+                "shooter/bottomRollerCurrent (amps)", shooterStates.bottomRollerCurrent);
+        SmartDashboard.putNumber(
+                "shooter/bottomRollerAppliedVoltage (volt)",
+                shooterStates.bottomRollerAppliedVoltage);
     }
 }

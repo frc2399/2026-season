@@ -147,14 +147,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     StructArrayPublisher<SwerveModuleState> swerveModuleStatePublisher =
             NetworkTableInstance.getDefault()
                     .getStructArrayTopic(
-                            "/SmartDashboard/Swerve/Current Modules States",
+                            "/SmartDashboard/drive/Current Modules States",
                             SwerveModuleState.struct)
                     .publish();
 
     StructArrayPublisher<SwerveModuleState> swerveModuleDesiredStatePublisher =
             NetworkTableInstance.getDefault()
                     .getStructArrayTopic(
-                            "/SmartDashboard/Swerve/Desired Modules States",
+                            "/SmartDashboard/drive/Desired Modules States",
                             SwerveModuleState.struct)
                     .publish();
 
@@ -204,7 +204,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         FRONT_LEFT_OFFSET, FRONT_RIGHT_OFFSET, REAR_LEFT_OFFSET, REAR_RIGHT_OFFSET);
 
         SmartDashboard.putData(field2d);
-        SmartDashboard.putData("DriveTrain/Drivetrain Commands", this);
+        SmartDashboard.putData("drive/Drivetrain Commands", this);
         poseEstimator =
                 new SwerveDrivePoseEstimator(
                         DRIVE_KINEMATICS,
@@ -220,7 +220,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         // free-floating numbers
         posePublisher =
                 NetworkTableInstance.getDefault()
-                        .getStructTopic("DriveSubsystem/EstimatedPose", Pose2d.struct)
+                        .getStructTopic("drive/EstimatedPose", Pose2d.struct)
                         .publish();
         posePublisher.setDefault(new Pose2d());
 
@@ -602,11 +602,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             Supplier<Pose2d> goalPose =
                                     RebuiltVisionUtil.getGoalPose(() -> robotPose, isBlueAlliance);
                             SmartDashboard.putNumber(
-                                    "Swerve/vision/goalPoseY", goalPose.get().getY());
+                                    "drive/vision/goalPoseY", goalPose.get().getY());
                             SmartDashboard.putNumber(
-                                    "Swerve/vision/goalPosex", goalPose.get().getX());
+                                    "drive/vision/goalPosex", goalPose.get().getX());
                             SmartDashboard.putNumber(
-                                    "Swerve/vision/goalTheta",
+                                    "drive/vision/goalTheta",
                                     goalPose.get().getRotation().getDegrees());
 
                             ChassisSpeeds alignmentSpeeds =
