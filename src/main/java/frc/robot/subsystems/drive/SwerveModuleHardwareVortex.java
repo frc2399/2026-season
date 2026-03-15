@@ -288,22 +288,22 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
         }
 
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/turn desired angle(deg)", states.desiredAngle);
-        SmartDashboard.putNumber("Swerve/module " + name + "/turn angle(deg)", states.turnAngle);
+                "Swerve/module " + name + "/turn desired angle (deg)", states.desiredAngle);
+        SmartDashboard.putNumber("Swerve/module " + name + "/turn angle (deg)", states.turnAngle);
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/drive desired velocity(mps)",
+                "Swerve/module " + name + "/drive desired velocity (mps)",
                 states.driveDesiredVelocity);
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/drive velocity(mps)", states.driveVelocity);
+                "Swerve/module " + name + "/drive velocity (mps)", states.driveVelocity);
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/drive encoder position(m)", states.driveEncoderPos);
+                "Swerve/module " + name + "/drive encoder position (m)", states.driveEncoderPos);
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/drive voltage(volt)", states.driveVoltage);
+                "Swerve/module " + name + "/drive voltage (volt)", states.driveVoltage);
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/turn voltage(volt)", states.turnVoltage);
+                "Swerve/module " + name + "/turn voltage (volt)", states.turnVoltage);
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/drive current(amps)", states.driveCurrent);
+                "Swerve/module " + name + "/drive current (amps)", states.driveCurrent);
         SmartDashboard.putNumber(
-                "Swerve/module " + name + "/turn current(amps)", states.turnCurrent);
+                "Swerve/module " + name + "/turn current (amps)", states.turnCurrent);
     }
 }

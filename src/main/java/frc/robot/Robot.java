@@ -70,8 +70,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         robotContainer.visionPoseEstimator.periodic();
         robotContainer.setAlerts();
-        SmartDashboard.putNumber(
-                "Robot/batteryVoltageIsHubActive", RobotController.getBatteryVoltage());
+        SmartDashboard.putNumber("robot/batteryVoltage", RobotController.getBatteryVoltage());
         SmartDashboard.putBoolean("robot/0 second delayIsHubActive", GameState.isHubActive(0));
         SmartDashboard.putBoolean("robot/1 second delayIsHubActive", GameState.isHubActive(1));
     }
