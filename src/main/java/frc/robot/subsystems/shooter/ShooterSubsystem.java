@@ -60,7 +60,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command shoot(Supplier<Distance> distFromHub) {
         return this.run(
                         () -> {
-                            System.out.println(distFromHub.get().in(Inches));
                             AngularVelocity topSpeed =
                                     RadiansPerSecond.of(
                                             topShooterSpeedTreeMapMeterRadS.get(
