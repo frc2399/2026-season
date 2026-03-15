@@ -88,7 +88,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 "shooter/topRollerDesiredSpeed (rad per s)", shooterStates.topRollerDesiredSpeed);
         SmartDashboard.putNumber(
                 "shooter/topRollerActualSpeed (rad per s)", shooterStates.topRollerActualSpeed);
-        SmartDashboard.putNumber("shooter/topRollerCurrent (volt)", shooterStates.topRollerCurrent);
+        SmartDashboard.putNumber("shooter/topRollerCurrent (amps)", shooterStates.topRollerCurrent);
         SmartDashboard.putNumber(
                 "shooter/topRollerAppliedVoltage (volt)", shooterStates.topRollerAppliedVoltage);
         SmartDashboard.putNumber(
