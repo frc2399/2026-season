@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command deployAndRunIntake() {
         return this.run(
                         () -> {
-                            // armProfiledPidEnabled = true;
+                            armProfiledPidEnabled = true;
                             armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
                             rollerIO.runIntake();
                         })
@@ -37,9 +37,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command defaultBehavior() {
         return this.run(
                         () -> {
-                            // armProfiledPidEnabled = true;
+                            armProfiledPidEnabled = true;
                             rollerIO.setZero();
-                            armIO.runIntakeArmZeroVelocity();
+                            // armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                         })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
@@ -98,7 +98,8 @@ public class IntakeSubsystem extends SubsystemBase {
                                                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                                                 })
                                         .withTimeout(Seconds.of(1)))
-                        .repeatedly().withName("feed fuel (arm)");
+                        .repeatedly()
+                        .withName("feed fuel (arm)");
 
         return feedFuelCommand;
     }

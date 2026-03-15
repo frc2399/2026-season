@@ -38,6 +38,10 @@ public class ShooterSubsystem extends SubsystemBase {
         return this.run(() -> io.defaultBehavior()).withName("shooterDefaultBehavior");
     }
 
+    public boolean isUpToSpeed() {
+        return io.isUpToSpeed();
+    }
+
     // fake default command so it runs the tunable number speed setpoints instead of actual default
     // command
     public Command tuningSetpoint() {
