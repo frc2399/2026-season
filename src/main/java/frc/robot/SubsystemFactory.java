@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
@@ -55,17 +56,23 @@ public class SubsystemFactory {
 
     private String serialNum = System.getenv("serialnum");
 
+    // for csv solution for shooter
+    private String csvFilepath = "";
+
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
             serialNum = "simulation";
+            csvFilepath = Filesystem.getDeployDirectory() + "/beta-shooter-speeds.csv";
         } else if (serialNum == null) {
             robotType = null;
             throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
+            csvFilepath = Filesystem.getDeployDirectory() + "/beta-shooter-speeds.csv";
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType = RobotType.COMP;
+            csvFilepath = Filesystem.getDeployDirectory() + "/comp-shooter-speeds.csv";
         } else if (serialNum.equals(BUBBLES_SERIAL_NUMBER)) {
             robotType = RobotType.BUBBLES;
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
@@ -168,13 +175,13 @@ public class SubsystemFactory {
 
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
-            return new ShooterSubsystem(new ShooterHardwarePrototype());
+            return new ShooterSubsystem(new ShooterHardwarePrototype(), csvFilepath);
         } else if (robotType == RobotType.BETA) {
-            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp(), csvFilepath);
         } else if (robotType == RobotType.COMP) {
-            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp(), csvFilepath);
         } else {
-            return new ShooterSubsystem(new ShooterPlacebo());
+            return new ShooterSubsystem(new ShooterPlacebo(), csvFilepath);
         }
     }
 

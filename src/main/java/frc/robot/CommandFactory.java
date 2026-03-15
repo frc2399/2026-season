@@ -4,6 +4,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -45,7 +46,8 @@ public class CommandFactory {
 
     public Command runSpindexShooterIndexAndShooter() {
         return Commands.sequence(
-                shooter.shoot().until(() -> shooter.isUpToSpeed()),
+                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()))
+                        .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(
                         spindexer.runSpindexer(),
                         shooterIndexer.runShooterIndexer(),
