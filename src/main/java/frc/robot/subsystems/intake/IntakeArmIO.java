@@ -13,6 +13,8 @@ public interface IntakeArmIO {
 
     public void resetSetpointsToCurrentPosition();
 
+    public boolean isArmBelowTrench();
+
     public enum IntakeArmSetpoint {
         DEPLOYED,
         STOWED,

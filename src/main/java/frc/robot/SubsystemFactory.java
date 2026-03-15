@@ -1,9 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.RobotConstants.GearRatios;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -55,17 +55,23 @@ public class SubsystemFactory {
 
     private String serialNum = System.getenv("serialnum");
 
+    // for csv solution for shooter
+    private String csvFilepath = "";
+
     public SubsystemFactory() {
         if (RobotBase.isSimulation()) {
             robotType = RobotType.SIM;
             serialNum = "simulation";
+            csvFilepath = Filesystem.getDeployDirectory() + "/beta-shooter-speeds.csv";
         } else if (serialNum == null) {
             robotType = null;
             throw new RuntimeException("NO SERIAL NUMBER (cannot identify robot based on rio)");
         } else if (serialNum.equals(BETA_SERIAL_NUMBER)) {
             robotType = RobotType.BETA;
+            csvFilepath = Filesystem.getDeployDirectory() + "/beta-shooter-speeds.csv";
         } else if (serialNum.equals(COMP_SERIAL_NUMBER)) {
             robotType = RobotType.COMP;
+            csvFilepath = Filesystem.getDeployDirectory() + "/comp-shooter-speeds.csv";
         } else if (serialNum.equals(BUBBLES_SERIAL_NUMBER)) {
             robotType = RobotType.BUBBLES;
         } else if (serialNum.equals(MOZART_SERIAL_NUMBER)) {
@@ -153,12 +159,14 @@ public class SubsystemFactory {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
-                    new IntakeArmHardwareBetaAndComp());
+                    new IntakeArmHardwareBetaAndComp(
+                            RobotConstants.DeadbandConstants.BETA_INTAKE_ARM_DEADBAND));
         } else if (robotType == RobotType.COMP) {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(
                             RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
-                    new IntakeArmPlacebo());
+                    new IntakeArmHardwareBetaAndComp(
+                            RobotConstants.DeadbandConstants.COMP_INTAKE_ARM_DEADBAND));
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
@@ -166,23 +174,25 @@ public class SubsystemFactory {
 
     public ShooterSubsystem buildShooter() {
         if (robotType == RobotType.PROTOTYPE) {
-            return new ShooterSubsystem(new ShooterHardwarePrototype());
+            return new ShooterSubsystem(new ShooterHardwarePrototype(), csvFilepath);
         } else if (robotType == RobotType.BETA) {
-            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp(), csvFilepath);
         } else if (robotType == RobotType.COMP) {
-            return new ShooterSubsystem(new ShooterHardwareBetaAndComp());
+            return new ShooterSubsystem(new ShooterHardwareBetaAndComp(), csvFilepath);
         } else {
-            return new ShooterSubsystem(new ShooterPlacebo());
+            return new ShooterSubsystem(new ShooterPlacebo(), csvFilepath);
         }
     }
 
     public SpindexerSubsystem buildSpindexer() {
         if (robotType == RobotType.BETA) {
             return new SpindexerSubsystem(
-                    new SpindexerHardwareBetaAndComp(GearRatios.BETA_SPINDEXER_GEAR_RATIO));
+                    new SpindexerHardwareBetaAndComp(
+                            RobotConstants.GearRatios.BETA_SPINDEXER_GEAR_RATIO));
         } else if (robotType == RobotType.COMP) {
             return new SpindexerSubsystem(
-                    new SpindexerHardwareBetaAndComp(GearRatios.COMP_SPINDEXER_GEAR_RATIO));
+                    new SpindexerHardwareBetaAndComp(
+                            RobotConstants.GearRatios.COMP_SPINDEXER_GEAR_RATIO));
         } else {
             return new SpindexerSubsystem(new SpindexerPlacebo());
         }
