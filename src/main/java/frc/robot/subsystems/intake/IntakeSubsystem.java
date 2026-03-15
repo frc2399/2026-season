@@ -98,7 +98,7 @@ public class IntakeSubsystem extends SubsystemBase {
                                                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                                                 })
                                         .withTimeout(Seconds.of(1)))
-                        .repeatedly();
+                        .repeatedly().withName("feed fuel (arm)");
 
         return feedFuelCommand;
     }
