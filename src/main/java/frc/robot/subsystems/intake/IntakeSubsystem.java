@@ -82,8 +82,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // }
 
-    public Command ifArmIsBelowTrench() {
-        return this.run(() -> armIO.ifArmIsBelowTrench());
+    public boolean isArmBelowTrench() {
+        return armIO.isArmBelowTrench();
     }
 
     @Override

@@ -254,11 +254,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     }
 
     @Override
-    public boolean ifArmIsBelowTrench() {
-        if (desiredArmAngleBelowTrench.in(Degrees) <= intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI)) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isArmBelowTrench() {
+        return (desiredArmAngleBelowTrench.in(Degrees) <= intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI));
     }
 }

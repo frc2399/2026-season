@@ -27,7 +27,7 @@ public class IntakeArmPlacebo implements IntakeArmIO {
     public void resetSetpointsToCurrentPosition() {}
 
     @Override
-    public boolean ifArmIsBelowTrench() {
+    public boolean isArmBelowTrench() {
         return true;
     }
 }
