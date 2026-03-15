@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import java.util.List;
 import java.util.Set;
@@ -27,20 +29,24 @@ public class AutonCommandFactory {
     private final DriveSubsystem drive;
     private final IntakeSubsystem intake;
     private final CommandFactory commandFactory;
+    private final Gyro gyro;
     private Pose2d finalPose;
 
     public final PathConstraints constraints =
             new PathConstraints(1.5, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints intakeConstraints =
-            new PathConstraints(
-                    0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
+            new PathConstraints(0.5, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
     public AutonCommandFactory(
-            DriveSubsystem drive, IntakeSubsystem intake, CommandFactory commandFactory) {
+            DriveSubsystem drive,
+            IntakeSubsystem intake,
+            CommandFactory commandFactory,
+            Gyro gyro) {
         this.drive = drive;
         this.intake = intake;
         this.commandFactory = commandFactory;
+        this.gyro = gyro;
     }
 
     public Command buildPathDeferred(
@@ -65,7 +71,7 @@ public class AutonCommandFactory {
     public Command trenchToDepot() {
         return Commands.sequence(
                 intake.stowArm(),
-                Commands.runOnce(() -> drive.resetOdometryFlipped(BLUE_DEPOT_STARTING_LINE.pose())),
+                Commands.runOnce(() -> resetOdometryFlipped(BLUE_DEPOT_STARTING_LINE.pose())),
                 buildPathDeferred(IN_THE_DEPOT, constraints, 0),
                 drive.driveToPoseOnExecute(),
                 intake.deployAndRunIntake().withTimeout(3),
@@ -129,23 +135,23 @@ public class AutonCommandFactory {
         return Commands.sequence(
                 intake.stowArm(),
                 Commands.print("arm stowed"),
-                Commands.runOnce(
-                        () -> drive.resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
-                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0),
-                // drive.driveToPoseOnExecute(),
+                Commands.runOnce(() -> resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
+                Commands.parallel(
+                        buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0),
+                        Commands.waitSeconds(1)
+                                .andThen(intake.deployAndRunIntake().withTimeout(0.01))),
                 Commands.parallel(
                         Commands.print("going along to pick up fuel"),
-                        intake.runRoller().withTimeout(0.1),
+                        intake.deployAndRunIntake().withTimeout(0.1),
                         buildPathDeferred(OUTPOST_NEUTRAL_ZONE_CENTER, constraints, 0)),
                 Commands.parallel(
-                        intake.runRoller().withTimeout(0.1),
+                        intake.deployAndRunIntake().withTimeout(0.1),
                         buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)),
                 intake.defaultBehavior().withTimeout(0.01),
                 Commands.print("defaulted intake"),
                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 Commands.print("gone back!"),
-                Commands.waitSeconds(.0),
-                Commands.waitSeconds(0.0),
+                commandFactory.runSpindexShooterIndexAndShooter(),
                 Commands.print("final shooting done"));
     }
 
@@ -154,7 +160,7 @@ public class AutonCommandFactory {
                 intake.stowArm(),
                 Commands.runOnce(
                         () ->
-                                drive.resetOdometryFlipped(
+                                resetOdometryFlipped(
                                         FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE
                                                 .pose())),
                 buildPathDeferred(
@@ -182,5 +188,14 @@ public class AutonCommandFactory {
                     path.preventFlipping = false;
                     CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
                 });
+    }
+
+    public void resetOdometryFlipped(Pose2d pose) {
+        boolean red = FieldConstants.alliance.get() == Alliance.Red;
+        if (red) {
+            pose = FlippingUtil.flipFieldPose(pose);
+        }
+        drive.resetOdometry(pose);
+        gyro.setYaw(pose.getRotation().getMeasure());
     }
 }
