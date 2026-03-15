@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Supplier;
 
 public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
@@ -56,19 +57,19 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public Command shoot(Distance distFromHub) {
+    public Command shoot(Supplier<Distance> distFromHub) {
         return this.run(
                         () -> {
+                            System.out.println(distFromHub.get().in(Inches));
                             AngularVelocity topSpeed =
                                     RadiansPerSecond.of(
                                             topShooterSpeedTreeMapMeterRadS.get(
-                                                    distFromHub.in(Meters)));
+                                                    distFromHub.get().in(Meters)));
                             AngularVelocity bottomSpeed =
                                     RadiansPerSecond.of(
                                             bottomShooterSpeedTreeMapMeterRadS.get(
-                                                    distFromHub.in(Meters)));
+                                                    distFromHub.get().in(Meters)));
                             io.runShooterWithSpeeds(topSpeed, bottomSpeed, shouldInterpolate);
-                            System.out.println("run...?");
                         })
                 .withName("runShooter");
     }

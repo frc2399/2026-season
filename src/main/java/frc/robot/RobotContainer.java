@@ -125,7 +125,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(
                         shooterSubsystem.shoot(
-                                RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose())));
+                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose())));
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().onTrue(intakeSubsystem.stowArm());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());

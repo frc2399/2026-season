@@ -92,6 +92,16 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         shooterBottomMotorConfig.encoder.positionConversionFactor(
                 ENCODER_POSITION_FACTOR.in(Radians));
         shooterTopMotorConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
+        shooterBottomMotorConfig
+                .encoder
+                .uvwMeasurementPeriod(8)
+                .quadratureAverageDepth(2)
+                .quadratureMeasurementPeriod(8);
+        shooterTopMotorConfig
+                .encoder
+                .uvwMeasurementPeriod(8)
+                .quadratureAverageDepth(2)
+                .quadratureMeasurementPeriod(8);
 
         shooterBottomMotorConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
