@@ -96,7 +96,6 @@ public class ShooterSubsystem extends SubsystemBase {
             CSVReaderBuilder builder = new CSVReaderBuilder(fileReader).withSkipLines(1);
             CSVReader reader = builder.build();
             String[] line;
-            System.out.println("i am the csv");
             while ((line = reader.readNext()) != null) {
                 // order: distance (inches), top speed (rad/s), bottom speed (rad/s), timestamp
                 Distance distanceToHub = Inches.of(Double.valueOf(line[0]));
@@ -125,7 +124,6 @@ public class ShooterSubsystem extends SubsystemBase {
         // https://www.geeksforgeeks.org/java/writing-a-csv-file-in-java-using-opencsv/
         try {
             File csvFile = new File(csvFilepath);
-            System.out.println("file " + csvFilepath);
             FileWriter outputWriter = new FileWriter(csvFile, true);
             CSVWriter csvWriter = new CSVWriter(outputWriter);
 
@@ -137,11 +135,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
             String timestamp = ZonedDateTime.now(LOGGING_TIMEZONE).format(LOGGING_TIME_FORMATTER);
 
-            System.out.println(distanceToHub.in(Inches));
-            System.out.println(desiredSpeedTopRadiansPerSecond);
-            System.out.println(desiredSpeedBottomRadiansPerSecond);
-            System.out.println(timestamp);
-
             String[] data =
                     new String[] {
                         Double.toString(distanceToHub.in(Inches)),
@@ -151,7 +144,6 @@ public class ShooterSubsystem extends SubsystemBase {
                     };
             csvWriter.writeNext(data);
             csvWriter.close();
-            System.out.println("written!");
         } catch (IOException e) {
             System.out.println(
                     "********COULD NOT WRITE TO THE SHOOTER SPEEDS CSV - SEE STACK TRACE********");
