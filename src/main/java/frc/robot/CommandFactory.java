@@ -48,7 +48,10 @@ public class CommandFactory {
         return Commands.sequence(
                 shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()))
                         .until(() -> shooter.isUpToSpeed()),
-                Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
+                Commands.parallel(
+                        spindexer.runSpindexer(),
+                        shooterIndexer.runShooterIndexer(),
+                        intakeSubsystem.feedFuel()));
     }
 
     public Command resetHeading(Angle yaw) {
