@@ -161,7 +161,7 @@ public class SubsystemFactory {
                     new IntakeArmHardwareBetaAndComp());
         } else {
             return new IntakeSubsystem(
-                    new IntakeRollerPlacebo(), new IntakeArmHardwareBetaAndComp());
+                    new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
     }
 

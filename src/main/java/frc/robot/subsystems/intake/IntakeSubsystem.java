@@ -90,30 +90,18 @@ public class IntakeSubsystem extends SubsystemBase {
                                 () -> {
                                     armProfiledPidEnabled = true;
                                     armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
-                                    System.out.println("feed fuel!");
                                 })
                         .withTimeout(Seconds.of(1))
                         .andThen(
                                 this.run(
                                                 () -> {
                                                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
-                                                    System.out.println("stow!");
                                                 })
                                         .withTimeout(Seconds.of(1)))
                         .repeatedly();
 
         return feedFuelCommand;
     }
-
-    // public Command feedFuelToSpindexer() {
-    //      return this.run(
-    //             () -> {
-    //                 armProfiledPidEnabled = true;
-    //                 armIO.setSetpoint(IntakeArmSetpoint.STOWED);
-
-    //             });
-
-    // }
 
     @Override
     public void periodic() {
