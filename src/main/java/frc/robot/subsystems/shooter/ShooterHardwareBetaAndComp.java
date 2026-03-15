@@ -63,7 +63,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     public AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
     public AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
 
-    public AngularVelocity shooterSpeedTolerance = RadiansPerSecond.of(75);
+    public AngularVelocity shooterSpeedTolerance = RadiansPerSecond.of(25);
 
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
