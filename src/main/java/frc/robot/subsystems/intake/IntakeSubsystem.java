@@ -104,6 +104,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return feedFuelCommand;
     }
 
+    public boolean isArmBelowTrench() {
+        return armIO.isArmBelowTrench();
+    }
+
     @Override
     public void periodic() {
 
@@ -138,5 +142,6 @@ public class IntakeSubsystem extends SubsystemBase {
                 "intake/arm/desired velocity (deg/sec)", armState.desiredVelocityDegreesPerSecond);
         SmartDashboard.putNumber("intake/arm/current", armState.current);
         SmartDashboard.putNumber("intake/arm/applied voltage", armState.appliedVoltage);
+        SmartDashboard.putBoolean("intake/arm/is below trench height", isArmBelowTrench());
     }
 }

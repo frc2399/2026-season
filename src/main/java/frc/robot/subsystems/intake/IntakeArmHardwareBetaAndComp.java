@@ -78,6 +78,8 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     private Angle desiredAngle = Degrees.of(0);
     private AngularVelocity desiredAngularVelocity = DegreesPerSecond.of(0);
 
+    private Angle desiredArmAngleBelowTrench = Degrees.of(30);
+
     // profiled PID control
     private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(2.5);
     private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(1.7);
@@ -252,5 +254,11 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
         state.appliedVoltage =
                 intakeArmSparkFlex.getBusVoltage() * intakeArmSparkFlex.getAppliedOutput();
         state.current = intakeArmSparkFlex.getOutputCurrent();
+    }
+
+    @Override
+    public boolean isArmBelowTrench() {
+        return (desiredArmAngleBelowTrench.in(Degrees)
+                >= intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI));
     }
 }

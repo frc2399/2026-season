@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.RobotConstants.GearRatios;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -188,10 +187,12 @@ public class SubsystemFactory {
     public SpindexerSubsystem buildSpindexer() {
         if (robotType == RobotType.BETA) {
             return new SpindexerSubsystem(
-                    new SpindexerHardwareBetaAndComp(GearRatios.BETA_SPINDEXER_GEAR_RATIO));
+                    new SpindexerHardwareBetaAndComp(
+                            RobotConstants.GearRatios.BETA_SPINDEXER_GEAR_RATIO));
         } else if (robotType == RobotType.COMP) {
             return new SpindexerSubsystem(
-                    new SpindexerHardwareBetaAndComp(GearRatios.COMP_SPINDEXER_GEAR_RATIO));
+                    new SpindexerHardwareBetaAndComp(
+                            RobotConstants.GearRatios.COMP_SPINDEXER_GEAR_RATIO));
         } else {
             return new SpindexerSubsystem(new SpindexerPlacebo());
         }
