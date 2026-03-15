@@ -70,7 +70,7 @@ public class AutonCommandFactory {
 
     public Command trenchToDepot() {
         return Commands.sequence(
-                intake.stowArm(),
+                intake.stowArmSetpoint(),
                 Commands.runOnce(() -> resetOdometryFlipped(BLUE_DEPOT_STARTING_LINE.pose())),
                 buildPathDeferred(IN_THE_DEPOT, constraints, 0),
                 drive.driveToPoseOnExecute(),
@@ -96,7 +96,7 @@ public class AutonCommandFactory {
 
     public Command depotSideNeutralZoneIntaking() {
         return Commands.sequence(
-                intake.stowArm(),
+                intake.stowArmSetpoint(),
                 followWaypoints(
                         DEPOT_SHOOTING_SPOT.pose(),
                         constraints,
@@ -133,14 +133,16 @@ public class AutonCommandFactory {
 
     public Command outpostSideNeutralZoneIntaking() {
         return Commands.sequence(
-                intake.stowArm(),
+                intake.stowArmSetpoint(),
                 Commands.print("arm stowed"),
+                commandFactory.runSpindexShooterIndexAndShooterNoFeedFuel().withTimeout(1.5),
+                commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                Commands.waitUntil(() -> intake.isArmBelowTrench()),
                 Commands.runOnce(() -> resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
                 buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
                 Commands.parallel(
                         buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0),
-                        Commands.waitSeconds(1)
-                                .andThen(intake.deployAndRunIntake().withTimeout(0.01))),
+                       intake.deployAndRunIntake().withTimeout(0.01)),
                 Commands.parallel(
                         Commands.print("going along to pick up fuel"),
                         intake.deployAndRunIntake().withTimeout(0.1),
@@ -152,7 +154,6 @@ public class AutonCommandFactory {
                 Commands.print("defaulted intake"),
                 buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
                 buildPathDeferred(BLUE_OUTPOST_STARTING_LINE, constraints, 0),
-                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 Commands.print("gone back!"),
                 commandFactory.runSpindexShooterIndexAndShooter(),
                 Commands.print("final shooting done"));
@@ -160,7 +161,7 @@ public class AutonCommandFactory {
 
     public Command driveStraightTesting() {
         return Commands.sequence(
-                intake.stowArm(),
+                intake.stowArmSetpoint(),
                 Commands.runOnce(
                         () ->
                                 resetOdometryFlipped(

@@ -52,6 +52,19 @@ public class CommandFactory {
                         intakeSubsystem.feedFuel()));
     }
 
+    public Command runSpindexShooterIndexAndShooterNoFeedFuel() {
+        return Commands.sequence(
+                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()))
+                        .until(() -> shooter.isUpToSpeed()),
+                Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
+    }
+
+    public Command defaultSpindexerShooterIndexerAndShooter() {
+        return Commands.parallel(
+            spindexer.defaultBehavior(), shooterIndexer.defaultBehavior(), shooter.defaultBehavior()
+        );
+    }
+
     public Command resetHeading(Angle yaw) {
         return Commands.parallel(
                 gyro.setYawCommand(yaw),

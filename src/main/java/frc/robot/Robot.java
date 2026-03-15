@@ -131,6 +131,7 @@ public class Robot extends TimedRobot {
                 && DriverStation.getAlliance().get() == Alliance.Red) {
             FieldConstants.alliance = Optional.of(Alliance.Red);
             robotContainer.gyro.setYaw(Degrees.of(-90));
+            robotContainer.drive.resetOdometryAfterGyro();
         } else {
             FieldConstants.alliance = Optional.of(Alliance.Blue);
             robotContainer.gyro.setYaw(Degrees.of(180));

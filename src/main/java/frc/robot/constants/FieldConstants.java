@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.Optional;
@@ -74,16 +75,9 @@ public final class FieldConstants {
         public static final Pose BLUE_OUTPOST_STARTING_LINE =
                 new Pose(
                         "blueOutpostStartingLine",
-                        FRONT_OF_BLUE_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.unaryMinus(),
-                                        HALF_WIDTH_OF_HUB
-                                                .plus(LENGTH_OF_BUMP)
-                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
-                                                .plus(ROBOT_HUB_MARGIN.times(0.5))
-                                                .plus(ROBOT_HUB_MARGIN.div(2))
-                                                .unaryMinus(),
-                                        Rotation2d.kCCW_90deg)));
+                        new Pose2d(
+                                new Translation2d(Meters.of(16.54 - 12.57), Meters.of(8.07 - 7.71)),
+                                Rotation2d.kCCW_90deg));
         public static final Pose DRIVE_STRAIGHT_TESTING =
                 new Pose(
                         "driveStraightTesting",
