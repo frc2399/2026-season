@@ -46,7 +46,10 @@ public class CommandFactory {
     public Command runSpindexShooterIndexAndShooter() {
         return Commands.sequence(
                 shooter.shoot().until(() -> shooter.isUpToSpeed()),
-                Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
+                Commands.parallel(
+                        spindexer.runSpindexer(),
+                        shooterIndexer.runShooterIndexer(),
+                        intakeSubsystem.feedFuel()));
     }
 
     public Command resetHeading(Angle yaw) {
