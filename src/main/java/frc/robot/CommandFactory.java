@@ -61,8 +61,9 @@ public class CommandFactory {
 
     public Command defaultSpindexerShooterIndexerAndShooter() {
         return Commands.parallel(
-            spindexer.defaultBehavior(), shooterIndexer.defaultBehavior(), shooter.defaultBehavior()
-        );
+                spindexer.defaultBehavior(),
+                shooterIndexer.defaultBehavior(),
+                shooter.defaultBehavior());
     }
 
     public Command resetHeading(Angle yaw) {
