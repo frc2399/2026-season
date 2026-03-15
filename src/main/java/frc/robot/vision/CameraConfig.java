@@ -76,7 +76,7 @@ public class CameraConfig {
                 CAMERA_PITCH = Degrees.of(32.794);
                 CAMERA_YAW = Degrees.of(9.937);
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(12.479);
-                Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(-9.505);
+                Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(9.505);
                 Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(20.751);
                 HAS_SECOND_CAMERA = false;
                 SECOND_LIMELIGHT_NAME = "not_a_limelight";

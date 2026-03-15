@@ -32,7 +32,7 @@ public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
     public Gyro gyro = subsystemFactory.buildGyro();
 
-    private DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
+    public DriveSubsystem drive = subsystemFactory.buildDriveSubsystem(gyro);
     private IntakeSubsystem intakeSubsystem = subsystemFactory.buildIntake();
     private ShooterSubsystem shooterSubsystem = subsystemFactory.buildShooter();
     private SpindexerSubsystem spindexerSubsystem = subsystemFactory.buildSpindexer();

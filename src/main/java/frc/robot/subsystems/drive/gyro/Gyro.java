@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drive.gyro;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
 
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.units.measure.Angle;
@@ -23,10 +24,15 @@ public class Gyro {
     }
 
     public Command setYawCommand(Angle yaw) {
-        return Commands.runOnce(() -> io.setYaw(yaw));
+        return Commands.runOnce(
+                () -> {
+                    io.setYaw(yaw);
+                    Commands.print("hi " + yaw.in(Degrees));
+                });
     }
 
     public void setYaw(Angle yaw) {
+        System.out.println("resetting gyro to " + yaw.in(Radians));
         io.setYaw(yaw);
     }
 

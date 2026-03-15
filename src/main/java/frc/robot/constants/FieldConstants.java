@@ -267,6 +267,20 @@ public final class FieldConstants {
                                                 .unaryMinus(),
                                         Meters.of(3).unaryMinus(),
                                         new Rotation2d(Degrees.of(70)))));
+        public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
+                new Pose(
+                        "blueOutpostStartingLine",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER.plus(
+                                                HALF_WIDTH_OF_HUB.times(2)),
+                                        HALF_WIDTH_OF_HUB
+                                                .plus(LENGTH_OF_BUMP)
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .plus(ROBOT_HUB_MARGIN.times(0.5))
+                                                .plus(ROBOT_HUB_MARGIN.div(2))
+                                                .unaryMinus(),
+                                        Rotation2d.kCCW_90deg)));
     }
 
     public static class FieldBoundaries {

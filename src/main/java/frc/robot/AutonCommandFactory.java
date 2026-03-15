@@ -136,6 +136,7 @@ public class AutonCommandFactory {
                 intake.stowArm(),
                 Commands.print("arm stowed"),
                 Commands.runOnce(() -> resetOdometryFlipped(BLUE_OUTPOST_STARTING_LINE.pose())),
+                buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
                 Commands.parallel(
                         buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0),
                         Commands.waitSeconds(1)
@@ -149,6 +150,8 @@ public class AutonCommandFactory {
                         buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)),
                 intake.defaultBehavior().withTimeout(0.01),
                 Commands.print("defaulted intake"),
+                buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
+                buildPathDeferred(BLUE_OUTPOST_STARTING_LINE, constraints, 0),
                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                 Commands.print("gone back!"),
                 commandFactory.runSpindexShooterIndexAndShooter(),
@@ -195,7 +198,9 @@ public class AutonCommandFactory {
         if (red) {
             pose = FlippingUtil.flipFieldPose(pose);
         }
+        System.out.println(pose.getRotation().getRadians() + "in le auton command");
         drive.resetOdometry(pose);
         gyro.setYaw(pose.getRotation().getMeasure());
+        drive.resetOdometryAfterGyro();
     }
 }
