@@ -63,8 +63,8 @@ public final class DriveConfig {
                 break;
             case BETA:
                 kS = 0.1;
-                kV = 2.29;
-                DRIVE_P = 0.4;
+                kV = 2.17;
+                DRIVE_P = 0.2;
                 DRIVE_D = 0;
                 TURN_P = 1.0;
                 TURN_D = 0.001;
@@ -79,8 +79,8 @@ public final class DriveConfig {
                 break;
             case COMP:
                 kS = 0.1;
-                kV = 2.29;
-                DRIVE_P = 0.4;
+                kV = 2.17;
+                DRIVE_P = 0.2;
                 DRIVE_D = 0;
                 TURN_P = 1.0;
                 TURN_D = 0.001;

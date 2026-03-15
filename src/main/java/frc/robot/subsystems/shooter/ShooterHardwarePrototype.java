@@ -144,7 +144,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
         }
     }
 
-    public void runShooter() {
+    public void runShooterWithSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {
         desiredBottomVelocity =
                 RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         desiredTopVelocity =

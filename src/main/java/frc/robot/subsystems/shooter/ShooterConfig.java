@@ -28,7 +28,7 @@ public class ShooterConfig {
             case COMP:
                 BOTTOM_KS = .122;
                 BOTTOM_KV = 0.0171;
-                BOTTOM_P = 0.0004;
+                BOTTOM_P = 0.00055;
                 TOP_KS = .155;
                 TOP_KV = 0.017;
                 TOP_P = 0.00006;

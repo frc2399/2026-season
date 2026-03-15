@@ -81,8 +81,8 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     private Angle desiredArmAngleBelowTrench = Degrees.of(30);
 
     // profiled PID control
-    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(1.6);
-    private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(.8);
+    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(2.5);
+    private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(1.7);
     private TrapezoidProfile intakeArmTrapezoidProfile =
             new TrapezoidProfile(
                     new Constraints(
@@ -97,7 +97,8 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     // much if we are within 1 degree of the goal
 
-    public IntakeArmHardwareBetaAndComp() {
+    public IntakeArmHardwareBetaAndComp(Angle pidDeadband) {
+        this.pidDeadband = pidDeadband;
         intakeArmSparkFlexConfig
                 .inverted(INTAKE_ARM_MOTOR_INVERTED)
                 .idleMode(IdleMode.kBrake)
@@ -155,7 +156,9 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             desiredAngle = Degrees.of(10);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
- } else if (setpoint == IntakeArmSetpoint.FEED_FUEL) {
+        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL) {
+            desiredAngle = Degrees.of(50); // TODO: empirically determine :)
+            goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         }
     }
 
@@ -255,6 +258,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     @Override
     public boolean isArmBelowTrench() {
-        return (desiredArmAngleBelowTrench.in(Degrees) <= intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI));
+        return (desiredArmAngleBelowTrench.in(Degrees)
+                >= intakeArmAbsoluteEncoder.getPosition() * (180 / Math.PI));
     }
 }
