@@ -1,7 +1,10 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.units.measure.AngularVelocity;
+
 public interface ShooterIO {
-    public void runShooter();
+    public void runShooterWithSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate);
 
     public void defaultBehavior();
 
@@ -10,6 +13,8 @@ public interface ShooterIO {
     public ShooterSpeeds getCurrentTopAndBottomSpeeds();
 
     public void runTunableNumberSetpoints();
+
+    public boolean isUpToSpeed();
 
     public void passFuel();
 

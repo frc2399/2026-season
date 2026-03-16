@@ -31,10 +31,11 @@ public class SpindexerSubsystem extends SubsystemBase {
     public void periodic() {
         io.updateStates(spindexerState);
         SmartDashboard.putNumber(
-                "Spindexer/desiredSpeed", spindexerState.spindexerDesiredSpeedRad_P_S);
+                "spindexer/desiredSpeed (rad per s)", spindexerState.spindexerDesiredSpeedRad_P_S);
         SmartDashboard.putNumber(
-                "Spindexer/actualSpeed", spindexerState.spindexerActualSpeedRad_P_S);
-        SmartDashboard.putNumber("Spindexer/driveVoltage", spindexerState.spindexerAppliedVoltage);
-        SmartDashboard.putNumber("Spindexer/driveCurrent", spindexerState.spindexerCurrent);
+                "spindexer/actualSpeed (rad per s)", spindexerState.spindexerActualSpeedRad_P_S);
+        SmartDashboard.putNumber(
+                "spindexer/driveVoltage (volt)", spindexerState.spindexerAppliedVoltage);
+        SmartDashboard.putNumber("spindexer/driveCurrent (amps)", spindexerState.spindexerCurrent);
     }
 }

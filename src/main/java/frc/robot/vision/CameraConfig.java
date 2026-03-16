@@ -59,7 +59,7 @@ public class CameraConfig {
             case BETA:
                 LIMELIGHT_NAME = "";
                 CAMERA_PITCH = Degrees.of(23.5);
-                CAMERA_YAW = Degrees.of(-10);
+                CAMERA_YAW = Degrees.of(10);
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(12.5);
                 Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(-9.75);
                 Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(28.75);
@@ -74,7 +74,7 @@ public class CameraConfig {
             case COMP:
                 LIMELIGHT_NAME = "";
                 CAMERA_PITCH = Degrees.of(32.794);
-                CAMERA_YAW = Degrees.of(-9.937);
+                CAMERA_YAW = Degrees.of(9.937);
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(12.479);
                 Y_ROBOT_TO_CAMERA_OFFSET = Inches.of(-9.505);
                 Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(20.751);

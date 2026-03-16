@@ -114,17 +114,27 @@ public class RobotContainer {
         // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
-        driverController.leftTrigger().whileTrue(commandFactory.runSpindexShooterIndexAndShooter(false)); // do not pass
-        driverController.rightBumper().whileTrue(commandFactory.runSpindexShooterIndexAndShooter(true)); // do pass
+        driverController
+                .leftTrigger()
+                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(false)); // do not pass
+        driverController
+                .rightBumper()
+                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(true)); // do pass
         driverController.x().whileTrue(drive.setX());
         driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
+        driverController.a().whileTrue(intakeSubsystem.feedFuel());
     }
 
     private void configureButtonBindingsTuningController() {
         tuningController.rightTrigger().onTrue(intakeSubsystem.deployArm());
-        tuningController.leftTrigger().whileTrue(shooterSubsystem.shoot(false));
+        tuningController
+                .leftTrigger()
+                .whileTrue(
+                        shooterSubsystem.shoot(
+                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                false));
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
-        tuningController.leftBumper().onTrue(intakeSubsystem.stowArm());
+        tuningController.leftBumper().onTrue(intakeSubsystem.stowArmSetpoint());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
         tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
         tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());

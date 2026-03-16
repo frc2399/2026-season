@@ -63,6 +63,8 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     public AngularVelocity desiredBottomVelocity = RadiansPerSecond.of(0);
     public AngularVelocity desiredTopVelocity = RadiansPerSecond.of(0);
 
+    public AngularVelocity shooterSpeedTolerance = RadiansPerSecond.of(25);
+
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
@@ -90,6 +92,16 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         shooterBottomMotorConfig.encoder.positionConversionFactor(
                 ENCODER_POSITION_FACTOR.in(Radians));
         shooterTopMotorConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
+        shooterBottomMotorConfig
+                .encoder
+                .uvwMeasurementPeriod(8)
+                .quadratureAverageDepth(2)
+                .quadratureMeasurementPeriod(8);
+        shooterTopMotorConfig
+                .encoder
+                .uvwMeasurementPeriod(8)
+                .quadratureAverageDepth(2)
+                .quadratureMeasurementPeriod(8);
 
         shooterBottomMotorConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
@@ -144,9 +156,16 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         }
     }
 
-    public void runShooter() {
-        desiredBottomVelocity = RadiansPerSecond.of(230.3834612632515);
-        desiredTopVelocity = RadiansPerSecond.of(314.1592653589793);
+    public void runShooterWithSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {
+        if (shouldInterpolate) {
+            desiredBottomVelocity = bottomSpeed;
+            desiredTopVelocity = topSpeed;
+        } else {
+            // default values
+            desiredBottomVelocity = RadiansPerSecond.of(230.3834612632515);
+            desiredTopVelocity = RadiansPerSecond.of(314.1592653589793);
+        }
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -174,12 +193,12 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
                 Math.abs(
                                 (shooterTopEncoder.getVelocity())
                                         - (desiredTopVelocity.in(RadiansPerSecond)))
-                        < 25;
+                        < shooterSpeedTolerance.in(RadiansPerSecond);
         boolean isBottomRollerDesiredSpeed =
                 Math.abs(
                                 (shooterBottomEncoder.getVelocity())
                                         - (desiredBottomVelocity.in(RadiansPerSecond)))
-                        < 25;
+                        < shooterSpeedTolerance.in(RadiansPerSecond);
 
         return isTopRollerDesiredSpeed && isBottomRollerDesiredSpeed;
     }
@@ -205,7 +224,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
 
     @Override
     public void runTunableNumberSetpoints() {
-        desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_TOP_DESIRED_SPEED_RPM.get());
+        desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get() - 100);
         desiredBottomVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get());
 
         shooterBottomPIDController.setSetpoint(

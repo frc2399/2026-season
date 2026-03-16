@@ -1,5 +1,8 @@
 package frc.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Seconds;
+
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,6 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private IntakeRollerIOState rollerState = new IntakeRollerIOState();
     private IntakeArmIOState armState = new IntakeArmIOState();
 
+    private Time feedFuelTimeoutSeconds = Seconds.of(1);
     public boolean armProfiledPidEnabled = false;
 
     public IntakeSubsystem(IntakeRollerIO rollerIO, IntakeArmIO armIO) {
@@ -23,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command deployAndRunIntake() {
         return this.run(
                         () -> {
-                            // armProfiledPidEnabled = true;
+                            armProfiledPidEnabled = true;
                             armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
                             rollerIO.runIntake();
                         })
@@ -33,9 +37,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command defaultBehavior() {
         return this.run(
                         () -> {
-                            // armProfiledPidEnabled = true;
+                            armProfiledPidEnabled = true;
                             rollerIO.setZero();
-                            armIO.runIntakeArmZeroVelocity();
+                            // armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                         })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
@@ -59,28 +63,50 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command deployArm() {
         return this.runOnce(
                 () -> {
-                    // armProfiledPidEnabled = true;
+                    armProfiledPidEnabled = true;
                     armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
                 });
     }
 
-    public Command stowArm() {
+    public Command stowArmSetpoint() {
         return this.runOnce(
                 () -> {
-                    // armProfiledPidEnabled = true;
+                    armProfiledPidEnabled = true;
                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                 });
     }
 
-    // public Command feedFuelToSpindexer() {
-    //      return this.run(
-    //             () -> {
-    //                 armProfiledPidEnabled = true;
-    //                 armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+    public Command feedFuelSetpoint() {
+        return this.runOnce(
+                () -> {
+                    armProfiledPidEnabled = true;
+                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                });
+    }
 
-    //             });
+    public Command feedFuel() {
+        Command feedFuelCommand =
+                this.run(
+                                () -> {
+                                    armProfiledPidEnabled = true;
+                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                                })
+                        .withTimeout(Seconds.of(1))
+                        .andThen(
+                                this.run(
+                                                () -> {
+                                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                                                })
+                                        .withTimeout(Seconds.of(1)))
+                        .repeatedly()
+                        .withName("feed fuel (arm)");
 
-    // }
+        return feedFuelCommand;
+    }
+
+    public boolean isArmBelowTrench() {
+        return armIO.isArmBelowTrench();
+    }
 
     @Override
     public void periodic() {
@@ -100,21 +126,23 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(
                 "intake/roller/actual speed (radians per second)",
                 rollerState.actualSpeedRadiansPerSecond);
-        SmartDashboard.putNumber("intake/roller/current", rollerState.current);
-        SmartDashboard.putNumber("intake/roller/applied output", rollerState.appliedVoltage);
+        SmartDashboard.putNumber("intake/roller/current (amps)", rollerState.current);
+        SmartDashboard.putNumber("intake/roller/applied output (volt)", rollerState.appliedVoltage);
 
         SmartDashboard.putNumber("intake/arm/desired angle (deg)", armState.desiredAngleDegrees);
         SmartDashboard.putNumber(
                 "intake/arm/intermediate angle (deg)", armState.intermediateAngleDegrees);
         SmartDashboard.putNumber("intake/arm/actual angle (deg)", armState.actualAngleDegrees);
         SmartDashboard.putNumber(
-                "intake/arm/velocity (deg/sec)", armState.velocityDegreesPerSecond);
+                "intake/arm/velocity (deg per s)", armState.velocityDegreesPerSecond);
         SmartDashboard.putNumber(
-                "intake/arm/intermediate velocity (deg/s)",
+                "intake/arm/intermediate velocity (deg per s)",
                 armState.intermediateVelocityDegreesPerSecond);
         SmartDashboard.putNumber(
-                "intake/arm/desired velocity (deg/sec)", armState.desiredVelocityDegreesPerSecond);
-        SmartDashboard.putNumber("intake/arm/current", armState.current);
-        SmartDashboard.putNumber("intake/arm/applied voltage", armState.appliedVoltage);
+                "intake/arm/desired velocity (deg per s)",
+                armState.desiredVelocityDegreesPerSecond);
+        SmartDashboard.putNumber("intake/arm/current (amps)", armState.current);
+        SmartDashboard.putNumber("intake/arm/applied voltage (volt)", armState.appliedVoltage);
+        SmartDashboard.putBoolean("intake/arm/is below trench height", isArmBelowTrench());
     }
 }
