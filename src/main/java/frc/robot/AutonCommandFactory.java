@@ -55,9 +55,6 @@ public class AutonCommandFactory {
         return new DeferredCommand(
                 () -> {
                     finalPose = pose.pose();
-                    System.out.println("building deferred + going to " + pose.name());
-                    System.out.println(pose.pose().getX());
-                    System.out.println(pose.pose().getY());
                     if (FieldConstants.alliance.isPresent()
                             && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
                         finalPose = FlippingUtil.flipFieldPose(finalPose);
@@ -119,7 +116,7 @@ public class AutonCommandFactory {
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 0),
                         buildPathDeferred(BLUE_DEPOT_STARTING_LINE, constraints, 0),
                         commandFactory.runSpindexShooterIndexAndShooter())
-                .withName("depotToNeutralZone BUE GYRO ANGLE: -90");
+                .withName("depotToNeutralZone");
     }
 
     public Command outpostSideNeutralZoneIntaking() {
@@ -147,7 +144,7 @@ public class AutonCommandFactory {
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
                         buildPathDeferred(BLUE_OUTPOST_STARTING_LINE, constraints, 0),
                         commandFactory.runSpindexShooterIndexAndShooter())
-                .withName("outpostToNeutralZone BLUE GYRO ANGLE: 90");
+                .withName("outpostToNeutralZone");
     }
 
     public Command driveStraightTesting() {
@@ -190,7 +187,6 @@ public class AutonCommandFactory {
         if (red) {
             pose = FlippingUtil.flipFieldPose(pose);
         }
-        System.out.println(pose.getRotation().getRadians() + "in le auton command");
         drive.resetOdometry(pose);
         gyro.setYaw(pose.getRotation().getMeasure());
         drive.resetOdometryAfterGyro();

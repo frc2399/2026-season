@@ -185,29 +185,28 @@ public class RobotContainer {
                             // command name is for BLUE
                             Command selectedAuton = getAutonomousCommand();
                             String autonName = selectedAuton.getName();
-                            String[] wordsInAutonName = autonName.split("BLUE GYRO ANGLE: ");
-                            if (wordsInAutonName.length < 1) {
-                                autonHasNoGyroAngle = true;
-                            } else {
-                                String autonAngleString = wordsInAutonName[1];
-                                try {
-                                    Angle desiredGyroAngle =
-                                            Degrees.of(Integer.parseInt(autonAngleString));
-                                    if (FieldConstants.alliance.isPresent()
-                                            && FieldConstants.alliance.get() == Alliance.Red) {
-                                        desiredGyroAngle = desiredGyroAngle.unaryMinus();
-                                    }
-                                    gyro.setYaw(desiredGyroAngle);
-                                    drive.resetOdometryAfterGyro();
+                            Angle gyroAngle;
+                            switch (autonName) {
+                                case "outpostToNeutralZone":
+                                    gyroAngle = Degrees.of(90);
                                     autonHasNoGyroAngle = false;
-                                    isGyroConfigured = true;
-                                    SmartDashboard.putBoolean(
-                                            "robot/has reset gyro", isGyroConfigured);
-                                } catch (NumberFormatException e) {
-                                    System.err.println(e.getStackTrace());
+                                    break;
+                                case "depotToNeutralZone":
+                                    gyroAngle = Degrees.of(-90);
+                                    autonHasNoGyroAngle = false;
+                                    break;
+                                default:
+                                    gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = true;
-                                }
+                                    break;
                             }
+                            if (FieldConstants.alliance.isPresent()
+                                    && FieldConstants.alliance.get() == Alliance.Red) {
+                                gyroAngle = gyroAngle.unaryMinus();
+                            }
+                            gyro.setYaw(gyroAngle);
+                            drive.resetOdometryAfterGyro();
+                            isGyroConfigured = true;
                         })
                 .ignoringDisable(true);
     }

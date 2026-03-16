@@ -340,9 +340,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     /** Resets the odometry to the specified pose. */
     public void resetOdometry(Pose2d pose) {
-        System.out.println(gyro.getYaw(false).in(Radians) + " gyro in drive reset odo");
-        System.out.println(
-                pose.getRotation().getMeasure().in(Radians) + " pose in drive reset odo");
         poseEstimator.resetPosition(
                 Rotation2d.fromRadians(gyro.getYaw(false).in(Radians)),
                 new SwerveModulePosition[] {
@@ -357,7 +354,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // basically, when we reset gyro, m_gyroOffset in SwerveDrivePoseEstimator does
     // NOT reset so the pose does not reset properly :(
     public void resetOdometryAfterGyro() {
-        poseEstimator.resetRotation(Rotation2d.fromRadians(gyro.getYaw(false).in(Radians)));
+        poseEstimator.resetRotation(Rotation2d.fromRadians(gyro.getYaw(true).in(Radians)));
     }
 
     /**
