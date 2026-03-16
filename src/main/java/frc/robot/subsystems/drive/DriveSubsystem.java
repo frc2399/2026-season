@@ -72,7 +72,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private double HEADING_P;
     private double HEADING_D;
 
-    private PIDController drivePIDController = new PIDController(HEADING_P, 0, HEADING_D);
+    private PIDController drivePIDController;
 
     private RobotConfig config;
 
@@ -181,6 +181,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         MAX_ANGULAR_VELOCITY = DriveConfig.MAX_ANGULAR_VELOCITY;
         TRACK_WIDTH = DriveConfig.TRACK_WIDTH;
         WHEEL_BASE = DriveConfig.TRACK_LENGTH;
+
+        drivePIDController = new PIDController(HEADING_P, 0, HEADING_D);
+
+
         SmartDashboard.putNumber("drive/config/heading_p", HEADING_P);
         SmartDashboard.putNumber("drive/config/heading_d", HEADING_D);
         SmartDashboard.putNumber(
