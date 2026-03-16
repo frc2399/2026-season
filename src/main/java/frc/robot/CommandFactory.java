@@ -43,9 +43,9 @@ public class CommandFactory {
         return Commands.parallel(intakeSubsystem.deployAndRunIntake());
     }
 
-    public Command runSpindexShooterIndexAndShooter() {
+    public Command runSpindexShooterIndexAndShooter(boolean shouldPass) {
         return Commands.sequence(
-                shooter.shoot().withTimeout(0.5),
+                shooter.shoot(shouldPass).withTimeout(0.5),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
     }
 
