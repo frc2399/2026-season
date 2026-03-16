@@ -26,25 +26,25 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command deployAndRunIntake() {
         return this.run(
-                        () -> {
-                            armProfiledPidEnabled = true;
-                            armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
-                            if (armIO.isArmBelowTrench()) {
-                                rollerIO.runIntake();
-                            } else {
-                                rollerIO.setZero();
-                            }
-                        })
+                () -> {
+                    armProfiledPidEnabled = true;
+                    armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
+                    if (armIO.isArmBelowTrench()) {
+                        rollerIO.runIntake();
+                    } else {
+                        rollerIO.setZero();
+                    }
+                })
                 .withName("intake: deploy arm and run roller");
     }
 
     public Command defaultBehavior() {
         return this.run(
-                        () -> {
-                            armProfiledPidEnabled = true;
-                            rollerIO.setZero();
-                            // armIO.setSetpoint(IntakeArmSetpoint.STOWED);
-                        })
+                () -> {
+                    armProfiledPidEnabled = true;
+                    rollerIO.setZero();
+                    // armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
 
@@ -61,7 +61,13 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command runRoller() {
-        return this.run(() -> rollerIO.runIntake());
+        return this.run(() -> {
+            if (armIO.isArmBelowTrench()) {
+                rollerIO.runIntake();
+            } else {
+                rollerIO.setZero();
+            }
+        });
     }
 
     public Command deployArm() {
@@ -89,21 +95,20 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command feedFuel() {
-        Command feedFuelCommand =
-                this.run(
+        Command feedFuelCommand = this.run(
+                () -> {
+                    armProfiledPidEnabled = true;
+                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                })
+                .withTimeout(Seconds.of(1))
+                .andThen(
+                        this.run(
                                 () -> {
-                                    armProfiledPidEnabled = true;
-                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                                 })
-                        .withTimeout(Seconds.of(1))
-                        .andThen(
-                                this.run(
-                                                () -> {
-                                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
-                                                })
-                                        .withTimeout(Seconds.of(1)))
-                        .repeatedly()
-                        .withName("feed fuel (arm)");
+                                .withTimeout(Seconds.of(1)))
+                .repeatedly()
+                .withName("feed fuel (arm)");
 
         return feedFuelCommand;
     }
