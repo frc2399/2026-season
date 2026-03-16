@@ -239,6 +239,7 @@ public final class FieldConstants {
                                         HALF_WIDTH_OF_HUB
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .minus(Meters.of(0.10))
                                                 .unaryMinus(),
                                         Rotation2d.kZero)));
         public static final Pose DEPOT_SHOOTING_SPOT =
@@ -256,14 +257,10 @@ public final class FieldConstants {
                                         Rotation2d.kZero)));
         public static final Pose OUTPOST_SHOOTING_SPOT =
                 new Pose(
-                        "outpostShootingSpot",
-                        FRONT_OF_BLUE_HUB.plus(
-                                new Transform2d(
-                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER
-                                                .plus(ROBOT_HUB_MARGIN)
-                                                .unaryMinus(),
-                                        Meters.of(3).unaryMinus(),
-                                        new Rotation2d(Degrees.of(70)))));
+                        "blueOutpostStartingLine",
+                        new Pose2d(
+                                new Translation2d(Meters.of(16.54 - 12.52), Meters.of(8.07 - 7.55)),
+                                Rotation2d.kCCW_90deg));
         public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
                 new Pose(
                         "outpostOtherSideOfTrench",
@@ -276,6 +273,11 @@ public final class FieldConstants {
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
                                                 .plus(ROBOT_HUB_MARGIN.div(2))
+                                                .minus(
+                                                        Meters.of(
+                                                                0.15)) // fudge factor - increase to
+                                                // move closer to the hub,
+                                                // decrease to move away
                                                 .unaryMinus(),
                                         Rotation2d.kCCW_90deg)));
         public static final Pose DEPOT_OTHER_SIDE_OF_TRENCH =

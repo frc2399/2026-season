@@ -36,7 +36,7 @@ public class AutonCommandFactory {
             new PathConstraints(1.5, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints intakeConstraints =
-            new PathConstraints(0.5, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
+            new PathConstraints(0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
     public AutonCommandFactory(
             DriveSubsystem drive,
@@ -142,7 +142,7 @@ public class AutonCommandFactory {
                                 buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
-                        buildPathDeferred(BLUE_OUTPOST_STARTING_LINE, constraints, 0),
+                        buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                         commandFactory.runSpindexShooterIndexAndShooter())
                 .withName("outpostToNeutralZone");
     }

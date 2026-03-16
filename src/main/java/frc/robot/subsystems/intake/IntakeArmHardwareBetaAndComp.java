@@ -151,7 +151,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     @Override
     public void setSetpoint(IntakeArmSetpoint setpoint) {
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-            desiredAngle = Degrees.of(-25);
+            desiredAngle = Degrees.of(-27);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             desiredAngle = Degrees.of(10);

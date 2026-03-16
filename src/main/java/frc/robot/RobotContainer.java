@@ -82,6 +82,7 @@ public class RobotContainer {
 
     private boolean isGyroConfigured = false;
     private boolean autonHasNoGyroAngle = false;
+    private String autonGyroConfiguredFor = "";
 
     public RobotContainer() {
         configureDefaultCommands();
@@ -185,6 +186,7 @@ public class RobotContainer {
                             // command name is for BLUE
                             Command selectedAuton = getAutonomousCommand();
                             String autonName = selectedAuton.getName();
+                            autonGyroConfiguredFor = autonName;
                             Angle gyroAngle;
                             switch (autonName) {
                                 case "outpostToNeutralZone":
@@ -226,7 +228,12 @@ public class RobotContainer {
                 DriverStation.isAutonomous()
                         && !DriverStation.isEnabled()
                         && getAutonomousCommand() == defaultCommand);
-        gyroNeedsConfiguringAlert.set(!isGyroConfigured);
+        gyroNeedsConfiguringAlert.set(
+                !isGyroConfigured
+                        || (DriverStation.isAutonomous()
+                                && (!getAutonomousCommand()
+                                        .getName()
+                                        .equals(autonGyroConfiguredFor))));
         autonHasNoGyroAngleAlert.set(autonHasNoGyroAngle);
     }
 }
