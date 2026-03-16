@@ -29,7 +29,11 @@ public class IntakeSubsystem extends SubsystemBase {
                         () -> {
                             armProfiledPidEnabled = true;
                             armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
-                            rollerIO.runIntake();
+                            if (armIO.isArmBelowTrench()) {
+                                rollerIO.runIntake();
+                            } else {
+                                rollerIO.setZero();
+                            }
                         })
                 .withName("intake: deploy arm and run roller");
     }
