@@ -68,7 +68,7 @@ public final class DriveConfig {
                 DRIVE_D = 0;
                 TURN_P = 1.0;
                 TURN_D = 0.001;
-                HEADING_P = 1.1;
+                HEADING_P = 2;
                 HEADING_D = 0.05;
                 PINION_TEETH = 13;
                 TRACK_WIDTH = Inches.of(20.5);
@@ -84,8 +84,8 @@ public final class DriveConfig {
                 DRIVE_D = 0;
                 TURN_P = 1.0;
                 TURN_D = 0.001;
-                HEADING_P = 0;
-                HEADING_D = 0;
+                HEADING_P = 2;
+                HEADING_D = 0.05;
                 PINION_TEETH = 13;
                 TRACK_WIDTH = Inches.of(20.5);
                 TRACK_LENGTH = Inches.of(26.5);

@@ -184,7 +184,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
         drivePIDController = new PIDController(HEADING_P, 0, HEADING_D);
 
-
         SmartDashboard.putNumber("drive/config/heading_p", HEADING_P);
         SmartDashboard.putNumber("drive/config/heading_d", HEADING_D);
         SmartDashboard.putNumber(
