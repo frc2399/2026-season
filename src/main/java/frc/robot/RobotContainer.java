@@ -7,11 +7,11 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.RebuiltVisionUtil;
@@ -28,7 +29,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 import frc.robot.util.GameState;
-import frc.robot.vision.LimelightHelpers.PoseEstimate;
 import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
@@ -73,6 +73,15 @@ public class RobotContainer {
             new Alert(
                     "Battery voltage is very low, turn off the robot or replace the battery to avoid damage.",
                     AlertType.kWarning);
+    private final Alert gyroNeedsConfiguringAlert =
+            new Alert(
+                    "Gyro not configured! Auton + vision will not work; click the button below auton selector.",
+                    AlertType.kWarning);
+    private final Alert autonHasNoGyroAngleAlert =
+            new Alert("Selected auton will not configure gyro properly!", AlertType.kWarning);
+
+    private boolean isGyroConfigured = false;
+    private boolean autonHasNoGyroAngle = false;
 
     public RobotContainer() {
         configureDefaultCommands();
@@ -163,25 +172,45 @@ public class RobotContainer {
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         autoChooser.setDefaultOption("drive straight", autonCommandFactory.driveStraightTesting());
         SmartDashboard.putData("Autos/Selector", autoChooser);
-        // SmartDashboard.putData("Autos/configure gyro", resetGyroByAuton());
+        SmartDashboard.putData(
+                "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
     }
 
-//     public Command resetGyroByAuton() {
-//     return (gyro.setYawCommand(Degrees.of(0))).ignoringDisable(true).andThen(
-
-//         Commands.runOnce(() ->
-
-//         {
-
-//           SmartDashboard.putBoolean("reseting odometry red", true);
-//           var poseEstimate = visionPoseEstimator.getPoseEstimate();
-//           poseEstimate.ifPresent((PoseEstimate pose) -> {
-//             var poseCopy = pose.pose;
-//             drive.resetOdometry(new Pose2d(poseCopy.getTranslation(), new Rotation2d(gyro.getYaw())));
-//           });
-
-//         }).ignoringDisable(true));
-//   } 
+    public Command resetGyroByAuton() {
+        return Commands.runOnce(
+                        () -> {
+                            // red outpost side needs -90, blue outpost needs +90
+                            // red depot needs 90, blue depot needs -90
+                            // for consistency with current pose names, the gyro degrees in the
+                            // command name is for BLUE
+                            Command selectedAuton = getAutonomousCommand();
+                            String autonName = selectedAuton.getName();
+                            String[] wordsInAutonName = autonName.split("BLUE GYRO ANGLE: ");
+                            if (wordsInAutonName.length < 1) {
+                                autonHasNoGyroAngle = true;
+                            } else {
+                                String autonAngleString = wordsInAutonName[1];
+                                try {
+                                    Angle desiredGyroAngle =
+                                            Degrees.of(Integer.parseInt(autonAngleString));
+                                    if (FieldConstants.alliance.isPresent()
+                                            && FieldConstants.alliance.get() == Alliance.Red) {
+                                        desiredGyroAngle = desiredGyroAngle.unaryMinus();
+                                    }
+                                    gyro.setYaw(desiredGyroAngle);
+                                    drive.resetOdometryAfterGyro();
+                                    autonHasNoGyroAngle = false;
+                                    isGyroConfigured = true;
+                                    SmartDashboard.putBoolean(
+                                            "robot/has reset gyro", isGyroConfigured);
+                                } catch (NumberFormatException e) {
+                                    System.err.println(e.getStackTrace());
+                                    autonHasNoGyroAngle = true;
+                                }
+                            }
+                        })
+                .ignoringDisable(true);
+    }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
@@ -198,5 +227,7 @@ public class RobotContainer {
                 DriverStation.isAutonomous()
                         && !DriverStation.isEnabled()
                         && getAutonomousCommand() == defaultCommand);
+        gyroNeedsConfiguringAlert.set(!isGyroConfigured);
+        autonHasNoGyroAngleAlert.set(autonHasNoGyroAngle);
     }
 }
