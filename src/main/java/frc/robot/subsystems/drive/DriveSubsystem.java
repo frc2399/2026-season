@@ -69,10 +69,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     private DriveSubsystemStates states = new DriveSubsystemStates();
 
     // correction PID
-    private double DRIVE_P;
-    private double DRIVE_D;
+    private double HEADING_P;
+    private double HEADING_D;
 
-    private PIDController drivePIDController = new PIDController(DRIVE_P, 0, DRIVE_D);
+    private PIDController drivePIDController = new PIDController(HEADING_P, 0, HEADING_D);
 
     private RobotConfig config;
 
@@ -175,14 +175,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         this.rearRight = rearRight;
 
         // get from config!
-        DRIVE_P = DriveConfig.HEADING_P;
-        DRIVE_D = DriveConfig.HEADING_D;
+        HEADING_P = DriveConfig.HEADING_P;
+        HEADING_D = DriveConfig.HEADING_D;
         MAX_LINEAR_SPEED = DriveConfig.MAX_SPEED;
         MAX_ANGULAR_VELOCITY = DriveConfig.MAX_ANGULAR_VELOCITY;
         TRACK_WIDTH = DriveConfig.TRACK_WIDTH;
         WHEEL_BASE = DriveConfig.TRACK_LENGTH;
-        SmartDashboard.putNumber("drive/config/heading_p", DRIVE_P);
-        SmartDashboard.putNumber("drive/config/heading_d", DRIVE_D);
+        SmartDashboard.putNumber("drive/config/heading_p", HEADING_P);
+        SmartDashboard.putNumber("drive/config/heading_d", HEADING_D);
         SmartDashboard.putNumber(
                 "drive/config/max_linear_speed", MAX_LINEAR_SPEED.in(MetersPerSecond));
         SmartDashboard.putNumber(
