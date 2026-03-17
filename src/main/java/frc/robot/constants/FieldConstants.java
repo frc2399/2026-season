@@ -239,7 +239,7 @@ public final class FieldConstants {
                                         HALF_WIDTH_OF_HUB
                                                 .plus(ROBOT_HUB_MARGIN)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
-                                                .minus(Meters.of(0.10))
+                                                .minus(Meters.of(0.30))
                                                 .unaryMinus(),
                                         Rotation2d.kZero)));
         public static final Pose DEPOT_SHOOTING_SPOT =

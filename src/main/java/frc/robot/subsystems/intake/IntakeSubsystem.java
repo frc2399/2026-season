@@ -88,6 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
         Command feedFuelCommand =
                 this.run(
                                 () -> {
+                                    rollerIO.runIntake();
                                     armProfiledPidEnabled = true;
                                     armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
                                 })
