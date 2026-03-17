@@ -144,7 +144,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
         }
     }
 
-    public void passFuel() {}
+    public void passFuelOrManualShoot() {}
 
     public void runShooterWithSpeeds(
             AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {

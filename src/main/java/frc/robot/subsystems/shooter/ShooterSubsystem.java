@@ -57,9 +57,9 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public Command shoot(Supplier<Distance> distFromHub, boolean shouldPassFuel) {
-        if (shouldPassFuel) {
-            return this.run(() -> io.passFuel()).withName("passFuel");
+    public Command shoot(Supplier<Distance> distFromHub, boolean shouldPassFuelOrManualShoot) {
+        if (shouldPassFuelOrManualShoot) {
+            return this.run(() -> io.passFuelOrManualShoot()).withName("passFuelOrManualShoot");
         } else {
             return this.run(
                             () -> {

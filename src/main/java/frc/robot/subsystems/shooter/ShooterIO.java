@@ -16,7 +16,7 @@ public interface ShooterIO {
 
     public boolean isUpToSpeed();
 
-    public void passFuel();
+    public void passFuelOrManualShoot();
 
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;

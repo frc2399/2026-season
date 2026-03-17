@@ -25,5 +25,5 @@ public class ShooterPlacebo implements ShooterIO {
     public void runTunableNumberSetpoints() {}
 
     @Override
-    public void passFuel() {}
+    public void passFuelOrManualShoot() {}
 }

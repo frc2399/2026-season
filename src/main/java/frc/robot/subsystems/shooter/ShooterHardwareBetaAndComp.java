@@ -183,9 +183,9 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
-    public void passFuel() {
-        desiredBottomVelocity = RadiansPerSecond.of(100);
-        desiredTopVelocity = RadiansPerSecond.of(314.1592653589793);
+    public void passFuelOrManualShoot() {
+        desiredBottomVelocity = RadiansPerSecond.of(233.00145514124299);
+        desiredTopVelocity = RadiansPerSecond.of(222.529479629277);
     }
 
     public boolean isUpToSpeed() {

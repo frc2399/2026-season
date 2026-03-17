@@ -44,11 +44,11 @@ public class CommandFactory {
         return Commands.parallel(intakeSubsystem.deployAndRunIntake());
     }
 
-    public Command runSpindexShooterIndexAndShooter(boolean shouldPass) {
+    public Command runSpindexShooterIndexAndShooter(boolean shouldPassOrManualShoot) {
         return Commands.sequence(
                 shooter.shoot(
                                 () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
-                                shouldPass)
+                                shouldPassOrManualShoot)
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(
                         spindexer.runSpindexer(),
