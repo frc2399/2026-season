@@ -60,7 +60,7 @@ public final class FieldConstants {
                                         Rotation2d.k180deg)));
         // this postion is when robot is on the blue alliance starting line closes to
         // scroing table.
-        public static final Pose BLUE_DEPOT_STARTING_LINE =
+        public static final Pose DEPOT_SIDE_STARTING_POSE =
                 new Pose(
                         "blueDepotStartingLine",
                         FRONT_OF_BLUE_HUB.plus(
@@ -74,7 +74,7 @@ public final class FieldConstants {
         // this postion is when robot is on the blue alliance starting line farthest
         // from scroing
         // table.
-        public static final Pose BLUE_OUTPOST_STARTING_LINE =
+        public static final Pose OUTPOST_SIDE_STARTING_POSE =
                 new Pose(
                         "blueOutpostStartingLine",
                         new Pose2d(
@@ -254,7 +254,7 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN),
-                                        Rotation2d.kZero)));
+                                        Rotation2d.kCW_90deg)));
         public static final Pose OUTPOST_SHOOTING_SPOT =
                 new Pose(
                         "blueOutpostStartingLine",
@@ -291,8 +291,9 @@ public final class FieldConstants {
                                                 .plus(LENGTH_OF_BUMP)
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
-                                                .plus(ROBOT_HUB_MARGIN.div(2)),
-                                        Rotation2d.kCW_90deg)));
+                                                .plus(ROBOT_HUB_MARGIN.div(2))
+                                                .minus(Meters.of(0.15)),
+                                        new Rotation2d(Degrees.of(-80))))); //TODO: tune this angle
     }
 
     public static class FieldBoundaries {

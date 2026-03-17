@@ -161,17 +161,12 @@ public class RobotContainer {
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption("trenchToDepot", autonCommandFactory.trenchToDepot());
         autoChooser.addOption(
-                "depotSideDepotToNeutralZone",
-                autonCommandFactory.depotSideDepotToNeutralZoneShooting());
+                "depot side to neutral zone then back and shoot", autonCommandFactory.depotSideNeutralZoneAndBackWithShooting());
         autoChooser.addOption(
-                "depotSideNeutralZoneIntaking", autonCommandFactory.depotSideNeutralZoneIntaking());
-        autoChooser.addOption(
-                "outpostSideNeutralZoneIntaking",
-                autonCommandFactory.outpostSideNeutralZoneIntaking());
+                "outpost side to neutral zone then back and shoot",
+                autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
-        autoChooser.setDefaultOption("drive straight", autonCommandFactory.driveStraightTesting());
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(
                 "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
