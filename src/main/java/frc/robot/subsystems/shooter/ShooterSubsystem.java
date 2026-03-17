@@ -57,20 +57,24 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public Command shoot(Supplier<Distance> distFromHub) {
-        return this.run(
-                        () -> {
-                            AngularVelocity topSpeed =
-                                    RadiansPerSecond.of(
-                                            topShooterSpeedTreeMapMeterRadS.get(
-                                                    distFromHub.get().in(Meters)));
-                            AngularVelocity bottomSpeed =
-                                    RadiansPerSecond.of(
-                                            bottomShooterSpeedTreeMapMeterRadS.get(
-                                                    distFromHub.get().in(Meters)));
-                            io.runShooterWithSpeeds(topSpeed, bottomSpeed, shouldInterpolate);
-                        })
-                .withName("runShooter");
+    public Command shoot(Supplier<Distance> distFromHub, boolean shouldPassFuelOrManualShoot) {
+        if (shouldPassFuelOrManualShoot) {
+            return this.run(() -> io.passFuelOrManualShoot()).withName("passFuelOrManualShoot");
+        } else {
+            return this.run(
+                            () -> {
+                                AngularVelocity topSpeed =
+                                        RadiansPerSecond.of(
+                                                topShooterSpeedTreeMapMeterRadS.get(
+                                                        distFromHub.get().in(Meters)));
+                                AngularVelocity bottomSpeed =
+                                        RadiansPerSecond.of(
+                                                bottomShooterSpeedTreeMapMeterRadS.get(
+                                                        distFromHub.get().in(Meters)));
+                                io.runShooterWithSpeeds(topSpeed, bottomSpeed, shouldInterpolate);
+                            })
+                    .withName("runShooter");
+        }
     }
 
     public Command defaultBehavior() {

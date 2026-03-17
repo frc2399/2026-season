@@ -245,10 +245,10 @@ public final class FieldConstants {
                                         Rotation2d.kZero)));
         public static final Pose DEPOT_SHOOTING_SPOT =
                 new Pose(
-                        "depotShootingSpot", 
+                        "depotShootingSpot",
                         new Pose2d(
-                        new Translation2d(Meters.of(16.54 - 12.52), Meters.of(7.55)),
-                                        new Rotation2d(Degrees.of(-80))));
+                                new Translation2d(Meters.of(16.54 - 12.52), Meters.of(7.55)),
+                                new Rotation2d(Degrees.of(-80))));
         public static final Pose OUTPOST_SHOOTING_SPOT =
                 new Pose(
                         "blueOutpostStartingLine",
@@ -287,7 +287,7 @@ public final class FieldConstants {
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
                                                 .plus(ROBOT_HUB_MARGIN.div(2))
                                                 .minus(Meters.of(0.15)),
-                                        Rotation2d.kCW_90deg))); //TODO: tune this angle
+                                        Rotation2d.kCW_90deg))); // TODO: tune this angle
     }
 
     public static class FieldBoundaries {

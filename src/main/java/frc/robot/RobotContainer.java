@@ -124,13 +124,17 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
-        // note! do not bind to the a button; it is used in drive command for auto-orient!
+        // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
-        driverController.leftTrigger().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController
+                .leftTrigger()
+                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(false)); // do not pass
+        driverController
+                .rightBumper()
+                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(true)); // do pass
         driverController.x().whileTrue(drive.setX());
         driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
-        driverController.a().whileTrue(intakeSubsystem.feedFuel());
     }
 
     private void configureButtonBindingsTuningController() {
@@ -139,7 +143,8 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(
                         shooterSubsystem.shoot(
-                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose())));
+                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                false));
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().onTrue(intakeSubsystem.stowArmSetpoint());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
@@ -162,7 +167,8 @@ public class RobotContainer {
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
         autoChooser.addOption(
-                "depot side to neutral zone then back and shoot", autonCommandFactory.depotSideNeutralZoneAndBackWithShooting());
+                "depot side to neutral zone then back and shoot",
+                autonCommandFactory.depotSideNeutralZoneAndBackWithShooting());
         autoChooser.addOption(
                 "outpost side to neutral zone then back and shoot",
                 autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
@@ -184,12 +190,12 @@ public class RobotContainer {
                             autonGyroConfiguredFor = autonName;
                             Angle gyroAngle;
                             switch (autonName) {
-                                case "outpostToNeutralZone":
+                                case "outpost side to neutral zone and then back and shoot":
                                     gyroAngle = Degrees.of(90);
                                     autonHasNoGyroAngle = false;
                                     break;
-                                case "depotToNeutralZone":
-                                    gyroAngle = Degrees.of(-90);
+                                case "depot side to neutral zone then back and shoot":
+                                    gyroAngle = Degrees.of(-80);
                                     autonHasNoGyroAngle = false;
                                     break;
                                 default:

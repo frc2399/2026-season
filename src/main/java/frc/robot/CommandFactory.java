@@ -42,9 +42,11 @@ public class CommandFactory {
         this.intakeSubsystem = intakeSubsystem;
     }
 
-    public Command runSpindexShooterIndexAndShooter() {
+    public Command runSpindexShooterIndexAndShooter(boolean shouldPassOrManualShoot) {
         return Commands.sequence(
-                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()))
+                shooter.shoot(
+                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                shouldPassOrManualShoot)
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(
                         spindexer.runSpindexer(),
@@ -54,7 +56,9 @@ public class CommandFactory {
 
     public Command runSpindexShooterIndexAndShooterNoFeedFuel() {
         return Commands.sequence(
-                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()))
+                shooter.shoot(
+                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                false)
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
     }

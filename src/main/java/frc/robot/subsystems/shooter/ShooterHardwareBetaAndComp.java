@@ -183,6 +183,11 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
+    public void passFuelOrManualShoot() {
+        desiredBottomVelocity = RadiansPerSecond.of(233.00145514124299);
+        desiredTopVelocity = RadiansPerSecond.of(222.529479629277);
+    }
+
     public boolean isUpToSpeed() {
         boolean isTopRollerDesiredSpeed =
                 Math.abs(
