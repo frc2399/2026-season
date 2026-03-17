@@ -111,10 +111,15 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
-        // note! do not bind to the a button; it is used in drive command for auto-orient!
+        // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(commandFactory.runIntakeandIntakeArm());
-        driverController.leftTrigger().whileTrue(commandFactory.runSpindexShooterIndexAndShooter());
+        driverController
+                .leftTrigger()
+                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(false)); // do not pass
+        driverController
+                .rightBumper()
+                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(true)); // do pass
         driverController.x().whileTrue(drive.setX());
         driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
         driverController.a().whileTrue(intakeSubsystem.feedFuel());
@@ -126,7 +131,8 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(
                         shooterSubsystem.shoot(
-                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose())));
+                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                false));
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().onTrue(intakeSubsystem.stowArmSetpoint());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
