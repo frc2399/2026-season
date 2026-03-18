@@ -242,7 +242,7 @@ public final class FieldConstants {
                 new Pose(
                         "depotShootingSpot",
                         new Pose2d(
-                                new Translation2d(Meters.of(3.43), Meters.of(7.35)),
+                                new Translation2d(Meters.of(3.53), Meters.of(7.35)),
                                 new Rotation2d(Degrees.of(-73.7))));
         public static final Pose OUTPOST_SHOOTING_SPOT =
                 new Pose(
