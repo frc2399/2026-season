@@ -64,8 +64,8 @@ public final class FieldConstants {
                 new Pose(
                         "blueDepotStartingLine",
                         new Pose2d(
-                                new Translation2d(Meters.of(16.54 - 12.57), Meters.of(7.71)),
-                                new Rotation2d(Degrees.of(-70))));
+                                new Translation2d(Meters.of(3.53), Meters.of(7.51)),
+                                new Rotation2d(Degrees.of(-73.7))));
         // this postion is when robot is on the blue alliance starting line farthest
         // from scroing
         // table.
@@ -242,8 +242,8 @@ public final class FieldConstants {
                 new Pose(
                         "depotShootingSpot",
                         new Pose2d(
-                                new Translation2d(Meters.of(16.54 - 12.52), Meters.of(7.55)),
-                                new Rotation2d(Degrees.of(-70))));
+                                new Translation2d(Meters.of(3.43), Meters.of(7.35)),
+                                new Rotation2d(Degrees.of(-73.7))));
         public static final Pose OUTPOST_SHOOTING_SPOT =
                 new Pose(
                         "outpostShootingSpot",

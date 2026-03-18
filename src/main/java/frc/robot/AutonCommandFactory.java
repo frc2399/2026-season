@@ -98,7 +98,7 @@ public class AutonCommandFactory {
                         intake.stowArmSetpoint(),
                         commandFactory
                                 .runSpindexShooterIndexAndShooterNoFeedFuel()
-                                .withTimeout(1.5),
+                                .withTimeout(1.7),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         Commands.runOnce(
@@ -125,7 +125,7 @@ public class AutonCommandFactory {
                         intake.stowArmSetpoint(),
                         commandFactory
                                 .runSpindexShooterIndexAndShooterNoFeedFuel()
-                                .withTimeout(1.5),
+                                .withTimeout(1.7),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         Commands.runOnce(

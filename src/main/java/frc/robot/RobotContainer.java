@@ -195,7 +195,7 @@ public class RobotContainer {
                                     autonHasNoGyroAngle = false;
                                     break;
                                 case "depot side to neutral zone then back and shoot":
-                                    gyroAngle = Degrees.of(-80);
+                                    gyroAngle = Degrees.of(-73.7);
                                     autonHasNoGyroAngle = false;
                                     break;
                                 default:
