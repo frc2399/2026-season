@@ -167,7 +167,7 @@ public class AutoAlignUtil {
             double offset = offsetTransform.getTranslation().getNorm();
             double distToHub = targetToRobotTranslation.getNorm();
             Angle correction = Radians.of(Math.asin(offset / distToHub));
-            //     desiredAngle = desiredAngle.minus(correction);
+                desiredAngle = desiredAngle.plus(correction);
             SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
             SmartDashboard.putNumber(
                     "vision/current angle", robotPose.get().getRotation().getDegrees());
