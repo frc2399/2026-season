@@ -87,6 +87,23 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
+        CommandScheduler.getInstance()
+                .onCommandInitialize(cmd -> DataLogManager.log(cmd.getName() + " : Init"));
+        CommandScheduler.getInstance()
+                .onCommandInterrupt(
+                        (interrupted, interrupting) ->
+                                DataLogManager.log(
+                                        interrupted.getName()
+                                                + "Interrupted by "
+                                                + (!interrupting.isEmpty()
+                                                        ? interrupting.get().getName()
+                                                        : "nothing")));
+        CommandScheduler.getInstance()
+                .onCommandFinish(cmd -> DataLogManager.log(cmd.getName() + ": End"));
+        SmartDashboard.putString(
+                "branch and date", BuildConstants.GIT_BRANCH + " " + BuildConstants.GIT_DATE);
         Map<String, Integer> commandCounts = new HashMap<>();
         BiConsumer<Command, Boolean> logCommandFunction =
                 (Command command, Boolean active) -> {
