@@ -23,7 +23,10 @@ public class Gyro {
     }
 
     public Command setYawCommand(Angle yaw) {
-        return Commands.runOnce(() -> io.setYaw(yaw));
+        return Commands.runOnce(
+                () -> {
+                    io.setYaw(yaw);
+                });
     }
 
     public void setYaw(Angle yaw) {

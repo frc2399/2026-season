@@ -39,7 +39,7 @@ public class IntakeSubsystem extends SubsystemBase {
                         () -> {
                             armProfiledPidEnabled = true;
                             rollerIO.setZero();
-                            // armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                            armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                         })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
@@ -88,6 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
         Command feedFuelCommand =
                 this.run(
                                 () -> {
+                                    rollerIO.runIntake();
                                     armProfiledPidEnabled = true;
                                     armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
                                 })

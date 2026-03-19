@@ -28,7 +28,7 @@ public final class VisionPoseEstimator {
 
     private static Angle CAMERA_PITCH_MAIN; // 0 = horizontal, positive = leaning back
     private static Distance X_ROBOT_TO_CAMERA_OFFSET_MAIN; // positive = in front of robot center
-    private static Distance Y_ROBOT_TO_CAMERA_OFFSET_MAIN; // positive = left of robot centerline
+    private static Distance Y_ROBOT_TO_CAMERA_OFFSET_MAIN; // positive = right of robot centerline
     private static Distance Z_ROBOT_TO_CAMERA_OFFSET_MAIN; // ground plane = 0
     private static Angle CAMERA_YAW_MAIN;
 

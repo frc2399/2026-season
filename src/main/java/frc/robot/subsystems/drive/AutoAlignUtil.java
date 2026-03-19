@@ -152,9 +152,8 @@ public class AutoAlignUtil {
         if (robotPose.get() == null) {
             return desiredRotRate;
         } else {
-            Pose2d poseToOrientToTarget = robotPose.get().transformBy(offsetTransform);
             Translation2d targetToRobotTranslation =
-                    orientTargetPose.getTranslation().minus(poseToOrientToTarget.getTranslation());
+                    orientTargetPose.getTranslation().minus(robotPose.get().getTranslation());
             SmartDashboard.putNumber(
                     "vision/orient/orientTargetToRobot/x", targetToRobotTranslation.getX());
             SmartDashboard.putNumber(
@@ -166,11 +165,10 @@ public class AutoAlignUtil {
                                     targetToRobotTranslation.getX()));
             SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
             SmartDashboard.putNumber(
-                    "vision/current angle", poseToOrientToTarget.getRotation().getDegrees());
+                    "vision/current angle", robotPose.get().getRotation().getDegrees());
             desiredRotRate =
                     orientPid.calculate(
-                            poseToOrientToTarget.getRotation().getRadians(),
-                            desiredAngle.in(Radians));
+                            robotPose.get().getRotation().getRadians(), desiredAngle.in(Radians));
             return desiredRotRate;
         }
     }

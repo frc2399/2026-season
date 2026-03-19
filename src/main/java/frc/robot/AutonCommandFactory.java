@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static frc.robot.constants.FieldConstants.PoseConstants.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
@@ -10,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +28,8 @@ import java.util.Set;
 public class AutonCommandFactory {
     private final DriveSubsystem drive;
     private final IntakeSubsystem intake;
+    private final CommandFactory commandFactory;
+    private final Gyro gyro;
     private Pose2d finalPose;
 
     public final PathConstraints constraints =
@@ -31,11 +37,17 @@ public class AutonCommandFactory {
 
     public final PathConstraints intakeConstraints =
             new PathConstraints(
-                    0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
+                    0.62, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
-    public AutonCommandFactory(DriveSubsystem drive, IntakeSubsystem intake) {
+    public AutonCommandFactory(
+            DriveSubsystem drive,
+            IntakeSubsystem intake,
+            CommandFactory commandFactory,
+            Gyro gyro) {
         this.drive = drive;
         this.intake = intake;
+        this.commandFactory = commandFactory;
+        this.gyro = gyro;
     }
 
     public Command buildPathDeferred(
@@ -54,28 +66,95 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
-    public Command hubToDepot() {
+    public Command trenchToDepot() {
         return Commands.sequence(
-                Commands.runOnce(
-                        () ->
-                                drive.resetOdometryFlipped(
-                                        FieldConstants.PoseConstants.BLUE_HUB_MIDDLE.pose())),
-                buildPathDeferred(FieldConstants.PoseConstants.IN_THE_DEPOT, constraints, 0),
-                // move into intake position while driving
+                intake.stowArmSetpoint(),
+                Commands.runOnce(() -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
+                buildPathDeferred(IN_THE_DEPOT, constraints, 0),
                 drive.driveToPoseOnExecute(),
-                // intakeSubsystem.runIntake().withTimeout(3),
-                // intakeSubsystem.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(FieldConstants.PoseConstants.BLUE_HUB_MIDDLE, constraints, 0),
-                // move into shooting position while driving
-                drive.driveToPoseOnExecute());
+                intake.deployAndRunIntake().withTimeout(3),
+                intake.defaultBehavior().withTimeout(0.01),
+                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
+                drive.driveToPoseOnExecute(),
+                commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6));
+    }
+
+    public Command depotSideDepotToNeutralZoneShooting() {
+        return Commands.sequence(
+                        trenchToDepot(),
+                        followWaypoints(
+                                DEPOT_SHOOTING_SPOT.pose(),
+                                constraints,
+                                1.5,
+                                Rotation2d.fromDegrees(180),
+                                DEPOT_SHOOTING_SPOT.pose(),
+                                DEPOT_SIDE_STARTING_POSE.pose(),
+                                BLUE_DEPOT_WALL_FUEL_CENTER.pose()))
+                .withName("depot to neutral zone");
+    }
+
+    public Command depotSideNeutralZoneAndBackWithShooting() {
+        return Commands.sequence(
+                        intake.stowArmSetpoint(),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooterNoFeedFuel()
+                                .withTimeout(1.7),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 0),
+                        Commands.parallel(
+                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 0),
+                                intake.deployAndRunIntake().withTimeout(0.01)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 0)),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 0),
+                        buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 0),
+                        commandFactory.runSpindexShooterIndexAndShooter(false))
+                .withName("depot side to neutral zone then back and shoot");
+    }
+
+    public Command outpostSideNeutralZoneAndBackWithShooting() {
+        return Commands.sequence(
+                        intake.stowArmSetpoint(),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooterNoFeedFuel()
+                                .withTimeout(1.7),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(OUTPOST_SIDE_STARTING_POSE.pose())),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
+                        Commands.parallel(
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0),
+                                intake.deployAndRunIntake().withTimeout(0.01)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(
+                                        OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
+                        buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
+                        commandFactory.runSpindexShooterIndexAndShooter(false))
+                .withName("outpost side to neutral zone and then back and shoot");
     }
 
     public Command driveStraightTesting() {
         return Commands.sequence(
+                intake.stowArmSetpoint(),
                 Commands.runOnce(
                         () ->
-                                drive.resetOdometryFlipped(
-                                        FieldConstants.PoseConstants.BLUE_OUTPOST_STARTING_LINE
+                                resetOdometryFlipped(
+                                        FieldConstants.PoseConstants.OUTPOST_SIDE_STARTING_POSE
                                                 .pose())),
                 buildPathDeferred(
                         FieldConstants.PoseConstants.DRIVE_STRAIGHT_TESTING, intakeConstraints, 0),
@@ -90,9 +169,6 @@ public class AutonCommandFactory {
             Pose2d... poses) {
         return Commands.runOnce(
                 () -> {
-                    drive.resetOdometry(startingPosition);
-                    drive.resetOdometryFlipped(startingPosition);
-
                     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
 
                     PathPlannerPath path =
@@ -105,5 +181,15 @@ public class AutonCommandFactory {
                     path.preventFlipping = false;
                     CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
                 });
+    }
+
+    public void resetOdometryFlipped(Pose2d pose) {
+        boolean red = FieldConstants.alliance.get() == Alliance.Red;
+        if (red) {
+            pose = FlippingUtil.flipFieldPose(pose);
+        }
+        drive.resetOdometry(pose);
+        gyro.setYaw(pose.getRotation().getMeasure());
+        drive.resetOdometryAfterGyro();
     }
 }
