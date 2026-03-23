@@ -59,7 +59,22 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command shoot(Supplier<Distance> distFromHub, boolean shouldPassFuelOrManualShoot) {
         if (shouldPassFuelOrManualShoot) {
-            return this.run(() -> io.passFuelOrManualShoot()).withName("passFuelOrManualShoot");
+            //    return this.run(() ->
+            // io.passFuelOrManualShoot()).withName("passFuelOrManualShoot");
+            return this.run(
+                            () -> {
+                                AngularVelocity topSpeed =
+                                        RadiansPerSecond.of(
+                                                topShooterSpeedTreeMapMeterRadS.get(
+                                                        distFromHub.get().in(Meters)));
+                                AngularVelocity bottomSpeed =
+                                        RadiansPerSecond.of(
+                                                bottomShooterSpeedTreeMapMeterRadS.get(
+                                                        distFromHub.get().in(Meters)));
+                                // making sure it doesnt interpolate for manual shoot
+                                io.runShooterWithSpeeds(topSpeed, bottomSpeed, false);
+                            })
+                    .withName("runShooter");
         } else {
             return this.run(
                             () -> {
