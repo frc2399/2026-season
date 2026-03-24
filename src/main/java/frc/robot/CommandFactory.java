@@ -44,10 +44,13 @@ public class CommandFactory {
 
     public Command runSpindexShooterIndexAndShooter(boolean shouldPassOrManualShoot) {
         return Commands.sequence(
-                shooter.shoot(
-                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
-                                shouldPassOrManualShoot)
-                        .until(() -> shooter.isUpToSpeed()),
+                Commands.parallel(
+                        shooter.shoot(
+                                        () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                        shouldPassOrManualShoot)
+                                .until(() -> shooter.isUpToSpeed()),
+                        drive.setX()
+                ),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
                         .withTimeout(
                                 1.5), // we don't want to feed fuel right away because it gets fuel
@@ -74,7 +77,6 @@ public class CommandFactory {
     public Command resetHeading(Angle yaw) {
         return Commands.parallel(
                 gyro.setYawCommand(yaw),
-                Commands.runOnce(() -> drive.resetOdometryAfterGyro()),
-                Commands.print(yaw.in(Degrees) + " hi im in cmd factory"));
+                Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
     }
 }
