@@ -95,14 +95,16 @@ public class AutonCommandFactory {
 
     public Command depotSideNeutralZoneAndBackWithShooting() {
         return Commands.sequence(
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
+                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                         intake.stowArmSetpoint(),
                         commandFactory
                                 .runSpindexShooterIndexAndShooterNoFeedFuel()
                                 .withTimeout(1.7),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                        buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 0),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                        Commands.runOnce(
-                                () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 0),
                         Commands.parallel(
                                 buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 0),
@@ -116,6 +118,7 @@ public class AutonCommandFactory {
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 0),
                         buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 0),
+                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                         commandFactory.runSpindexShooterIndexAndShooter(false))
                 .withName("depot side to neutral zone then back and shoot");
     }
