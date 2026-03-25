@@ -633,6 +633,32 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 });
     }
 
+    public Command autoAlignToTarget() {
+        return this.run(() -> {
+                        double rotRate = AutoAlignUtil.getAutoOrientRotRate(() -> robotPose, RebuiltVisionUtil.getHubPose(), RobotConstants.TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
+
+                        double rotRateDelivered =
+                                    rotRate * MAX_ANGULAR_VELOCITY.in(RadiansPerSecond); // it's gross to scale like this, but the one that exists does do this
+
+                        ChassisSpeeds robotSpeeds =
+                                        ChassisSpeeds.fromFieldRelativeSpeeds(
+                                                0,
+                                                0,
+                                                rotRateDelivered,
+                                                new Rotation2d(gyro.getYaw(false)));
+
+                            var swerveModuleStates =
+                                    DRIVE_KINEMATICS.toSwerveModuleStates(robotSpeeds);
+                            SwerveDriveKinematics.desaturateWheelSpeeds(
+                                    swerveModuleStates, MAX_LINEAR_SPEED.in(MetersPerSecond));
+                            frontLeft.setDesiredState(swerveModuleStates[0]);
+                            frontRight.setDesiredState(swerveModuleStates[1]);
+                            rearLeft.setDesiredState(swerveModuleStates[2]);
+                            rearRight.setDesiredState(swerveModuleStates[3]);
+                }
+        ).until(() -> RebuiltVisionUtil.isShootingAngleAlignedToHub(() -> robotPose));
+    }
+
     private void logAndUpdateDriveSubsystemStates() {
         states.pose = getPose();
         states.poseTheta = states.pose.getRotation().getDegrees();

@@ -1,7 +1,5 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -46,11 +44,12 @@ public class CommandFactory {
         return Commands.sequence(
                 Commands.parallel(
                         shooter.shoot(
-                                        () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                        () ->
+                                                RebuiltVisionUtil.getDistanceToHub(
+                                                        () -> drive.getPose()),
                                         shouldPassOrManualShoot)
                                 .until(() -> shooter.isUpToSpeed()),
-                        drive.setX()
-                ),
+                        drive.setX()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
                         .withTimeout(
                                 1.5), // we don't want to feed fuel right away because it gets fuel
@@ -74,9 +73,19 @@ public class CommandFactory {
                 shooter.defaultBehavior());
     }
 
+    public Command shooterSpeedTuningRunSpindexerShooterIndexerShooterAndFeedFuel() {
+        return Commands.sequence(
+                Commands.parallel(
+                        shooter.tuningSetpoint().until(() -> shooter.isUpToSpeed()), drive.setX()),
+                Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
+                        .withTimeout(
+                                1.5), // we don't want to feed fuel right away because it gets fuel
+                // jammed
+                intakeSubsystem.feedFuel());
+    }
+
     public Command resetHeading(Angle yaw) {
         return Commands.parallel(
-                gyro.setYawCommand(yaw),
-                Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
+                gyro.setYawCommand(yaw), Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
     }
 }
