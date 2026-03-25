@@ -83,6 +83,7 @@ public class RobotContainer {
     private boolean isGyroConfigured = false;
     private boolean autonHasNoGyroAngle = false;
     private String autonGyroConfiguredFor = "";
+    public boolean useIsHubActiveMethod = false;
 
     public RobotContainer() {
         configureDefaultCommands();
@@ -122,19 +123,24 @@ public class RobotContainer {
     }
 
     private void configureButtonBindingsDriver() {
-        Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
+        Trigger canShootIntoHub =
+                new Trigger(() -> GameState.isHubActive(0) && useIsHubActiveMethod);
 
         // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         driverController
                 .leftTrigger()
+                .and(canShootIntoHub)
                 .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(false)); // do not pass
         driverController
                 .rightBumper()
                 .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(true)); // do pass
         driverController.x().whileTrue(drive.setX());
         driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
+        driverController
+                .povUp()
+                .onTrue(Commands.runOnce(() -> useIsHubActiveMethod = !useIsHubActiveMethod));
     }
 
     private void configureButtonBindingsTuningController() {
