@@ -656,7 +656,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             rearLeft.setDesiredState(swerveModuleStates[2]);
                             rearRight.setDesiredState(swerveModuleStates[3]);
                 }
-        ).until(() -> RebuiltVisionUtil.isShootingAngleAlignedToHub(() -> robotPose));
+        );
     }
 
     private void logAndUpdateDriveSubsystemStates() {

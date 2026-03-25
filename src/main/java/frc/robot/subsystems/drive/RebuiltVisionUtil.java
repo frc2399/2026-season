@@ -54,7 +54,7 @@ public class RebuiltVisionUtil {
         Transform2d robotToShooterTransform = TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM;
 
         Translation2d targetToRobotTranslation =
-                orientTargetPose.getTranslation().minus(robotToShooterTransform.getTranslation());
+                orientTargetPose.getTranslation().minus(robotPose.get().transformBy(robotToShooterTransform).getTranslation());
         Angle desiredAngle =
                 Radians.of(
                         Math.atan2(
