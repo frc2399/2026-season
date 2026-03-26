@@ -500,7 +500,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             double polarYSpeed,
             BooleanSupplier shouldAutoAlign) {
         if (shouldAutoAlign.getAsBoolean()) {
-            return AutoAlignUtil.getAutoOrientRotRateWithFudge(
+            return AutoAlignUtil.getAutoOrientRotRate(
                     () -> robotPose,
                     RebuiltVisionUtil.getHubPose(),
                     TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
