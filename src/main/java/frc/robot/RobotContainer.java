@@ -79,6 +79,10 @@ public class RobotContainer {
                     AlertType.kWarning);
     private final Alert autonHasNoGyroAngleAlert =
             new Alert("Selected auton will not configure gyro properly!", AlertType.kWarning);
+    private final Alert csvIssueAlert =
+            new Alert(
+                    "The CSV file used for shooter speeds has an error. MUST USE MANUAL SHOOT. (if this disappears you can use autoshoot)",
+                    AlertType.kWarning);
 
     private boolean isGyroConfigured = false;
     private boolean autonHasNoGyroAngle = false;
@@ -236,5 +240,6 @@ public class RobotContainer {
                                         .getName()
                                         .equals(autonGyroConfiguredFor))));
         autonHasNoGyroAngleAlert.set(autonHasNoGyroAngle);
+        csvIssueAlert.set(shooterSubsystem.isErrorInCSVFile());
     }
 }

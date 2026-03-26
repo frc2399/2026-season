@@ -169,6 +169,10 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
+    public boolean isErrorInCSVFile() {
+        return !shouldInterpolate;
+    }
+
     @Override
     public void periodic() {
         io.updateStates(shooterStates);
