@@ -69,12 +69,11 @@ public final class RobotConstants {
     }
 
     public static class TransformConstants {
-        public static final Distance ROBOT_TO_SHOOTER_X = Inches.of(10.425726);
-        public static final Distance ROBOT_TO_SHOOTER_Y = Inches.of(8.5);
+        public static final Distance ROBOT_TO_SHOOTER_X = Inches.of(-10.425726);
+        public static final Distance ROBOT_TO_SHOOTER_Y = Inches.of(-8.5);
         // these values should be edited once we have our robot to shooter transform
-        // DO NOT LET THESE CHANGES GO TO MAIN THEY ARE FOR TESTING
         public static final Transform2d ROBOT_TO_SHOOTER_TRANSFORM =
-                new Transform2d(0, 0, new Rotation2d(0));
+                new Transform2d(ROBOT_TO_SHOOTER_X, ROBOT_TO_SHOOTER_Y, new Rotation2d(0));
     }
 
     public static class GearRatios {
