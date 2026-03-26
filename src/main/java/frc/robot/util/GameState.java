@@ -50,22 +50,38 @@ public class GameState {
         }
         double timeRemaining;
         timeRemaining = DriverStation.getMatchTime();
-        if (timeRemaining < 30 + shooterTimeDelay) {
+        int ENDGAME_SECONDS_BOUNDARY = 30;
+        int SHIFT_FOUR_SECONDS_BOUNDARY = 55;
+        int SHIFT_THREE_SECONDS_BOUNDARY = 80;
+        int SHIFT_TWO_SECONDS_BOUNDARY = 105;
+        int SHIFT_ONE_SECONDS_BOUNDARY = 130;
+        int TRANSITION_SECONDS_BOUNDARY = 140;
+        if (areWeFirst()) {
+            SHIFT_TWO_SECONDS_BOUNDARY += (3 - shooterTimeDelay);
+            SHIFT_THREE_SECONDS_BOUNDARY += shooterTimeDelay;
+            SHIFT_FOUR_SECONDS_BOUNDARY += (3 - shooterTimeDelay);
+        } else {
+            SHIFT_ONE_SECONDS_BOUNDARY += (3 - shooterTimeDelay);
+            SHIFT_TWO_SECONDS_BOUNDARY += shooterTimeDelay;
+            SHIFT_THREE_SECONDS_BOUNDARY += (3 - shooterTimeDelay);
+            SHIFT_FOUR_SECONDS_BOUNDARY += shooterTimeDelay;
+        }
+        if (timeRemaining < ENDGAME_SECONDS_BOUNDARY) {
             return Period.ENDGAME;
         }
-        if (timeRemaining < 55 + shooterTimeDelay) {
+        if (timeRemaining < SHIFT_FOUR_SECONDS_BOUNDARY) {
             return Period.SHIFT_4;
         }
-        if (timeRemaining < 80 + shooterTimeDelay) {
+        if (timeRemaining < SHIFT_THREE_SECONDS_BOUNDARY) {
             return Period.SHIFT_3;
         }
-        if (timeRemaining < 105 + shooterTimeDelay) {
+        if (timeRemaining < SHIFT_TWO_SECONDS_BOUNDARY) {
             return Period.SHIFT_2;
         }
-        if (timeRemaining < 130 + shooterTimeDelay) {
+        if (timeRemaining < SHIFT_ONE_SECONDS_BOUNDARY) {
             return Period.SHIFT_1;
         }
-        if (timeRemaining < 140 + shooterTimeDelay) {
+        if (timeRemaining < TRANSITION_SECONDS_BOUNDARY) {
             return Period.TRANSITION;
         } else {
             return Period.UNDEFINED;
