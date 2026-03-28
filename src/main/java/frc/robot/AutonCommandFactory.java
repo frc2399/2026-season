@@ -154,11 +154,14 @@ public class AutonCommandFactory {
 
     public Command centerMoveAndShoot() {
         return Commands.sequence(
-                Commands.runOnce(() -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
-                intake.stowArmSetpoint(),
-                buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
-                commandFactory.runSpindexShooterIndexAndShooterNoFeedFuel().withTimeout(Seconds.of(2))
-        ).withName("move from center and shoot preload");
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
+                        intake.stowArmSetpoint(),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooterNoFeedFuel()
+                                .withTimeout(Seconds.of(2)))
+                .withName("move from center and shoot preload");
     }
 
     public Command driveStraightTesting() {

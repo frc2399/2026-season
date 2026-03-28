@@ -172,6 +172,8 @@ public class RobotContainer {
         autoChooser.addOption(
                 "outpost side to neutral zone then back and shoot",
                 autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
+        autoChooser.addOption(
+                "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(
@@ -212,9 +214,9 @@ public class RobotContainer {
                             if (FieldConstants.alliance.isPresent()
                                     && FieldConstants.alliance.get() == Alliance.Red) {
                                 if (isCenterAuton) {
-                                        gyroAngle = Degrees.of(180);
+                                    gyroAngle = Degrees.of(180);
                                 } else {
-                                        gyroAngle = gyroAngle.unaryMinus();
+                                    gyroAngle = gyroAngle.unaryMinus();
                                 }
                             }
                             gyro.setYaw(gyroAngle);
