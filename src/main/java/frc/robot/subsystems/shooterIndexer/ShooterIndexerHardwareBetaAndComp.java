@@ -40,7 +40,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
             RadiansPerSecond.of(2 * Math.PI / 60 / SHOOTER_INDEXER_GEAR_RATIO);
 
-    private static final double SHOOTER_INDEXER_P = 0.0001;
+    private static final double SHOOTER_INDEXER_P = 0.0006;
     private static final double SHOOTER_INDEXER_I = 0;
     private static final double SHOOTER_INDEXER_D = 0;
     private static final double SHOOTER_INDEXER_MIN_OUTPUT = -1;
