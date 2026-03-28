@@ -36,7 +36,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
             Radians.of(2 * Math.PI / SHOOTER_INDEXER_GEAR_RATIO); // 3 : 1
     // gear
-    // ratio
+    // ratioa
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
             RadiansPerSecond.of(2 * Math.PI / 60 / SHOOTER_INDEXER_GEAR_RATIO);
 
@@ -47,7 +47,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
     private static final double SHOOTER_INDEXER_KS = 0.1355;
-    private static final double SHOOTER_INDEXER_KV = 0.030;
+    private static final double SHOOTER_INDEXER_KV = 0.040;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
@@ -116,7 +116,8 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
+        state.shooterIndexerDesiredSpeedRad_P_S =
+                desiredVelocity.in(RadiansPerSecond) / SHOOTER_INDEXER_GEAR_RATIO;
         state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkFlex.getBusVoltage()
