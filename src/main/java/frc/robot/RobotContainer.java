@@ -189,7 +189,6 @@ public class RobotContainer {
                             // command name is for BLUE
                             Command selectedAuton = getAutonomousCommand();
                             String autonName = selectedAuton.getName();
-                            System.out.println(autonName);
                             autonGyroConfiguredFor = autonName;
                             Angle gyroAngle;
                             boolean isCenterAuton = false;
