@@ -250,6 +250,8 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(16.54 - 12.52), Meters.of(8.07 - 7.55)),
                                 Rotation2d.kCCW_90deg));
+        public static final Pose MIDDLE_SHOOT_POSE =
+                new Pose("center shooting spot", new Pose2d(2.5, 4, Rotation2d.fromDegrees(0)));
         public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
                 new Pose(
                         "outpostOtherSideOfTrench",
