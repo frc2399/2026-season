@@ -50,7 +50,7 @@ public class CommandFactory {
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
                         .withTimeout(
-                                1.5), // we don't want to feed fuel right away because it gets fuel
+                                2.5), // we don't want to feed fuel right away because it gets fuel
                 // jammed
                 intakeSubsystem.feedFuel());
     }
