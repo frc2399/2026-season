@@ -36,7 +36,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final Angle SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR =
             Radians.of(2 * Math.PI / SHOOTER_INDEXER_GEAR_RATIO); // 3 : 1
     // gear
-    // ratio
+    // ratioa
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
             RadiansPerSecond.of(2 * Math.PI / 60 / SHOOTER_INDEXER_GEAR_RATIO);
 
