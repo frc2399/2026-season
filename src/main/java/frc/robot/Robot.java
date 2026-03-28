@@ -3,8 +3,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.net.WebServer;
@@ -149,12 +147,8 @@ public class Robot extends TimedRobot {
         if (DriverStation.getAlliance().isPresent()
                 && DriverStation.getAlliance().get() == Alliance.Red) {
             FieldConstants.alliance = Optional.of(Alliance.Red);
-            robotContainer.gyro.setYaw(Degrees.of(-90));
-            robotContainer.drive.resetOdometryAfterGyro();
         } else {
             FieldConstants.alliance = Optional.of(Alliance.Blue);
-            robotContainer.gyro.setYaw(Degrees.of(180));
-            robotContainer.drive.resetOdometryAfterGyro();
         }
     }
 
