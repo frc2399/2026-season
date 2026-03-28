@@ -96,8 +96,8 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     public void runSpindexer() {
         desiredVelocity =
                 RadiansPerSecond.of(
-                        0.06
-                                * SPINDEXER_GEAR_RATIO
+                        0.6
+                                
                                 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         spindexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
