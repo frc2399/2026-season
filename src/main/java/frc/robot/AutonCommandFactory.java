@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.constants.FieldConstants.PoseConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -149,6 +150,18 @@ public class AutonCommandFactory {
                         buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                         commandFactory.runSpindexShooterIndexAndShooter(false))
                 .withName("outpost side to neutral zone and then back and shoot");
+    }
+
+    public Command centerMoveAndShoot() {
+        return Commands.sequence(
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
+                        intake.stowArmSetpoint(),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooterNoFeedFuel()
+                                .withTimeout(Seconds.of(2)))
+                .withName("move from center and shoot preload");
     }
 
     public Command driveStraightTesting() {

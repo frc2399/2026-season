@@ -172,6 +172,8 @@ public class RobotContainer {
         autoChooser.addOption(
                 "outpost side to neutral zone then back and shoot",
                 autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
+        autoChooser.addOption(
+                "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(
@@ -189,6 +191,7 @@ public class RobotContainer {
                             String autonName = selectedAuton.getName();
                             autonGyroConfiguredFor = autonName;
                             Angle gyroAngle;
+                            boolean isCenterAuton = false;
                             switch (autonName) {
                                 case "outpost side to neutral zone and then back and shoot":
                                     gyroAngle = Degrees.of(90);
@@ -198,6 +201,11 @@ public class RobotContainer {
                                     gyroAngle = Degrees.of(-90);
                                     autonHasNoGyroAngle = false;
                                     break;
+                                case "move from center and shoot preload":
+                                    gyroAngle = Degrees.of(0);
+                                    autonHasNoGyroAngle = false;
+                                    isCenterAuton = true;
+                                    break;
                                 default:
                                     gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = true;
@@ -205,7 +213,11 @@ public class RobotContainer {
                             }
                             if (FieldConstants.alliance.isPresent()
                                     && FieldConstants.alliance.get() == Alliance.Red) {
-                                gyroAngle = gyroAngle.unaryMinus();
+                                if (isCenterAuton) {
+                                    gyroAngle = Degrees.of(180);
+                                } else {
+                                    gyroAngle = gyroAngle.unaryMinus();
+                                }
                             }
                             gyro.setYaw(gyroAngle);
                             drive.resetOdometryAfterGyro();

@@ -252,6 +252,8 @@ public final class FieldConstants {
                                         Meters.of(16.54 - 12.52 - 0.304 - 0.1),
                                         Meters.of(8.07 - 7.55)),
                                 new Rotation2d(Degrees.of(82))));
+        public static final Pose MIDDLE_SHOOT_POSE =
+                new Pose("center shooting spot", new Pose2d(2.5, 4, Rotation2d.fromDegrees(0)));
         public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
                 new Pose(
                         "outpostOtherSideOfTrench",
@@ -264,9 +266,11 @@ public final class FieldConstants {
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
                                                 .plus(ROBOT_HUB_MARGIN.div(2))
-                                                .minus(
-                                                        Meters.of(
-                                                                0.15)) // fudge factor - increase to
+                                                .minus(Meters.of(0.15)) // fudge
+                                                // factor
+                                                // -
+                                                // increase
+                                                // to
                                                 // move closer to the hub,
                                                 // decrease to move away
                                                 .unaryMinus(),
