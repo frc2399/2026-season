@@ -38,7 +38,7 @@ public class AutonCommandFactory {
 
     public final PathConstraints intakeConstraints =
             new PathConstraints(
-                    0.62, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
+                    0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
     public AutonCommandFactory(
             DriveSubsystem drive,
