@@ -98,24 +98,24 @@ public class AutonCommandFactory {
         return Commands.sequence(
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
-                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
+                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 1),
                         intake.stowArmSetpoint(),
                         commandFactory
                                 .runSpindexShooterIndexAndShooterNoFeedFuel()
                                 .withTimeout(1.7),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
-                        buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 0),
+                        buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 1),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 0),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
-                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 0),
+                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 1),
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 0)),
+                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 1)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 1),
@@ -134,9 +134,9 @@ public class AutonCommandFactory {
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(OUTPOST_SIDE_STARTING_POSE.pose())),
-                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 0),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0),
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 1),
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
@@ -144,7 +144,7 @@ public class AutonCommandFactory {
                                         OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 0)),
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 1)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
