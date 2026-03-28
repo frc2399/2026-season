@@ -101,7 +101,8 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
     public void updateState(IntakeRollerIOState state) {
         state.actualSpeedRadiansPerSecond = intakeEncoder.getVelocity();
-        state.desiredSpeedRadiansPerSecond = desiredVelocity.in(RadiansPerSecond) / ROLLER_GEAR_RATIO;
+        state.desiredSpeedRadiansPerSecond =
+                desiredVelocity.in(RadiansPerSecond) / ROLLER_GEAR_RATIO;
         state.current = intakeSparkFlex.getOutputCurrent();
         state.appliedVoltage = intakeSparkFlex.getBusVoltage() * intakeSparkFlex.getAppliedOutput();
         // if tuning a value, update this chunk for that motor's p, i, OR d
