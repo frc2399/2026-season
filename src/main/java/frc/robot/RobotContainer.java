@@ -30,6 +30,7 @@ import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator;
+import java.util.Optional;
 
 public class RobotContainer {
     private SubsystemFactory subsystemFactory = new SubsystemFactory();
@@ -182,11 +183,14 @@ public class RobotContainer {
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(
                 "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
+        SmartDashboard.putData("alliance/reset blue", resetAllianceBlue());
+        SmartDashboard.putData("alliance/reset red", resetAllianceRed());
     }
 
     public Command resetGyroByAuton() {
         return Commands.runOnce(
                         () -> {
+                            FieldConstants.alliance = DriverStation.getAlliance();
                             // red outpost side needs -90, blue outpost needs +90
                             // red depot needs 90, blue depot needs -90
                             // for consistency with current pose names, the gyro degrees in the
@@ -226,6 +230,24 @@ public class RobotContainer {
                             gyro.setYaw(gyroAngle);
                             drive.resetOdometryAfterGyro();
                             isGyroConfigured = true;
+                        })
+                .ignoringDisable(true);
+    }
+
+    public Command resetAllianceBlue() {
+        return Commands.runOnce(
+                        () -> {
+                            FieldConstants.alliance = Optional.of(Alliance.Blue);
+                            isGyroConfigured = false;
+                        })
+                .ignoringDisable(true);
+    }
+
+    public Command resetAllianceRed() {
+        return Commands.runOnce(
+                        () -> {
+                            FieldConstants.alliance = Optional.of(Alliance.Red);
+                            isGyroConfigured = false;
                         })
                 .ignoringDisable(true);
     }
