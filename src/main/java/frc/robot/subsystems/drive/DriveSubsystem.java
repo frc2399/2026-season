@@ -456,7 +456,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     public Command setX() {
         return this.run(
                 () -> {
-                        System.out.println("le x mode");
+                    System.out.println("le x mode");
                     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
                     frontRight.setDesiredState(
                             new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
@@ -634,11 +634,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     public Command setXOrAutoAlignToHub() {
         return setX().until(
                         () ->
-                                RebuiltVisionUtil.isShootingAngleAlignedToHub(
+                                !RebuiltVisionUtil.isShootingAngleAlignedToHub(
                                         () -> robotPose, ToleranceType.POSTALIGNMENT))
                 .andThen(
                         this.run(
                                 () -> {
+                                    System.out.println("auto align yippee");
                                     double currentAngle = gyro.getYaw(false).in(Radians);
                                     if (FieldConstants.alliance.isPresent()
                                             && FieldConstants.alliance.get()
@@ -656,9 +657,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                                     TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
                                     // Convert the commanded speeds into the correct units for the
                                     // drivetrain
+                                    SmartDashboard.putNumber("vision/util/speed", newRotRate);
                                     double rotRateDelivered =
                                             newRotRate * MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
-                                    rotRateDelivered = 0;
                                     // dont need to translate
                                     relativeRobotSpeeds =
                                             ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -681,7 +682,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 .until(
                         () ->
                                 RebuiltVisionUtil.isShootingAngleAlignedToHub(
-                                        () -> robotPose, ToleranceType.REALIGNING));
+                                        () -> robotPose, ToleranceType.REALIGNING))
+                .repeatedly()
+                .withName("set x or autoalign");
     }
 
     public Command disableDriveToPose() {

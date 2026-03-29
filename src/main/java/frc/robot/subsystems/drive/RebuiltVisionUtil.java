@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 public class RebuiltVisionUtil {
 
-    private static final double REALIGNING_TOLERANCE_MULTIPLIER = 0.25;
+    private static final double REALIGNING_TOLERANCE_MULTIPLIER = 0.5;
 
     public static enum ToleranceType {
         REALIGNING,
