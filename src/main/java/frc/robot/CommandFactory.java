@@ -43,8 +43,7 @@ public class CommandFactory {
     }
 
     public Command runSpindexShooterIndexAndShooter(boolean shouldPassOrManualShoot) {
-        return Commands.parallel(
-                Commands.sequence(
+        return Commands.sequence(
                         shooter.shoot(
                                         () ->
                                                 RebuiltVisionUtil.getDistanceToHub(
@@ -58,8 +57,7 @@ public class CommandFactory {
                                         1.5), // we don't want to feed fuel right away because it
                         // gets fuel
                         // jammed
-                        intakeSubsystem.feedFuel()),
-                drive.setXOrAutoAlignToHub());
+                        intakeSubsystem.feedFuel());
     }
 
     public Command runSpindexShooterIndexAndShooterNoFeedFuel() {
