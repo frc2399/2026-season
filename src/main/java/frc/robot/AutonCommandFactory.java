@@ -164,6 +164,23 @@ public class AutonCommandFactory {
                 .withName("move from center and shoot preload");
     }
 
+    public Command centerMoveShootDepotShoot() {
+        return Commands.sequence(
+                        intake.stowArmSetpoint(),
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooterNoFeedFuel()
+                                .withTimeout(Seconds.of(2)),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter(),
+                        buildPathDeferred(CENTER_SIDE_OF_DEPOT, constraints, 0),
+                        buildPathDeferred(WALL_SIDE_OF_DEPOT, intakeConstraints, 0),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        commandFactory.runSpindexShooterIndexAndShooter(false))
+                .withName("move from center, shoot preload, pick up depot, shoot");
+    }
+
     public Command driveStraightTesting() {
         return Commands.sequence(
                 intake.stowArmSetpoint(),

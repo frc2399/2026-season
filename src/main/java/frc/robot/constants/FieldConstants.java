@@ -24,6 +24,8 @@ public final class FieldConstants {
     public static final Distance STARTING_LINE_TO_CENTER_DISTANCE = Inches.of(47 + 120);
     public static final Distance FUEL_PIT_HALF_WIDTH = Inches.of(35.95);
     public static final Distance LENGTH_OF_BUMP = Inches.of(73.00 + 12.00);
+    // length is the longer part of the depot (runs parallel to alliance wall)
+    public static final Distance HALF_LENGTH_OF_DEPOT = Inches.of(42.0).div(2);
     public static final Pose2d FIELD_CENTER =
             new Pose2d(Inches.of(325.61), Inches.of(158.32), Rotation2d.kZero);
     public static final Pose2d RED_CENTER_OF_HUB_POSE =
@@ -185,6 +187,28 @@ public final class FieldConstants {
                                                 .plus(Inches.of(5))
                                                 .unaryMinus(),
                                         Inches.of(0),
+                                        Rotation2d.k180deg)));
+        public static final Pose CENTER_SIDE_OF_DEPOT =
+                new Pose(
+                        "centerSideOfDepot",
+                        BACK_OF_DEPOT.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER
+                                                .plus(Inches.of(5))
+                                                .unaryMinus(),
+                                        HALF_LENGTH_OF_DEPOT
+                                                .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
+                                                .unaryMinus(),
+                                        Rotation2d.k180deg)));
+        public static final Pose WALL_SIDE_OF_DEPOT =
+                new Pose(
+                        "centerSideOfDepot",
+                        BACK_OF_DEPOT.plus(
+                                new Transform2d(
+                                        HALF_LENGTH_OF_ROBOT_WITH_BUMPER
+                                                .plus(Inches.of(5))
+                                                .unaryMinus(),
+                                        HALF_LENGTH_OF_DEPOT.plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER),
                                         Rotation2d.k180deg)));
         public static final Pose DEPOT_NEUTRAL_ZONE_CENTER =
                 new Pose(
