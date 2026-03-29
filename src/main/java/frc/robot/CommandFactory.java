@@ -46,16 +46,20 @@ public class CommandFactory {
         return Commands.parallel(
                 Commands.sequence(
                         shooter.shoot(
-                                        () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                        () ->
+                                                RebuiltVisionUtil.getDistanceToHub(
+                                                        () -> drive.getPose()),
                                         shouldPassOrManualShoot)
                                 .until(() -> shooter.isUpToSpeed()),
-                        Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
+                        Commands.parallel(
+                                        spindexer.runSpindexer(),
+                                        shooterIndexer.runShooterIndexer())
                                 .withTimeout(
-                                        1.5), // we don't want to feed fuel right away because it gets fuel
+                                        1.5), // we don't want to feed fuel right away because it
+                        // gets fuel
                         // jammed
                         intakeSubsystem.feedFuel()),
-                drive.setXOrAutoAlignToHub()
-        );
+                drive.setXOrAutoAlignToHub());
     }
 
     public Command runSpindexShooterIndexAndShooterNoFeedFuel() {

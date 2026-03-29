@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.HubConstants;
 import frc.robot.constants.RobotConstants;
@@ -21,10 +22,10 @@ import java.util.function.Supplier;
 
 public class RebuiltVisionUtil {
 
-    private final static double REALIGNING_TOLERANCE_MULTIPLIER = 0.25;
-    
+    private static final double REALIGNING_TOLERANCE_MULTIPLIER = 0.25;
+
     public static enum ToleranceType {
-        REALIGNING, 
+        REALIGNING,
         POSTALIGNMENT
     }
 
@@ -64,7 +65,8 @@ public class RebuiltVisionUtil {
         Angle desiredAngle =
                 Radians.of(
                         Math.atan2(
-                                hubToShooterTranslation.get().getY(), hubToShooterTranslation.get().getX()));
+                                hubToShooterTranslation.get().getY(),
+                                hubToShooterTranslation.get().getX()));
         double desiredAngleInDegrees = desiredAngle.in(Degrees);
         return desiredAngleInDegrees;
     }
@@ -87,35 +89,49 @@ public class RebuiltVisionUtil {
     //     return rangeOfAngleToHubInDegrees;
     // }
 
-    // abstracted because the target pose could either be the CENTER of the hub or one of the SIDES of the hub
-    public static Translation2d getTargetToShooterTranslation(Supplier<Pose2d> shooterPose, Supplier<Pose2d> targetPose) {
+    // abstracted because the target pose could either be the CENTER of the hub or one of the SIDES
+    // of the hub
+    public static Translation2d getTargetToShooterTranslation(
+            Supplier<Pose2d> shooterPose, Supplier<Pose2d> targetPose) {
         return targetPose.get().getTranslation().minus(shooterPose.get().getTranslation());
     }
 
-    public static double getMaxDiffOfDesiredAndActualAngleInDegrees(Translation2d hubToShooterTranslation, Pose2d shooterPose) {
+    public static double getMaxDiffOfDesiredAndActualAngleInDegrees(
+            Translation2d hubToShooterTranslation, Pose2d shooterPose) {
         double hubRadiusMinusFuelRadiusInMeters =
                 HubConstants.HUB_RADIUS.minus(HubConstants.FUEL_RADIUS).in(Meters);
 
-        Transform2d toEdgeOfHubTransform = new Transform2d(0, hubRadiusMinusFuelRadiusInMeters, Rotation2d.kZero);
+        Transform2d toEdgeOfHubTransform =
+                new Transform2d(0, hubRadiusMinusFuelRadiusInMeters, Rotation2d.kZero);
         Pose2d edgeOfHubPose = getHubPose().transformBy(toEdgeOfHubTransform);
 
-        Translation2d edgeOfHubToShooterTranslation = getTargetToShooterTranslation(() -> shooterPose, () -> edgeOfHubPose);
-        
+        Translation2d edgeOfHubToShooterTranslation =
+                getTargetToShooterTranslation(() -> shooterPose, () -> edgeOfHubPose);
+
         double dotProduct = hubToShooterTranslation.dot(edgeOfHubToShooterTranslation);
-        double productOfMagnitudes = hubToShooterTranslation.getNorm() * edgeOfHubToShooterTranslation.getNorm();
-        
-        return Math.acos(dotProduct / productOfMagnitudes);
+        double productOfMagnitudes =
+                hubToShooterTranslation.getNorm() * edgeOfHubToShooterTranslation.getNorm();
+
+        Angle maxDiffOfAngles = Radians.of(Math.acos(dotProduct / productOfMagnitudes));
+        return maxDiffOfAngles.in(Degrees);
     }
 
-    public static boolean isShootingAngleAlignedToHub(Supplier<Pose2d> robotPose, ToleranceType toleranceType) {
-        Pose2d shooterPose = robotPose.get().transformBy(TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
-        Translation2d hubToShooterTranslation = getTargetToShooterTranslation(() -> shooterPose, () -> getHubPose());
+    public static boolean isShootingAngleAlignedToHub(
+            Supplier<Pose2d> robotPose, ToleranceType toleranceType) {
+        Pose2d shooterPose =
+                robotPose.get().transformBy(TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
+        Translation2d hubToShooterTranslation =
+                getTargetToShooterTranslation(() -> shooterPose, () -> getHubPose());
 
         double robotAngleToHubInDegrees = getDesiredAngleToHub(() -> hubToShooterTranslation);
+        SmartDashboard.putNumber("vision/util/des angle", robotAngleToHubInDegrees);
 
         double diffOfAngleInDegrees = getActualAngleToHub(robotPose) - robotAngleToHubInDegrees;
+        SmartDashboard.putNumber("vision/util/diff angle", diffOfAngleInDegrees);
 
-        double maxDiffOfAnglesInDegrees = getMaxDiffOfDesiredAndActualAngleInDegrees(hubToShooterTranslation, shooterPose);
+        double maxDiffOfAnglesInDegrees =
+                getMaxDiffOfDesiredAndActualAngleInDegrees(hubToShooterTranslation, shooterPose);
+        SmartDashboard.putNumber("vision/util/max diff", maxDiffOfAnglesInDegrees);
 
         if (toleranceType == ToleranceType.REALIGNING) {
             maxDiffOfAnglesInDegrees *= REALIGNING_TOLERANCE_MULTIPLIER;
