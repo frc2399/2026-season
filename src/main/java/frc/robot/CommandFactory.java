@@ -44,20 +44,15 @@ public class CommandFactory {
 
     public Command runSpindexShooterIndexAndShooter(boolean shouldPassOrManualShoot) {
         return Commands.sequence(
-                        shooter.shoot(
-                                        () ->
-                                                RebuiltVisionUtil.getDistanceToHub(
-                                                        () -> drive.getPose()),
-                                        shouldPassOrManualShoot)
-                                .until(() -> shooter.isUpToSpeed()),
-                        Commands.parallel(
-                                        spindexer.runSpindexer(),
-                                        shooterIndexer.runShooterIndexer())
-                                .withTimeout(
-                                        1.5), // we don't want to feed fuel right away because it
-                        // gets fuel
-                        // jammed
-                        intakeSubsystem.feedFuel());
+                shooter.shoot(
+                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
+                                shouldPassOrManualShoot)
+                        .until(() -> shooter.isUpToSpeed()),
+                Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
+                        .withTimeout(1.5), // we don't want to feed fuel right away because it
+                // gets fuel
+                // jammed
+                intakeSubsystem.feedFuel());
     }
 
     public Command runSpindexShooterIndexAndShooterNoFeedFuel() {

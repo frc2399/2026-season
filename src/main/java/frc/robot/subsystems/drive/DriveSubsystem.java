@@ -51,7 +51,6 @@ import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
-import frc.robot.subsystems.drive.RebuiltVisionUtil.ToleranceType;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.util.FieldCalculationHelpers;
 import frc.robot.util.GameState;
