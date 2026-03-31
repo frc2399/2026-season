@@ -154,9 +154,6 @@ public class AutonCommandFactory {
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(
                                         OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
-                        Commands.parallel(
-                                intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 1)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
@@ -167,19 +164,14 @@ public class AutonCommandFactory {
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 1),
-                                intake.deployAndRunIntake().withTimeout(0.01)),
+                                intake.deployArm().withTimeout(0.1),
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(
-                                        OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
-                        Commands.parallel(
-                                intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2)),
-                        intake.defaultBehavior().withTimeout(0.01),
-                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                        buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(5))
+                                        OUTPOST_SIDE_AUTON_FUEL_CENTER_ON_DEPOT_SIDE,
+                                        intakeConstraints,
+                                        0)))
                 .withName("outpost side to neutral zone and then back and shoot");
     }
 

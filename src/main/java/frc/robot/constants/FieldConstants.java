@@ -136,6 +136,16 @@ public final class FieldConstants {
                                                 .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
                                         HALF_WIDTH_OF_HUB.plus(LENGTH_OF_BUMP).unaryMinus(),
                                         Rotation2d.kZero)));
+        public static final Pose OUTPOST_SIDE_AUTON_FUEL_CENTER_ON_DEPOT_SIDE =
+                new Pose(
+                        "blueDepotBorderFuelCenter",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        STARTING_LINE_TO_CENTER_DISTANCE
+                                                .minus(FUEL_PIT_HALF_WIDTH)
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
+                                        HALF_WIDTH_OF_HUB.plus(LENGTH_OF_BUMP),
+                                        Rotation2d.kZero)));
         public static final Pose BLUE_OUTPOST_BORDER_FUEL_EDGE =
                 new Pose(
                         "blueOutpostBorderFuelEdge",
@@ -248,8 +258,8 @@ public final class FieldConstants {
                 new Pose(
                         "outpostShootingSpot",
                         new Pose2d(
-                                new Translation2d(Meters.of(16.54 - 12.47), Meters.of(8.07 - 7.55)),
-                                Rotation2d.kCCW_90deg));
+                                new Translation2d(Meters.of(3.24), Meters.of(0.68)),
+                                new Rotation2d(Degrees.of(70))));
         public static final Pose MIDDLE_SHOOT_POSE =
                 new Pose("center shooting spot", new Pose2d(2.5, 4, Rotation2d.fromDegrees(0)));
         public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
