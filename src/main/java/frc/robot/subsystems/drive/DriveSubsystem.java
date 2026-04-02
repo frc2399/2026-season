@@ -455,7 +455,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     public Command setX() {
         return this.run(
                 () -> {
-                    System.out.println("le x mode");
                     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
                     frontRight.setDesiredState(
                             new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
