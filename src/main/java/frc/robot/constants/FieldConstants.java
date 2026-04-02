@@ -65,7 +65,7 @@ public final class FieldConstants {
                         "blueDepotStartingLine",
                         new Pose2d(
                                 new Translation2d(Meters.of(3.53), Meters.of(7.51)),
-                                new Rotation2d(Degrees.of(-90))));
+                                new Rotation2d(Degrees.of(-70))));
         // this postion is when robot is on the blue alliance starting line farthest
         // from scroing
         // table.
@@ -135,6 +135,16 @@ public final class FieldConstants {
                                                 .minus(FUEL_PIT_HALF_WIDTH)
                                                 .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
                                         HALF_WIDTH_OF_HUB.plus(LENGTH_OF_BUMP).unaryMinus(),
+                                        Rotation2d.kZero)));
+        public static final Pose OUTPOST_SIDE_AUTON_FUEL_CENTER_ON_DEPOT_SIDE =
+                new Pose(
+                        "blueDepotBorderFuelCenter",
+                        FRONT_OF_BLUE_HUB.plus(
+                                new Transform2d(
+                                        STARTING_LINE_TO_CENTER_DISTANCE
+                                                .minus(FUEL_PIT_HALF_WIDTH)
+                                                .plus(HALF_LENGTH_OF_ROBOT_WITH_BUMPER),
+                                        HALF_WIDTH_OF_HUB.plus(LENGTH_OF_BUMP),
                                         Rotation2d.kZero)));
         public static final Pose BLUE_OUTPOST_BORDER_FUEL_EDGE =
                 new Pose(
@@ -242,16 +252,14 @@ public final class FieldConstants {
                 new Pose(
                         "depotShootingSpot",
                         new Pose2d(
-                                new Translation2d(Meters.of(3.53 - 0.53), Meters.of(7.35)),
-                                new Rotation2d(Degrees.of(-62))));
+                                new Translation2d(Meters.of(3.53), Meters.of(7.35)),
+                                new Rotation2d(Degrees.of(-70))));
         public static final Pose OUTPOST_SHOOTING_SPOT =
                 new Pose(
                         "outpostShootingSpot",
                         new Pose2d(
-                                new Translation2d(
-                                        Meters.of(16.54 - 12.52 - 0.304 - 0.1),
-                                        Meters.of(8.07 - 7.55)),
-                                new Rotation2d(Degrees.of(82))));
+                                new Translation2d(Meters.of(3.24), Meters.of(0.68)),
+                                new Rotation2d(Degrees.of(70))));
         public static final Pose MIDDLE_SHOOT_POSE =
                 new Pose("center shooting spot", new Pose2d(2.5, 4, Rotation2d.fromDegrees(0)));
         public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
@@ -266,11 +274,9 @@ public final class FieldConstants {
                                                 .plus(HALF_WIDTH_OF_ROBOT_WITH_BUMPER)
                                                 .plus(ROBOT_HUB_MARGIN.times(0.5))
                                                 .plus(ROBOT_HUB_MARGIN.div(2))
-                                                .minus(Meters.of(0.15)) // fudge
-                                                // factor
-                                                // -
-                                                // increase
-                                                // to
+                                                .minus(
+                                                        Meters.of(
+                                                                0.15)) // fudge factor - increase to
                                                 // move closer to the hub,
                                                 // decrease to move away
                                                 .unaryMinus(),
@@ -305,8 +311,8 @@ public final class FieldConstants {
 
         // values taken from field drawings
         public static final Pose2d RED_CENTER_OF_HUB_POSE =
-                new Pose2d(Inches.of(182.11 + (2 * 143.50)), Inches.of(158.84), Rotation2d.kZero);
+                new Pose2d(Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
         public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
-                new Pose2d(Inches.of(182.11), Inches.of(158.84), Rotation2d.kZero);
+                new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
     }
 }
