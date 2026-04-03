@@ -131,6 +131,8 @@ public class AutonCommandFactory {
         return Commands.sequence(
                         // first cycle
                         intake.stowArmSetpoint(),
+                        // first cycle
+                        intake.stowArmSetpoint(),
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
