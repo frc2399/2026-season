@@ -94,46 +94,13 @@ public class AutonCommandFactory {
                 .withName("depot to neutral zone");
     }
 
-    public Command depotSideNeutralZoneAndBackWithShooting() {
-        return Commands.sequence(
-                        Commands.runOnce(
-                                () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
-                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 2),
-                        intake.stowArmSetpoint(),
-                        commandFactory
-                                .runSpindexShooterIndexAndShooterNoFeedFuel()
-                                .withTimeout(1.7),
-                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
-                        buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 2),
-                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                        Commands.parallel(
-                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 2),
-                                intake.deployAndRunIntake().withTimeout(0.01)),
-                        Commands.parallel(
-                                intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
-                        Commands.parallel(
-                                intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 2)),
-                        intake.defaultBehavior().withTimeout(0.01),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                        buildPathDeferred(DEPOT_SIDE_STARTING_POSE, constraints, 2),
-                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                        commandFactory.runSpindexShooterIndexAndShooter(false))
-                .withName("depot side to neutral zone then back and shoot");
-    }
-
     public Command outpostSideNeutralZoneAndBackWithShooting() {
         return Commands.sequence(
+                        // first cycle
                         intake.stowArmSetpoint(),
-                        commandFactory
-                                .runSpindexShooterIndexAndShooterNoFeedFuel()
-                                .withTimeout(1.7),
-                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
-                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(OUTPOST_SIDE_STARTING_POSE.pose())),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2),
@@ -142,14 +109,54 @@ public class AutonCommandFactory {
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(
                                         OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
-                        Commands.parallel(
-                                intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                        commandFactory.runSpindexShooterIndexAndShooter(false))
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                        // second cycle
+                        intake.defaultBehavior().withTimeout(0.01),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
+                                intake.deployArm().withTimeout(0.1),
+                                buildPathDeferred(OUTPOST_PASS_2_START, constraints, 2)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(OUTPOST_PASS_2_END, intakeConstraints, 0)))
                 .withName("outpost side to neutral zone and then back and shoot");
+    }
+
+    public Command depotSideNeutralZoneAndBackWithShooting() {
+        return Commands.sequence(
+                        // first cycle
+                        intake.stowArmSetpoint(),
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
+                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 2),
+                                intake.deployAndRunIntake().withTimeout(0.01)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                        // second cycle
+                        intake.defaultBehavior().withTimeout(0.01),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
+                                intake.deployArm().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_PASS_2_START, constraints, 2)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_PASS_2_END, intakeConstraints, 0)))
+                .withName("depot side to neutral zone then back and shoot");
     }
 
     public Command centerMoveAndShoot() {

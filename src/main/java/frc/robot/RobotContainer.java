@@ -120,6 +120,7 @@ public class RobotContainer {
                                         DriveControlConstants.DRIVE_DEADBAND)),
                         true,
                         () -> (driverController.leftBumper().getAsBoolean())));
+
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
         spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
@@ -143,7 +144,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindingsTuningController() {
-        tuningController.rightTrigger().onTrue(intakeSubsystem.deployArm());
+        tuningController.rightTrigger().whileTrue(intakeSubsystem.deployArm());
         tuningController
                 .leftTrigger()
                 .whileTrue(
@@ -151,12 +152,13 @@ public class RobotContainer {
                                 () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
                                 false));
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
-        tuningController.leftBumper().onTrue(intakeSubsystem.stowArmSetpoint());
+        tuningController.leftBumper().whileTrue(intakeSubsystem.stowArmSetpoint());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
         tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
         tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
         tuningController.b().whileTrue(intakeSubsystem.runRoller());
         tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
+        tuningController.povRight().whileTrue(intakeSubsystem.feedFuel());
         tuningController
                 .povUp()
                 // .and(tuningController.a())
