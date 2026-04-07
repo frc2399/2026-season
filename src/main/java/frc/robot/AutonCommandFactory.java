@@ -67,39 +67,11 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
-    public Command trenchToDepot() {
-        return Commands.sequence(
-                intake.stowArmSetpoint(),
-                Commands.runOnce(() -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
-                buildPathDeferred(IN_THE_DEPOT, constraints, 0),
-                drive.driveToPoseOnExecute(),
-                intake.deployAndRunIntake().withTimeout(3),
-                intake.defaultBehavior().withTimeout(0.01),
-                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                drive.driveToPoseOnExecute(),
-                commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6));
-    }
-
-    public Command depotSideDepotToNeutralZoneShooting() {
-        return Commands.sequence(
-                        trenchToDepot(),
-                        followWaypoints(
-                                DEPOT_SHOOTING_SPOT.pose(),
-                                constraints,
-                                1.5,
-                                Rotation2d.fromDegrees(180),
-                                DEPOT_SHOOTING_SPOT.pose(),
-                                DEPOT_SIDE_STARTING_POSE.pose(),
-                                BLUE_DEPOT_WALL_FUEL_CENTER.pose()))
-                .withName("depot to neutral zone");
-    }
-
     public Command outpostSideNeutralZoneAndBackWithShooting() {
         return Commands.sequence(
                         // first cycle
                         intake.stowArmSetpoint(),
-                        Commands.runOnce(
-                                () -> resetOdometryFlipped(OUTPOST_SIDE_STARTING_POSE.pose())),
+                        Commands.runOnce(() -> resetOdometryFlipped(OUTPOST_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
@@ -131,12 +103,11 @@ public class AutonCommandFactory {
         return Commands.sequence(
                         // first cycle
                         intake.stowArmSetpoint(),
-                        Commands.runOnce(
-                                () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
+                        Commands.runOnce(() -> resetOdometryFlipped(DEPOT_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                buildPathDeferred(BLUE_DEPOT_BORDER_FUEL_CENTER, constraints, 2),
+                                buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, constraints, 2),
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
@@ -169,19 +140,6 @@ public class AutonCommandFactory {
                                 .runSpindexShooterIndexAndShooterNoFeedFuel()
                                 .withTimeout(Seconds.of(2)))
                 .withName("move from center and shoot preload");
-    }
-
-    public Command driveStraightTesting() {
-        return Commands.sequence(
-                intake.stowArmSetpoint(),
-                Commands.runOnce(
-                        () ->
-                                resetOdometryFlipped(
-                                        FieldConstants.PoseConstants.OUTPOST_SIDE_STARTING_POSE
-                                                .pose())),
-                buildPathDeferred(
-                        FieldConstants.PoseConstants.DRIVE_STRAIGHT_TESTING, intakeConstraints, 0),
-                drive.driveToPoseOnExecute());
     }
 
     public Command followWaypoints(
