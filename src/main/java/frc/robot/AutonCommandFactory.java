@@ -131,8 +131,6 @@ public class AutonCommandFactory {
         return Commands.sequence(
                         // first cycle
                         intake.stowArmSetpoint(),
-                        // first cycle
-                        intake.stowArmSetpoint(),
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(DEPOT_SIDE_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
@@ -144,7 +142,7 @@ public class AutonCommandFactory {
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                         commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
                         // second cycle
