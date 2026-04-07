@@ -36,7 +36,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     private final int MAX_OUTPUT_RANGE = 1;
     private final double SPINDEXER_P = 0.00006;
     private final double SPINDEXER_D = 0;
-    private final double SPINDEXER_KS = 0.175;
+    private final double SPINDEXER_KS = 0.13;
     private final double SPINDEXER_KV = 0.017;
     private final boolean SPINDEXER_INVERTED = false;
 
