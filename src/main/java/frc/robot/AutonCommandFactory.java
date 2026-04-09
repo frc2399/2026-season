@@ -144,20 +144,19 @@ public class AutonCommandFactory {
 
     public Command hubMoveToDepot() {
         return Commands.sequence(
-                Commands.runOnce(() -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
-                intake.stowArmSetpoint(),
-                buildPathDeferred(DEPOT_EDGE, constraints, 0),
-                Commands.parallel(
-                        intake.deployArm().withTimeout(0.1),
-                        buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0),
+                        intake.stowArmSetpoint(),
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
+                        buildPathDeferred(DEPOT_EDGE, constraints, 0),
+                        Commands.parallel(
+                                intake.deployArm().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_SIDE_INTAKE_END, intakeConstraints, 0),
-                                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0)),
-                        commandFactory
-                                .defaultSpindexerShooterIndexerAndShooter()
-                                .withTimeout(2)
-                .withName("move from center to depot and shoot")));
+                                buildPathDeferred(DEPOT_SIDE_INTAKE_END, intakeConstraints, 0)),
+                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(2))
+                .withName("move from center to depot and shoot");
     }
 
     public Command followWaypoints(
