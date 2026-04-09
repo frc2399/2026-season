@@ -23,8 +23,11 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +37,7 @@ public class AutonCommandFactory {
    private final IntakeSubsystem intake;
    private final CommandFactory commandFactory;
    private final Gyro gyro;
+   private final ShooterSubsystem shooter;
    private Pose2d finalPose;
 
 
@@ -50,11 +54,13 @@ public class AutonCommandFactory {
            DriveSubsystem drive,
            IntakeSubsystem intake,
            CommandFactory commandFactory,
-           Gyro gyro) {
+           Gyro gyro,
+           ShooterSubsystem shooter) {
        this.drive = drive;
        this.intake = intake;
        this.commandFactory = commandFactory;
        this.gyro = gyro;
+       this.shooter = shooter;
    }
 
 
@@ -92,8 +98,11 @@ public class AutonCommandFactory {
                                        OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
                        intake.defaultBehavior().withTimeout(0.01),
                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                       buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                       commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                       Commands.parallel(
+                                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
+                                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()), false)
+                       ),
+                       commandFactory.runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly().withTimeout(6),
                        // second cycle
                        intake.defaultBehavior().withTimeout(0.01),
                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -124,8 +133,11 @@ public class AutonCommandFactory {
                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
                        intake.defaultBehavior().withTimeout(0.01),
                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
-                       buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                       commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                       Commands.parallel(
+                                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
+                                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()), false)
+                       ),
+                       commandFactory.runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly().withTimeout(6),
                        // second cycle
                        intake.defaultBehavior().withTimeout(0.01),
                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -146,10 +158,11 @@ public class AutonCommandFactory {
                        Commands.runOnce(
                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
                        intake.stowArmSetpoint(),
-                       buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
-                       commandFactory
-                               .runSpindexShooterIndexAndShooterNoFeedFuel()
-                               .withTimeout(Seconds.of(2)))
+                       Commands.parallel(
+                                buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()), false)
+                       ),
+                       commandFactory.runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly().withTimeout(2))
                .withName("move from center and shoot preload");
    }
 
