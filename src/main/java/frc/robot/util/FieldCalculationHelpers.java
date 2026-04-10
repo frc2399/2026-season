@@ -4,7 +4,7 @@ import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.CommandFactory.TargetFuel;
+import frc.robot.CommandFactory.TargetZoneType;
 import frc.robot.constants.FieldConstants;
 
 public class FieldCalculationHelpers {
@@ -35,20 +35,23 @@ public class FieldCalculationHelpers {
     }
 
     // if return true then shoot right and if false shoot left
-    public static TargetFuel shouldRobotPassLeftOrRight(Pose2d robotLocation) {
+    public static TargetZoneType getAlignmentTargetType(Pose2d robotLocation) {
         double poseY = robotLocation.getY();
+        if (shouldTargetHub(robotLocation)) {
+            return TargetZoneType.HUB;
+        } 
         if (FieldConstants.alliance.isPresent()
                 && FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
             if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) <= poseY) {
-                return TargetFuel.OUTPOST_SIDE;
+                return TargetZoneType.OUTPOST_SIDE;
             } else {
-                return TargetFuel.DEPOT_SIDE;
+                return TargetZoneType.DEPOT_SIDE;
             }
         } else {
             if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) >= poseY) {
-                return TargetFuel.OUTPOST_SIDE;
+                return TargetZoneType.OUTPOST_SIDE;
             } else {
-                return TargetFuel.DEPOT_SIDE;
+                return TargetZoneType.DEPOT_SIDE;
             }
         }
     }
