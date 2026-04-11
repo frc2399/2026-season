@@ -49,15 +49,15 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
             RadiansPerSecond.of(2 * Math.PI / 60);
 
     // pid
-    private static final double INTAKE_ARM_P = .25;
+    private static final double INTAKE_ARM_P = .35;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
 
     // feedforward
     private static final double INTAKE_ARM_KS = 0.0;
-    private static final double INTAKE_ARM_KV = .95;
+    private static final double INTAKE_ARM_KV = .93;
     private static final double INTAKE_ARM_KA = 0.0;
-    private static final double INTAKE_ARM_KCOS = .34;
+    private static final double INTAKE_ARM_KCOS = .28;
 
     // we use an outside feedforward, because arms also have a cosine factor (the
     // impact of gravity changes), and revlib's is poorly documented so it's not
@@ -81,7 +81,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     private Angle desiredArmAngleBelowTrench = Degrees.of(30);
 
     // profiled PID control
-    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(2.5);
+    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(3);
     private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(1.7);
     private TrapezoidProfile intakeArmTrapezoidProfile =
             new TrapezoidProfile(
@@ -169,7 +169,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     @Override
     public void runIntakeArmOutVelocity() {
-        desiredAngularVelocity = RadiansPerSecond.of(-0.5);
+        desiredAngularVelocity = RadiansPerSecond.of(-1);
         double setpointFF =
                 intakeArmFeedforward.calculate(
                         intakeArmAbsoluteEncoder.getPosition(),
@@ -183,7 +183,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     @Override
     public void runIntakeArmInVelocity() {
-        desiredAngularVelocity = RadiansPerSecond.of(0.5);
+        desiredAngularVelocity = RadiansPerSecond.of(1);
         double setpointFF =
                 intakeArmFeedforward.calculate(
                         intakeArmAbsoluteEncoder.getPosition(),

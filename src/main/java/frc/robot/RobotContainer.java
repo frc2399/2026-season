@@ -145,7 +145,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindingsTuningController() {
-        tuningController.rightTrigger().whileTrue(intakeSubsystem.deployArm());
+        tuningController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         tuningController
                 .leftTrigger()
                 .whileTrue(

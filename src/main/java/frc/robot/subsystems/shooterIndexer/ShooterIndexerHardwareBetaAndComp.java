@@ -40,7 +40,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final AngularVelocity SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR =
             RadiansPerSecond.of(2 * Math.PI / 60 / SHOOTER_INDEXER_GEAR_RATIO);
 
-    private static final double SHOOTER_INDEXER_P = 0.004;
+    private static final double SHOOTER_INDEXER_P = 0.0001;
     private static final double SHOOTER_INDEXER_I = 0;
     private static final double SHOOTER_INDEXER_D = 0;
     private static final double SHOOTER_INDEXER_MIN_OUTPUT = -1;
@@ -65,11 +65,6 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
                 .positionConversionFactor(SHOOTER_INDEXER_POSITION_CONVERSION_FACTOR.in(Radians))
                 .velocityConversionFactor(
                         SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR.in(RadiansPerSecond));
-        shooterIndexerSparkFlexConfig
-                .encoder
-                .uvwMeasurementPeriod(8)
-                .quadratureAverageDepth(2)
-                .quadratureMeasurementPeriod(8);
         shooterIndexerSparkFlexConfig
                 .closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
