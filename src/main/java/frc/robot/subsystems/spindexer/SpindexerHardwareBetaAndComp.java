@@ -65,6 +65,11 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
                 ENCODER_POSITION_FACTOR.in(Radians));
         spindexerSparkFlexConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
+        spindexerSparkFlexConfig
+                .encoder
+                .uvwMeasurementPeriod(8)
+                .quadratureAverageDepth(2)
+                .quadratureMeasurementPeriod(8);
 
         spindexerSparkFlexConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         spindexerSparkFlexConfig.closedLoop.pid(SPINDEXER_P, 0, SPINDEXER_D);
