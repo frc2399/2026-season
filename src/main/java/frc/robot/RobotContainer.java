@@ -182,6 +182,8 @@ public class RobotContainer {
                 autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
         autoChooser.addOption(
                 "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
+        autoChooser.addOption(
+                "move from center to depot and shoot", autonCommandFactory.hubMoveToDepot());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(

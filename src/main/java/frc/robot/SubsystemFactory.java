@@ -9,6 +9,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModule;
 import frc.robot.subsystems.drive.SwerveModuleHardwareVortex;
 import frc.robot.subsystems.drive.SwerveModulePlacebo;
+import frc.robot.subsystems.drive.SwerveModuleSim;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.drive.gyro.GyroHardware;
 import frc.robot.subsystems.drive.gyro.GyroPlacebo;
@@ -128,6 +129,20 @@ public class SubsystemFactory {
                                     MotorIdConstants.REAR_RIGHT_TURNING_CAN_ID,
                                     REAR_RIGHT_CHASSIS_ANGULAR_OFFSET,
                                     "rear right"));
+            return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
+        } else if (robotType == RobotType.SIM) {
+            frontLeft =
+                    new SwerveModule(
+                            new SwerveModuleSim(FRONT_LEFT_CHASSIS_ANGULAR_OFFSET, "front left"));
+            frontRight =
+                    new SwerveModule(
+                            new SwerveModuleSim(FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET, "front right"));
+            rearLeft =
+                    new SwerveModule(
+                            new SwerveModuleSim(REAR_LEFT_CHASSIS_ANGULAR_OFFSET, "rear left"));
+            rearRight =
+                    new SwerveModule(
+                            new SwerveModuleSim(REAR_RIGHT_CHASSIS_ANGULAR_OFFSET, "rear right"));
             return new DriveSubsystem(frontLeft, frontRight, rearLeft, rearRight, gyro);
         } else {
             frontLeft = new SwerveModule(new SwerveModulePlacebo());
