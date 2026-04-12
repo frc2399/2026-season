@@ -99,8 +99,8 @@ public class SubsystemFactory {
         if (robotType == RobotType.BETA
                 || robotType == RobotType.BUBBLES
                 || robotType == RobotType.MOZART
-        // || robotType == RobotType.COMP
-        ) {
+                // || robotType == RobotType.COMP
+                ) {
             frontLeft =
                     new SwerveModule(
                             new SwerveModuleHardwareVortex(
