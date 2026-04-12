@@ -70,7 +70,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     private static final double INTAKE_ARM_MAX_OUTPUT = 1;
 
     // soft limits
-    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(99);
+    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(112);
     private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = true;
     private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(-37);
     private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = true;
@@ -81,8 +81,8 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     private Angle desiredArmAngleBelowTrench = Degrees.of(30);
 
     // profiled PID control
-    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(3);
-    private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(1.7);
+    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(4.0);
+    private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(2.5);
     private TrapezoidProfile intakeArmTrapezoidProfile =
             new TrapezoidProfile(
                     new Constraints(
@@ -156,8 +156,11 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             desiredAngle = Degrees.of(-15);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
-        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL) {
-            desiredAngle = Degrees.of(60); // TODO: empirically determine :)
+        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL_UPPER_BOUND) {
+            desiredAngle = Degrees.of(90); // TODO: empirically determine :)
+            goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
+        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND) {
+            desiredAngle = Degrees.of(45);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         }
     }

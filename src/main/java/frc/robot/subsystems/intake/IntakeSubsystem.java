@@ -76,11 +76,11 @@ public class IntakeSubsystem extends SubsystemBase {
                 });
     }
 
-    public Command feedFuelSetpoint() {
+    public Command feedFuelLowerBoundSetpoint() {
         return this.runOnce(
                 () -> {
                     armProfiledPidEnabled = true;
-                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND);
                 });
     }
 
@@ -90,13 +90,15 @@ public class IntakeSubsystem extends SubsystemBase {
                                 () -> {
                                     rollerIO.runIntake();
                                     armProfiledPidEnabled = true;
-                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND);
                                 })
                         .withTimeout(Seconds.of(1))
                         .andThen(
                                 this.run(
                                                 () -> {
-                                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                                                    armIO.setSetpoint(
+                                                            IntakeArmSetpoint
+                                                                    .FEED_FUEL_UPPER_BOUND);
                                                 })
                                         .withTimeout(Seconds.of(1)))
                         .repeatedly()
