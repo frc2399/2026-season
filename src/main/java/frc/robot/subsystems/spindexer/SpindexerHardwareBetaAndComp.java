@@ -34,10 +34,11 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
-    private final double SPINDEXER_P = 0.00006;
-    private final double SPINDEXER_D = 0;
+    private final double SPINDEXER_P = 0.02;
+    private final double SPINDEXER_D = 0.01;
+
     private final double SPINDEXER_KS = 0.13;
-    private final double SPINDEXER_KV = 0.0178;
+    private final double SPINDEXER_KV = 0.1;
     private final boolean SPINDEXER_INVERTED = false;
 
     private final Time CLOSED_LOOP_RAMP_RATE = Seconds.of(0.1);
@@ -65,6 +66,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
                 ENCODER_POSITION_FACTOR.in(Radians));
         spindexerSparkFlexConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
+        spindexerSparkFlexConfig.encoder.quadratureAverageDepth(2).quadratureMeasurementPeriod(8);
 
         spindexerSparkFlexConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         spindexerSparkFlexConfig.closedLoop.pid(SPINDEXER_P, 0, SPINDEXER_D);
