@@ -37,7 +37,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     private final double SPINDEXER_P = 0.00006;
     private final double SPINDEXER_D = 0;
     private final double SPINDEXER_KS = 0.13;
-    private final double SPINDEXER_KV = 0.017;
+    private final double SPINDEXER_KV = 0.0178;
     private final boolean SPINDEXER_INVERTED = false;
 
     private final Time CLOSED_LOOP_RAMP_RATE = Seconds.of(0.1);
@@ -95,7 +95,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
     public void runSpindexer() {
         desiredVelocity =
-                RadiansPerSecond.of(0.8 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+                RadiansPerSecond.of(1.0 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
 
         spindexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
