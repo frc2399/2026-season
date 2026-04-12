@@ -28,10 +28,10 @@ public class ShooterConfig {
             case COMP:
                 BOTTOM_KS = .122;
                 BOTTOM_KV = 0.0171;
-                BOTTOM_P = 0.00055;
+                BOTTOM_P = 0.005;
                 TOP_KS = .155;
                 TOP_KV = 0.017;
-                TOP_P = 0.00006;
+                TOP_P = 0.00003;
                 BOTTOM_ROLLER_INVERTED = true;
                 break;
             default:
