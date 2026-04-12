@@ -66,11 +66,6 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
                 .velocityConversionFactor(
                         SHOOTER_INDEXER_VELOCITY_CONVERSION_FACTOR.in(RadiansPerSecond));
         shooterIndexerSparkFlexConfig
-                .encoder
-                .uvwMeasurementPeriod(8)
-                .quadratureAverageDepth(2)
-                .quadratureMeasurementPeriod(8);
-        shooterIndexerSparkFlexConfig
                 .closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .pid(SHOOTER_INDEXER_P, SHOOTER_INDEXER_I, SHOOTER_INDEXER_D)
