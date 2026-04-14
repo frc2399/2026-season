@@ -285,7 +285,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 RebuiltVisionUtil.isShootingAngleAlignedToHub(
                         () -> robotPose, RebuiltVisionUtil.ToleranceType.REALIGNING));
         SmartDashboard.putString(
-                "robot/shouldRobotpassLeftOrRight",
+                "robot/where should robot pass",
                 FieldCalculationHelpers.getAlignmentTargetType(robotPose).toString());
 
         frontLeftField2dModule.setPose(
