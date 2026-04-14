@@ -1,9 +1,7 @@
 package frc.robot;
 
-
 import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.constants.FieldConstants.PoseConstants.*;
-
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
@@ -31,7 +29,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import java.util.List;
 import java.util.Set;
 
-
 public class AutonCommandFactory {
    private final DriveSubsystem drive;
    private final IntakeSubsystem intake;
@@ -41,13 +38,12 @@ public class AutonCommandFactory {
    private Pose2d finalPose;
 
 
-   public final PathConstraints constraints =
-           new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
+    public final PathConstraints constraints =
+            new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
-
-   public final PathConstraints intakeConstraints =
-           new PathConstraints(
-                   0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
+    public final PathConstraints intakeConstraints =
+            new PathConstraints(
+                    0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
 
    public AutonCommandFactory(
@@ -64,8 +60,8 @@ public class AutonCommandFactory {
    }
 
 
-   public Command buildPathDeferred(
-           Pose pose, PathConstraints constraints, double goalEndVelocity) {
+    public Command buildPathDeferred(
+            Pose pose, PathConstraints constraints, double goalEndVelocity) {
 
 
        return new DeferredCommand(
@@ -167,38 +163,35 @@ public class AutonCommandFactory {
    }
 
 
-   public Command followWaypoints(
-           Pose2d startingPosition,
-           PathConstraints constraints,
-           double endVelocity,
-           Rotation2d endRotation,
-           Pose2d... poses) {
-       return Commands.runOnce(
-               () -> {
-                   List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
+    public Command followWaypoints(
+            Pose2d startingPosition,
+            PathConstraints constraints,
+            double endVelocity,
+            Rotation2d endRotation,
+            Pose2d... poses) {
+        return Commands.runOnce(
+                () -> {
+                    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poses);
 
+                    PathPlannerPath path =
+                            new PathPlannerPath(
+                                    waypoints,
+                                    constraints,
+                                    null,
+                                    new GoalEndState(endVelocity, endRotation));
 
-                   PathPlannerPath path =
-                           new PathPlannerPath(
-                                   waypoints,
-                                   constraints,
-                                   null,
-                                   new GoalEndState(endVelocity, endRotation));
+                    path.preventFlipping = false;
+                    CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
+                });
+    }
 
-
-                   path.preventFlipping = false;
-                   CommandScheduler.getInstance().schedule(AutoBuilder.followPath(path));
-               });
-   }
-
-
-   public void resetOdometryFlipped(Pose2d pose) {
-       boolean red = FieldConstants.alliance.get() == Alliance.Red;
-       if (red) {
-           pose = FlippingUtil.flipFieldPose(pose);
-       }
-       drive.resetOdometry(pose);
-       gyro.setYaw(pose.getRotation().getMeasure());
-       drive.resetOdometryAfterGyro();
-   }
+    public void resetOdometryFlipped(Pose2d pose) {
+        boolean red = FieldConstants.alliance.get() == Alliance.Red;
+        if (red) {
+            pose = FlippingUtil.flipFieldPose(pose);
+        }
+        drive.resetOdometry(pose);
+        gyro.setYaw(pose.getRotation().getMeasure());
+        drive.resetOdometryAfterGyro();
+    }
 }

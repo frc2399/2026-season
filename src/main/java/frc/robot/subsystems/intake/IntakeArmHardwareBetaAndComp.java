@@ -49,15 +49,15 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
             RadiansPerSecond.of(2 * Math.PI / 60);
 
     // pid
-    private static final double INTAKE_ARM_P = .25;
+    private static final double INTAKE_ARM_P = .35;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
 
     // feedforward
     private static final double INTAKE_ARM_KS = 0.0;
-    private static final double INTAKE_ARM_KV = .95;
+    private static final double INTAKE_ARM_KV = .93;
     private static final double INTAKE_ARM_KA = 0.0;
-    private static final double INTAKE_ARM_KCOS = .34;
+    private static final double INTAKE_ARM_KCOS = .28;
 
     // we use an outside feedforward, because arms also have a cosine factor (the
     // impact of gravity changes), and revlib's is poorly documented so it's not
@@ -70,7 +70,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     private static final double INTAKE_ARM_MAX_OUTPUT = 1;
 
     // soft limits
-    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(99);
+    private static final Angle INTAKE_ARM_FORWARD_MAX_ANGLE = Degrees.of(112);
     private static final boolean INTAKE_ARM_FORWARD_SOFTLIMIT_ENABLED = true;
     private static final Angle INTAKE_ARM_REVERSE_MAX_ANGLE = Degrees.of(-37);
     private static final boolean INTAKE_ARM_REVERSE_SOFTLIMIT_ENABLED = true;
@@ -81,8 +81,8 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     private Angle desiredArmAngleBelowTrench = Degrees.of(30);
 
     // profiled PID control
-    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(2.5);
-    private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(1.7);
+    private AngularVelocity ARM_MAX_VEL = RadiansPerSecond.of(4.0);
+    private AngularAcceleration ARM_MAX_ACCEL = RadiansPerSecondPerSecond.of(2.5);
     private TrapezoidProfile intakeArmTrapezoidProfile =
             new TrapezoidProfile(
                     new Constraints(
@@ -156,8 +156,11 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
             desiredAngle = Degrees.of(-15);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
-        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL) {
-            desiredAngle = Degrees.of(60); // TODO: empirically determine :)
+        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL_UPPER_BOUND) {
+            desiredAngle = Degrees.of(90);
+            goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
+        } else if (setpoint == IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND) {
+            desiredAngle = Degrees.of(45);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         }
     }
@@ -169,7 +172,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     @Override
     public void runIntakeArmOutVelocity() {
-        desiredAngularVelocity = RadiansPerSecond.of(-0.5);
+        desiredAngularVelocity = RadiansPerSecond.of(-1);
         double setpointFF =
                 intakeArmFeedforward.calculate(
                         intakeArmAbsoluteEncoder.getPosition(),
@@ -183,7 +186,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     @Override
     public void runIntakeArmInVelocity() {
-        desiredAngularVelocity = RadiansPerSecond.of(0.5);
+        desiredAngularVelocity = RadiansPerSecond.of(1);
         double setpointFF =
                 intakeArmFeedforward.calculate(
                         intakeArmAbsoluteEncoder.getPosition(),
