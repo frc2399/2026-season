@@ -132,6 +132,7 @@ public class RobotContainer {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
         // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
+        driverController.a().whileTrue(intakeSubsystem.deployAndRunIntakeBackwards());
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         driverController

@@ -3,6 +3,8 @@ package frc.robot.subsystems.intake;
 public interface IntakeRollerIO {
     public void runIntake();
 
+    public void runIntakeBackwards();
+
     public void setZero();
 
     public void updateState(IntakeRollerIOState state);
