@@ -83,6 +83,6 @@ public final class RobotConstants {
 
     public static class DeadbandConstants {
         public static final Angle BETA_INTAKE_ARM_DEADBAND = Degrees.of(3.0);
-        public static final Angle COMP_INTAKE_ARM_DEADBAND = Degrees.of(2.0);
+        public static final Angle COMP_INTAKE_ARM_DEADBAND = Degrees.of(1.0);
     }
 }
