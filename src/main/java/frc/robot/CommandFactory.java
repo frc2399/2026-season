@@ -1,7 +1,5 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -75,13 +73,11 @@ public class CommandFactory {
         return Commands.parallel(
                 Commands.waitUntil(() -> shooter.isUpToSpeed()),
                 shooterIndexer.defaultBehavior(),
-                shooter.defaultBehavior()
-        );
+                shooter.defaultBehavior());
     }
 
     public Command resetHeading(Angle yaw) {
         return Commands.parallel(
-                gyro.setYawCommand(yaw),
-                Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
+                gyro.setYawCommand(yaw), Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
     }
 }

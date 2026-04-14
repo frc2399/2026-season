@@ -56,7 +56,7 @@ public class RobotContainer {
                     spindexerSubsystem,
                     intakeSubsystem);
     public AutonCommandFactory autonCommandFactory =
-            new AutonCommandFactory(drive, intakeSubsystem, commandFactory, gyro);
+            new AutonCommandFactory(drive, intakeSubsystem, commandFactory, gyro, shooterSubsystem);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();

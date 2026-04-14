@@ -1,6 +1,5 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.constants.FieldConstants.PoseConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -25,18 +24,16 @@ import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-
 import java.util.List;
 import java.util.Set;
 
 public class AutonCommandFactory {
-   private final DriveSubsystem drive;
-   private final IntakeSubsystem intake;
-   private final CommandFactory commandFactory;
-   private final Gyro gyro;
-   private final ShooterSubsystem shooter;
-   private Pose2d finalPose;
-
+    private final DriveSubsystem drive;
+    private final IntakeSubsystem intake;
+    private final CommandFactory commandFactory;
+    private final Gyro gyro;
+    private final ShooterSubsystem shooter;
+    private Pose2d finalPose;
 
     public final PathConstraints constraints =
             new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
@@ -45,123 +42,131 @@ public class AutonCommandFactory {
             new PathConstraints(
                     0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
-
-   public AutonCommandFactory(
-           DriveSubsystem drive,
-           IntakeSubsystem intake,
-           CommandFactory commandFactory,
-           Gyro gyro,
-           ShooterSubsystem shooter) {
-       this.drive = drive;
-       this.intake = intake;
-       this.commandFactory = commandFactory;
-       this.gyro = gyro;
-       this.shooter = shooter;
-   }
-
+    public AutonCommandFactory(
+            DriveSubsystem drive,
+            IntakeSubsystem intake,
+            CommandFactory commandFactory,
+            Gyro gyro,
+            ShooterSubsystem shooter) {
+        this.drive = drive;
+        this.intake = intake;
+        this.commandFactory = commandFactory;
+        this.gyro = gyro;
+        this.shooter = shooter;
+    }
 
     public Command buildPathDeferred(
             Pose pose, PathConstraints constraints, double goalEndVelocity) {
 
+        return new DeferredCommand(
+                () -> {
+                    finalPose = pose.pose();
+                    if (FieldConstants.alliance.isPresent()
+                            && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+                        finalPose = FlippingUtil.flipFieldPose(finalPose);
+                    }
+                    return AutoBuilder.pathfindToPose(finalPose, constraints, goalEndVelocity)
+                            .withName(pose.name());
+                },
+                Set.of(drive));
+    }
 
-       return new DeferredCommand(
-               () -> {
-                   finalPose = pose.pose();
-                   if (FieldConstants.alliance.isPresent()
-                           && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
-                       finalPose = FlippingUtil.flipFieldPose(finalPose);
-                   }
-                   return AutoBuilder.pathfindToPose(finalPose, constraints, goalEndVelocity)
-                           .withName(pose.name());
-               },
-               Set.of(drive));
-   }
-
-
-   public Command outpostSideNeutralZoneAndBackWithShooting() {
-       return Commands.sequence(
-                       // first cycle
-                       intake.stowArmSetpoint(),
-                       Commands.runOnce(() -> resetOdometryFlipped(OUTPOST_STARTING_POSE.pose())),
-                       Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                       buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                       Commands.parallel(
-                               buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2),
-                               intake.deployAndRunIntake().withTimeout(0.01)),
-                       Commands.parallel(
-                               intake.deployAndRunIntake().withTimeout(0.1),
-                               buildPathDeferred(
-                                       OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
-                       intake.defaultBehavior().withTimeout(0.01),
-                       buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                       Commands.parallel(
+    public Command outpostSideNeutralZoneAndBackWithShooting() {
+        return Commands.sequence(
+                        // first cycle
+                        intake.stowArmSetpoint(),
+                        Commands.runOnce(() -> resetOdometryFlipped(OUTPOST_STARTING_POSE.pose())),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2),
+                                intake.deployAndRunIntake().withTimeout(0.01)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(
+                                        OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()), false)
-                       ),
-                       commandFactory.runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly().withTimeout(6),
-                       // second cycle
-                       intake.defaultBehavior().withTimeout(0.01),
-                       commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
-                       Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                       buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                       Commands.parallel(
-                               intake.deployArm().withTimeout(0.1),
-                               buildPathDeferred(OUTPOST_PASS_2_START, constraints, 2)),
-                       Commands.parallel(
-                               intake.deployAndRunIntake().withTimeout(0.1),
-                               buildPathDeferred(OUTPOST_PASS_2_END, intakeConstraints, 0)))
-               .withName("outpost side to neutral zone and then back and shoot");
-   }
+                                shooter.shoot(
+                                        () ->
+                                                RebuiltVisionUtil.getDistanceToHub(
+                                                        () -> drive.getPose()),
+                                        false)),
+                        commandFactory
+                                .runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly()
+                                .withTimeout(6),
+                        // second cycle
+                        intake.defaultBehavior().withTimeout(0.01),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
+                                intake.deployArm().withTimeout(0.1),
+                                buildPathDeferred(OUTPOST_PASS_2_START, constraints, 2)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(OUTPOST_PASS_2_END, intakeConstraints, 0)))
+                .withName("outpost side to neutral zone and then back and shoot");
+    }
 
-
-   public Command depotSideNeutralZoneAndBackWithShooting() {
-       return Commands.sequence(
-                       // first cycle
-                       intake.stowArmSetpoint(),
-                       Commands.runOnce(() -> resetOdometryFlipped(DEPOT_STARTING_POSE.pose())),
-                       Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                       buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                       Commands.parallel(
-                               buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, constraints, 2),
-                               intake.deployAndRunIntake().withTimeout(0.01)),
-                       Commands.parallel(
-                               intake.deployAndRunIntake().withTimeout(0.1),
-                               buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
-                       intake.defaultBehavior().withTimeout(0.01),
-                       buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
-                       Commands.parallel(
+    public Command depotSideNeutralZoneAndBackWithShooting() {
+        return Commands.sequence(
+                        // first cycle
+                        intake.stowArmSetpoint(),
+                        Commands.runOnce(() -> resetOdometryFlipped(DEPOT_STARTING_POSE.pose())),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
+                                buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, constraints, 2),
+                                intake.deployAndRunIntake().withTimeout(0.01)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
+                        Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()), false)
-                       ),
-                       commandFactory.runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly().withTimeout(6),
-                       // second cycle
-                       intake.defaultBehavior().withTimeout(0.01),
-                       commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
-                       Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                       buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                       Commands.parallel(
-                               intake.deployArm().withTimeout(0.1),
-                               buildPathDeferred(DEPOT_PASS_2_START, constraints, 2)),
-                       Commands.parallel(
-                               intake.deployAndRunIntake().withTimeout(0.1),
-                               buildPathDeferred(DEPOT_PASS_2_END, intakeConstraints, 0)))
-               .withName("depot side to neutral zone then back and shoot");
-   }
+                                shooter.shoot(
+                                        () ->
+                                                RebuiltVisionUtil.getDistanceToHub(
+                                                        () -> drive.getPose()),
+                                        false)),
+                        commandFactory
+                                .runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly()
+                                .withTimeout(6),
+                        // second cycle
+                        intake.defaultBehavior().withTimeout(0.01),
+                        commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
+                        Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                        Commands.parallel(
+                                intake.deployArm().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_PASS_2_START, constraints, 2)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_PASS_2_END, intakeConstraints, 0)))
+                .withName("depot side to neutral zone then back and shoot");
+    }
 
-
-   public Command centerMoveAndShoot() {
-       return Commands.sequence(
-                       Commands.runOnce(
-                               () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
-                       intake.stowArmSetpoint(),
-                       Commands.parallel(
+    public Command centerMoveAndShoot() {
+        return Commands.sequence(
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
+                        intake.stowArmSetpoint(),
+                        Commands.parallel(
                                 buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
-                                shooter.shoot(() -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()), false)
-                       ),
-                       commandFactory.runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly().withTimeout(2))
-               .withName("move from center and shoot preload");
-   }
-
+                                shooter.shoot(
+                                        () ->
+                                                RebuiltVisionUtil.getDistanceToHub(
+                                                        () -> drive.getPose()),
+                                        false)),
+                        commandFactory
+                                .runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly()
+                                .withTimeout(2))
+                .withName("move from center and shoot preload");
+    }
 
     public Command followWaypoints(
             Pose2d startingPosition,
