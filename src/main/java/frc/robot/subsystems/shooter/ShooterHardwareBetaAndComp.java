@@ -148,16 +148,21 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         }
     }
 
-    public void runShooterWithSpeeds(
-            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {
-        if (shouldInterpolate) {
-            desiredBottomVelocity = bottomSpeed;
-            desiredTopVelocity = topSpeed;
-        } else {
-            // default values
-            desiredBottomVelocity = RadiansPerSecond.of(233.00145514124299);
-            desiredTopVelocity = RadiansPerSecond.of(222.529479629277);
-        }
+    public void runShooterWithInterpolatedSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
+        desiredBottomVelocity = bottomSpeed;
+        desiredTopVelocity = topSpeed;
+
+        shooterBottomPIDController.setSetpoint(
+                desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        shooterTopPIDController.setSetpoint(
+                desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    public void runShooterDefaultSpeeds() {
+        // default values
+        desiredBottomVelocity = RadiansPerSecond.of(233.00145514124299);
+        desiredTopVelocity = RadiansPerSecond.of(222.529479629277);
 
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);

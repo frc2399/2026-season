@@ -3,8 +3,10 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public interface ShooterIO {
-    public void runShooterWithSpeeds(
-            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate);
+    public void runShooterWithInterpolatedSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed);
+
+    public void runShooterDefaultSpeeds();
 
     public void defaultBehavior();
 

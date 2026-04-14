@@ -3,8 +3,8 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public class ShooterPlacebo implements ShooterIO {
-    public void runShooterWithSpeeds(
-            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {}
+    public void runShooterWithInterpolatedSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed) {}
 
     public void defaultBehavior() {}
 
@@ -26,4 +26,7 @@ public class ShooterPlacebo implements ShooterIO {
 
     @Override
     public void passFuelOrManualShoot() {}
+
+    @Override
+    public void runShooterDefaultSpeeds() {}
 }

@@ -146,8 +146,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
 
     public void passFuelOrManualShoot() {}
 
-    public void runShooterWithSpeeds(
-            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {
+    public void runShooterWithInterpolatedSpeeds(
+            AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
         desiredBottomVelocity =
                 RadiansPerSecond.of(0.5 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
         desiredTopVelocity =
@@ -257,4 +257,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
 
     @Override
     public void runTunableNumberSetpoints() {}
+
+    @Override
+    public void runShooterDefaultSpeeds() {}
 }

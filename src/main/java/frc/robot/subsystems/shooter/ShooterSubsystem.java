@@ -63,16 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
             // io.passFuelOrManualShoot()).withName("passFuelOrManualShoot");
             return this.run(
                             () -> {
-                                AngularVelocity topSpeed =
-                                        RadiansPerSecond.of(
-                                                topShooterSpeedTreeMapMeterRadS.get(
-                                                        distFromHub.get().in(Meters)));
-                                AngularVelocity bottomSpeed =
-                                        RadiansPerSecond.of(
-                                                bottomShooterSpeedTreeMapMeterRadS.get(
-                                                        distFromHub.get().in(Meters)));
-                                // making sure it doesnt interpolate for manual shoot
-                                io.runShooterWithSpeeds(topSpeed, bottomSpeed, false);
+                                io.runShooterDefaultSpeeds();
                             })
                     .withName("runShooter");
         } else {
@@ -86,7 +77,7 @@ public class ShooterSubsystem extends SubsystemBase {
                                         RadiansPerSecond.of(
                                                 bottomShooterSpeedTreeMapMeterRadS.get(
                                                         distFromHub.get().in(Meters)));
-                                io.runShooterWithSpeeds(topSpeed, bottomSpeed, shouldInterpolate);
+                                io.runShooterWithInterpolatedSpeeds(topSpeed, bottomSpeed);
                             })
                     .withName("runShooter");
         }
