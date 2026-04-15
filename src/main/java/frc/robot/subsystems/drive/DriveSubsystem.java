@@ -636,15 +636,29 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     }
 
     public Command autoOrientCommand() {
-        return this.run(() -> {
-                Pose2d targetPoseForOrientation = RebuiltVisionUtil.getHubPose();
+        return this.run(
+                        () -> {
+                            Pose2d targetPoseForOrientation = RebuiltVisionUtil.getHubPose();
 
-                double rotRate = AutoAlignUtil.getAutoOrientRotRate(() -> robotPose, targetPoseForOrientation, RobotConstants.TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM, false);
-                ChassisSpeeds desiredSpeeds = new ChassisSpeeds(0, 0, rotRate);
-                ChassisSpeeds finalAlignmentSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredSpeeds, robotPose.getRotation());
+                            double rotRate =
+                                    AutoAlignUtil.getAutoOrientRotRate(
+                                            () -> robotPose,
+                                            targetPoseForOrientation,
+                                            RobotConstants.TransformConstants
+                                                    .ROBOT_TO_SHOOTER_TRANSFORM,
+                                            false);
+                            ChassisSpeeds desiredSpeeds = new ChassisSpeeds(0, 0, rotRate);
+                            ChassisSpeeds finalAlignmentSpeeds =
+                                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                                            desiredSpeeds, robotPose.getRotation());
 
-                setRobotRelativeSpeeds(finalAlignmentSpeeds);
-        }).until(() -> RebuiltVisionUtil.isShootingAngleAlignedToHub(() -> robotPose, ToleranceType.REALIGNING)).withName("auto orient command");
+                            setRobotRelativeSpeeds(finalAlignmentSpeeds);
+                        })
+                .until(
+                        () ->
+                                RebuiltVisionUtil.isShootingAngleAlignedToHub(
+                                        () -> robotPose, ToleranceType.REALIGNING))
+                .withName("auto orient command");
     }
 
     private void logAndUpdateDriveSubsystemStates() {

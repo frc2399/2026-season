@@ -146,7 +146,10 @@ public class AutoAlignUtil {
     // offset pose is not necessarily a requirement, but necessary if trying to align an off-center
     // mechanism (eg a shooter) to a pose
     public static double getAutoOrientRotRate(
-            Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform, boolean shouldUseDriveCodeIntegrationPid) {
+            Supplier<Pose2d> robotPose,
+            Pose2d orientTargetPose,
+            Transform2d offsetTransform,
+            boolean shouldUseDriveCodeIntegrationPid) {
         // default: do not turn
         double desiredRotRate = 0;
         if (robotPose.get() == null) {
@@ -172,7 +175,9 @@ public class AutoAlignUtil {
                         orientPid.calculate(
                                 shooterPose.getRotation().getRadians(), desiredAngle.in(Radians));
             } else {
-                desiredRotRate = driveToPoseThetaPid.calculate(shooterPose.getRotation().getRadians(), desiredAngle.in(Radians));
+                desiredRotRate =
+                        driveToPoseThetaPid.calculate(
+                                shooterPose.getRotation().getRadians(), desiredAngle.in(Radians));
             }
             return desiredRotRate;
         }
