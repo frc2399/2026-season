@@ -157,6 +157,8 @@ public class ShooterHardwarePrototype implements ShooterIO {
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        desiredBottomVelocity = bottomSpeed;
+        desiredTopVelocity = topSpeed;
     }
 
     public void defaultBehavior() {
