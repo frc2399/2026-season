@@ -26,4 +26,7 @@ public class ShooterPlacebo implements ShooterIO {
 
     @Override
     public void passFuelOrManualShoot() {}
+
+    @Override
+    public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {}
 }
