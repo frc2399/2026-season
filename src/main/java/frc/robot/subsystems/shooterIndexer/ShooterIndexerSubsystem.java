@@ -27,6 +27,10 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
         return this.run(() -> io.defaultBehavior()).withName("shooterIndexerDefaultBehavior");
     }
 
+    public boolean isUpToSpeed() {
+        return io.isUpToSpeed();
+    }
+
     @Override
     public void periodic() {
         io.updateStates(shooterIndexerState);

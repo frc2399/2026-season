@@ -52,6 +52,8 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
+    private AngularVelocity shooterIndexerTolerance = RadiansPerSecond.of(25);
+
     public ShooterIndexerHardwareBetaAndComp() {
         shooterIndexerSparkFlexConfig = new SparkFlexConfig();
         shooterIndexerClosedLoopConfig = new ClosedLoopConfig();
@@ -112,6 +114,14 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
         desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(0);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    @Override
+    public boolean isUpToSpeed() {
+        return Math.abs(
+                        (shooterIndexerEncoder.getVelocity())
+                                - (desiredVelocity.in(RadiansPerSecond)))
+                < shooterIndexerTolerance.in(RadiansPerSecond);
     }
 
     @Override
