@@ -32,7 +32,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR;
     private final int SPINDEXER_GEAR_RATIO;
 
-    private final int MIN_OUTPUT_RANGE = -1;
+    private final int MIN_OUTPUT_RANGE = 0;
     private final int MAX_OUTPUT_RANGE = 1;
     private final double SPINDEXER_P = 0.00006;
     private final double SPINDEXER_D = 0;

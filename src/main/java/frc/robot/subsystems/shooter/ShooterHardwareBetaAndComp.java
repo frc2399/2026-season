@@ -31,7 +31,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
-    private final double MIN_OUTPUT_RANGE = -1;
+    private final double MIN_OUTPUT_RANGE = 0;
     private final double MAX_OUTPUT_RANGE = 1;
     private final double SHOOTER_TOP_P;
     private final double SHOOTER_TOP_D = 0;
