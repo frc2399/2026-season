@@ -31,7 +31,7 @@ public class AutoAlignUtil {
     private static final double DRIVE_TO_POSE_THETA_P =
             3.5; // radians per second per radian of error
     private static final double DRIVE_TO_POSE_THETA_D = 0.0;
-    private static final PIDController driveToPoseThetaAltPid =
+    private static final PIDController driveToPoseThetaPid =
             new PIDController(DRIVE_TO_POSE_THETA_P, 0, DRIVE_TO_POSE_THETA_D);
     // Pose2d automatically wraps to -180 to 180 degrees. if this changes, these
     // values need to change, too.
@@ -43,7 +43,7 @@ public class AutoAlignUtil {
     // wrapping, and the way to make that happen in a static fashion is a static
     // block
     static {
-        driveToPoseThetaAltPid.enableContinuousInput(
+        driveToPoseThetaPid.enableContinuousInput(
                 DRIVE_TO_POSE_MIN_INPUT.in(Degrees), DRIVE_TO_POSE_MAX_INPUT.in(Degrees));
     }
 
@@ -86,7 +86,7 @@ public class AutoAlignUtil {
                         driveToPoseYPid.calculate(robotPose.get().getY(), goalPose.get().getY()));
         AngularVelocity thetaDesired =
                 RadiansPerSecond.of(
-                        driveToPoseThetaAltPid.calculate(
+                        driveToPoseThetaPid.calculate(
                                 robotPose.get().getRotation().getRadians(),
                                 goalPose.get().getRotation().getRadians()));
 
@@ -146,7 +146,7 @@ public class AutoAlignUtil {
     // offset pose is not necessarily a requirement, but necessary if trying to align an off-center
     // mechanism (eg a shooter) to a pose
     public static double getAutoOrientRotRate(
-            Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform) {
+            Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform, boolean shouldUseDriveCodeIntegrationPid) {
         // default: do not turn
         double desiredRotRate = 0;
         if (robotPose.get() == null) {
@@ -167,9 +167,13 @@ public class AutoAlignUtil {
             SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
             SmartDashboard.putNumber(
                     "vision/current angle", shooterPose.getRotation().getDegrees());
-            desiredRotRate =
-                    orientPid.calculate(
-                            shooterPose.getRotation().getRadians(), desiredAngle.in(Radians));
+            if (shouldUseDriveCodeIntegrationPid) {
+                desiredRotRate =
+                        orientPid.calculate(
+                                shooterPose.getRotation().getRadians(), desiredAngle.in(Radians));
+            } else {
+                desiredRotRate = driveToPoseThetaPid.calculate(shooterPose.getRotation().getRadians(), desiredAngle.in(Radians));
+            }
             return desiredRotRate;
         }
     }
