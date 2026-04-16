@@ -69,13 +69,6 @@ public class CommandFactory {
                 shooter.defaultBehavior());
     }
 
-    public Command runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly() {
-        return Commands.parallel(
-                Commands.waitUntil(() -> shooter.isUpToSpeed()),
-                shooterIndexer.defaultBehavior(),
-                shooter.defaultBehavior());
-    }
-
     public Command resetHeading(Angle yaw) {
         return Commands.parallel(
                 gyro.setYawCommand(yaw), Commands.runOnce(() -> drive.resetOdometryAfterGyro()));

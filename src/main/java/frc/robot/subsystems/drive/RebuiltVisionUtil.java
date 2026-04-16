@@ -46,6 +46,8 @@ public class RebuiltVisionUtil {
                         .transformBy(RobotConstants.TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
         double distanceBetweenRobotAndHub =
                 hubPose.getTranslation().getDistance(shooterPose.getTranslation());
+        SmartDashboard.putNumber(
+                "shooter/dist to hub v2 (delete later)", distanceBetweenRobotAndHub);
         return Meters.of(distanceBetweenRobotAndHub);
     }
 

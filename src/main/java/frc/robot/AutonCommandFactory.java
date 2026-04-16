@@ -71,6 +71,15 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
+    public Pose2d getTargetPoseIfNeedFlippedEarlyShooter(Pose pose) {
+        Pose2d finalPose = pose.pose();
+        if (FieldConstants.alliance.isPresent()
+                && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+            finalPose = FlippingUtil.flipFieldPose(finalPose);
+        }
+        return finalPose;
+    }
+
     public Command outpostSideNeutralZoneAndBackWithShooting() {
         return Commands.sequence(
                         // first cycle
@@ -90,13 +99,14 @@ public class AutonCommandFactory {
                         Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                                 shooter.shoot(
-                                        () ->
-                                                RebuiltVisionUtil.getDistanceToHub(
-                                                        () -> drive.getPose()),
-                                        false)),
-                        commandFactory
-                                .runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly()
-                                .withTimeout(6),
+                                                () ->
+                                                        RebuiltVisionUtil.getDistanceToHub(
+                                                                () ->
+                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                OUTPOST_SHOOTING_SPOT)),
+                                                false)
+                                        .withTimeout(0.1)),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -129,13 +139,14 @@ public class AutonCommandFactory {
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                                 shooter.shoot(
-                                        () ->
-                                                RebuiltVisionUtil.getDistanceToHub(
-                                                        () -> drive.getPose()),
-                                        false)),
-                        commandFactory
-                                .runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly()
-                                .withTimeout(6),
+                                                () ->
+                                                        RebuiltVisionUtil.getDistanceToHub(
+                                                                () ->
+                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                DEPOT_SHOOTING_SPOT)),
+                                                false)
+                                        .withTimeout(0.1)),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -158,13 +169,14 @@ public class AutonCommandFactory {
                         Commands.parallel(
                                 buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
                                 shooter.shoot(
-                                        () ->
-                                                RebuiltVisionUtil.getDistanceToHub(
-                                                        () -> drive.getPose()),
-                                        false)),
-                        commandFactory
-                                .runSpindexerAndShooterIndexerWhenShooterUpToSpeedAutonOnly()
-                                .withTimeout(2))
+                                                () ->
+                                                        RebuiltVisionUtil.getDistanceToHub(
+                                                                () ->
+                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                MIDDLE_SHOOT_POSE)),
+                                                false)
+                                        .withTimeout(0.1)),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(2))
                 .withName("move from center and shoot preload");
     }
 
