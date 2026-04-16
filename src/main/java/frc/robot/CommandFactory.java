@@ -40,11 +40,11 @@ public class CommandFactory {
         this.intakeSubsystem = intakeSubsystem;
     }
 
-    public Command runSpindexShooterIndexAndShooter(boolean shouldPassOrManualShoot) {
+    public Command runSpindexShooterIndexAndShooter(boolean shouldManualShoot) {
         return Commands.sequence(
                 shooter.shoot(
                                 () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
-                                shouldPassOrManualShoot)
+                                shouldManualShoot)
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
                         .withTimeout(1.5), // we don't want to feed fuel right away because it
