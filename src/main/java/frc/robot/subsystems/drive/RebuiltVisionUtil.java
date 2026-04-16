@@ -19,7 +19,6 @@ import frc.robot.constants.FieldConstants.AlignmentTargetPoseConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.util.FieldCalculationHelpers;
-
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -82,8 +81,7 @@ public class RebuiltVisionUtil {
             return getHubPose();
         } else if (targetType == TargetZoneType.OUTPOST_SIDE) {
             return getOutpostSidePose();
-        }
-        else {
+        } else {
             return getDepotSidePose();
         }
     }
@@ -130,7 +128,9 @@ public class RebuiltVisionUtil {
     public static double getMaxDiffOfDesiredAndActualAngleInDegrees(
             Translation2d hubToShooterTranslation, Pose2d shooterPose) {
         double hubRadiusMinusFuelRadiusInMeters =
-                AlignmentTargetPoseConstants.HUB_RADIUS.minus(AlignmentTargetPoseConstants.FUEL_RADIUS).in(Meters);
+                AlignmentTargetPoseConstants.HUB_RADIUS
+                        .minus(AlignmentTargetPoseConstants.FUEL_RADIUS)
+                        .in(Meters);
 
         Transform2d toEdgeOfHubTransform =
                 new Transform2d(0, hubRadiusMinusFuelRadiusInMeters, Rotation2d.kZero);
