@@ -51,6 +51,7 @@ import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
+import frc.robot.subsystems.drive.RebuiltVisionUtil.ToleranceType;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.util.FieldCalculationHelpers;
 import frc.robot.util.GameState;
@@ -510,7 +511,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             return AutoAlignUtil.getAutoOrientRotRate(
                     () -> robotPose,
                     RebuiltVisionUtil.getHubPose(),
-                    TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
+                    TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM,
+                    true);
         } else {
             return getHeadingCorrectionRotRate(currentAngle, rotRate, polarXSpeed, polarYSpeed);
         }
@@ -570,13 +572,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             poseEstimator.addVisionMeasurement(pose, timestampSeconds, visionMeasurementStdDevs);
         }
     }
-
-    // new method workflow:
-    // 1. calculate the trapezoid
-    // 2. periodically yoink the next trapezoid
-    // 3. move the robot
-    // 4. check for the goal
-    // 5. end the robot
 
     // this method has a LOT of suppliers - so short explanation of why they're good
     // basically, when a button binding is called in robotContainer, it makes an
@@ -638,6 +633,32 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                     rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
                     rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
                 });
+    }
+
+    public Command autoOrientCommand() {
+        return this.run(
+                        () -> {
+                            Pose2d targetPoseForOrientation = RebuiltVisionUtil.getHubPose();
+
+                            double rotRate =
+                                    AutoAlignUtil.getAutoOrientRotRate(
+                                            () -> robotPose,
+                                            targetPoseForOrientation,
+                                            RobotConstants.TransformConstants
+                                                    .ROBOT_TO_SHOOTER_TRANSFORM,
+                                            false);
+                            ChassisSpeeds desiredSpeeds = new ChassisSpeeds(0, 0, rotRate);
+                            ChassisSpeeds finalAlignmentSpeeds =
+                                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                                            desiredSpeeds, robotPose.getRotation());
+
+                            setRobotRelativeSpeeds(finalAlignmentSpeeds);
+                        })
+                .until(
+                        () ->
+                                RebuiltVisionUtil.isShootingAngleAlignedToHub(
+                                        () -> robotPose, ToleranceType.REALIGNING))
+                .withName("auto orient command");
     }
 
     private void logAndUpdateDriveSubsystemStates() {

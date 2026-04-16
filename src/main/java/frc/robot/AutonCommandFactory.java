@@ -84,6 +84,7 @@ public class AutonCommandFactory {
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
+                        drive.autoOrientCommand(),
                         commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
@@ -115,6 +116,7 @@ public class AutonCommandFactory {
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
+                        drive.autoOrientCommand(),
                         commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
@@ -136,6 +138,7 @@ public class AutonCommandFactory {
                                 () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
                         intake.stowArmSetpoint(),
                         buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        drive.autoOrientCommand(),
                         commandFactory
                                 .runSpindexShooterIndexAndShooterNoFeedFuel()
                                 .withTimeout(Seconds.of(2)))
