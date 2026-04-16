@@ -34,7 +34,6 @@ public class FieldCalculationHelpers {
         return false;
     }
 
-    // if return true then shoot right and if false shoot left
     public static TargetZoneType getAlignmentTargetType(Pose2d robotLocation) {
         double poseY = robotLocation.getY();
         if (shouldTargetHub(robotLocation)) {
