@@ -103,11 +103,6 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
-    @Override
-    public boolean isUpToSpeed() {
-        return true;
-    }
-
     public void updateStates(ShooterIndexerIOState state) {
         state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
         state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();

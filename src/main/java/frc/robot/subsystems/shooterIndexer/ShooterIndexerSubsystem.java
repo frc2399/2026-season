@@ -27,10 +27,6 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
         return this.run(() -> io.defaultBehavior()).withName("shooterIndexerDefaultBehavior");
     }
 
-    public boolean isUpToSpeed() {
-        return io.isUpToSpeed();
-    }
-
     @Override
     public void periodic() {
         io.updateStates(shooterIndexerState);
@@ -44,6 +40,5 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
                 "shooterIndexer/voltage (volt)", shooterIndexerState.shooterIndexerAppliedVoltage);
         SmartDashboard.putNumber(
                 "shooterIndexer/current (amps)", shooterIndexerState.shooterIndexerCurrent);
-        SmartDashboard.putBoolean("shooterIndexer/is up to speed", isUpToSpeed());
     }
 }
