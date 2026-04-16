@@ -133,32 +133,74 @@ public final class FieldConstants {
                 new Pose(
                         "depot edge",
                         new Pose2d(
-                                new Translation2d(Meters.of(1.37), Meters.of(4.92)),
+                                new Translation2d(Meters.of(1.37), Meters.of(4.9)),
                                 new Rotation2d(Degrees.of(0))));
+        // public static final Pose DEPOT_SIDE_INTAKE =
+        //         new Pose(
+        //                 "depot intake start",
+        //                 new Pose2d(
+        //                         new Translation2d(Meters.of(0.6), Meters.of(4.9)),
+        //                         new Rotation2d(Degrees.of(24.5))));
         public static final Pose DEPOT_SIDE_INTAKE =
                 new Pose(
                         "depot intake start",
                         new Pose2d(
-                                new Translation2d(Meters.of(0.485), Meters.of(4.92)),
+                                new Translation2d(Meters.of(0.42), Meters.of(4.6)),
                                 new Rotation2d(Degrees.of(0))));
+        // public static final Pose DEPOT_SIDE_INTAKE_END =
+        //         new Pose(
+        //                 "depot intake end",
+        //                 new Pose2d(
+        //                         new Translation2d(Meters.of(0.6), Meters.of(6)),
+        //                         new Rotation2d(Degrees.of(24.5))));
         public static final Pose DEPOT_SIDE_INTAKE_END =
                 new Pose(
                         "depot intake end",
                         new Pose2d(
-                                new Translation2d(Meters.of(0.485), Meters.of(6.48)),
+                                new Translation2d(Meters.of(0.42), Meters.of(7)),
                                 new Rotation2d(Degrees.of(0))));
+        public static final Pose DEPOT_CORNER =
+                new Pose(
+                        "depot intake corner",
+                        new Pose2d(
+                                new Translation2d(Meters.of(1), Meters.of(7.31)),
+                                new Rotation2d(Degrees.of(90))));
+        public static final Pose DEPOT_CORNER_STRAIGHT =
+                new Pose(
+                        "depot intake corner",
+                        new Pose2d(
+                                new Translation2d(Meters.of(1), Meters.of(6.86)),
+                                new Rotation2d(Degrees.of(0))));
+        public static final Pose DEPOT_CORNER_INTAKE_TURNED =
+                new Pose(
+                        "depot intake turned in corner",
+                        new Pose2d(
+                                new Translation2d(Meters.of(0.53), Meters.of(7.31)),
+                                new Rotation2d(Degrees.of(90))));
+        public static final Pose DEPOT_CORNER_INTAKE_STRAIGHT =
+                new Pose(
+                        "depot intake end",
+                        new Pose2d(
+                                new Translation2d(Meters.of(0.755), Meters.of(7.6)),
+                                new Rotation2d(Degrees.of(0))));
+        public static final Pose DEPOT_MIDDLE =
+                new Pose(
+                        "depot middle",
+                        new Pose2d(
+                                new Translation2d(Meters.of(0.6), Meters.of(6.75)),
+                                new Rotation2d(Degrees.of(24.5))));
         public static final Pose CENTER_MOVE_TO_SHOOTING_SPOT =
                 new Pose(
-                        "depot to shoot",
+                        "depot moving to shooting spot",
                         new Pose2d(
                                 new Translation2d(Meters.of(1.686), Meters.of(6.48)),
-                                new Rotation2d(Degrees.of(-110))));
+                                new Rotation2d(Degrees.of(-28))));
         public static final Pose CENTER_SHOOTING_SPOT =
                 new Pose(
                         "depot to shoot",
                         new Pose2d(
                                 new Translation2d(Meters.of(2.686), Meters.of(5.48)),
-                                new Rotation2d(Degrees.of(-110))));
+                                new Rotation2d(Degrees.of(-35))));
     }
 
     public static class FieldBoundaries {

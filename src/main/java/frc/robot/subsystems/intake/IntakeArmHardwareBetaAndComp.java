@@ -159,6 +159,9 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
         } else if (setpoint == IntakeArmSetpoint.FEED_FUEL) {
             desiredAngle = Degrees.of(60); // TODO: empirically determine :)
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
+        } else if (setpoint == IntakeArmSetpoint.MID) {
+            desiredAngle = Degrees.of(-16);
+            goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         }
     }
 

@@ -219,6 +219,11 @@ public class RobotContainer {
                                     autonHasNoGyroAngle = false;
                                     isCenterAuton = true;
                                     break;
+                                case "move from center to depot and shoot":
+                                    gyroAngle = Degrees.of(0);
+                                    autonHasNoGyroAngle = false;
+                                    isCenterAuton = true;
+                                    break;
                                 default:
                                     gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = true;
