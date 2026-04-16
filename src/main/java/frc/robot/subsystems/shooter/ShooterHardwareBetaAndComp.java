@@ -198,6 +198,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         state.bottomRollerActualSpeed = shooterBottomEncoder.getVelocity();
         state.bottomRollerAppliedVoltage =
                 shooterBottomSparkFlex.getBusVoltage() * shooterBottomSparkFlex.getAppliedOutput();
+        state.isUpToSpeed = isUpToSpeed();
     }
 
     public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
