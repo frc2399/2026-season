@@ -19,7 +19,7 @@ public class CommandFactory {
     private final SpindexerSubsystem spindexer;
     private final IntakeSubsystem intakeSubsystem;
 
-    public enum TargetFuel {
+    public enum TargetZoneType {
         HUB,
         DEPOT_SIDE,
         OUTPOST_SIDE
