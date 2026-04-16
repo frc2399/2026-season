@@ -149,6 +149,8 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     }
 
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
+        desiredBottomVelocity = bottomSpeed;
+        desiredTopVelocity = topSpeed;
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
