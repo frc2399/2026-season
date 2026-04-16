@@ -27,6 +27,7 @@ public interface ShooterIO {
         public double bottomRollerActualSpeed = 0.0;
         public double bottomRollerCurrent = 0.0;
         public double bottomRollerAppliedVoltage = 0.0;
+        public boolean isUpToSpeed = false;
     }
 
     public record ShooterSpeeds(

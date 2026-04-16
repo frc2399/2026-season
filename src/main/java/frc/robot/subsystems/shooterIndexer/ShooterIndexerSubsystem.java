@@ -44,5 +44,6 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
                 "shooterIndexer/voltage (volt)", shooterIndexerState.shooterIndexerAppliedVoltage);
         SmartDashboard.putNumber(
                 "shooterIndexer/current (amps)", shooterIndexerState.shooterIndexerCurrent);
+        SmartDashboard.putBoolean("shooterIndexer/is up to speed", isUpToSpeed());
     }
 }

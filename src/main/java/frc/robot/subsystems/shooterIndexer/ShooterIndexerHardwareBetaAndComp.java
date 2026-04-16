@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.constants.RobotConstants.MotorIdConstants;
 
@@ -124,8 +125,17 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
                 < shooterIndexerTolerance.in(RadiansPerSecond);
     }
 
+    public void diffOfVelAndDes() {
+        double diff =
+                Math.abs(
+                        (shooterIndexerEncoder.getVelocity())
+                                - (desiredVelocity.in(RadiansPerSecond)));
+        SmartDashboard.putNumber("shooterIndexer/diff", diff);
+    }
+
     @Override
     public void updateStates(ShooterIndexerIOState state) {
+        diffOfVelAndDes();
         state.shooterIndexerDesiredSpeedRad_P_S =
                 desiredVelocity.in(RadiansPerSecond) / SHOOTER_INDEXER_GEAR_RATIO;
         state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
@@ -133,5 +143,6 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
                 shooterIndexerSparkFlex.getBusVoltage()
                         * shooterIndexerSparkFlex.getAppliedOutput();
         state.shooterIndexerCurrent = shooterIndexerSparkFlex.getOutputCurrent();
+        state.isUpToSpeed = isUpToSpeed();
     }
 }

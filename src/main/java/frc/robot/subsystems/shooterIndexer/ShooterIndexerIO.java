@@ -16,5 +16,6 @@ public interface ShooterIndexerIO {
         public double shooterIndexerActualSpeedRad_P_S = 0;
         public double shooterIndexerAppliedVoltage = 0;
         public double shooterIndexerCurrent = 0;
+        public boolean isUpToSpeed = false;
     }
 }

@@ -195,5 +195,6 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(
                 "shooter/bottomRollerAppliedVoltage (volt)",
                 shooterStates.bottomRollerAppliedVoltage);
+        SmartDashboard.putBoolean("shooter/isUpToSpeed", shooterStates.isUpToSpeed);
     }
 }

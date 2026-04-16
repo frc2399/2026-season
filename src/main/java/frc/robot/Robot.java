@@ -73,6 +73,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("robot/1 second delayIsHubActive", GameState.isHubActive(1));
         SmartDashboard.putNumber("robot/match time", DriverStation.getMatchTime());
         SmartDashboard.putString("robot/alliance", FieldConstants.alliance.toString());
+        SmartDashboard.putBoolean(
+                "robot/has stopped shooting",
+                robotContainer.autonCommandFactory.hasStoppedShooting());
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
