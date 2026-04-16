@@ -43,7 +43,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_P = 0.004;
     private static final double SHOOTER_INDEXER_I = 0;
     private static final double SHOOTER_INDEXER_D = 0;
-    private static final double SHOOTER_INDEXER_MIN_OUTPUT = -1;
+    private static final double SHOOTER_INDEXER_MIN_OUTPUT = 0;
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
     private static final double SHOOTER_INDEXER_KS = 0.1355;
