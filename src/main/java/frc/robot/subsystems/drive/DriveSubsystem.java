@@ -658,6 +658,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () ->
                                 RebuiltVisionUtil.isShootingAngleAlignedToHub(
                                         () -> robotPose, ToleranceType.REALIGNING))
+                .andThen(disableDriveToPose())
                 .withName("auto orient command");
     }
 
