@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -86,6 +87,15 @@ public class AutonCommandFactory {
                 Set.of(drive));
     }
 
+    public Pose2d getTargetPoseIfNeedFlippedEarlyShooter(Pose pose) {
+        Pose2d finalPose = pose.pose();
+        if (FieldConstants.alliance.isPresent()
+                && FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
+            finalPose = FlippingUtil.flipFieldPose(finalPose);
+        }
+        return finalPose;
+    }
+
     public Command outpostSideNeutralZoneAndBackWithShooting() {
         return Commands.sequence(
                         // first cycle
@@ -102,10 +112,17 @@ public class AutonCommandFactory {
                                         OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
-                        buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                        commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
-                                .until(() -> hasStoppedShooting()),
+                        Commands.parallel(
+                                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
+                                shooter.shoot(
+                                                () ->
+                                                        RebuiltVisionUtil.getDistanceToHub(
+                                                                () ->
+                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                OUTPOST_SHOOTING_SPOT)),
+                                                false)
+                                        .withTimeout(0.1)),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -135,10 +152,17 @@ public class AutonCommandFactory {
                                 buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
-                        buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                        commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
-                                .until(() -> hasStoppedShooting()),
+                        Commands.parallel(
+                                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
+                                shooter.shoot(
+                                                () ->
+                                                        RebuiltVisionUtil.getDistanceToHub(
+                                                                () ->
+                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                DEPOT_SHOOTING_SPOT)),
+                                                false)
+                                        .withTimeout(0.1)),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -158,10 +182,17 @@ public class AutonCommandFactory {
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
                         intake.stowArmSetpoint(),
-                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
-                        commandFactory
-                                .runSpindexShooterIndexAndShooterNoFeedFuel()
-                                .until(() -> hasStoppedShooting()))
+                        Commands.parallel(
+                                buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                                shooter.shoot(
+                                                () ->
+                                                        RebuiltVisionUtil.getDistanceToHub(
+                                                                () ->
+                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                MIDDLE_SHOOT_POSE)),
+                                                false)
+                                        .withTimeout(0.1)),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(2))
                 .withName("move from center and shoot preload");
     }
 
