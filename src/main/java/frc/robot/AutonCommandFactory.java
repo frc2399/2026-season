@@ -8,6 +8,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.Pose;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -24,6 +26,7 @@ import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +36,12 @@ public class AutonCommandFactory {
     private final CommandFactory commandFactory;
     private final Gyro gyro;
     private final ShooterSubsystem shooter;
+    private final ShooterIndexerSubsystem shooterIndexer;
     private Pose2d finalPose;
+
+    private Debouncer hasStoppedShootingDebouncer = new Debouncer(0.5);
+
+    private Trigger hasStoppedShootingTrigger;
 
     public final PathConstraints constraints =
             new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
@@ -47,12 +55,20 @@ public class AutonCommandFactory {
             IntakeSubsystem intake,
             CommandFactory commandFactory,
             Gyro gyro,
-            ShooterSubsystem shooter) {
+            ShooterSubsystem shooter,
+            ShooterIndexerSubsystem shooterIndexer) {
         this.drive = drive;
         this.intake = intake;
         this.commandFactory = commandFactory;
         this.gyro = gyro;
         this.shooter = shooter;
+        this.shooterIndexer = shooterIndexer;
+
+        hasStoppedShootingTrigger = new Trigger(() -> shooter.isUpToSpeed());
+    }
+
+    public boolean hasStoppedShooting() {
+        return hasStoppedShootingDebouncer.calculate(hasStoppedShootingTrigger.getAsBoolean());
     }
 
     public Command buildPathDeferred(

@@ -7,4 +7,7 @@ public class IntakeRollerPlacebo implements IntakeRollerIO {
 
     @Override
     public void updateState(IntakeRollerIOState state) {}
+
+    @Override
+    public void runIntakeBackwards() {}
 }

@@ -31,7 +31,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
 
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR = RadiansPerSecond.of(2 * Math.PI / 60);
-    private final double MIN_OUTPUT_RANGE = -1;
+    private final double MIN_OUTPUT_RANGE = 0;
     private final double MAX_OUTPUT_RANGE = 1;
     private final double SHOOTER_TOP_P;
     private final double SHOOTER_TOP_D = 0;
@@ -148,17 +148,9 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         }
     }
 
-    public void runShooterWithSpeeds(
-            AngularVelocity topSpeed, AngularVelocity bottomSpeed, boolean shouldInterpolate) {
-        if (shouldInterpolate) {
-            desiredBottomVelocity = bottomSpeed;
-            desiredTopVelocity = topSpeed;
-        } else {
-            // default values
-            desiredBottomVelocity = RadiansPerSecond.of(233.00145514124299);
-            desiredTopVelocity = RadiansPerSecond.of(222.529479629277);
-        }
-
+    public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
+        desiredBottomVelocity = bottomSpeed;
+        desiredTopVelocity = topSpeed;
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
@@ -206,6 +198,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         state.bottomRollerActualSpeed = shooterBottomEncoder.getVelocity();
         state.bottomRollerAppliedVoltage =
                 shooterBottomSparkFlex.getBusVoltage() * shooterBottomSparkFlex.getAppliedOutput();
+        state.isUpToSpeed = isUpToSpeed();
     }
 
     public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
