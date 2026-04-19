@@ -10,11 +10,12 @@ public interface IntakeRollerIO {
     public void updateState(IntakeRollerIOState state);
 
     public static class IntakeRollerIOState {
-        public double leaderDesiredSpeedRadiansPerSecond = 0;
+        public double desiredSpeedRadiansPerSecond = 0;
         public double leaderActualSpeedRadiansPerSecond = 0;
         public double followerActualSpeedRadiansPerSecond = 0;
-        public double followerDesiredSpeedRadiansPerSecond = 0;
-        public double current = 0;
-        public double appliedVoltage = 0;
+        public double leaderCurrent = 0;
+        public double followerCurrent = 0;
+        public double leaderAppliedVoltage = 0;
+        public double followerAppliedVoltage = 0;
     }
 }
