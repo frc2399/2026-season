@@ -38,7 +38,7 @@ public class FieldCalculationHelpers {
         double poseY = robotLocation.getY();
         if (shouldTargetHub(robotLocation)) {
             return TargetZoneType.HUB;
-        } 
+        }
         if (FieldConstants.alliance.isPresent()
                 && FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
             if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) <= poseY) {
