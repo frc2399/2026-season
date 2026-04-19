@@ -60,7 +60,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public IntakeRollerHardware(int rollerCANId) {
+    public IntakeRollerHardware() {
         globalMotorConfig.idleMode(IdleMode.kBrake);
         globalMotorConfig.inverted(LEADER_MOTOR_INVERTED);
         globalMotorConfig.smartCurrentLimit(
@@ -79,8 +79,8 @@ public class IntakeRollerHardware implements IntakeRollerIO {
                 DEFAULT_INTAKE_LEADER_KS, DEFAULT_INTAKE_LEADER_KV, 0);
         globalMotorConfig.apply(globalClosedLoopConfig);
 
-        intakeLeaderSparkFlex = new SparkFlex(rollerCANId, MotorType.kBrushless);
-        intakeFollowerSparkFlex = new SparkFlex(rollerCANId, MotorType.kBrushless);
+        intakeLeaderSparkFlex = new SparkFlex(RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_LEADER_CAN_ID, MotorType.kBrushless);
+        intakeFollowerSparkFlex = new SparkFlex(RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_FOLLOWER_CAN_ID, MotorType.kBrushless);
 
         var intakeLeaderStatus =
                 intakeLeaderSparkFlex.configure(
@@ -91,7 +91,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
         intakePidController = intakeLeaderSparkFlex.getClosedLoopController();
         var intakeFollowerStatus =
                 intakeFollowerSparkFlex.configure(
-                        globalMotorConfig.follow(rollerCANId, FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER),
+                        globalMotorConfig.follow(RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_LEADER_CAN_ID, FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER),
                         ResetMode.kResetSafeParameters,
                         PersistMode.kPersistParameters);
 
@@ -126,9 +126,9 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void updateState(IntakeRollerIOState state) {
-        state.actualSpeedRadiansPerSecond = intakeLeaderEncoder.getVelocity();
-        state.actualSpeedRadiansPerSecond = intakeFollowerEncoder.getVelocity();
-        state.desiredSpeedRadiansPerSecond =
+        state.leaderActualSpeedRadiansPerSecond = intakeLeaderEncoder.getVelocity();
+        state.leaderActualSpeedRadiansPerSecond = intakeFollowerEncoder.getVelocity();
+        state.leaderDesiredSpeedRadiansPerSecond =
                 desiredVelocity.in(RadiansPerSecond) / ROLLER_GEAR_RATIO;
         state.current = intakeLeaderSparkFlex.getOutputCurrent();
         state.current = intakeFollowerSparkFlex.getOutputCurrent();
