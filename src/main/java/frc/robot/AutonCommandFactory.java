@@ -107,7 +107,7 @@ public final PathConstraints neutralConstraints =
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, neutralConstraints, 2),
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2),
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
@@ -148,7 +148,7 @@ public final PathConstraints neutralConstraints =
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, neutralConstraints, 2),
+                                buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, constraints, 2),
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
