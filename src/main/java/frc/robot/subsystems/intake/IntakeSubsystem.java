@@ -143,10 +143,12 @@ public class IntakeSubsystem extends SubsystemBase {
                 "intake/roller/follower actual speed (radians per second)",
                 rollerState.followerActualSpeedRadiansPerSecond);
         SmartDashboard.putNumber("intake/roller/leader current (amps)", rollerState.leaderCurrent);
-        SmartDashboard.putNumber("intake/roller/follower current (amps)", rollerState.followerCurrent);
-        SmartDashboard.putNumber("intake/roller/leader applied output (volt)", rollerState.leaderAppliedVoltage);
-        SmartDashboard.putNumber("intake/roller/follower applied output (volt)", rollerState.followerAppliedVoltage);
-
+        SmartDashboard.putNumber(
+                "intake/roller/follower current (amps)", rollerState.followerCurrent);
+        SmartDashboard.putNumber(
+                "intake/roller/leader applied output (volt)", rollerState.leaderAppliedVoltage);
+        SmartDashboard.putNumber(
+                "intake/roller/follower applied output (volt)", rollerState.followerAppliedVoltage);
 
         SmartDashboard.putNumber("intake/arm/desired angle (deg)", armState.desiredAngleDegrees);
         SmartDashboard.putNumber(

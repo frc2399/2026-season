@@ -152,9 +152,7 @@ public class SubsystemFactory {
 
     public IntakeSubsystem buildIntake() {
         if (robotType == RobotType.MOZART) {
-            return new IntakeSubsystem(
-                    new IntakeRollerHardware(),
-                    new IntakeArmPlacebo());
+            return new IntakeSubsystem(new IntakeRollerHardware(), new IntakeArmPlacebo());
         } else if (robotType == RobotType.BETA) {
             return new IntakeSubsystem(
                     new IntakeRollerHardware(),
