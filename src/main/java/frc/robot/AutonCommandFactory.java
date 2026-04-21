@@ -46,7 +46,10 @@ public class AutonCommandFactory {
     public final PathConstraints constraints =
             new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
-    public final PathConstraints intakeConstraints =
+public final PathConstraints neutralConstraints =
+            new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
+
+    public final PathConstraints depotConstraints =
             new PathConstraints(
                     0.75, 5, Units.degreesToRadians(720), Units.degreesToRadians((720)));
 
@@ -104,12 +107,12 @@ public class AutonCommandFactory {
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2),
+                                buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, neutralConstraints, 2),
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(
-                                        OUTPOST_NEUTRAL_ZONE_CENTER, constraints, 0)),
+                                        OUTPOST_NEUTRAL_ZONE_CENTER, neutralConstraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
@@ -133,7 +136,7 @@ public class AutonCommandFactory {
                                 buildPathDeferred(OUTPOST_PASS_2_START, constraints, 2)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(OUTPOST_PASS_2_END, constraints, 0)))
+                                buildPathDeferred(OUTPOST_PASS_2_END, neutralConstraints, 0)))
                 .withName("outpost side to neutral zone and then back and shoot");
     }
 
@@ -145,11 +148,11 @@ public class AutonCommandFactory {
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, constraints, 2),
+                                buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, neutralConstraints, 2),
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, constraints, 0)),
+                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, neutralConstraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
@@ -173,7 +176,7 @@ public class AutonCommandFactory {
                                 buildPathDeferred(DEPOT_PASS_2_START, constraints, 2)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_PASS_2_END, constraints, 0)))
+                                buildPathDeferred(DEPOT_PASS_2_END, neutralConstraints, 0)))
                 .withName("depot side to neutral zone then back and shoot");
     }
 
