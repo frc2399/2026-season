@@ -109,7 +109,7 @@ public class AutonCommandFactory {
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(
-                                        OUTPOST_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
+                                        OUTPOST_NEUTRAL_ZONE_CENTER, constraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
@@ -133,7 +133,7 @@ public class AutonCommandFactory {
                                 buildPathDeferred(OUTPOST_PASS_2_START, constraints, 2)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(OUTPOST_PASS_2_END, intakeConstraints, 0)))
+                                buildPathDeferred(OUTPOST_PASS_2_END, constraints, 0)))
                 .withName("outpost side to neutral zone and then back and shoot");
     }
 
@@ -149,7 +149,7 @@ public class AutonCommandFactory {
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, intakeConstraints, 0)),
+                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, constraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
@@ -173,7 +173,7 @@ public class AutonCommandFactory {
                                 buildPathDeferred(DEPOT_PASS_2_START, constraints, 2)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_PASS_2_END, intakeConstraints, 0)))
+                                buildPathDeferred(DEPOT_PASS_2_END, constraints, 0)))
                 .withName("depot side to neutral zone then back and shoot");
     }
 
