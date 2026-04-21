@@ -23,7 +23,9 @@ import frc.robot.constants.RobotConstants.MotorConstants;
 
 public class IntakeRollerHardware implements IntakeRollerIO {
 
-    private SparkFlex intakeSparkFlex;
+    private SparkFlex intakeLeaderSparkFlex;
+    private SparkFlex intakeFollowerSparkFlex;
+
     private final SparkClosedLoopController intakePidController;
 
     private static final double ROLLER_GEAR_RATIO = 3.0 / 2.0;
@@ -33,6 +35,9 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final int MIN_OUTPUT_RANGE = -1;
     private final int MAX_OUTPUT_RANGE = 1;
     private final double INTAKE_D = 0.0;
+
+    private final boolean LEADER_MOTOR_INVERTED = false;
+    private final boolean FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER = true;
 
     private static final double DEFAULT_INTAKE_P = 0.001;
     private static final double DEFAULT_INTAKE_KS = 0.1;
@@ -46,43 +51,63 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     // private static final TunableNumber TUNABLE_INTAKE_KV =
     // new TunableNumber("Intake/intake_kv", DEFAULT_INTAKE_KV, true);
 
-    private final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
-    private final ClosedLoopConfig closedLoopConfigIntake = new ClosedLoopConfig();
-    private final RelativeEncoder intakeEncoder;
-    private double desiredSpeed;
+    private final SparkFlexConfig globalMotorConfig = new SparkFlexConfig();
+
+    private final ClosedLoopConfig globalClosedLoopConfig = new ClosedLoopConfig();
+
+    private final RelativeEncoder intakeLeaderEncoder;
+    private final RelativeEncoder intakeFollowerEncoder;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
 
-    public IntakeRollerHardware(int rollerCANId) {
-        intakeMotorConfig.idleMode(IdleMode.kBrake);
-        intakeMotorConfig.inverted(true);
-        intakeMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
+    public IntakeRollerHardware() {
+        globalMotorConfig.idleMode(IdleMode.kBrake);
+        globalMotorConfig.inverted(LEADER_MOTOR_INVERTED);
+        globalMotorConfig.smartCurrentLimit((int) MotorConstants.VORTEX_CURRENT_LIMIT.in(Amps));
+        globalMotorConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
 
-        intakeMotorConfig.encoder.positionConversionFactor(ENCODER_POSITION_FACTOR.in(Radians));
-        intakeMotorConfig.encoder.velocityConversionFactor(
+        globalMotorConfig.encoder.velocityConversionFactor(
                 ENCODER_VELOCITY_FACTOR.in(RadiansPerSecond));
 
-        intakeMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        intakeMotorConfig.closedLoop.pid(DEFAULT_INTAKE_P, 0, INTAKE_D);
-        intakeMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
+        globalMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
-        closedLoopConfigIntake.feedForward.sva(DEFAULT_INTAKE_KS, DEFAULT_INTAKE_KV, 0);
+        globalMotorConfig.closedLoop.pid(DEFAULT_INTAKE_P, 0, INTAKE_D);
+        globalMotorConfig.closedLoop.outputRange(MIN_OUTPUT_RANGE, MAX_OUTPUT_RANGE);
+        globalClosedLoopConfig.feedForward.sva(DEFAULT_INTAKE_KS, DEFAULT_INTAKE_KV, 0);
+        globalMotorConfig.apply(globalClosedLoopConfig);
 
-        intakeMotorConfig.apply(closedLoopConfigIntake);
+        intakeLeaderSparkFlex =
+                new SparkFlex(
+                        RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_LEADER_CAN_ID,
+                        MotorType.kBrushless);
+        intakeFollowerSparkFlex =
+                new SparkFlex(
+                        RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_FOLLOWER_CAN_ID,
+                        MotorType.kBrushless);
 
-        intakeSparkFlex = new SparkFlex(rollerCANId, MotorType.kBrushless);
-
-        var intakeStatus =
-                intakeSparkFlex.configure(
-                        intakeMotorConfig,
+        var intakeLeaderStatus =
+                intakeLeaderSparkFlex.configure(
+                        globalMotorConfig,
                         ResetMode.kResetSafeParameters,
                         PersistMode.kPersistParameters);
 
-        intakePidController = intakeSparkFlex.getClosedLoopController();
+        intakePidController = intakeLeaderSparkFlex.getClosedLoopController();
+        var intakeFollowerStatus =
+                intakeFollowerSparkFlex.configure(
+                        globalMotorConfig.follow(
+                                RobotConstants.MotorIdConstants
+                                        .INTAKE_ROLLER_BETA_AND_COMP_LEADER_CAN_ID,
+                                FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER),
+                        ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
 
-        intakeEncoder = intakeSparkFlex.getEncoder();
-        if (intakeStatus != REVLibError.kOk) {
-            System.err.println("Failed to configure intake roller motor: " + intakeStatus);
+        intakeLeaderEncoder = intakeLeaderSparkFlex.getEncoder();
+        if (intakeLeaderStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure intake roller motor: " + intakeLeaderStatus);
+        }
+        intakeFollowerEncoder = intakeFollowerSparkFlex.getEncoder();
+        if (intakeFollowerStatus != REVLibError.kOk) {
+            System.err.println("Failed to configure intake roller motor: " + intakeFollowerStatus);
         }
     }
 
@@ -94,7 +119,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntakeBackwards() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1).unaryMinus();
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(.1).unaryMinus();
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -107,11 +132,17 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void updateState(IntakeRollerIOState state) {
-        state.actualSpeedRadiansPerSecond = intakeEncoder.getVelocity();
+        state.leaderActualSpeedRadiansPerSecond = intakeLeaderEncoder.getVelocity();
+        state.followerActualSpeedRadiansPerSecond = intakeFollowerEncoder.getVelocity();
         state.desiredSpeedRadiansPerSecond =
                 desiredVelocity.in(RadiansPerSecond) / ROLLER_GEAR_RATIO;
-        state.current = intakeSparkFlex.getOutputCurrent();
-        state.appliedVoltage = intakeSparkFlex.getBusVoltage() * intakeSparkFlex.getAppliedOutput();
+        state.leaderCurrent = intakeLeaderSparkFlex.getOutputCurrent();
+        state.followerCurrent = intakeFollowerSparkFlex.getOutputCurrent();
+        state.leaderAppliedVoltage =
+                intakeLeaderSparkFlex.getBusVoltage() * intakeLeaderSparkFlex.getAppliedOutput();
+        state.followerAppliedVoltage =
+                intakeFollowerSparkFlex.getBusVoltage()
+                        * intakeFollowerSparkFlex.getAppliedOutput();
         // if tuning a value, update this chunk for that motor's p, i, OR d
         // attempting to have this logic running with multiple causes a loop overrun :)
         // if (TUNABLE_INTAKE_KS.hasChanged()) {
