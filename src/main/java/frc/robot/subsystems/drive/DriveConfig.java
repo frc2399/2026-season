@@ -78,8 +78,8 @@ public final class DriveConfig {
                 MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(2 * Math.PI);
                 break;
             case COMP:
-                kS = 0.1;
-                kV = 2.17;
+                kS = 0.401;
+                kV = 2.21;
                 DRIVE_P = 0.2;
                 DRIVE_D = 0;
                 TURN_P = 1.0;
