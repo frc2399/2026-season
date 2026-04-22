@@ -117,6 +117,14 @@ public final class FieldConstants {
                                 new Rotation2d(Degrees.of(70))));
         public static final Pose MIDDLE_SHOOT_POSE =
                 new Pose("center shooting spot", new Pose2d(2.5, 4, Rotation2d.fromDegrees(0)));
+        public static final Pose TUNING_POSE_TRIANGLE_NEAR_ALLIANCE_WALL =
+                new Pose(
+                        "tuning pose triangle near alliance wall",
+                        new Pose2d(1.5, 6, Rotation2d.kZero));
+        public static final Pose TUNING_POSE_TRIANGLE_FAR_FROM_ALLIANCE_WALL =
+                new Pose(
+                        "tuning pose triangle near alliance wall",
+                        new Pose2d(3, 6, Rotation2d.kZero));
         public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
                 new Pose(
                         "outpost other side of trench",

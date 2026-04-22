@@ -189,6 +189,7 @@ public class RobotContainer {
                 autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
         autoChooser.addOption(
                 "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
+        autoChooser.addOption("tune holonomic p", autonCommandFactory.tuneHolonomicP());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(
@@ -220,6 +221,11 @@ public class RobotContainer {
                                     autonHasNoGyroAngle = false;
                                     break;
                                 case "move from center and shoot preload":
+                                    gyroAngle = Degrees.of(0);
+                                    autonHasNoGyroAngle = false;
+                                    isCenterAuton = true;
+                                    break;
+                                case "triangle to tune holonomic p":
                                     gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = false;
                                     isCenterAuton = true;

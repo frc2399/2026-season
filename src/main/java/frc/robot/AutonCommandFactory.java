@@ -44,9 +44,9 @@ public class AutonCommandFactory {
     private Trigger hasStoppedShootingTrigger;
 
     public final PathConstraints constraints =
-            new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
+            new PathConstraints(3, 4, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
-public final PathConstraints neutralConstraints =
+    public final PathConstraints neutralConstraints =
             new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints depotConstraints =
@@ -152,7 +152,8 @@ public final PathConstraints neutralConstraints =
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, neutralConstraints, 0)),
+                                buildPathDeferred(
+                                        DEPOT_NEUTRAL_ZONE_CENTER, neutralConstraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
@@ -197,6 +198,37 @@ public final PathConstraints neutralConstraints =
                                         .withTimeout(0.1)),
                         commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(2))
                 .withName("move from center and shoot preload");
+    }
+
+    public Command tuneHolonomicP() {
+        return Commands.sequence(
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        buildPathDeferred(TUNING_POSE_TRIANGLE_NEAR_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(
+                                TUNING_POSE_TRIANGLE_FAR_FROM_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        buildPathDeferred(TUNING_POSE_TRIANGLE_NEAR_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(
+                                TUNING_POSE_TRIANGLE_FAR_FROM_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        buildPathDeferred(TUNING_POSE_TRIANGLE_NEAR_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(
+                                TUNING_POSE_TRIANGLE_FAR_FROM_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        buildPathDeferred(TUNING_POSE_TRIANGLE_NEAR_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(
+                                TUNING_POSE_TRIANGLE_FAR_FROM_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        buildPathDeferred(TUNING_POSE_TRIANGLE_NEAR_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(
+                                TUNING_POSE_TRIANGLE_FAR_FROM_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
+                        buildPathDeferred(TUNING_POSE_TRIANGLE_NEAR_ALLIANCE_WALL, constraints, 0),
+                        buildPathDeferred(
+                                TUNING_POSE_TRIANGLE_FAR_FROM_ALLIANCE_WALL, constraints, 0))
+                .withName("triangle to tune holonomic p");
     }
 
     public Command followWaypoints(
