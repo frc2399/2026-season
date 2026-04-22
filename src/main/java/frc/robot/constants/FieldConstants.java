@@ -159,11 +159,29 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(0.42), Meters.of(7)),
                                 new Rotation2d(Degrees.of(0))));
+        public static final Pose DEPOT_INTAKE_FAR =
+                new Pose(
+                        "depot intake end",
+                        new Pose2d(
+                                new Translation2d(Meters.of(0.42), Meters.of(7.6)),
+                                new Rotation2d(Degrees.of(0))));
         public static final Pose DEPOT_CORNER =
                 new Pose(
                         "depot intake corner",
                         new Pose2d(
-                                new Translation2d(Meters.of(1), Meters.of(7.31)),
+                                new Translation2d(Meters.of(1), Meters.of(7)),
+                                new Rotation2d(Degrees.of(90))));
+        public static final Pose DEPOT_WALL_INTAKE =
+                new Pose(
+                        "depot wall intake",
+                        new Pose2d(
+                                new Translation2d(Meters.of(3), Meters.of(7.71)),
+                                new Rotation2d(Degrees.of(90))));
+        public static final Pose DEPOT_CORNER_WALL_INTAKE =
+                new Pose(
+                        "depot wall intake",
+                        new Pose2d(
+                                new Translation2d(Meters.of(0.96), Meters.of(7.71)),
                                 new Rotation2d(Degrees.of(90))));
         public static final Pose DEPOT_CORNER_STRAIGHT =
                 new Pose(

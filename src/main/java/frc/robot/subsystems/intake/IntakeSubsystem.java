@@ -42,7 +42,8 @@ public class IntakeSubsystem extends SubsystemBase {
                             rollerIO.runIntake();
                         })
                 .withName("intake: deploy arm and run roller");
-                    }
+    }
+
     public Command deployAndRunIntakeBackwards() {
         return this.run(
                         () -> {
