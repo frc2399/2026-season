@@ -112,7 +112,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntake() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1);
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1).div(ROLLER_GEAR_RATIO);
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -134,8 +134,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     public void updateState(IntakeRollerIOState state) {
         state.leaderActualSpeedRadiansPerSecond = intakeLeaderEncoder.getVelocity();
         state.followerActualSpeedRadiansPerSecond = intakeFollowerEncoder.getVelocity();
-        state.desiredSpeedRadiansPerSecond =
-                desiredVelocity.in(RadiansPerSecond) / ROLLER_GEAR_RATIO;
+        state.desiredSpeedRadiansPerSecond = desiredVelocity.in(RadiansPerSecond);
         state.leaderCurrent = intakeLeaderSparkFlex.getOutputCurrent();
         state.followerCurrent = intakeFollowerSparkFlex.getOutputCurrent();
         state.leaderAppliedVoltage =
