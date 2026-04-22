@@ -13,10 +13,12 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.CommandFactory.TargetZoneType;
 import frc.robot.constants.FieldConstants;
-import frc.robot.constants.FieldConstants.HubConstants;
+import frc.robot.constants.FieldConstants.AlignmentTargetPoseConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
+import frc.robot.util.FieldCalculationHelpers;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -46,14 +48,43 @@ public class RebuiltVisionUtil {
                         .transformBy(RobotConstants.TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
         double distanceBetweenRobotAndHub =
                 hubPose.getTranslation().getDistance(shooterPose.getTranslation());
+        SmartDashboard.putNumber(
+                "shooter/dist to hub v2 (delete later)", distanceBetweenRobotAndHub);
         return Meters.of(distanceBetweenRobotAndHub);
     }
 
     public static Pose2d getHubPose() {
         if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
-            return FieldConstants.HubConstants.BLUE_CENTER_OF_HUB_POSE;
+            return FieldConstants.AlignmentTargetPoseConstants.BLUE_CENTER_OF_HUB_POSE;
         } else {
-            return FieldConstants.HubConstants.RED_CENTER_OF_HUB_POSE;
+            return FieldConstants.AlignmentTargetPoseConstants.RED_CENTER_OF_HUB_POSE;
+        }
+    }
+
+    public static Pose2d getOutpostSidePose() {
+        if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
+            return FieldConstants.AlignmentTargetPoseConstants.BLUE_OUTPOST_ALIGN_POSE;
+        } else {
+            return FieldConstants.AlignmentTargetPoseConstants.RED_OUTPOST_ALIGN_POSE;
+        }
+    }
+
+    public static Pose2d getDepotSidePose() {
+        if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
+            return FieldConstants.AlignmentTargetPoseConstants.BLUE_DEPOT_ALIGN_POSE;
+        } else {
+            return FieldConstants.AlignmentTargetPoseConstants.RED_DEPOT_ALIGN_POSE;
+        }
+    }
+
+    public static Pose2d getAlignmentTargetPose(Supplier<Pose2d> robotPose) {
+        TargetZoneType targetType = FieldCalculationHelpers.getAlignmentTargetType(robotPose.get());
+        if (targetType == TargetZoneType.HUB) {
+            return getHubPose();
+        } else if (targetType == TargetZoneType.OUTPOST_SIDE) {
+            return getOutpostSidePose();
+        } else {
+            return getDepotSidePose();
         }
     }
 
@@ -99,7 +130,9 @@ public class RebuiltVisionUtil {
     public static double getMaxDiffOfDesiredAndActualAngleInDegrees(
             Translation2d hubToShooterTranslation, Pose2d shooterPose) {
         double hubRadiusMinusFuelRadiusInMeters =
-                HubConstants.HUB_RADIUS.minus(HubConstants.FUEL_RADIUS).in(Meters);
+                AlignmentTargetPoseConstants.HUB_RADIUS
+                        .minus(AlignmentTargetPoseConstants.FUEL_RADIUS)
+                        .in(Meters);
 
         Transform2d toEdgeOfHubTransform =
                 new Transform2d(0, hubRadiusMinusFuelRadiusInMeters, Rotation2d.kZero);

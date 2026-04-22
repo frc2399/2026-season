@@ -285,8 +285,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 RebuiltVisionUtil.isShootingAngleAlignedToHub(
                         () -> robotPose, RebuiltVisionUtil.ToleranceType.REALIGNING));
         SmartDashboard.putString(
-                "robot/shouldRobotpassLeftOrRight",
-                FieldCalculationHelpers.shouldRobotPassLeftOrRight(robotPose).toString());
+                "robot/where should robot pass",
+                FieldCalculationHelpers.getAlignmentTargetType(robotPose).toString());
 
         frontLeftField2dModule.setPose(
                 robotPose.transformBy(
@@ -509,7 +509,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         if (shouldAutoAlign.getAsBoolean()) {
             return AutoAlignUtil.getAutoOrientRotRate(
                     () -> robotPose,
-                    RebuiltVisionUtil.getHubPose(),
+                    RebuiltVisionUtil.getAlignmentTargetPose(() -> robotPose),
                     TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
         } else {
             return getHeadingCorrectionRotRate(currentAngle, rotRate, polarXSpeed, polarYSpeed);

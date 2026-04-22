@@ -33,7 +33,8 @@ public final class RobotConstants {
         public static final int SHOOTER_BOTTOM_CAN_ID = 3;
         public static final int SHOOTER_TOP_CAN_ID = 21;
 
-        public static final int INTAKE_ROLLER_BETA_AND_COMP_CAN_ID = 7;
+        public static final int INTAKE_ROLLER_BETA_AND_COMP_FOLLOWER_CAN_ID = 6;
+        public static final int INTAKE_ROLLER_BETA_AND_COMP_LEADER_CAN_ID = 7;
         public static final int INTAKE_ARM_BETA_CAN_ID = 8;
         public static final int SHOOTER_BOTTOM_BETA_CAN_ID = 9;
         public static final int SHOOTER_TOP_BETA_CAN_ID = 10;
@@ -83,6 +84,6 @@ public final class RobotConstants {
 
     public static class DeadbandConstants {
         public static final Angle BETA_INTAKE_ARM_DEADBAND = Degrees.of(3.0);
-        public static final Angle COMP_INTAKE_ARM_DEADBAND = Degrees.of(2.0);
+        public static final Angle COMP_INTAKE_ARM_DEADBAND = Degrees.of(1.0);
     }
 }

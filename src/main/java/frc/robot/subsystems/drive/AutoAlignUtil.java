@@ -9,7 +9,6 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -48,7 +47,7 @@ public class AutoAlignUtil {
                 DRIVE_TO_POSE_MIN_INPUT.in(Degrees), DRIVE_TO_POSE_MAX_INPUT.in(Degrees));
     }
 
-    private static final double ORIENT_P = .9;
+    private static final double ORIENT_P = 2;
     private static final double ORIENT_D = 0.015;
 
     private static final PIDController orientPid = new PIDController(ORIENT_P, 0, ORIENT_D);
@@ -171,37 +170,6 @@ public class AutoAlignUtil {
             desiredRotRate =
                     orientPid.calculate(
                             shooterPose.getRotation().getRadians(), desiredAngle.in(Radians));
-            return desiredRotRate;
-        }
-    }
-
-    public static double getAutoOrientRotRateWithFudge(
-            Supplier<Pose2d> robotPose, Pose2d orientTargetPose, Transform2d offsetTransform) {
-        // default: do not turn
-        double desiredRotRate = 0;
-        if (robotPose.get() == null) {
-            return desiredRotRate;
-        } else {
-            Transform2d fudgeFactor =
-                    new Transform2d(Inches.of(0), Inches.of(9.505).times(-2), Rotation2d.kZero);
-            Pose2d robotPoseFudge = robotPose.get().transformBy(fudgeFactor);
-            Translation2d targetToRobotTranslation =
-                    orientTargetPose.getTranslation().minus(robotPoseFudge.getTranslation());
-            SmartDashboard.putNumber(
-                    "vision/orient/orientTargetToRobot/x", targetToRobotTranslation.getX());
-            SmartDashboard.putNumber(
-                    "vision/orient/orientTargetToRobot/y", targetToRobotTranslation.getY());
-            Angle desiredAngle =
-                    Radians.of(
-                            Math.atan2(
-                                    targetToRobotTranslation.getY(),
-                                    targetToRobotTranslation.getX()));
-            SmartDashboard.putNumber("vision/desired angle", desiredAngle.in(Degrees));
-            SmartDashboard.putNumber(
-                    "vision/current angle", robotPoseFudge.getRotation().getDegrees());
-            desiredRotRate =
-                    orientPid.calculate(
-                            robotPoseFudge.getRotation().getRadians(), desiredAngle.in(Radians));
             return desiredRotRate;
         }
     }

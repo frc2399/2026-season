@@ -157,7 +157,8 @@ public class SubsystemFactory {
         if (robotType == RobotType.COMP
                 || robotType == RobotType.BETA
                 || robotType == RobotType.BUBBLES
-                || robotType == RobotType.MOZART) {
+                || robotType == RobotType.MOZART
+                || robotType == RobotType.COMP) {
             return new Gyro(new GyroHardware());
         } else {
             return new Gyro(new GyroPlacebo());
@@ -166,20 +167,15 @@ public class SubsystemFactory {
 
     public IntakeSubsystem buildIntake() {
         if (robotType == RobotType.MOZART) {
-            return new IntakeSubsystem(
-                    new IntakeRollerHardware(
-                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_ALPHA_CAN_ID),
-                    new IntakeArmPlacebo());
+            return new IntakeSubsystem(new IntakeRollerHardware(), new IntakeArmPlacebo());
         } else if (robotType == RobotType.BETA) {
             return new IntakeSubsystem(
-                    new IntakeRollerHardware(
-                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
+                    new IntakeRollerHardware(),
                     new IntakeArmHardwareBetaAndComp(
                             RobotConstants.DeadbandConstants.BETA_INTAKE_ARM_DEADBAND));
         } else if (robotType == RobotType.COMP) {
             return new IntakeSubsystem(
-                    new IntakeRollerHardware(
-                            RobotConstants.MotorIdConstants.INTAKE_ROLLER_BETA_AND_COMP_CAN_ID),
+                    new IntakeRollerHardware(),
                     new IntakeArmHardwareBetaAndComp(
                             RobotConstants.DeadbandConstants.COMP_INTAKE_ARM_DEADBAND));
         } else {

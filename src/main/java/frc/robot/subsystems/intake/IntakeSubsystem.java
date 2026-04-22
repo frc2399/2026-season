@@ -42,6 +42,15 @@ public class IntakeSubsystem extends SubsystemBase {
                             rollerIO.runIntake();
                         })
                 .withName("intake: deploy arm and run roller");
+                    }
+    public Command deployAndRunIntakeBackwards() {
+        return this.run(
+                        () -> {
+                            armProfiledPidEnabled = true;
+                            armIO.setSetpoint(IntakeArmSetpoint.DEPLOYED);
+                            rollerIO.runIntakeBackwards();
+                        })
+                .withName("intake: deploy arm and run roller backwards");
     }
 
     public Command defaultBehavior() {
@@ -94,11 +103,11 @@ public class IntakeSubsystem extends SubsystemBase {
                 });
     }
 
-    public Command feedFuelSetpoint() {
+    public Command feedFuelLowerBoundSetpoint() {
         return this.runOnce(
                 () -> {
                     armProfiledPidEnabled = true;
-                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND);
                 });
     }
 
@@ -108,13 +117,15 @@ public class IntakeSubsystem extends SubsystemBase {
                                 () -> {
                                     rollerIO.runIntake();
                                     armProfiledPidEnabled = true;
-                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL);
+                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND);
                                 })
                         .withTimeout(Seconds.of(1))
                         .andThen(
                                 this.run(
                                                 () -> {
-                                                    armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                                                    armIO.setSetpoint(
+                                                            IntakeArmSetpoint
+                                                                    .FEED_FUEL_UPPER_BOUND);
                                                 })
                                         .withTimeout(Seconds.of(1)))
                         .repeatedly()
@@ -143,10 +154,18 @@ public class IntakeSubsystem extends SubsystemBase {
                 "intake/roller/desired speed (radians per second)",
                 rollerState.desiredSpeedRadiansPerSecond);
         SmartDashboard.putNumber(
-                "intake/roller/actual speed (radians per second)",
-                rollerState.actualSpeedRadiansPerSecond);
-        SmartDashboard.putNumber("intake/roller/current (amps)", rollerState.current);
-        SmartDashboard.putNumber("intake/roller/applied output (volt)", rollerState.appliedVoltage);
+                "intake/roller/leader actual speed (radians per second)",
+                rollerState.leaderActualSpeedRadiansPerSecond);
+        SmartDashboard.putNumber(
+                "intake/roller/follower actual speed (radians per second)",
+                rollerState.followerActualSpeedRadiansPerSecond);
+        SmartDashboard.putNumber("intake/roller/leader current (amps)", rollerState.leaderCurrent);
+        SmartDashboard.putNumber(
+                "intake/roller/follower current (amps)", rollerState.followerCurrent);
+        SmartDashboard.putNumber(
+                "intake/roller/leader applied output (volt)", rollerState.leaderAppliedVoltage);
+        SmartDashboard.putNumber(
+                "intake/roller/follower applied output (volt)", rollerState.followerAppliedVoltage);
 
         SmartDashboard.putNumber("intake/arm/desired angle (deg)", armState.desiredAngleDegrees);
         SmartDashboard.putNumber(

@@ -19,7 +19,9 @@ public interface IntakeArmIO {
         DEPLOYED,
         STOWED,
         FEED_FUEL,
-        MID
+        MID,
+        FEED_FUEL_LOWER_BOUND,
+        FEED_FUEL_UPPER_BOUND
     }
 
     public void updateState(IntakeArmIOState state);

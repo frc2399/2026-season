@@ -56,7 +56,13 @@ public class RobotContainer {
                     spindexerSubsystem,
                     intakeSubsystem);
     public AutonCommandFactory autonCommandFactory =
-            new AutonCommandFactory(drive, intakeSubsystem, commandFactory, gyro);
+            new AutonCommandFactory(
+                    drive,
+                    intakeSubsystem,
+                    commandFactory,
+                    gyro,
+                    shooterSubsystem,
+                    shooterIndexerSubsystem);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();
@@ -132,6 +138,7 @@ public class RobotContainer {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
         // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
+        driverController.a().whileTrue(intakeSubsystem.deployAndRunIntakeBackwards());
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         driverController
@@ -145,7 +152,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindingsTuningController() {
-        tuningController.rightTrigger().whileTrue(intakeSubsystem.deployArm());
+        tuningController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         tuningController
                 .leftTrigger()
                 .whileTrue(
