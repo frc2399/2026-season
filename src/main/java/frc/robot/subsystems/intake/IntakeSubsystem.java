@@ -47,10 +47,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command defaultBehavior() {
         return this.run(
                         () -> {
-                            // armProfiledPidEnabled = true;
+                            armProfiledPidEnabled = true;
                             rollerIO.setZero();
-                            armIO.runIntakeArmZeroVelocity();
-                            // armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                            armIO.setSetpoint(IntakeArmSetpoint.STOWED);
                         })
                 .withName("intake defaultBehavior (arm stowed + roller at 0)");
     }
