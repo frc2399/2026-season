@@ -46,7 +46,7 @@ public class AutonCommandFactory {
     public final PathConstraints constraints =
             new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
-public final PathConstraints neutralConstraints =
+    public final PathConstraints neutralConstraints =
             new PathConstraints(3, 5, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints depotConstraints =
@@ -152,7 +152,8 @@ public final PathConstraints neutralConstraints =
                                 intake.deployAndRunIntake().withTimeout(0.01)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER, neutralConstraints, 0)),
+                                buildPathDeferred(
+                                        DEPOT_NEUTRAL_ZONE_CENTER, neutralConstraints, 0)),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
