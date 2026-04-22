@@ -97,7 +97,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
     public void runSpindexer() {
         desiredVelocity =
-                RadiansPerSecond.of(1.0 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+                RadiansPerSecond.of(70); // empirical max speed
 
         spindexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -105,7 +105,8 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
 
     public void runSpindexerBackwards() {
         desiredVelocity =
-                RadiansPerSecond.of(-0.10 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond));
+                RadiansPerSecond.of(-0.10 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond))
+                        .div(SPINDEXER_GEAR_RATIO);
         spindexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
@@ -116,8 +117,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     }
 
     public void updateStates(SpindexerIOState state) {
-        state.spindexerDesiredSpeedRad_P_S =
-                desiredVelocity.in(RadiansPerSecond) / SPINDEXER_GEAR_RATIO;
+        state.spindexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
         state.spindexerActualSpeedRad_P_S = spindexerEncoder.getVelocity();
         state.spindexerCurrent = spindexerSparkFlex.getOutputCurrent();
         state.spindexerAppliedVoltage =

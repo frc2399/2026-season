@@ -95,14 +95,15 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     @Override
     public void runShooterIndexer() {
-        desiredVelocity = RadiansPerSecond.of(215 * 3);
+        desiredVelocity = RadiansPerSecond.of(215);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     @Override
     public void backwardsRunShooterIndexer() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(-0.0781);
+        desiredVelocity =
+                MotorConstants.VORTEX_FREE_SPEED.times(-0.0781).div(SHOOTER_INDEXER_GEAR_RATIO);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
@@ -116,8 +117,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeedRad_P_S =
-                desiredVelocity.in(RadiansPerSecond) / SHOOTER_INDEXER_GEAR_RATIO;
+        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
         state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkFlex.getBusVoltage()
