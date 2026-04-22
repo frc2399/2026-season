@@ -80,7 +80,7 @@ public final class DriveConfig {
             case COMP:
                 kS = 0.15;
                 kV = 2.21;
-                DRIVE_P = 0.35;
+                DRIVE_P = 0.3;
                 DRIVE_D = 0;
                 TURN_P = 1.0;
                 TURN_D = 0.001;
