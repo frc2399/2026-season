@@ -63,7 +63,7 @@ public class SwerveModuleHardwareVortex implements SwerveModuleIO {
     private static final boolean TURNING_MOTOR_INVERTED = false;
 
     // Calculations required for driving motor conversion factors and feed forward
-    private static final Distance WHEEL_DIAMETER = Inches.of(2 * 1.508);
+    private static final Distance WHEEL_DIAMETER = Inches.of(1.3);
     private static final Distance WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER.times(Math.PI);
 
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
