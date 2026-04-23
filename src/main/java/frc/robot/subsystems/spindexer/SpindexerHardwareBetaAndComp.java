@@ -32,13 +32,13 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     private final AngularVelocity ENCODER_VELOCITY_FACTOR;
     private final int SPINDEXER_GEAR_RATIO;
 
-    private final int MIN_OUTPUT_RANGE = -1;
+    private final int MIN_OUTPUT_RANGE = 0;
     private final int MAX_OUTPUT_RANGE = 1;
     private final double SPINDEXER_P = 0.02;
     private final double SPINDEXER_D = 0.01;
 
     private final double SPINDEXER_KS = 0.13;
-    private final double SPINDEXER_KV = 0.1;
+    private final double SPINDEXER_KV = 0.15;
     private final boolean SPINDEXER_INVERTED = false;
 
     private final Time CLOSED_LOOP_RAMP_RATE = Seconds.of(0.1);
@@ -96,8 +96,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     }
 
     public void runSpindexer() {
-        desiredVelocity =
-                RadiansPerSecond.of(70); // empirical max speed
+        desiredVelocity = RadiansPerSecond.of(75); // empirical max speed
 
         spindexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
