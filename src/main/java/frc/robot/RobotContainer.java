@@ -224,6 +224,10 @@ public class RobotContainer {
                                     autonHasNoGyroAngle = false;
                                     isCenterAuton = true;
                                     break;
+                                case "outpost side to neutral zone with scoop":
+                                    gyroAngle = Degrees.of(90);
+                                    autonHasNoGyroAngle = false;
+                                    break;
                                 default:
                                     gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = true;
