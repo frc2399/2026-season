@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
+import java.util.function.Supplier;
 
 public class ShooterPlacebo implements ShooterIO {
     public void runShooterWithSpeeds(
@@ -29,4 +31,7 @@ public class ShooterPlacebo implements ShooterIO {
 
     @Override
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {}
+
+    @Override
+    public void pass(Supplier<Distance> distFromTarget) {}
 }

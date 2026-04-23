@@ -20,8 +20,10 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
+import java.util.function.Supplier;
 
 public class ShooterHardwarePrototype implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
@@ -260,4 +262,7 @@ public class ShooterHardwarePrototype implements ShooterIO {
 
     @Override
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {}
+
+    @Override
+    public void pass(Supplier<Distance> distFromTarget) {}
 }

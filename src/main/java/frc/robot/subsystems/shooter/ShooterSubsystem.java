@@ -16,6 +16,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.CommandFactory.TargetZoneType;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOState;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterSpeeds;
 import java.io.File;
@@ -57,7 +58,10 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public Command shoot(Supplier<Distance> distFromHub, boolean shouldManualShoot) {
+    public Command shoot(
+            Supplier<Distance> distFromTarget,
+            boolean shouldManualShoot,
+            Supplier<TargetZoneType> targetZoneType) {
         if (shouldManualShoot) {
             //    return this.run(() ->
             // io.passFuelOrManualShoot()).withName("passFuelOrManualShoot");
@@ -66,12 +70,12 @@ public class ShooterSubsystem extends SubsystemBase {
                                 AngularVelocity topSpeed = RadiansPerSecond.of(222.529479629277);
                                 RadiansPerSecond.of(
                                         topShooterSpeedTreeMapMeterRadS.get(
-                                                distFromHub.get().in(Meters)));
+                                                distFromTarget.get().in(Meters)));
                                 AngularVelocity bottomSpeed =
                                         RadiansPerSecond.of(233.00145514124299);
                                 RadiansPerSecond.of(
                                         bottomShooterSpeedTreeMapMeterRadS.get(
-                                                distFromHub.get().in(Meters)));
+                                                distFromTarget.get().in(Meters)));
                                 // making sure it doesnt interpolate for manual shoot
                                 io.runShooterWithSpeeds(topSpeed, bottomSpeed);
                             })
@@ -79,14 +83,20 @@ public class ShooterSubsystem extends SubsystemBase {
         } else {
             return this.run(
                             () -> {
-                                AngularVelocity topSpeed =
-                                        RadiansPerSecond.of(
-                                                topShooterSpeedTreeMapMeterRadS.get(
-                                                        distFromHub.get().in(Meters)));
-                                AngularVelocity bottomSpeed =
-                                        RadiansPerSecond.of(
-                                                bottomShooterSpeedTreeMapMeterRadS.get(
-                                                        distFromHub.get().in(Meters)));
+                                AngularVelocity topSpeed = RadiansPerSecond.of(0);
+                                AngularVelocity bottomSpeed = RadiansPerSecond.of(0);
+                                if (targetZoneType.get() == TargetZoneType.HUB) {
+                                    topSpeed =
+                                            RadiansPerSecond.of(
+                                                    topShooterSpeedTreeMapMeterRadS.get(
+                                                            distFromTarget.get().in(Meters)));
+                                    bottomSpeed =
+                                            RadiansPerSecond.of(
+                                                    bottomShooterSpeedTreeMapMeterRadS.get(
+                                                            distFromTarget.get().in(Meters)));
+                                } else {
+                                    io.pass(distFromTarget);
+                                }
                                 io.runShooterWithSpeeds(topSpeed, bottomSpeed);
                             })
                     .withName("runShooter");
