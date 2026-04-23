@@ -149,6 +149,19 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     }
 
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
+
+        if (bottomSpeed.in(RPM) < RobotConstants.MotorConstants.NEO_FREE_SPEED.in(RPM)) {
+            desiredBottomVelocity = bottomSpeed;
+        } else {
+            desiredBottomVelocity = RobotConstants.MotorConstants.NEO_FREE_SPEED;
+        }
+
+        if (topSpeed.in(RPM) < RobotConstants.MotorConstants.NEO_FREE_SPEED.in(RPM)) {
+            desiredTopVelocity = topSpeed;
+        } else {
+            desiredTopVelocity = RobotConstants.MotorConstants.NEO_FREE_SPEED;
+        }
+
         desiredBottomVelocity = bottomSpeed;
         desiredTopVelocity = topSpeed;
         shooterBottomPIDController.setSetpoint(
