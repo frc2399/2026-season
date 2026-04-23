@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.FlippingUtil;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -588,20 +589,17 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // by using a supplier, the robot knows 'hey, this value might change, so i
     // should
     // check it every time i use this object' thus allowing it to change
-    public Command driveToPoseOnExecute() {
+    public Command driveToPoseOnExecute(Supplier<Pose2d> wantPose) {
         return this.run(
                         () -> {
                             atGoal = false;
+                            Supplier<Pose2d> goalPose = wantPose;
 
                             if (FieldConstants.alliance.isPresent()
-                                    && FieldConstants.alliance.get() == Alliance.Blue) {
-                                isBlueAlliance = () -> true;
-                            } else {
-                                isBlueAlliance = () -> false;
+                                    && FieldConstants.alliance.get() == Alliance.Red) {
+                                goalPose = () -> FlippingUtil.flipFieldPose(wantPose.get());
                             }
 
-                            Supplier<Pose2d> goalPose =
-                                    RebuiltVisionUtil.getGoalPose(() -> robotPose, isBlueAlliance);
                             SmartDashboard.putNumber(
                                     "drive/vision/goalPoseY", goalPose.get().getY());
                             SmartDashboard.putNumber(

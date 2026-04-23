@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.constants.FieldConstants.PoseConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -239,7 +240,10 @@ public class AutonCommandFactory {
                         //         buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints, 0)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_INTAKE_FAR, depotConstraints, 0)),
+                                buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints, 0)),
+                        drive.driveToPoseOnExecute(
+                                () -> new Pose2d(0.7, 7, new Rotation2d(Degrees.of(-52)))),
+                        intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(DEPOT_CORNER, constraints, 0),
                         buildPathDeferred(DEPOT_WALL_INTAKE, constraints, 0),
                         Commands.parallel(
@@ -251,6 +255,7 @@ public class AutonCommandFactory {
                         //         buildPathDeferred(
                         //                 DEPOT_CORNER_INTAKE_STRAIGHT, depotConstraints, 0)),
                         // buildPathDeferred(CENTER_MOVE_TO_SHOOTING_SPOT, constraints, 0),
+                        intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
                         commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(7))
                 .withName("move from center to depot and shoot");
