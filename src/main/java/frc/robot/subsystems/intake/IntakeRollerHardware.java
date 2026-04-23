@@ -39,10 +39,12 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final boolean LEADER_MOTOR_INVERTED = false;
     private final boolean FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER = true;
 
-    private static final double DEFAULT_INTAKE_P = 0.001;
-    private static final double DEFAULT_INTAKE_KS = 0.1;
-    private static final double DEFAULT_INTAKE_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private static final double DEFAULT_INTAKE_P = 0;
+    // .001
+    private static final double DEFAULT_INTAKE_KS = .65;
+    private static final double DEFAULT_INTAKE_KV = 0;
+    // .1
+    // 12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
 
     // private static final TunableNumber TUNABLE_INTAKE_P =
     // new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
