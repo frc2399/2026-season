@@ -201,10 +201,10 @@ public class AutonCommandFactory {
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(
-                                        DEPOT_NEUTRAL_ZONE_CENTER, neutralConstraints, 0)),
-                        buildPathDeferred(DEPOT_MIDDLE_HUB_NEUTRAL_ZONE, neutralConstraints, 0),
-                        buildPathDeferred(DEPOT_CORNER_HUB_NEUTRAL_ZONE, constraints, 0),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
+                                        DEPOT_NEUTRAL_ZONE_CENTER, neutralConstraints, 1)),
+                        buildPathDeferred(DEPOT_MIDDLE_HUB_NEUTRAL_ZONE, neutralConstraints, 1),
+                        buildPathDeferred(DEPOT_CORNER_HUB_NEUTRAL_ZONE, constraints, 1),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, .5),
                         intake.defaultBehavior().withTimeout(0.01),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
