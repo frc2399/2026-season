@@ -67,7 +67,8 @@ public class AutonCommandFactory {
         this.shooter = shooter;
         this.shooterIndexer = shooterIndexer;
 
-        hasStoppedShootingTrigger = new Trigger(() -> shooter.isUpToSpeed());
+        hasStoppedShootingTrigger =
+                new Trigger(() -> shooter.isUpToSpeed() && shooterIndexer.isUpToSpeed());
     }
 
     public boolean hasStoppedShooting() {
