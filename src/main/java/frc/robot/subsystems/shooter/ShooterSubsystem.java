@@ -16,6 +16,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOState;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterSpeeds;
 import java.io.File;
@@ -72,7 +73,14 @@ public class ShooterSubsystem extends SubsystemBase {
                                 RadiansPerSecond.of(
                                         bottomShooterSpeedTreeMapMeterRadS.get(
                                                 distFromHub.get().in(Meters)));
-                                // making sure it doesnt interpolate for manual shoot
+                                if (distFromHub.get().in(Inches) >= 222 && FieldConstants.alliance.isPresent()) {
+                                    topShooterSpeedTreeMapMeterRadS.get(Inches.of(222).in(Meters));
+                                } else {
+                                }
+                                if (distFromHub.get().in(Inches) >= 222 && FieldConstants.alliance.isPresent()) {
+                                    bottomShooterSpeedTreeMapMeterRadS.get(Inches.of(222).in(Meters));
+                                } else {
+                                }
                                 io.runShooterWithSpeeds(topSpeed, bottomSpeed);
                             })
                     .withName("runShooter");
