@@ -79,13 +79,8 @@ public final class DriveConfig {
                 break;
             case COMP:
                 kS = 0.15;
-<<<<<<< HEAD
                 kV = 2.23;
                 DRIVE_P = 0.35;
-=======
-                kV = 2.21;
-                DRIVE_P = 0.3;
->>>>>>> main
                 DRIVE_D = 0;
                 TURN_P = 1.0;
                 TURN_D = 0.001;
