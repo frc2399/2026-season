@@ -133,7 +133,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     public void updateState(IntakeRollerIOState state) {
         state.leaderActualSpeedRadiansPerSecond = intakeLeaderEncoder.getVelocity();
         state.followerActualSpeedRadiansPerSecond = intakeFollowerEncoder.getVelocity();
-        state.desiredSpeedRadiansPerSecond = desiredVelocity.in(RadiansPerSecond) / 2;
+        state.desiredSpeedRadiansPerSecond = desiredVelocity.in(RadiansPerSecond);
         state.leaderCurrent = intakeLeaderSparkFlex.getOutputCurrent();
         state.followerCurrent = intakeFollowerSparkFlex.getOutputCurrent();
         state.leaderAppliedVoltage =
