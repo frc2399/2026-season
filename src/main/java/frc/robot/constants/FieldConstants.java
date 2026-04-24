@@ -149,12 +149,12 @@ public final class FieldConstants {
         public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
                 new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
         public static final Pose2d BLUE_OUTPOST_ALIGN_POSE =
-                new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(0.68)), Rotation2d.kZero);
+                new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(1)), Rotation2d.kZero);
         public static final Pose2d RED_OUTPOST_ALIGN_POSE =
-                new Pose2d(Meters.of(13), Meters.of(7.35), Rotation2d.kZero);
+                new Pose2d(Meters.of(13), Meters.of(8), Rotation2d.kZero);
         public static final Pose2d BLUE_DEPOT_ALIGN_POSE =
-                new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(7.35)), Rotation2d.kZero);
+                new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(8)), Rotation2d.kZero);
         public static final Pose2d RED_DEPOT_ALIGN_POSE =
-                new Pose2d(Meters.of(13), Meters.of(0.68), Rotation2d.kZero);
+                new Pose2d(Meters.of(13), Meters.of(1), Rotation2d.kZero);
     }
 }
