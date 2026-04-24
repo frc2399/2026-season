@@ -72,10 +72,10 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
 
     // for passing line
-    double TOP_PASSING_SLOPE = 0;
-    double TOP_PASSING_INTERCEPT = 0;
-    double BOTTOM_PASSING_SLOPE = 0;
-    double BOTTOM_PASSING_INTERCEPT = 0;
+    double TOP_PASSING_SLOPE = 0.813008;
+    double TOP_PASSING_INTERCEPT = 156.74797;
+    double BOTTOM_PASSING_SLOPE = .813008;
+    double BOTTOM_PASSING_INTERCEPT = 167.74797;
 
     public ShooterHardwareBetaAndComp() {
 
