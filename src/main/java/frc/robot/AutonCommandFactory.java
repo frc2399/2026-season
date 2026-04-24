@@ -125,7 +125,9 @@ public class AutonCommandFactory {
                                                                                 OUTPOST_SHOOTING_SPOT)),
                                                 false)
                                         .withTimeout(0.1)),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false)
+                                .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -168,7 +170,9 @@ public class AutonCommandFactory {
                                                                                 OUTPOST_SHOOTING_SPOT)),
                                                 false)
                                         .withTimeout(0.1)),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false)
+                                .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -211,7 +215,9 @@ public class AutonCommandFactory {
                                                                                 DEPOT_SHOOTING_SPOT)),
                                                 false)
                                         .withTimeout(0.1)),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false)
+                                .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -252,7 +258,9 @@ public class AutonCommandFactory {
                                                                                 DEPOT_SHOOTING_SPOT)),
                                                 false)
                                         .withTimeout(0.1)),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(6),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false)
+                                .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
@@ -282,7 +290,9 @@ public class AutonCommandFactory {
                                                                                 MIDDLE_SHOOT_POSE)),
                                                 false)
                                         .withTimeout(0.1)),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(2))
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false)
+                                .until(() -> hasStoppedShooting()))
                 .withName("move from center and shoot preload");
     }
 
