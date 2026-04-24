@@ -9,7 +9,7 @@ public interface ShooterIndexerIO {
 
     public void updateStates(ShooterIndexerIOState state);
 
-    public boolean isUpToSpeed();
+    public boolean isMoving();
 
     public static class ShooterIndexerIOState {
         public double shooterIndexerDesiredSpeedRad_P_S = 0;

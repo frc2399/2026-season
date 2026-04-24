@@ -104,7 +104,7 @@ public class ShooterIndexerHardwarePrototype implements ShooterIndexerIO {
     }
 
     @Override
-    public boolean isUpToSpeed() {
+    public boolean isMoving() {
         return true;
     }
 

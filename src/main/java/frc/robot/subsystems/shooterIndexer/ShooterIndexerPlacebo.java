@@ -11,7 +11,7 @@ public class ShooterIndexerPlacebo implements ShooterIndexerIO {
     public void updateStates(ShooterIndexerIOState state) {}
 
     @Override
-    public boolean isUpToSpeed() {
+    public boolean isMoving() {
         return true;
     }
 }
