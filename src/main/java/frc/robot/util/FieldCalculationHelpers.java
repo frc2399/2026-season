@@ -43,15 +43,15 @@ public class FieldCalculationHelpers {
         if (FieldConstants.alliance.isPresent()
                 && FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
             if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) <= poseY) {
-                return TargetZoneType.OUTPOST_SIDE;
-            } else {
                 return TargetZoneType.DEPOT_SIDE;
+            } else {
+                return TargetZoneType.OUTPOST_SIDE;
             }
         } else {
             if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) >= poseY) {
-                return TargetZoneType.OUTPOST_SIDE;
-            } else {
                 return TargetZoneType.DEPOT_SIDE;
+            } else {
+                return TargetZoneType.OUTPOST_SIDE;
             }
         }
     }
