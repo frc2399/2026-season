@@ -129,6 +129,30 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(6), Meters.of(7.39)),
                                 new Rotation2d(Degrees.of(-90))));
+        public static final Pose OUTPOST_MIDDLE_HUB_NEUTRAL_ZONE =
+                new Pose(
+                        "outpost middle hub neutral zone",
+                        new Pose2d(
+                                new Translation2d(Meters.of(6.5), Meters.of(3.25)),
+                                Rotation2d.kCCW_90deg));
+        public static final Pose OUTPOST_CORNER_HUB_NEUTRAL_ZONE =
+                new Pose(
+                        "outpost corner hub neutral zone",
+                        new Pose2d(
+                                new Translation2d(Meters.of(5.75), Meters.of(2.5)),
+                                Rotation2d.k180deg));
+        public static final Pose DEPOT_MIDDLE_HUB_NEUTRAL_ZONE =
+                new Pose(
+                        "depot middle hub neutral zone",
+                        new Pose2d(
+                                new Translation2d(Meters.of(6.5), Meters.of(4.5)),
+                                Rotation2d.kCW_90deg));
+        public static final Pose DEPOT_CORNER_HUB_NEUTRAL_ZONE =
+                new Pose(
+                        "depot corner hub neutral zone",
+                        new Pose2d(
+                                new Translation2d(Meters.of(5.75), Meters.of(5.75)),
+                                Rotation2d.kZero));
     }
 
     public static class FieldBoundaries {

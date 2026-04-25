@@ -51,6 +51,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
+    private AngularVelocity shooterIndexerIsMovingThreshold = RadiansPerSecond.of(100);
 
     public ShooterIndexerHardwareBetaAndComp() {
         shooterIndexerSparkFlexConfig = new SparkFlexConfig();
@@ -103,6 +104,12 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
         desiredVelocity = RadiansPerSecond.of(215);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    @Override
+    public boolean isMoving() {
+        return shooterIndexerEncoder.getVelocity()
+                > shooterIndexerIsMovingThreshold.in(RadiansPerSecond);
     }
 
     @Override

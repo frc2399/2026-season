@@ -189,6 +189,12 @@ public class RobotContainer {
                 autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
         autoChooser.addOption(
                 "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
+        autoChooser.addOption(
+                "SCOOP depot side neutral zone back and shoot",
+                autonCommandFactory.depotSideNeutralZoneScoop());
+        autoChooser.addOption(
+                "SCOOP outpost side neutral zone back and shoot",
+                autonCommandFactory.outpostSideNeutralZoneScoop());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(
@@ -223,6 +229,14 @@ public class RobotContainer {
                                     gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = false;
                                     isCenterAuton = true;
+                                    break;
+                                case "outpost side to neutral zone with scoop":
+                                    gyroAngle = Degrees.of(90);
+                                    autonHasNoGyroAngle = false;
+                                    break;
+                                case "depot side to neutral zone with scoop":
+                                    gyroAngle = Degrees.of(-90);
+                                    autonHasNoGyroAngle = false;
                                     break;
                                 default:
                                     gyroAngle = Degrees.of(0);

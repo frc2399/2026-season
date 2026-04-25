@@ -27,6 +27,10 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
         return this.run(() -> io.defaultBehavior()).withName("shooterIndexerDefaultBehavior");
     }
 
+    public boolean isMoving() {
+        return io.isMoving();
+    }
+
     @Override
     public void periodic() {
         io.updateStates(shooterIndexerState);
