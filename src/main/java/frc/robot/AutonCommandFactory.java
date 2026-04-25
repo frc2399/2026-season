@@ -411,6 +411,35 @@ public class AutonCommandFactory {
                 .withName("move from center to depot and shoot");
     }
 
+    public Command hubMoveToDepotNoWallScrape() {
+        return Commands.sequence(
+                        Commands.runOnce(
+                                () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
+                        Commands.parallel(
+                                buildPathDeferred(DEPOT_EDGE, constraints, 0),
+                                intake.stowArmSetpoint()),
+                        Commands.parallel(
+                                intake.deployArm().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),
+                        // Commands.parallel(
+                        //         intake.deployHigherAndRunIntake().withTimeout(0.1),
+                        //         buildPathDeferred(DEPOT_MIDDLE, depotConstraints, 1)),
+                        // Commands.parallel(
+                        //         intake.deployAndRunIntake().withTimeout(0.1),
+                        //         buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints, 0)),
+                        Commands.parallel(
+                                intake.deployAndRunIntake().withTimeout(0.1),
+                                buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints, 0)),
+                        drive.driveToPoseOnExecute(
+                                () -> new Pose2d(0.7, 7, new Rotation2d(Degrees.of(-52)))),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        buildPathDeferred(DEPOT_CORNER, constraints, 0),
+                        intake.defaultBehavior().withTimeout(0.01),
+                        buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
+                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(7))
+                .withName("move from center to depot and shoot no wall scrape");
+    }
+
     public Command followWaypoints(
             Pose2d startingPosition,
             PathConstraints constraints,
