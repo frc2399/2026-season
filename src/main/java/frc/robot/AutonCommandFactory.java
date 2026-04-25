@@ -169,10 +169,11 @@ public class AutonCommandFactory {
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                                 shooter.shoot(
                                                 () ->
-                                                        RebuiltVisionUtil.getDistanceToAlignmentTarget(
-                                                                () ->
-                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                OUTPOST_SHOOTING_SPOT)),
+                                                        RebuiltVisionUtil
+                                                                .getDistanceToAlignmentTarget(
+                                                                        () ->
+                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                        OUTPOST_SHOOTING_SPOT)),
                                                 false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
@@ -215,10 +216,11 @@ public class AutonCommandFactory {
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                                 shooter.shoot(
                                                 () ->
-                                                        RebuiltVisionUtil.getDistanceToAlignmentTarget(
-                                                                () ->
-                                                                        getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                DEPOT_SHOOTING_SPOT)),
+                                                        RebuiltVisionUtil
+                                                                .getDistanceToAlignmentTarget(
+                                                                        () ->
+                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                        DEPOT_SHOOTING_SPOT)),
                                                 false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),

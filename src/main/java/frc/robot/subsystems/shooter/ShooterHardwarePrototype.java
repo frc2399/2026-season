@@ -262,7 +262,4 @@ public class ShooterHardwarePrototype implements ShooterIO {
 
     @Override
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {}
-
-    @Override
-    public void pass(Supplier<Distance> distFromTarget) {}
 }

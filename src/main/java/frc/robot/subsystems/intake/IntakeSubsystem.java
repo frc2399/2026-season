@@ -41,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
                             armIO.setSetpoint(IntakeArmSetpoint.MID);
                             rollerIO.runIntake();
                         })
-                .withName("intake: deploy arm and run roller");
+                .withName("intake: deploy arm higher and run roller");
     }
 
     public Command deployAndRunIntakeBackwards() {

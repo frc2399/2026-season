@@ -19,8 +19,6 @@ public interface ShooterIO {
 
     public void passFuelOrManualShoot();
 
-    public void pass(Supplier<Distance> distFromTarget);
-
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;
         public double topRollerActualSpeed = 0.0;

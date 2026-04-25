@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.opencsv.CSVReader;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CommandFactory.TargetZoneType;
+import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOState;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterSpeeds;
 import java.io.File;
@@ -50,6 +52,21 @@ public class ShooterSubsystem extends SubsystemBase {
             new InterpolatingTreeMap<Double, Double>(
                     InverseInterpolator.forDouble(), Interpolator.forDouble());
 
+    // for both: m = (y2-y1) / (x2-x1)
+    // TOP SHOOTER INTERPOLATION
+    private static final Distance TOP_DISTANCE_POINT_ONE = Inches.of(127);
+    private static final Distance TOP_DISTANCE_POINT_TWO = Inches.of(250);
+    private static final AngularVelocity TOP_SPEED_POINT_ONE = RadiansPerSecond.of(260);
+    private static final AngularVelocity TOP_SPEED_POINT_TWO = RadiansPerSecond.of(360);
+    private static final double TOP_SHOOTER_SLOPE_RADIANS_PER_SECOND_PER_METER = TOP_SPEED_POINT_TWO.minus(TOP_SPEED_POINT_ONE).in(RadiansPerSecond) / TOP_DISTANCE_POINT_TWO.minus(TOP_DISTANCE_POINT_ONE).in(Meters);
+
+    // BOTTOM SHOOTER INTERPOLATION
+    private static final Distance BOTTOM_DISTANCE_POINT_ONE = Inches.of(127);
+    private static final Distance BOTTOM_DISTANCE_POINT_TWO = Inches.of(250);
+    private static final AngularVelocity BOTTOM_SPEED_POINT_ONE = RadiansPerSecond.of(0);
+    private static final AngularVelocity BOTTOM_SPEED_POINT_TWO = RadiansPerSecond.of(0);
+    private static final double BOTTOM_SHOOTER_SLOPE_RADIANS_PER_SECOND_PER_METER = BOTTOM_SPEED_POINT_TWO.minus(BOTTOM_SPEED_POINT_ONE).in(RadiansPerSecond) / BOTTOM_DISTANCE_POINT_TWO.minus(BOTTOM_DISTANCE_POINT_ONE).in(Meters);
+
     public ShooterSubsystem(ShooterIO io, String csvFilepath) {
         this.io = io;
         this.csvFilepath = csvFilepath;
@@ -63,8 +80,6 @@ public class ShooterSubsystem extends SubsystemBase {
             boolean shouldManualShoot,
             Supplier<TargetZoneType> targetZoneType) {
         if (shouldManualShoot) {
-            //    return this.run(() ->
-            // io.passFuelOrManualShoot()).withName("passFuelOrManualShoot");
             return this.run(
                             () -> {
                                 AngularVelocity topSpeed = RadiansPerSecond.of(222.529479629277);
@@ -83,8 +98,8 @@ public class ShooterSubsystem extends SubsystemBase {
         } else {
             return this.run(
                             () -> {
-                                AngularVelocity topSpeed = RadiansPerSecond.of(0);
-                                AngularVelocity bottomSpeed = RadiansPerSecond.of(0);
+                                AngularVelocity topSpeed;
+                                AngularVelocity bottomSpeed;
                                 if (targetZoneType.get() == TargetZoneType.HUB) {
                                     topSpeed =
                                             RadiansPerSecond.of(
@@ -95,7 +110,19 @@ public class ShooterSubsystem extends SubsystemBase {
                                                     bottomShooterSpeedTreeMapMeterRadS.get(
                                                             distFromTarget.get().in(Meters)));
                                 } else {
-                                    io.pass(distFromTarget);
+                                    // point slope form: y-y1 = m(x-x1) => y = m(x-x1) + y1
+                                    topSpeed = RadiansPerSecond.of(TOP_SHOOTER_SLOPE_RADIANS_PER_SECOND_PER_METER * (distFromTarget.get().minus(TOP_DISTANCE_POINT_ONE).in(Meters)) + TOP_SPEED_POINT_ONE.in(RadiansPerSecond));
+                                    bottomSpeed = RadiansPerSecond.of(BOTTOM_SHOOTER_SLOPE_RADIANS_PER_SECOND_PER_METER * (distFromTarget.get().minus(BOTTOM_DISTANCE_POINT_ONE).in(Meters)) + BOTTOM_SPEED_POINT_ONE.in(RadiansPerSecond));
+
+                                    if (topSpeed.in(RadiansPerSecond)
+                                                > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)) {
+                                        topSpeed = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+                                    }
+
+                                    if (bottomSpeed.in(RadiansPerSecond)
+                                            > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)) {
+                                    bottomSpeed = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+                                    }
                                 }
                                 io.runShooterWithSpeeds(topSpeed, bottomSpeed);
                             })

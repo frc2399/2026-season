@@ -217,33 +217,6 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     }
 
     @Override
-    public void pass(Supplier<Distance> distFromTarget) {
-        desiredTopVelocity =
-                RadiansPerSecond.of(
-                        TOP_PASSING_SLOPE * distFromTarget.get().in(Inches)
-                                + TOP_PASSING_INTERCEPT);
-        desiredBottomVelocity =
-                RadiansPerSecond.of(
-                        BOTTOM_PASSING_SLOPE * distFromTarget.get().in(Inches)
-                                + BOTTOM_PASSING_INTERCEPT);
-
-        if (desiredTopVelocity.in(RadiansPerSecond)
-                > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)) {
-            desiredTopVelocity = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
-        }
-
-        if (desiredBottomVelocity.in(RadiansPerSecond)
-                > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)) {
-            desiredBottomVelocity = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
-        }
-
-        shooterTopPIDController.setSetpoint(
-                desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
-        shooterBottomPIDController.setSetpoint(
-                desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
-    }
-
-    @Override
     public void runTunableNumberSetpoints() {
         desiredTopVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get() - 100);
         desiredBottomVelocity = RPM.of(TUNABLE_SHOOTER_BOTTOM_DESIRED_SPEED_RPM.get());
