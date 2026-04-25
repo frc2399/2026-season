@@ -275,7 +275,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         field2d.setRobotPose(robotPose);
 
         SmartDashboard.putBoolean(
-                "robot/should Target Hub", FieldCalculationHelpers.shouldTargetHub(robotPose));
+                "robot/should Target Hub",
+                FieldCalculationHelpers.shouldTargetHub(() -> robotPose));
         SmartDashboard.putBoolean(
                 "robot/isShootingAngleAlignedToHub wide tolerance",
                 RebuiltVisionUtil.isShootingAngleAlignedToHub(
@@ -286,7 +287,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                         () -> robotPose, RebuiltVisionUtil.ToleranceType.REALIGNING));
         SmartDashboard.putString(
                 "robot/where should robot pass",
-                FieldCalculationHelpers.getAlignmentTargetType(robotPose).toString());
+                FieldCalculationHelpers.getAlignmentTargetType(() -> robotPose).toString());
 
         frontLeftField2dModule.setPose(
                 robotPose.transformBy(
@@ -656,7 +657,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putBoolean("vision/orient/shouldAutoOrient", isAutoOrienting);
         SmartDashboard.putNumber(
                 "shooter/distance to hub (in)",
-                RebuiltVisionUtil.getDistanceToHub(() -> robotPose).in(Inches));
+                RebuiltVisionUtil.getDistanceToAlignmentTarget(() -> robotPose).in(Inches));
         SmartDashboard.putNumber("drive/Pose X(m)", states.pose.getX());
         SmartDashboard.putNumber("drive/Pose Y(m)", states.pose.getY());
         SmartDashboard.putNumber("drive/Pose Theta(deg)", states.poseTheta);
