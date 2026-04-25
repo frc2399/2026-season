@@ -64,8 +64,8 @@ public class ShooterSubsystem extends SubsystemBase {
     // BOTTOM SHOOTER INTERPOLATION
     private static final Distance BOTTOM_DISTANCE_POINT_ONE = Inches.of(127);
     private static final Distance BOTTOM_DISTANCE_POINT_TWO = Inches.of(250);
-    private static final AngularVelocity BOTTOM_SPEED_POINT_ONE = RadiansPerSecond.of(0);
-    private static final AngularVelocity BOTTOM_SPEED_POINT_TWO = RadiansPerSecond.of(0);
+    private static final AngularVelocity BOTTOM_SPEED_POINT_ONE = RadiansPerSecond.of(270);
+    private static final AngularVelocity BOTTOM_SPEED_POINT_TWO = RadiansPerSecond.of(370);
     private static final double BOTTOM_SHOOTER_SLOPE_RADIANS_PER_SECOND_PER_METER =
             BOTTOM_SPEED_POINT_TWO.minus(BOTTOM_SPEED_POINT_ONE).in(RadiansPerSecond)
                     / BOTTOM_DISTANCE_POINT_TWO.minus(BOTTOM_DISTANCE_POINT_ONE).in(Meters);
