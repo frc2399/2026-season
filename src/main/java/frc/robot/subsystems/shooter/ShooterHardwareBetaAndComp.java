@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -19,9 +20,11 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
+import java.util.function.Supplier;
 
 public class ShooterHardwareBetaAndComp implements ShooterIO {
     private SparkFlex shooterBottomSparkFlex;
@@ -67,6 +70,12 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
 
     SparkFlexConfig shooterBottomMotorConfig = new SparkFlexConfig();
     SparkFlexConfig shooterTopMotorConfig = new SparkFlexConfig();
+
+    // for passing line
+    double TOP_PASSING_SLOPE = 0.813008;
+    double TOP_PASSING_INTERCEPT = 156.74797;
+    double BOTTOM_PASSING_SLOPE = .813008;
+    double BOTTOM_PASSING_INTERCEPT = 167.74797;
 
     public ShooterHardwareBetaAndComp() {
 
@@ -205,6 +214,33 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         double topSpeedToLog = desiredTopVelocity.in(RadiansPerSecond);
         double bottomSpeedToLog = desiredBottomVelocity.in(RadiansPerSecond);
         return new ShooterSpeeds(topSpeedToLog, bottomSpeedToLog);
+    }
+
+    @Override
+    public void pass(Supplier<Distance> distFromTarget) {
+        desiredTopVelocity =
+                RadiansPerSecond.of(
+                        TOP_PASSING_SLOPE * distFromTarget.get().in(Inches)
+                                + TOP_PASSING_INTERCEPT);
+        desiredBottomVelocity =
+                RadiansPerSecond.of(
+                        BOTTOM_PASSING_SLOPE * distFromTarget.get().in(Inches)
+                                + BOTTOM_PASSING_INTERCEPT);
+
+        if (desiredTopVelocity.in(RadiansPerSecond)
+                > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)) {
+            desiredTopVelocity = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+        }
+
+        if (desiredBottomVelocity.in(RadiansPerSecond)
+                > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond)) {
+            desiredBottomVelocity = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+        }
+
+        shooterTopPIDController.setSetpoint(
+                desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        shooterBottomPIDController.setSetpoint(
+                desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     @Override

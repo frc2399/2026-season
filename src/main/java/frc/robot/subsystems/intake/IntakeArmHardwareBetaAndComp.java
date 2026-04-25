@@ -55,9 +55,9 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
 
     // feedforward
     private static final double INTAKE_ARM_KS = 0.0;
-    private static final double INTAKE_ARM_KV = .93;
+    private static final double INTAKE_ARM_KV = 1.03;
     private static final double INTAKE_ARM_KA = 0.0;
-    private static final double INTAKE_ARM_KCOS = .28;
+    private static final double INTAKE_ARM_KCOS = .33;
 
     // we use an outside feedforward, because arms also have a cosine factor (the
     // impact of gravity changes), and revlib's is poorly documented so it's not
@@ -151,10 +151,10 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
     @Override
     public void setSetpoint(IntakeArmSetpoint setpoint) {
         if (setpoint == IntakeArmSetpoint.DEPLOYED) {
-            desiredAngle = Degrees.of(-28);
+            desiredAngle = Degrees.of(-26);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         } else if (setpoint == IntakeArmSetpoint.STOWED) {
-            desiredAngle = Degrees.of(-15);
+            desiredAngle = Degrees.of(-21.4);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
         } else if (setpoint == IntakeArmSetpoint.FEED_FUEL_UPPER_BOUND) {
             desiredAngle = Degrees.of(90);

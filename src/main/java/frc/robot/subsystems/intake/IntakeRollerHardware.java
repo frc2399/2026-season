@@ -39,10 +39,9 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final boolean LEADER_MOTOR_INVERTED = false;
     private final boolean FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER = true;
 
-    private static final double DEFAULT_INTAKE_P = 0.001;
-    private static final double DEFAULT_INTAKE_KS = 0.1;
-    private static final double DEFAULT_INTAKE_KV =
-            12 / RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond);
+    private static final double DEFAULT_INTAKE_P = .00001;
+    private static final double DEFAULT_INTAKE_KS = .28;
+    private static final double DEFAULT_INTAKE_KV = 0.0137;
 
     // private static final TunableNumber TUNABLE_INTAKE_P =
     // new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
@@ -112,7 +111,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntake() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1);
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1).div(ROLLER_GEAR_RATIO);
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -134,8 +133,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     public void updateState(IntakeRollerIOState state) {
         state.leaderActualSpeedRadiansPerSecond = intakeLeaderEncoder.getVelocity();
         state.followerActualSpeedRadiansPerSecond = intakeFollowerEncoder.getVelocity();
-        state.desiredSpeedRadiansPerSecond =
-                desiredVelocity.in(RadiansPerSecond) / ROLLER_GEAR_RATIO;
+        state.desiredSpeedRadiansPerSecond = desiredVelocity.in(RadiansPerSecond);
         state.leaderCurrent = intakeLeaderSparkFlex.getOutputCurrent();
         state.followerCurrent = intakeFollowerSparkFlex.getOutputCurrent();
         state.leaderAppliedVoltage =

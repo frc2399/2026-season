@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 public class AutoAlignUtil {
     // profiled pid controllers for driving to a pose and related constants
-    private static final double DRIVE_TO_POSE_XY_P = 4.75;
+    private static final double DRIVE_TO_POSE_XY_P = 4;
     private static final double DRIVE_TO_POSE_XY_D = 0.0;
     private static final PIDController driveToPoseXPid =
             new PIDController(DRIVE_TO_POSE_XY_P, 0, DRIVE_TO_POSE_XY_D);
@@ -47,7 +47,7 @@ public class AutoAlignUtil {
                 DRIVE_TO_POSE_MIN_INPUT.in(Degrees), DRIVE_TO_POSE_MAX_INPUT.in(Degrees));
     }
 
-    private static final double ORIENT_P = 2;
+    private static final double ORIENT_P = 1.5;
     private static final double ORIENT_D = 0.015;
 
     private static final PIDController orientPid = new PIDController(ORIENT_P, 0, ORIENT_D);

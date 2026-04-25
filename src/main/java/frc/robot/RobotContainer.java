@@ -28,6 +28,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
+import frc.robot.util.FieldCalculationHelpers;
 import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator;
 import java.util.Optional;
@@ -157,8 +158,13 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(
                         shooterSubsystem.shoot(
-                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
-                                false));
+                                () ->
+                                        RebuiltVisionUtil.getDistanceToAlignmentTarget(
+                                                () -> drive.getPose()),
+                                false,
+                                () ->
+                                        FieldCalculationHelpers.getAlignmentTargetType(
+                                                () -> drive.getPose())));
         tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
         tuningController.leftBumper().whileTrue(intakeSubsystem.stowArmSetpoint());
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
@@ -174,7 +180,7 @@ public class RobotContainer {
                         Commands.runOnce(
                                 () ->
                                         shooterSubsystem.logShooterSpeedsToCSV(
-                                                RebuiltVisionUtil.getDistanceToHub(
+                                                RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                         () -> drive.getPose()))));
         tuningController.povDown().onTrue(commandFactory.resetHeading(Degrees.of(180)));
     }
@@ -191,6 +197,12 @@ public class RobotContainer {
                 "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
         autoChooser.addOption(
                 "move from center to depot and shoot", autonCommandFactory.hubMoveToDepot());
+        autoChooser.addOption(
+                "SCOOP depot side neutral zone back and shoot",
+                autonCommandFactory.depotSideNeutralZoneScoop());
+        autoChooser.addOption(
+                "SCOOP outpost side neutral zone back and shoot",
+                autonCommandFactory.outpostSideNeutralZoneScoop());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(

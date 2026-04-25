@@ -10,6 +10,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
+import frc.robot.util.FieldCalculationHelpers;
 
 public class CommandFactory {
     private final DriveSubsystem drive;
@@ -43,11 +44,16 @@ public class CommandFactory {
     public Command runSpindexShooterIndexAndShooter(boolean shouldManualShoot) {
         return Commands.sequence(
                 shooter.shoot(
-                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
-                                shouldManualShoot)
+                                () ->
+                                        RebuiltVisionUtil.getDistanceToAlignmentTarget(
+                                                () -> drive.getPose()),
+                                shouldManualShoot,
+                                () ->
+                                        FieldCalculationHelpers.getAlignmentTargetType(
+                                                () -> drive.getPose()))
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
-                        .withTimeout(1.5), // we don't want to feed fuel right away because it
+                        .withTimeout(2.5), // we don't want to feed fuel right away because it
                 // gets fuel
                 // jammed
                 intakeSubsystem.feedFuel());
@@ -56,8 +62,13 @@ public class CommandFactory {
     public Command runSpindexShooterIndexAndShooterNoFeedFuel() {
         return Commands.sequence(
                 shooter.shoot(
-                                () -> RebuiltVisionUtil.getDistanceToHub(() -> drive.getPose()),
-                                false)
+                                () ->
+                                        RebuiltVisionUtil.getDistanceToAlignmentTarget(
+                                                () -> drive.getPose()),
+                                false,
+                                () ->
+                                        FieldCalculationHelpers.getAlignmentTargetType(
+                                                () -> drive.getPose()))
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer()));
     }

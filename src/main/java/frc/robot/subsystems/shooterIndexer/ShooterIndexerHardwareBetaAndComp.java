@@ -47,10 +47,11 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
     private static final double SHOOTER_INDEXER_MAX_OUTPUT = 1;
 
     private static final double SHOOTER_INDEXER_KS = 0.1355;
-    private static final double SHOOTER_INDEXER_KV = 0.040;
+    private static final double SHOOTER_INDEXER_KV = 0.075;
     private static final double SHOOTER_INDEXER_KA = 0;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
+    private AngularVelocity shooterIndexerIsMovingThreshold = RadiansPerSecond.of(100);
 
     public ShooterIndexerHardwareBetaAndComp() {
         shooterIndexerSparkFlexConfig = new SparkFlexConfig();
@@ -100,14 +101,21 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     @Override
     public void runShooterIndexer() {
-        desiredVelocity = RadiansPerSecond.of(215 * 3);
+        desiredVelocity = RadiansPerSecond.of(215);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     @Override
+    public boolean isMoving() {
+        return shooterIndexerEncoder.getVelocity()
+                > shooterIndexerIsMovingThreshold.in(RadiansPerSecond);
+    }
+
+    @Override
     public void backwardsRunShooterIndexer() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(-0.0781);
+        desiredVelocity =
+                MotorConstants.VORTEX_FREE_SPEED.times(-0.0781).div(SHOOTER_INDEXER_GEAR_RATIO);
         shooterIndexerPidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
@@ -121,8 +129,7 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
 
     @Override
     public void updateStates(ShooterIndexerIOState state) {
-        state.shooterIndexerDesiredSpeedRad_P_S =
-                desiredVelocity.in(RadiansPerSecond) / SHOOTER_INDEXER_GEAR_RATIO;
+        state.shooterIndexerDesiredSpeedRad_P_S = desiredVelocity.in(RadiansPerSecond);
         state.shooterIndexerActualSpeedRad_P_S = shooterIndexerEncoder.getVelocity();
         state.shooterIndexerAppliedVoltage =
                 shooterIndexerSparkFlex.getBusVoltage()

@@ -36,8 +36,8 @@ public class RebuiltVisionUtil {
         return () -> returnPose;
     }
 
-    public static Distance getDistanceToHub(Supplier<Pose2d> robotPose) {
-        Pose2d hubPose = getHubPose();
+    public static Distance getDistanceToAlignmentTarget(Supplier<Pose2d> robotPose) {
+        Pose2d targetPose = getAlignmentTargetPose(robotPose);
         if (robotPose.get() == null) {
             return Inches.of(0);
         }
@@ -46,7 +46,7 @@ public class RebuiltVisionUtil {
                         .get()
                         .transformBy(RobotConstants.TransformConstants.ROBOT_TO_SHOOTER_TRANSFORM);
         double distanceBetweenRobotAndHub =
-                hubPose.getTranslation().getDistance(shooterPose.getTranslation());
+                targetPose.getTranslation().getDistance(shooterPose.getTranslation());
         SmartDashboard.putNumber(
                 "shooter/dist to hub v2 (delete later)", distanceBetweenRobotAndHub);
         return Meters.of(distanceBetweenRobotAndHub);
@@ -77,7 +77,7 @@ public class RebuiltVisionUtil {
     }
 
     public static Pose2d getAlignmentTargetPose(Supplier<Pose2d> robotPose) {
-        TargetZoneType targetType = FieldCalculationHelpers.getAlignmentTargetType(robotPose.get());
+        TargetZoneType targetType = FieldCalculationHelpers.getAlignmentTargetType(robotPose);
         if (targetType == TargetZoneType.HUB) {
             return getHubPose();
         } else if (targetType == TargetZoneType.OUTPOST_SIDE) {
