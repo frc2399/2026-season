@@ -244,6 +244,69 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(5.75), Meters.of(5.75)),
                                 Rotation2d.kZero));
+
+        public static class SecondPassScoopPoseConstants {
+            public static final Pose DEPOT_PAST_TRENCH_ROTATION_SCOOP_2 =
+                    new Pose(
+                            "depot past trench rotation scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6), Meters.of(6.79)),
+                                    Rotation2d.k180deg));
+            public static final Pose DEPOT_CORNER_HUB_SCOOP_2 =
+                    new Pose(
+                            "depot corner hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(5.75), Meters.of(5.75)),
+                                    Rotation2d.k180deg));
+            public static final Pose DEPOT_MIDDLE_HUB_SCOOP_2 =
+                    new Pose(
+                            "depot middle hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6.5), Meters.of(4.5)),
+                                    Rotation2d.kCCW_90deg));
+            public static final Pose DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2 =
+                    new Pose(
+                            "depot neutral zone center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.74), Meters.of(5.08)),
+                                    Rotation2d.k180deg));
+            public static final Pose DEPOT_BORDER_FUEL_CENTER_SCOOP_2 =
+                    new Pose(
+                            "depot border fuel center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.74), Meters.of(5.08)),
+                                    Rotation2d.kZero));
+            public static final Pose OUTPOST_PAST_TRENCH_ROTATION_SCOOP_2 =
+                    new Pose(
+                            "outpost past trench rotation scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6), Meters.of(1.35)),
+                                    Rotation2d.kZero));
+            public static final Pose OUTPOST_CORNER_HUB_SCOOP_2 =
+                    new Pose(
+                            "outpost corner hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(5.75), Meters.of(2.5)),
+                                    Rotation2d.kZero));
+            public static final Pose OUTPOST_MIDDLE_HUB_SCOOP_2 =
+                    new Pose(
+                            "outpost middle hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6.5), Meters.of(3.25)),
+                                    Rotation2d.kCW_90deg));
+            public static final Pose OUTPOST_NEUTRAL_ZONE_CENTER_SCOOP_2 =
+                    new Pose(
+                            "outpost neutral zone center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.74), Meters.of(2.96)),
+                                    Rotation2d.k180deg));
+            public static final Pose OUTPOST_BORDER_FUEL_CENTER_SCOOP_2 =
+                    new Pose(
+                            "outpost border fuel center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.7), Meters.of(1)),
+                                    Rotation2d.k180deg));
+        }
     }
 
     public static class FieldBoundaries {

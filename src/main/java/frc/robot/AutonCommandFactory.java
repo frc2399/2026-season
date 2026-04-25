@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.constants.FieldConstants.PoseConstants.*;
+import static frc.robot.constants.FieldConstants.PoseConstants.SecondPassScoopPoseConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
@@ -162,8 +163,8 @@ public class AutonCommandFactory {
                                 buildPathDeferred(
                                         OUTPOST_NEUTRAL_ZONE_CENTER, neutralConstraints, 1)),
                         buildPathDeferred(OUTPOST_MIDDLE_HUB_NEUTRAL_ZONE, neutralConstraints, 1),
-                        buildPathDeferred(OUTPOST_CORNER_HUB_NEUTRAL_ZONE, constraints, 1),
-                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, .5),
+                        buildPathDeferred(OUTPOST_CORNER_HUB_NEUTRAL_ZONE, neutralConstraints, 1),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, neutralConstraints, .5),
                         intake.defaultBehavior().withTimeout(0.01),
                         Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
@@ -186,11 +187,32 @@ public class AutonCommandFactory {
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                intake.deployArm().withTimeout(0.1),
-                                buildPathDeferred(OUTPOST_PASS_2_START, constraints, 2)),
-                        Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(OUTPOST_PASS_2_END, neutralConstraints, 0)))
+                                buildPathDeferred(
+                                        OUTPOST_PAST_TRENCH_ROTATION_SCOOP_2, constraints, 0.5)),
+                        buildPathDeferred(OUTPOST_CORNER_HUB_SCOOP_2, neutralConstraints, 1),
+                        buildPathDeferred(OUTPOST_MIDDLE_HUB_SCOOP_2, neutralConstraints, 1),
+                        buildPathDeferred(
+                                OUTPOST_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
+                        buildPathDeferred(
+                                OUTPOST_BORDER_FUEL_CENTER_SCOOP_2, neutralConstraints, 0.25),
+                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 1),
+                        Commands.parallel(
+                                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 1),
+                                intake.defaultBehavior().withTimeout(0.1),
+                                shooter.shoot(
+                                                () ->
+                                                        RebuiltVisionUtil
+                                                                .getDistanceToAlignmentTarget(
+                                                                        () ->
+                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                        OUTPOST_SHOOTING_SPOT)),
+                                                false,
+                                                () -> TargetZoneType.HUB)
+                                        .withTimeout(0.1)),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false)
+                                .until(() -> hasStoppedShooting()))
                 .withName("outpost side to neutral zone with scoop");
     }
 
@@ -233,11 +255,32 @@ public class AutonCommandFactory {
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
-                                intake.deployArm().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_PASS_2_START, constraints, 2)),
-                        Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
-                                buildPathDeferred(DEPOT_PASS_2_END, neutralConstraints, 0)))
+                                buildPathDeferred(
+                                        DEPOT_PAST_TRENCH_ROTATION_SCOOP_2, constraints, 0.5)),
+                        buildPathDeferred(DEPOT_CORNER_HUB_SCOOP_2, neutralConstraints, 1),
+                        buildPathDeferred(DEPOT_MIDDLE_HUB_SCOOP_2, neutralConstraints, 1),
+                        buildPathDeferred(
+                                DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
+                        buildPathDeferred(
+                                DEPOT_BORDER_FUEL_CENTER_SCOOP_2, neutralConstraints, 0.25),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
+                        Commands.parallel(
+                                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 1),
+                                intake.defaultBehavior().withTimeout(0.1),
+                                shooter.shoot(
+                                                () ->
+                                                        RebuiltVisionUtil
+                                                                .getDistanceToAlignmentTarget(
+                                                                        () ->
+                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                        DEPOT_SHOOTING_SPOT)),
+                                                false,
+                                                () -> TargetZoneType.HUB)
+                                        .withTimeout(0.1)),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false)
+                                .until(() -> hasStoppedShooting()))
                 .withName("depot side to neutral zone with scoop");
     }
 
