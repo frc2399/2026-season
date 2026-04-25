@@ -196,6 +196,8 @@ public class RobotContainer {
         autoChooser.addOption(
                 "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
         autoChooser.addOption(
+                "move from center to depot and shoot", autonCommandFactory.hubMoveToDepot());
+        autoChooser.addOption(
                 "SCOOP depot side neutral zone back and shoot",
                 autonCommandFactory.depotSideNeutralZoneScoop());
         autoChooser.addOption(
@@ -236,13 +238,10 @@ public class RobotContainer {
                                     autonHasNoGyroAngle = false;
                                     isCenterAuton = true;
                                     break;
-                                case "outpost side to neutral zone with scoop":
-                                    gyroAngle = Degrees.of(90);
+                                case "move from center to depot and shoot":
+                                    gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = false;
-                                    break;
-                                case "depot side to neutral zone with scoop":
-                                    gyroAngle = Degrees.of(-90);
-                                    autonHasNoGyroAngle = false;
+                                    isCenterAuton = true;
                                     break;
                                 default:
                                     gyroAngle = Degrees.of(0);

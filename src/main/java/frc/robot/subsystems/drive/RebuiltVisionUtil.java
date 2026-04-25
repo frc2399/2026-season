@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.CommandFactory.TargetZoneType;
 import frc.robot.constants.FieldConstants;
-import frc.robot.constants.FieldConstants.AlignmentTargetPoseConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.TransformConstants;
 import frc.robot.util.FieldCalculationHelpers;
@@ -55,25 +54,25 @@ public class RebuiltVisionUtil {
 
     public static Pose2d getHubPose() {
         if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
-            return FieldConstants.AlignmentTargetPoseConstants.BLUE_CENTER_OF_HUB_POSE;
+            return FieldConstants.BLUE_CENTER_OF_HUB_POSE;
         } else {
-            return FieldConstants.AlignmentTargetPoseConstants.RED_CENTER_OF_HUB_POSE;
+            return FieldConstants.RED_CENTER_OF_HUB_POSE;
         }
     }
 
     public static Pose2d getOutpostSidePose() {
         if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
-            return FieldConstants.AlignmentTargetPoseConstants.BLUE_OUTPOST_ALIGN_POSE;
+            return FieldConstants.HubConstants.AlignmentTargetPoseConstants.BLUE_OUTPOST_ALIGN_POSE;
         } else {
-            return FieldConstants.AlignmentTargetPoseConstants.RED_OUTPOST_ALIGN_POSE;
+            return FieldConstants.HubConstants.AlignmentTargetPoseConstants.RED_OUTPOST_ALIGN_POSE;
         }
     }
 
     public static Pose2d getDepotSidePose() {
         if (FieldConstants.alliance.isPresent() && FieldConstants.alliance.get() == Alliance.Blue) {
-            return FieldConstants.AlignmentTargetPoseConstants.BLUE_DEPOT_ALIGN_POSE;
+            return FieldConstants.HubConstants.AlignmentTargetPoseConstants.BLUE_DEPOT_ALIGN_POSE;
         } else {
-            return FieldConstants.AlignmentTargetPoseConstants.RED_DEPOT_ALIGN_POSE;
+            return FieldConstants.HubConstants.AlignmentTargetPoseConstants.RED_DEPOT_ALIGN_POSE;
         }
     }
 
@@ -130,8 +129,8 @@ public class RebuiltVisionUtil {
     public static double getMaxDiffOfDesiredAndActualAngleInDegrees(
             Translation2d hubToShooterTranslation, Pose2d shooterPose) {
         double hubRadiusMinusFuelRadiusInMeters =
-                AlignmentTargetPoseConstants.HUB_RADIUS
-                        .minus(AlignmentTargetPoseConstants.FUEL_RADIUS)
+                FieldConstants.HubConstants.AlignmentTargetPoseConstants.HUB_RADIUS
+                        .minus(FieldConstants.HubConstants.AlignmentTargetPoseConstants.FUEL_RADIUS)
                         .in(Meters);
 
         Transform2d toEdgeOfHubTransform =
