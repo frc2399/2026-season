@@ -260,8 +260,7 @@ public class AutonCommandFactory {
                                         DEPOT_PAST_TRENCH_ROTATION_SCOOP_2, constraints, 0.5)),
                         buildPathDeferred(DEPOT_CORNER_HUB_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(DEPOT_MIDDLE_HUB_SCOOP_2, neutralConstraints, 1),
-                        buildPathDeferred(
-                                DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
+                        buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(
                                 DEPOT_BORDER_FUEL_CENTER_SCOOP_2, neutralConstraints, 0.25),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),

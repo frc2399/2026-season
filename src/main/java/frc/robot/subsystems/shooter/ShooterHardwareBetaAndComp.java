@@ -167,7 +167,7 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         } else {
             desiredTopVelocity = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
         }
-        
+
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
