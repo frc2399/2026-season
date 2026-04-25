@@ -116,7 +116,7 @@ public class IntakeSubsystem extends SubsystemBase {
         Command feedFuelCommand =
                 this.run(
                                 () -> {
-                                    rollerIO.runIntake();
+                                    rollerIO.runIntakeForShooting();
                                     armProfiledPidEnabled = true;
                                     armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND);
                                 })

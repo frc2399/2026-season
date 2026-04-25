@@ -10,4 +10,7 @@ public class IntakeRollerPlacebo implements IntakeRollerIO {
 
     @Override
     public void runIntakeBackwards() {}
+
+    @Override
+    public void runIntakeForShooting() {}
 }

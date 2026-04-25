@@ -5,6 +5,8 @@ public interface IntakeRollerIO {
 
     public void runIntakeBackwards();
 
+    public void runIntakeForShooting();
+
     public void setZero();
 
     public void updateState(IntakeRollerIOState state);
