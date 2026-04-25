@@ -18,6 +18,8 @@ public interface IntakeArmIO {
     public enum IntakeArmSetpoint {
         DEPLOYED,
         STOWED,
+        FEED_FUEL,
+        MID,
         FEED_FUEL_LOWER_BOUND,
         FEED_FUEL_UPPER_BOUND
     }

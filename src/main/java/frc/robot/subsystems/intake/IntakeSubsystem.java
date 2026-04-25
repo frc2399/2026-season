@@ -34,6 +34,16 @@ public class IntakeSubsystem extends SubsystemBase {
                 .withName("intake: deploy arm and run roller");
     }
 
+    public Command deployHigherAndRunIntake() {
+        return this.run(
+                        () -> {
+                            armProfiledPidEnabled = true;
+                            armIO.setSetpoint(IntakeArmSetpoint.MID);
+                            rollerIO.runIntake();
+                        })
+                .withName("intake: deploy arm and run roller");
+    }
+
     public Command deployAndRunIntakeBackwards() {
         return this.run(
                         () -> {
@@ -83,6 +93,14 @@ public class IntakeSubsystem extends SubsystemBase {
                 () -> {
                     armProfiledPidEnabled = true;
                     armIO.setSetpoint(IntakeArmSetpoint.STOWED);
+                });
+    }
+
+    public Command midArmSetpoint() {
+        return this.runOnce(
+                () -> {
+                    armProfiledPidEnabled = true;
+                    armIO.setSetpoint(IntakeArmSetpoint.MID);
                 });
     }
 
