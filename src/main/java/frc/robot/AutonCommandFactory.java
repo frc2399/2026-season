@@ -194,11 +194,9 @@ public class AutonCommandFactory {
                         buildPathDeferred(OUTPOST_MIDDLE_HUB_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(
                                 OUTPOST_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
-                        buildPathDeferred(
-                                OUTPOST_BORDER_FUEL_CENTER_SCOOP_2, neutralConstraints, 0.25),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
-                                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 1),
+                                buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                                 intake.defaultBehavior().withTimeout(0.1),
                                 shooter.shoot(
                                                 () ->
@@ -261,11 +259,9 @@ public class AutonCommandFactory {
                         buildPathDeferred(DEPOT_CORNER_HUB_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(DEPOT_MIDDLE_HUB_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
-                        buildPathDeferred(
-                                DEPOT_BORDER_FUEL_CENTER_SCOOP_2, neutralConstraints, 0.25),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
-                                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 1),
+                                buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                                 intake.defaultBehavior().withTimeout(0.1),
                                 shooter.shoot(
                                                 () ->

@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.revrobotics.PersistMode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
@@ -119,7 +118,8 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntakeBackwards() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1).div(ROLLER_GEAR_RATIO).unaryMinus();
+        desiredVelocity =
+                MotorConstants.VORTEX_FREE_SPEED.times(1).div(ROLLER_GEAR_RATIO).unaryMinus();
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -129,7 +129,8 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     public void runIntakeForShooting() {
         desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(.1).div(ROLLER_GEAR_RATIO);
 
-        intakePidController.setSetpoint(desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+        intakePidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void setZero() {

@@ -237,7 +237,7 @@ public final class FieldConstants {
                         "depot middle hub neutral zone",
                         new Pose2d(
                                 new Translation2d(Meters.of(6.5), Meters.of(4.5)),
-                                Rotation2d.kCW_90deg));
+                                Rotation2d.kCCW_90deg));
         public static final Pose DEPOT_CORNER_HUB_NEUTRAL_ZONE =
                 new Pose(
                         "depot corner hub neutral zone",
@@ -263,13 +263,13 @@ public final class FieldConstants {
                             "depot middle hub scoop 2",
                             new Pose2d(
                                     new Translation2d(Meters.of(6.5), Meters.of(4.5)),
-                                    Rotation2d.kCCW_90deg));
+                                    Rotation2d.kCW_90deg));
             public static final Pose DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2 =
                     new Pose(
                             "depot neutral zone center scoop 2",
                             new Pose2d(
                                     new Translation2d(Meters.of(7.74), Meters.of(5.08)),
-                                    Rotation2d.k180deg));
+                                    Rotation2d.kZero));
             public static final Pose DEPOT_BORDER_FUEL_CENTER_SCOOP_2 =
                     new Pose(
                             "depot border fuel center scoop 2",
