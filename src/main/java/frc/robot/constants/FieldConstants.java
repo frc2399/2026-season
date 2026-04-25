@@ -129,7 +129,6 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(6), Meters.of(7.39)),
                                 new Rotation2d(Degrees.of(-90))));
-<<<<<<< HEAD
         public static final Pose DEPOT_EDGE =
                 new Pose(
                         "depot edge",
@@ -220,7 +219,7 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(2.686), Meters.of(5.48)),
                                 new Rotation2d(Degrees.of(-35))));
-=======
+
         public static final Pose OUTPOST_MIDDLE_HUB_NEUTRAL_ZONE =
                 new Pose(
                         "outpost middle hub neutral zone",
@@ -245,7 +244,6 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(5.75), Meters.of(5.75)),
                                 Rotation2d.kZero));
->>>>>>> main
     }
 
     public static class FieldBoundaries {
@@ -261,25 +259,6 @@ public final class FieldConstants {
             public static final Distance HUB_RADIUS = Inches.of(23.5);
             public static final Distance FUEL_RADIUS = Inches.of(2.955);
 
-<<<<<<< HEAD
-            // values taken from field drawings
-            public static final Pose2d RED_CENTER_OF_HUB_POSE =
-                    new Pose2d(
-                            Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
-            public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
-                    new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
-            public static final Pose2d BLUE_OUTPOST_ALIGN_POSE =
-                    new Pose2d(
-                            new Translation2d(Meters.of(3.24), Meters.of(0.68)), Rotation2d.kZero);
-            public static final Pose2d RED_OUTPOST_ALIGN_POSE =
-                    new Pose2d(Meters.of(13), Meters.of(7.35), Rotation2d.kZero);
-            public static final Pose2d BLUE_DEPOT_ALIGN_POSE =
-                    new Pose2d(
-                            new Translation2d(Meters.of(3.24), Meters.of(7.35)), Rotation2d.kZero);
-            public static final Pose2d RED_DEPOT_ALIGN_POSE =
-                    new Pose2d(Meters.of(13), Meters.of(0.68), Rotation2d.kZero);
-        }
-=======
         // values taken from field drawings
         public static final Pose2d RED_CENTER_OF_HUB_POSE =
                 new Pose2d(Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
@@ -293,6 +272,6 @@ public final class FieldConstants {
                 new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(8)), Rotation2d.kZero);
         public static final Pose2d RED_DEPOT_ALIGN_POSE =
                 new Pose2d(Meters.of(13), Meters.of(1), Rotation2d.kZero);
->>>>>>> main
+        }
     }
 }
