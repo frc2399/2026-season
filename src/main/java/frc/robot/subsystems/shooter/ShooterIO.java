@@ -1,8 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
-import java.util.function.Supplier;
 
 public interface ShooterIO {
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed);

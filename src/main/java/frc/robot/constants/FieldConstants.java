@@ -247,9 +247,9 @@ public final class FieldConstants {
     }
 
     public static class FieldBoundaries {
-        public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
+        public static final Distance RED_ZONE_BOUNDARY_X = Inches.of(181.56 + (2 * 143.50));
         public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
-        public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
+        public static final Distance BLUE_ZONE_BOUNDARY_X = Inches.of(181.56);
         public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
         public static final Distance HORIZONTAL_CENTER_LINE = Meters.of(4.034663);
     }
