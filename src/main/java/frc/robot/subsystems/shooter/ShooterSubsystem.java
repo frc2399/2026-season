@@ -134,19 +134,6 @@ public class ShooterSubsystem extends SubsystemBase {
                                                                             .in(Meters))
                                                             + BOTTOM_SPEED_POINT_ONE.in(
                                                                     RadiansPerSecond));
-
-                                    if (topSpeed.in(RadiansPerSecond)
-                                            > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(
-                                                    RadiansPerSecond)) {
-                                        topSpeed = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
-                                    }
-
-                                    if (bottomSpeed.in(RadiansPerSecond)
-                                            > RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(
-                                                    RadiansPerSecond)) {
-                                        bottomSpeed =
-                                                RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
-                                    }
                                 }
                                 io.runShooterWithSpeeds(topSpeed, bottomSpeed);
                             })
