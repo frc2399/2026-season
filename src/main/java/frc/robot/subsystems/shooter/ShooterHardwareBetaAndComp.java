@@ -158,8 +158,19 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
     }
 
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
-        desiredBottomVelocity = bottomSpeed;
-        desiredTopVelocity = topSpeed;
+
+        if (bottomSpeed.in(RPM) < RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RPM)) {
+            desiredBottomVelocity = bottomSpeed;
+        } else {
+            desiredBottomVelocity = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+        }
+
+        if (topSpeed.in(RPM) < RobotConstants.MotorConstants.VORTEX_FREE_SPEED.in(RPM)) {
+            desiredTopVelocity = topSpeed;
+        } else {
+            desiredTopVelocity = RobotConstants.MotorConstants.VORTEX_FREE_SPEED;
+        }
+        
         shooterBottomPIDController.setSetpoint(
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
