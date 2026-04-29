@@ -1,8 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
-import java.util.function.Supplier;
 
 public interface ShooterIO {
     public void runShooterWithSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed);
@@ -18,8 +16,6 @@ public interface ShooterIO {
     public boolean isUpToSpeed();
 
     public void passFuelOrManualShoot();
-
-    public void pass(Supplier<Distance> distFromTarget);
 
     public static class ShooterIOState {
         public double topRollerDesiredSpeed = 0.0;

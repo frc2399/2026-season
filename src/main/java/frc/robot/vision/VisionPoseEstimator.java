@@ -40,6 +40,8 @@ public final class VisionPoseEstimator {
     private static Distance Z_ROBOT_TO_CAMERA_OFFSET_SECONDARY; // ground plane = 0
     private static Angle CAMERA_YAW_SECONDARY;
 
+    private boolean isUsingVisionData = false;
+
     /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
         Rotation2d getYaw();
@@ -198,6 +200,7 @@ public final class VisionPoseEstimator {
 
     /** Update the limelight's robot orientation */
     public void periodic() {
+        isUsingVisionData = false;
         // Resist the temptation to rotate this depending on alliance - the coordinate
         // system here _has_ to match the WPILib coordinate system, where Yaw is CCW +
         // and 0 faces the red alliance wall
@@ -216,6 +219,7 @@ public final class VisionPoseEstimator {
                             var stddevs =
                                     LimelightHelpers.getLimelightNTDoubleArray(
                                             limelightHostnameMain, "stddevs");
+                            isUsingVisionData = true;
                             driveBase.addVisionMeasurement(
                                     pe.pose,
                                     pe.timestampSeconds,
@@ -239,5 +243,6 @@ public final class VisionPoseEstimator {
                                     VecBuilder.fill(
                                             stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
                         });
+        SmartDashboard.putBoolean("vision/is using vision data", isUsingVisionData);
     }
 }

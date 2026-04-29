@@ -118,7 +118,16 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntakeBackwards() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(.1).unaryMinus();
+        desiredVelocity =
+                MotorConstants.VORTEX_FREE_SPEED.times(1).div(ROLLER_GEAR_RATIO).unaryMinus();
+
+        intakePidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    @Override
+    public void runIntakeForShooting() {
+        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(.1).div(ROLLER_GEAR_RATIO);
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);

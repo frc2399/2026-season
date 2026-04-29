@@ -169,13 +169,13 @@ public final class FieldConstants {
                 new Pose(
                         "depot intake corner",
                         new Pose2d(
-                                new Translation2d(Meters.of(2.1), Meters.of(7.2)),
+                                new Translation2d(Meters.of(2.1), Meters.of(7.4)),
                                 new Rotation2d(Degrees.of(0))));
         public static final Pose DEPOT_WALL_INTAKE =
                 new Pose(
                         "depot wall intake",
                         new Pose2d(
-                                new Translation2d(Meters.of(3), Meters.of(7.52)),
+                                new Translation2d(Meters.of(2), Meters.of(7.52)),
                                 new Rotation2d(Degrees.of(90))));
         public static final Pose DEPOT_CORNER_WALL_INTAKE =
                 new Pose(
@@ -237,19 +237,82 @@ public final class FieldConstants {
                         "depot middle hub neutral zone",
                         new Pose2d(
                                 new Translation2d(Meters.of(6.5), Meters.of(4.5)),
-                                Rotation2d.kCW_90deg));
+                                Rotation2d.kCCW_90deg));
         public static final Pose DEPOT_CORNER_HUB_NEUTRAL_ZONE =
                 new Pose(
                         "depot corner hub neutral zone",
                         new Pose2d(
                                 new Translation2d(Meters.of(5.75), Meters.of(5.75)),
                                 Rotation2d.kZero));
+
+        public static class SecondPassScoopPoseConstants {
+            public static final Pose DEPOT_PAST_TRENCH_ROTATION_SCOOP_2 =
+                    new Pose(
+                            "depot past trench rotation scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6), Meters.of(6.79)),
+                                    Rotation2d.k180deg));
+            public static final Pose DEPOT_CORNER_HUB_SCOOP_2 =
+                    new Pose(
+                            "depot corner hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(5.75), Meters.of(5.75)),
+                                    Rotation2d.k180deg));
+            public static final Pose DEPOT_MIDDLE_HUB_SCOOP_2 =
+                    new Pose(
+                            "depot middle hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6.5), Meters.of(4.5)),
+                                    Rotation2d.kCW_90deg));
+            public static final Pose DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2 =
+                    new Pose(
+                            "depot neutral zone center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.74), Meters.of(5.08)),
+                                    Rotation2d.kZero));
+            public static final Pose DEPOT_BORDER_FUEL_CENTER_SCOOP_2 =
+                    new Pose(
+                            "depot border fuel center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.74), Meters.of(5.08)),
+                                    Rotation2d.kZero));
+            public static final Pose OUTPOST_PAST_TRENCH_ROTATION_SCOOP_2 =
+                    new Pose(
+                            "outpost past trench rotation scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6), Meters.of(1.35)),
+                                    Rotation2d.kZero));
+            public static final Pose OUTPOST_CORNER_HUB_SCOOP_2 =
+                    new Pose(
+                            "outpost corner hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(5.75), Meters.of(2.5)),
+                                    Rotation2d.kZero));
+            public static final Pose OUTPOST_MIDDLE_HUB_SCOOP_2 =
+                    new Pose(
+                            "outpost middle hub scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(6.5), Meters.of(3.25)),
+                                    Rotation2d.kCW_90deg));
+            public static final Pose OUTPOST_NEUTRAL_ZONE_CENTER_SCOOP_2 =
+                    new Pose(
+                            "outpost neutral zone center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.74), Meters.of(2.96)),
+                                    Rotation2d.k180deg));
+            public static final Pose OUTPOST_BORDER_FUEL_CENTER_SCOOP_2 =
+                    new Pose(
+                            "outpost border fuel center scoop 2",
+                            new Pose2d(
+                                    new Translation2d(Meters.of(7.7), Meters.of(1)),
+                                    Rotation2d.k180deg));
+        }
     }
 
     public static class FieldBoundaries {
-        public static final Distance RED_ZONE_BOUNDARY_X = Meters.of(12.56);
+        public static final Distance RED_ZONE_BOUNDARY_X = Inches.of(181.56 + (2 * 143.50));
         public static final Distance RED_DRIVER_STATION_WALL_X = Meters.of(16.94);
-        public static final Distance BLUE_ZONE_BOUNDARY_X = Meters.of(3.98);
+        public static final Distance BLUE_ZONE_BOUNDARY_X = Inches.of(181.56);
         public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
         public static final Distance HORIZONTAL_CENTER_LINE = Meters.of(4.034663);
     }
@@ -259,19 +322,20 @@ public final class FieldConstants {
             public static final Distance HUB_RADIUS = Inches.of(23.5);
             public static final Distance FUEL_RADIUS = Inches.of(2.955);
 
-        // values taken from field drawings
-        public static final Pose2d RED_CENTER_OF_HUB_POSE =
-                new Pose2d(Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
-        public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
-                new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
-        public static final Pose2d BLUE_OUTPOST_ALIGN_POSE =
-                new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(1)), Rotation2d.kZero);
-        public static final Pose2d RED_OUTPOST_ALIGN_POSE =
-                new Pose2d(Meters.of(13), Meters.of(8), Rotation2d.kZero);
-        public static final Pose2d BLUE_DEPOT_ALIGN_POSE =
-                new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(8)), Rotation2d.kZero);
-        public static final Pose2d RED_DEPOT_ALIGN_POSE =
-                new Pose2d(Meters.of(13), Meters.of(1), Rotation2d.kZero);
+            // values taken from field drawings
+            public static final Pose2d RED_CENTER_OF_HUB_POSE =
+                    new Pose2d(
+                            Inches.of(181.56 + (2 * 143.50)), Inches.of(158.32), Rotation2d.kZero);
+            public static final Pose2d BLUE_CENTER_OF_HUB_POSE =
+                    new Pose2d(Inches.of(181.56), Inches.of(158.32), Rotation2d.kZero);
+            public static final Pose2d BLUE_OUTPOST_ALIGN_POSE =
+                    new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(2)), Rotation2d.kZero);
+            public static final Pose2d RED_OUTPOST_ALIGN_POSE =
+                    new Pose2d(Meters.of(13), Meters.of(6), Rotation2d.kZero);
+            public static final Pose2d BLUE_DEPOT_ALIGN_POSE =
+                    new Pose2d(new Translation2d(Meters.of(3.24), Meters.of(6)), Rotation2d.kZero);
+            public static final Pose2d RED_DEPOT_ALIGN_POSE =
+                    new Pose2d(Meters.of(13), Meters.of(2), Rotation2d.kZero);
         }
     }
 }

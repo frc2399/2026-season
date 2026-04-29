@@ -53,7 +53,7 @@ public class CommandFactory {
                                                 () -> drive.getPose()))
                         .until(() -> shooter.isUpToSpeed()),
                 Commands.parallel(spindexer.runSpindexer(), shooterIndexer.runShooterIndexer())
-                        .withTimeout(2.5), // we don't want to feed fuel right away because it
+                        .withTimeout(2.0), // we don't want to feed fuel right away because it
                 // gets fuel
                 // jammed
                 intakeSubsystem.feedFuel());
