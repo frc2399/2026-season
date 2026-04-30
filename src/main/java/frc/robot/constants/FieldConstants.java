@@ -108,13 +108,13 @@ public final class FieldConstants {
                         "depotShootingSpot",
                         new Pose2d(
                                 new Translation2d(Meters.of(3.53), Meters.of(7.35)),
-                                new Rotation2d(Degrees.of(-67))));
+                                new Rotation2d(Degrees.of(-72))));
         public static final Pose OUTPOST_SHOOTING_SPOT =
                 new Pose(
                         "outpostShootingSpot",
                         new Pose2d(
                                 new Translation2d(Meters.of(3.24), Meters.of(0.68)),
-                                new Rotation2d(Degrees.of(70))));
+                                new Rotation2d(Degrees.of(67))));
         public static final Pose MIDDLE_SHOOT_POSE =
                 new Pose("center shooting spot", new Pose2d(2.5, 4, Rotation2d.fromDegrees(0)));
         public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH =
@@ -129,36 +129,54 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(6), Meters.of(7.39)),
                                 new Rotation2d(Degrees.of(-90))));
+        public static final Pose DEPOT_OTHER_SIDE_OF_TRENCH_FIRST =
+                new Pose(
+                        "depot other side of trench first",
+                        new Pose2d(
+                                new Translation2d(Meters.of(6), Meters.of(7.25)),
+                                new Rotation2d(Degrees.of(-90))));
+        public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST =
+                new Pose(
+                        "outpost other side of trench first",
+                        new Pose2d(
+                                new Translation2d(Meters.of(6), Meters.of(0.68)),
+                                new Rotation2d(Degrees.of(90))));
         public static final Pose DEPOT_EDGE =
                 new Pose(
                         "depot edge",
                         new Pose2d(
                                 new Translation2d(Meters.of(1.37), Meters.of(4.9)),
                                 new Rotation2d(Degrees.of(0))));
-        // public static final Pose DEPOT_SIDE_INTAKE =
-        //         new Pose(
-        //                 "depot intake start",
-        //                 new Pose2d(
-        //                         new Translation2d(Meters.of(0.6), Meters.of(4.9)),
-        //                         new Rotation2d(Degrees.of(24.5))));
+        public static final Pose DEPOT_EDGE_NEW =
+                new Pose(
+                        "depot edge new",
+                        new Pose2d(
+                                new Translation2d(Meters.of(1.37), Meters.of(7.3)),
+                                new Rotation2d(Degrees.of(180))));
         public static final Pose DEPOT_SIDE_INTAKE =
                 new Pose(
                         "depot intake start",
                         new Pose2d(
                                 new Translation2d(Meters.of(0.42), Meters.of(4.9)),
                                 new Rotation2d(Degrees.of(0))));
-        // public static final Pose DEPOT_SIDE_INTAKE_END =
-        //         new Pose(
-        //                 "depot intake end",
-        //                 new Pose2d(
-        //                         new Translation2d(Meters.of(0.6), Meters.of(6)),
-        //                         new Rotation2d(Degrees.of(24.5))));
+        public static final Pose DEPOT_SIDE_INTAKE_END_NEW =
+                new Pose(
+                        "depot intake end new",
+                        new Pose2d(
+                                new Translation2d(Meters.of(0.42), Meters.of(4.9)),
+                                new Rotation2d(Degrees.of(180))));
         public static final Pose DEPOT_SIDE_INTAKE_END =
                 new Pose(
                         "depot intake end",
                         new Pose2d(
                                 new Translation2d(Meters.of(0.42), Meters.of(7)),
                                 new Rotation2d(Degrees.of(0))));
+        public static final Pose DEPOT_SIDE_INTAKE_NEW =
+                new Pose(
+                        "depot intake new",
+                        new Pose2d(
+                                new Translation2d(Meters.of(0.42), Meters.of(7.6)),
+                                new Rotation2d(Degrees.of(180))));
         public static final Pose DEPOT_INTAKE_FAR =
                 new Pose(
                         "depot intake end",
@@ -211,14 +229,20 @@ public final class FieldConstants {
                 new Pose(
                         "depot moving to shooting spot",
                         new Pose2d(
-                                new Translation2d(Meters.of(1.686), Meters.of(6.48)),
-                                new Rotation2d(Degrees.of(-28))));
+                                new Translation2d(Meters.of(1.37), Meters.of(4.9)),
+                                new Rotation2d(Degrees.of(-26))));
         public static final Pose CENTER_SHOOTING_SPOT =
                 new Pose(
                         "depot to shoot",
                         new Pose2d(
                                 new Translation2d(Meters.of(2.686), Meters.of(5.48)),
-                                new Rotation2d(Degrees.of(-35))));
+                                new Rotation2d(Degrees.of(-36))));
+        public static final Pose CENTER_SHOOTING_SPOT_DEEP =
+                new Pose(
+                        "depot to shoot deep",
+                        new Pose2d(
+                                new Translation2d(Meters.of(1.686), Meters.of(5.48)),
+                                new Rotation2d(Degrees.of(-31))));
 
         public static final Pose OUTPOST_MIDDLE_HUB_NEUTRAL_ZONE =
                 new Pose(

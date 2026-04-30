@@ -120,7 +120,7 @@ public class IntakeSubsystem extends SubsystemBase {
                                     armProfiledPidEnabled = true;
                                     armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND);
                                 })
-                        .withTimeout(Seconds.of(1))
+                        .withTimeout(Seconds.of(0.75))
                         .andThen(
                                 this.run(
                                                 () -> {
@@ -128,7 +128,7 @@ public class IntakeSubsystem extends SubsystemBase {
                                                             IntakeArmSetpoint
                                                                     .FEED_FUEL_UPPER_BOUND);
                                                 })
-                                        .withTimeout(Seconds.of(1)))
+                                        .withTimeout(Seconds.of(0.75)))
                         .repeatedly()
                         .withName("feed fuel (arm)");
 

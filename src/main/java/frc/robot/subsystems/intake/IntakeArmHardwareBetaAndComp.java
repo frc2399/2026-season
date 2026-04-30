@@ -49,7 +49,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
             RadiansPerSecond.of(2 * Math.PI / 60);
 
     // pid
-    private static final double INTAKE_ARM_P = .45;
+    private static final double INTAKE_ARM_P = .9;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
 

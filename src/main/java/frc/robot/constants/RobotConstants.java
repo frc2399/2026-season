@@ -51,6 +51,7 @@ public final class RobotConstants {
         public static final AngularVelocity NEO550_FREE_SPEED = RPM.of(11000);
         public static final AngularVelocity NEO_FREE_SPEED = RPM.of(5676);
         public static final AngularVelocity VORTEX_FREE_SPEED = RPM.of(6784);
+        public static final AngularVelocity SHOOTER_REAL_SPEED = RadiansPerSecond.of(674);
     }
 
     public static class SpeedConstants {

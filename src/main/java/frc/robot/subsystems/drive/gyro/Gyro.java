@@ -18,6 +18,14 @@ public class Gyro {
         io.setYaw(Degrees.of(0));
     }
 
+    /**
+     * Gets the underlying GyroIO implementation. This is used for simulation to access GyroIOSim
+     * methods.
+     */
+    public GyroIO getIO() {
+        return io;
+    }
+
     public Angle getYaw(boolean refresh) {
         return io.getYaw(refresh);
     }

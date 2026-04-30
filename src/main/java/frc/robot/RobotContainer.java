@@ -105,6 +105,32 @@ public class RobotContainer {
         SmartDashboard.putData("robot/driverController", driverController.getHID());
     }
 
+    /**
+     * Updates the simulation state, particularly the gyro. This method should be called from
+     * Robot.simulationPeriodic().
+     */
+    public void updateSimulation() {
+        if (!Robot.isSimulation()) {
+            return;
+        }
+
+        // Check if gyro is using the simulation implementation
+        if (gyro.getIO() instanceof frc.robot.subsystems.drive.gyro.GyroSim) {
+            frc.robot.subsystems.drive.gyro.GyroSim gyroSim =
+                    (frc.robot.subsystems.drive.gyro.GyroSim) gyro.getIO();
+
+            // Get the robot's current angular velocity from the drive subsystem
+            // The drive subsystem calculates this from the swerve module states
+            double omegaRadPerSec = drive.getRobotRelativeSpeeds().omegaRadiansPerSecond;
+
+            // Update the simulated gyro with the angular velocity
+            gyroSim.setAngularVelocity(omegaRadPerSec);
+
+            // Integrate to update the heading (20ms = 0.02 seconds)
+            gyroSim.update(0.02);
+        }
+    }
+
     public void disableSubsystems() {
         drive.disableDriveToPose();
         intakeSubsystem.armProfiledPidEnabled = false;
