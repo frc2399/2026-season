@@ -39,6 +39,7 @@ public class AutonCommandFactory {
     private final CommandFactory commandFactory;
     private final Gyro gyro;
     private final ShooterSubsystem shooter;
+    private final RobotContainer robotContainer;
     private final ShooterIndexerSubsystem shooterIndexer;
     private Pose2d finalPose;
 
@@ -62,13 +63,15 @@ public class AutonCommandFactory {
             CommandFactory commandFactory,
             Gyro gyro,
             ShooterSubsystem shooter,
-            ShooterIndexerSubsystem shooterIndexer) {
+            ShooterIndexerSubsystem shooterIndexer,
+            RobotContainer robotContainer) {
         this.drive = drive;
         this.intake = intake;
         this.commandFactory = commandFactory;
         this.gyro = gyro;
         this.shooter = shooter;
         this.shooterIndexer = shooterIndexer;
+        this.robotContainer = robotContainer;
 
         hasStoppedShootingTrigger =
                 new Trigger(() -> shooter.isUpToSpeed() && shooterIndexer.isMoving());
@@ -109,6 +112,8 @@ public class AutonCommandFactory {
                         intake.stowArmSetpoint(),
                         Commands.runOnce(() -> resetOdometryFlipped(OUTPOST_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        new DeferredCommand(
+                                () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2),
@@ -155,6 +160,8 @@ public class AutonCommandFactory {
                         intake.stowArmSetpoint(),
                         Commands.runOnce(() -> resetOdometryFlipped(OUTPOST_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        new DeferredCommand(
+                                () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 2),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
@@ -225,9 +232,10 @@ public class AutonCommandFactory {
         return Commands.sequence(
                         // first cycle
                         intake.stowArmSetpoint(),
+                        new DeferredCommand(
+                                () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         Commands.runOnce(() -> resetOdometryFlipped(DEPOT_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                        Commands.waitSeconds(8),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 2),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
@@ -298,6 +306,8 @@ public class AutonCommandFactory {
                         intake.stowArmSetpoint(),
                         Commands.runOnce(() -> resetOdometryFlipped(DEPOT_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
+                        new DeferredCommand(
+                                () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, constraints, 2),
@@ -343,6 +353,8 @@ public class AutonCommandFactory {
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
                         intake.stowArmSetpoint(),
+                        new DeferredCommand(
+                                () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         Commands.parallel(
                                 buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
                                 shooter.shoot(
@@ -390,6 +402,8 @@ public class AutonCommandFactory {
                         Commands.runOnce(
                                 () -> resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
                         intake.stowArmSetpoint(),
+                        new DeferredCommand(
+                                () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         buildPathDeferred(DEPOT_EDGE_NEW, constraints, 1),
                         Commands.parallel(
                                 intake.deployArm().withTimeout(0.1),
@@ -458,6 +472,8 @@ public class AutonCommandFactory {
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_EDGE, constraints, 0),
                                 intake.stowArmSetpoint()),
+                        new DeferredCommand(
+                                () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         Commands.parallel(
                                 intake.deployArm().withTimeout(0.1),
                                 buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),

@@ -63,9 +63,11 @@ public class RobotContainer {
                     commandFactory,
                     gyro,
                     shooterSubsystem,
-                    shooterIndexerSubsystem);
+                    shooterIndexerSubsystem,
+                    this);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private static SendableChooser<Double> delayChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();
 
     private static final CommandXboxController driverController =
@@ -244,6 +246,20 @@ public class RobotContainer {
                 "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
         SmartDashboard.putData("alliance/reset blue", resetAllianceBlue());
         SmartDashboard.putData("alliance/reset red", resetAllianceRed());
+        delayChooser.addOption("1", 0.0);
+        delayChooser.addOption("1", 1.0);
+        delayChooser.addOption("2", 2.0);
+        delayChooser.addOption("3", 3.0);
+        delayChooser.addOption("4", 4.0);
+        delayChooser.addOption("5", 5.0);
+        delayChooser.addOption("6", 6.0);
+        delayChooser.addOption("7", 7.0);
+        delayChooser.addOption("8", 8.0);
+        SmartDashboard.putData("delay Chooser", delayChooser);
+    }
+
+    public double getWait() {
+        return delayChooser.getSelected();
     }
 
     public Command resetGyroByAuton() {
