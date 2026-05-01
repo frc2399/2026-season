@@ -170,10 +170,17 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         driverController
                 .leftTrigger()
-                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(false)); // do not pass
+                .whileTrue(
+                        commandFactory.runSpindexShooterIndexAndShooter(
+                                false,
+                                () ->
+                                        FieldCalculationHelpers.amInDangerZone(
+                                                () -> drive.getPose()))); // do not pass
         driverController
                 .rightBumper()
-                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(true)); // do pass
+                .whileTrue(
+                        commandFactory.runSpindexShooterIndexAndShooter(
+                                true, () -> false)); // do pass
         driverController.x().whileTrue(drive.setX());
         driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
     }
@@ -188,6 +195,8 @@ public class RobotContainer {
                                         RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                 () -> drive.getPose()),
                                 false,
+                                () -> false, // this is the tuning controller and we do not care
+                                // if it is in danger zone
                                 () ->
                                         FieldCalculationHelpers.getAlignmentTargetType(
                                                 () -> drive.getPose())));

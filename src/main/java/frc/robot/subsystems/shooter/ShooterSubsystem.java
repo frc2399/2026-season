@@ -80,6 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command shoot(
             Supplier<Distance> distFromTarget,
             boolean shouldManualShoot,
+            Supplier<Boolean> amInDangerZone,
             Supplier<TargetZoneType> targetZoneType) {
         if (shouldManualShoot) {
             return this.run(
@@ -112,6 +113,9 @@ public class ShooterSubsystem extends SubsystemBase {
                                                     bottomShooterSpeedTreeMapMeterRadS.get(
                                                             distFromTarget.get().in(Meters)));
                                 } else {
+                                    if (amInDangerZone.get()) {
+                                        System.out.println("am in danger zone!");
+                                    }
                                     // point slope form: y-y1 = m(x-x1) => y = m(x-x1) + y1
                                     topSpeed =
                                             RadiansPerSecond.of(

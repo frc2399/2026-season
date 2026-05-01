@@ -35,6 +35,15 @@ public class FieldCalculationHelpers {
         return false;
     }
 
+    public static boolean amInDangerZone(Supplier<Pose2d> robotLocation) {
+        if (shouldTargetHub(robotLocation)) return false;
+        double y = robotLocation.get().getY();
+        double yScreenLine = FieldConstants.FieldBoundaries.SCREEN_LINE.in(Meters);
+        if (Math.abs(y - yScreenLine) < FieldConstants.FieldBoundaries.SCREEN_RANGE.in(Meters))
+            return true;
+        return false;
+    }
+
     public static TargetZoneType getAlignmentTargetType(Supplier<Pose2d> robotLocation) {
         double poseY = robotLocation.get().getY();
         if (shouldTargetHub(robotLocation)) {
@@ -42,15 +51,19 @@ public class FieldCalculationHelpers {
         }
         if (FieldConstants.alliance.isPresent()
                 && FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
-            if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) <= poseY) {
+            if (FieldConstants.FieldBoundaries.SCREEN_LINE.in(Meters) <= poseY) {
+
                 return TargetZoneType.DEPOT_SIDE;
             } else {
+
                 return TargetZoneType.OUTPOST_SIDE;
             }
         } else {
-            if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) >= poseY) {
+            if (FieldConstants.FieldBoundaries.SCREEN_LINE.in(Meters) >= poseY) {
+
                 return TargetZoneType.DEPOT_SIDE;
             } else {
+
                 return TargetZoneType.OUTPOST_SIDE;
             }
         }

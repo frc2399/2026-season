@@ -129,10 +129,11 @@ public class AutonCommandFactory {
                                                                                 getTargetPoseIfNeedFlippedEarlyShooter(
                                                                                         OUTPOST_SHOOTING_SPOT)),
                                                 false,
+                                                () -> false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
                         commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
@@ -178,10 +179,11 @@ public class AutonCommandFactory {
                                                                                 getTargetPoseIfNeedFlippedEarlyShooter(
                                                                                         OUTPOST_SHOOTING_SPOT)),
                                                 false,
+                                                () -> false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
                         commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
@@ -210,10 +212,11 @@ public class AutonCommandFactory {
                                                                                 getTargetPoseIfNeedFlippedEarlyShooter(
                                                                                         OUTPOST_SHOOTING_SPOT)),
                                                 false,
+                                                () -> false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
                         commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()))
                 .withName("outpost side neutral zone back and shoot");
     }
@@ -249,10 +252,11 @@ public class AutonCommandFactory {
                                                                                 getTargetPoseIfNeedFlippedEarlyShooter(
                                                                                         DEPOT_SHOOTING_SPOT)),
                                                 false,
+                                                () -> false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
                         commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
@@ -279,10 +283,11 @@ public class AutonCommandFactory {
                                                                                 getTargetPoseIfNeedFlippedEarlyShooter(
                                                                                         DEPOT_SHOOTING_SPOT)),
                                                 false,
+                                                () -> false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
                         commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()))
                 .withName("depot side neutral zone back and shoot");
     }
@@ -313,10 +318,11 @@ public class AutonCommandFactory {
                                                                                 getTargetPoseIfNeedFlippedEarlyShooter(
                                                                                         DEPOT_SHOOTING_SPOT)),
                                                 false,
+                                                () -> false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
                         commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
                         // second cycle
                         intake.defaultBehavior().withTimeout(0.01),
@@ -347,10 +353,11 @@ public class AutonCommandFactory {
                                                                                 getTargetPoseIfNeedFlippedEarlyShooter(
                                                                                         MIDDLE_SHOOT_POSE)),
                                                 false,
+                                                () -> false,
                                                 () -> TargetZoneType.HUB)
                                         .withTimeout(0.1)),
                         commandFactory
-                                .runSpindexShooterIndexAndShooter(false)
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()))
                 .withName("move from center and shoot preload");
     }
@@ -392,7 +399,9 @@ public class AutonCommandFactory {
                                 buildPathDeferred(DEPOT_SIDE_INTAKE_END_NEW, depotConstraints, 1)),
                         buildPathDeferred(CENTER_MOVE_TO_SHOOTING_SPOT, constraints, 0),
                         // buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(7))
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
+                                .withTimeout(7))
                 .withName("move from center to depot and shoot");
     }
 
@@ -467,7 +476,9 @@ public class AutonCommandFactory {
                         buildPathDeferred(DEPOT_CORNER, constraints, 0),
                         intake.defaultBehavior().withTimeout(0.01),
                         buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
-                        commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(7))
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
+                                .withTimeout(7))
                 .withName("move from center to depot and shoot no wall scrape");
     }
 

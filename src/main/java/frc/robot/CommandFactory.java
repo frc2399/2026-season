@@ -11,6 +11,7 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
 import frc.robot.util.FieldCalculationHelpers;
+import java.util.function.Supplier;
 
 public class CommandFactory {
     private final DriveSubsystem drive;
@@ -41,13 +42,15 @@ public class CommandFactory {
         this.intakeSubsystem = intakeSubsystem;
     }
 
-    public Command runSpindexShooterIndexAndShooter(boolean shouldManualShoot) {
+    public Command runSpindexShooterIndexAndShooter(
+            boolean shouldManualShoot, Supplier<Boolean> amInDangerZone) {
         return Commands.sequence(
                 shooter.shoot(
                                 () ->
                                         RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                 () -> drive.getPose()),
                                 shouldManualShoot,
+                                amInDangerZone,
                                 () ->
                                         FieldCalculationHelpers.getAlignmentTargetType(
                                                 () -> drive.getPose()))
@@ -59,13 +62,14 @@ public class CommandFactory {
                 intakeSubsystem.feedFuel());
     }
 
-    public Command runSpindexShooterIndexAndShooterNoFeedFuel() {
+    public Command runSpindexShooterIndexAndShooterNoFeedFuel(Supplier<Boolean> amInDangerZone) {
         return Commands.sequence(
                 shooter.shoot(
                                 () ->
                                         RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                 () -> drive.getPose()),
                                 false,
+                                amInDangerZone,
                                 () ->
                                         FieldCalculationHelpers.getAlignmentTargetType(
                                                 () -> drive.getPose()))
