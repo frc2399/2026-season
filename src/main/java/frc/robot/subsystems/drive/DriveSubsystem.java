@@ -279,6 +279,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                 "robot/should Target Hub",
                 FieldCalculationHelpers.shouldTargetHub(() -> robotPose));
         SmartDashboard.putBoolean(
+                "robot/am in Danger Zone", FieldCalculationHelpers.amInDangerZone(() -> robotPose));
+        SmartDashboard.putBoolean(
                 "robot/isShootingAngleAlignedToHub wide tolerance",
                 RebuiltVisionUtil.isShootingAngleAlignedToHub(
                         () -> robotPose, RebuiltVisionUtil.ToleranceType.POSTALIGNMENT));
