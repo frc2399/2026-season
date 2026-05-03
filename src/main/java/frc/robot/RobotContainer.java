@@ -246,7 +246,7 @@ public class RobotContainer {
                 "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
         SmartDashboard.putData("alliance/reset blue", resetAllianceBlue());
         SmartDashboard.putData("alliance/reset red", resetAllianceRed());
-        delayChooser.addOption("1", 0.0);
+        delayChooser.addOption("0", 0.0);
         delayChooser.addOption("1", 1.0);
         delayChooser.addOption("2", 2.0);
         delayChooser.addOption("3", 3.0);
@@ -255,7 +255,10 @@ public class RobotContainer {
         delayChooser.addOption("6", 6.0);
         delayChooser.addOption("7", 7.0);
         delayChooser.addOption("8", 8.0);
-        SmartDashboard.putData("delay Chooser", delayChooser);
+        delayChooser.addOption("9", 9.0);
+        delayChooser.addOption("10", 10.0);
+        delayChooser.setDefaultOption("0", 0.0);
+        SmartDashboard.putData("Autos/Delays", delayChooser);
     }
 
     public double getWait() {

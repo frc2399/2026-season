@@ -85,7 +85,7 @@ public class CommandFactory {
     }
 
     public Command resetHeading(Angle yaw) {
-        return Commands.parallel(
+        return Commands.sequence(
                 gyro.setYawCommand(yaw), Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
     }
 }
