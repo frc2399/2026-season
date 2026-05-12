@@ -13,25 +13,29 @@ public class FieldCalculationHelpers {
         double poseX = robotLocation.get().getX();
         if (FieldConstants.alliance.isPresent()) {
             if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
-                if (FieldConstants.FieldBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters) <= poseX
-                        && poseX
-                                <= FieldConstants.FieldBoundaries.BLUE_ZONE_BOUNDARY_X.in(Meters)) {
+                if (FieldConstants.FieldBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters) <= poseX) {
                     return true;
                 } else {
                     return false;
                 }
             }
             if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
-                if (FieldConstants.FieldBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX
-                        && poseX
-                                <= FieldConstants.FieldBoundaries.RED_DRIVER_STATION_WALL_X.in(
-                                        Meters)) {
+                if (FieldConstants.FieldBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX) {
                     return true;
                 } else {
                     return false;
                 }
             }
         }
+        return false;
+    }
+
+    public static boolean amInDangerZone(Supplier<Pose2d> robotLocation) {
+        if (shouldTargetHub(robotLocation)) return false;
+        double y = robotLocation.get().getY();
+        double yScreenLine = FieldConstants.FieldBoundaries.SCREEN_LINE.in(Meters);
+        if (Math.abs(y - yScreenLine) < FieldConstants.FieldBoundaries.SCREEN_RANGE.in(Meters))
+            return true;
         return false;
     }
 
@@ -42,15 +46,19 @@ public class FieldCalculationHelpers {
         }
         if (FieldConstants.alliance.isPresent()
                 && FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
-            if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) <= poseY) {
+            if (FieldConstants.FieldBoundaries.SCREEN_LINE.in(Meters) <= poseY) {
+
                 return TargetZoneType.DEPOT_SIDE;
             } else {
+
                 return TargetZoneType.OUTPOST_SIDE;
             }
         } else {
-            if (FieldConstants.FieldBoundaries.HORIZONTAL_CENTER_LINE.in(Meters) >= poseY) {
+            if (FieldConstants.FieldBoundaries.SCREEN_LINE.in(Meters) >= poseY) {
+
                 return TargetZoneType.DEPOT_SIDE;
             } else {
+
                 return TargetZoneType.OUTPOST_SIDE;
             }
         }

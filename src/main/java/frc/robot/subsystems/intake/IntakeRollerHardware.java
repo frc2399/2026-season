@@ -40,7 +40,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final boolean FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER = true;
 
     private static final double DEFAULT_INTAKE_P = .00001;
-    private static final double DEFAULT_INTAKE_KS = .28;
+    private static final double DEFAULT_INTAKE_KS = .1;
     private static final double DEFAULT_INTAKE_KV = 0.0137;
 
     // private static final TunableNumber TUNABLE_INTAKE_P =

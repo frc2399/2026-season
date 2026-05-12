@@ -29,7 +29,7 @@ public class ShooterConfig {
                 BOTTOM_KS = .122;
                 BOTTOM_KV = 0.0171;
                 BOTTOM_P = 0.003;
-                TOP_KS = .155;
+                TOP_KS = .1;
                 TOP_KV = 0.017;
                 TOP_P = 0.000005;
                 BOTTOM_ROLLER_INVERTED = true;

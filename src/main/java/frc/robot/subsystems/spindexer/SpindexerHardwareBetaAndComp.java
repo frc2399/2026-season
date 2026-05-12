@@ -37,7 +37,7 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
     private final double SPINDEXER_P = 0.02;
     private final double SPINDEXER_D = 0.01;
 
-    private final double SPINDEXER_KS = 0.13;
+    private final double SPINDEXER_KS = 0.08;
     private final double SPINDEXER_KV = 0.15;
     private final boolean SPINDEXER_INVERTED = false;
 

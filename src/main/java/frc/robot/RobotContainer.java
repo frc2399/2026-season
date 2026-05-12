@@ -63,9 +63,11 @@ public class RobotContainer {
                     commandFactory,
                     gyro,
                     shooterSubsystem,
-                    shooterIndexerSubsystem);
+                    shooterIndexerSubsystem,
+                    this);
 
     private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private static SendableChooser<Double> delayChooser = new SendableChooser<>();
     private Command defaultCommand = Commands.none();
 
     private static final CommandXboxController driverController =
@@ -103,6 +105,32 @@ public class RobotContainer {
         setUpAuton();
 
         SmartDashboard.putData("robot/driverController", driverController.getHID());
+    }
+
+    /**
+     * Updates the simulation state, particularly the gyro. This method should be called from
+     * Robot.simulationPeriodic().
+     */
+    public void updateSimulation() {
+        if (!Robot.isSimulation()) {
+            return;
+        }
+
+        // Check if gyro is using the simulation implementation
+        if (gyro.getIO() instanceof frc.robot.subsystems.drive.gyro.GyroSim) {
+            frc.robot.subsystems.drive.gyro.GyroSim gyroSim =
+                    (frc.robot.subsystems.drive.gyro.GyroSim) gyro.getIO();
+
+            // Get the robot's current angular velocity from the drive subsystem
+            // The drive subsystem calculates this from the swerve module states
+            double omegaRadPerSec = drive.getRobotRelativeSpeeds().omegaRadiansPerSecond;
+
+            // Update the simulated gyro with the angular velocity
+            gyroSim.setAngularVelocity(omegaRadPerSec);
+
+            // Integrate to update the heading (20ms = 0.02 seconds)
+            gyroSim.update(0.02);
+        }
     }
 
     public void disableSubsystems() {
@@ -144,10 +172,17 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
         driverController
                 .leftTrigger()
-                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(false)); // do not pass
+                .whileTrue(
+                        commandFactory.runSpindexShooterIndexAndShooter(
+                                false,
+                                () ->
+                                        FieldCalculationHelpers.amInDangerZone(
+                                                () -> drive.getPose()))); // do not pass
         driverController
                 .rightBumper()
-                .whileTrue(commandFactory.runSpindexShooterIndexAndShooter(true)); // do pass
+                .whileTrue(
+                        commandFactory.runSpindexShooterIndexAndShooter(
+                                true, () -> false)); // do pass
         driverController.x().whileTrue(drive.setX());
         driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
     }
@@ -162,6 +197,8 @@ public class RobotContainer {
                                         RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                 () -> drive.getPose()),
                                 false,
+                                () -> false, // this is the tuning controller and we do not care
+                                // if it is in danger zone
                                 () ->
                                         FieldCalculationHelpers.getAlignmentTargetType(
                                                 () -> drive.getPose())));
@@ -209,6 +246,23 @@ public class RobotContainer {
                 "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
         SmartDashboard.putData("alliance/reset blue", resetAllianceBlue());
         SmartDashboard.putData("alliance/reset red", resetAllianceRed());
+        delayChooser.addOption("0", 0.0);
+        delayChooser.addOption("1", 1.0);
+        delayChooser.addOption("2", 2.0);
+        delayChooser.addOption("3", 3.0);
+        delayChooser.addOption("4", 4.0);
+        delayChooser.addOption("5", 5.0);
+        delayChooser.addOption("6", 6.0);
+        delayChooser.addOption("7", 7.0);
+        delayChooser.addOption("8", 8.0);
+        delayChooser.addOption("9", 9.0);
+        delayChooser.addOption("10", 10.0);
+        delayChooser.setDefaultOption("0", 0.0);
+        SmartDashboard.putData("Autos/Delays", delayChooser);
+    }
+
+    public double getWait() {
+        return delayChooser.getSelected();
     }
 
     public Command resetGyroByAuton() {

@@ -49,6 +49,10 @@ public class Robot extends TimedRobot {
         PathfindingCommand.warmupCommand();
     }
 
+    public RobotContainer getRobotContainer() {
+        return robotContainer;
+    }
+
     /**
      * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
      * that you want ran during disabled, autonomous, teleoperated and test.
@@ -201,5 +205,7 @@ public class Robot extends TimedRobot {
 
     /** This function is called periodically whilst in simulation. */
     @Override
-    public void simulationPeriodic() {}
+    public void simulationPeriodic() {
+        robotContainer.updateSimulation();
+    }
 }
