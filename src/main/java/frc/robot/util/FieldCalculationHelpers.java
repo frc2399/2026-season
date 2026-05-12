@@ -13,18 +13,10 @@ public class FieldCalculationHelpers {
         double poseX = robotLocation.get().getX();
         if (FieldConstants.alliance.isPresent()) {
             if (FieldConstants.alliance.get() == DriverStation.Alliance.Blue) {
-                if (FieldConstants.FieldBoundaries.BLUE_DRIVER_STATION_WALL_X.in(Meters) <= poseX) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (FieldConstants.FieldBoundaries.BLUE_ZONE_BOUNDARY_X.in(Meters) >= poseX);
             }
             if (FieldConstants.alliance.get() == DriverStation.Alliance.Red) {
-                if (FieldConstants.FieldBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (FieldConstants.FieldBoundaries.RED_ZONE_BOUNDARY_X.in(Meters) <= poseX);
             }
         }
         return false;
