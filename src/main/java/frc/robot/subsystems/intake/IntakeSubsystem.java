@@ -80,6 +80,11 @@ public class IntakeSubsystem extends SubsystemBase {
         return this.run(() -> rollerIO.runIntake());
     }
 
+    // delete
+    public Command runRollerForTuning() {
+        return this.run(() -> rollerIO.runIntakeForShooting());
+    }
+
     public Command deployArm() {
         return this.runOnce(
                 () -> {
