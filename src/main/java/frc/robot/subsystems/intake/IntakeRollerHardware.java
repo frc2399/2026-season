@@ -28,7 +28,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
     private final SparkClosedLoopController intakePidController;
 
-    private static final double ROLLER_GEAR_RATIO = 18.0 / 22.0;
+    private static final double ROLLER_GEAR_RATIO = 3.0 / 2.0;
     private final Angle ENCODER_POSITION_FACTOR = Radians.of(2 * Math.PI / ROLLER_GEAR_RATIO);
     private final AngularVelocity ENCODER_VELOCITY_FACTOR =
             RadiansPerSecond.of((2 * Math.PI / 60) / ROLLER_GEAR_RATIO);
@@ -128,7 +128,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
     @Override
     public void runIntakeForShooting() {
-        desiredVelocity = ROLLER_FREE_SPEED.times(.5);
+        desiredVelocity = ROLLER_FREE_SPEED.times(.1);
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);

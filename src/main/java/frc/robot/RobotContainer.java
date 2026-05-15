@@ -207,7 +207,7 @@ public class RobotContainer {
         tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
         tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
         tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
-        tuningController.b().whileTrue(intakeSubsystem.runRollerForTuning());
+        tuningController.b().whileTrue(intakeSubsystem.runRoller());
         tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
         tuningController.povRight().whileTrue(intakeSubsystem.feedFuel());
         tuningController
