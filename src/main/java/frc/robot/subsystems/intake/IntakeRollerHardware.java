@@ -39,9 +39,9 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final boolean LEADER_MOTOR_INVERTED = false;
     private final boolean FOLLOWER_MOTOR_INVERTED_RELATIVE_TO_LEADER = true;
 
-    private static final double DEFAULT_INTAKE_P = .00001;
+    private static final double DEFAULT_INTAKE_P = .0000;
     private static final double DEFAULT_INTAKE_KS = .1;
-    private static final double DEFAULT_INTAKE_KV = 0.0137;
+    private static final double DEFAULT_INTAKE_KV = 0.027;
 
     // private static final TunableNumber TUNABLE_INTAKE_P =
     // new TunableNumber("Intake/intake_p", DEFAULT_INTAKE_P, true);
@@ -58,6 +58,8 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     private final RelativeEncoder intakeFollowerEncoder;
 
     private AngularVelocity desiredVelocity = RadiansPerSecond.of(0);
+
+    private static final AngularVelocity ROLLER_FREE_SPEED = RadiansPerSecond.of(415);
 
     public IntakeRollerHardware() {
         globalMotorConfig.idleMode(IdleMode.kBrake);
@@ -111,15 +113,14 @@ public class IntakeRollerHardware implements IntakeRollerIO {
     }
 
     public void runIntake() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(1).div(ROLLER_GEAR_RATIO);
+        desiredVelocity = ROLLER_FREE_SPEED.times(1);
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
     public void runIntakeBackwards() {
-        desiredVelocity =
-                MotorConstants.VORTEX_FREE_SPEED.times(1).div(ROLLER_GEAR_RATIO).unaryMinus();
+        desiredVelocity = ROLLER_FREE_SPEED.times(1).unaryMinus();
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
@@ -127,7 +128,7 @@ public class IntakeRollerHardware implements IntakeRollerIO {
 
     @Override
     public void runIntakeForShooting() {
-        desiredVelocity = MotorConstants.VORTEX_FREE_SPEED.times(.1).div(ROLLER_GEAR_RATIO);
+        desiredVelocity = ROLLER_FREE_SPEED.times(.1);
 
         intakePidController.setSetpoint(
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
