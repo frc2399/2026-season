@@ -341,7 +341,7 @@ public final class FieldConstants {
         public static final Distance SCREEN_LINE =
                 Inches.of(204); // screen 17 ft from scoring table (measured by fta)
         public static final Distance HORIZONTAL_CENTER_LINE = Meters.of(4.034663);
-        public static final Distance SCREEN_RANGE = Meters.of(0.4);
+        public static final Distance SCREEN_RANGE = Meters.of(0);
     }
 
     public static class HubConstants {
