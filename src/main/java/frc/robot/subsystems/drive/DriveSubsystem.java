@@ -384,9 +384,14 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             DoubleSupplier ySpeed,
             DoubleSupplier rotRate,
             Boolean fieldRelative,
-            BooleanSupplier shouldAutoOrient) {
+            BooleanSupplier shouldAutoOrient,
+            BooleanSupplier enableDriverControl) {
         return this.run(
                         () -> {
+                            double driverSpeedFactor = 0;
+                            if (enableDriverControl.getAsBoolean()) {
+                                driverSpeedFactor = 0.1;
+                            }
                             double currentAngle = gyro.getYaw(false).in(Radians);
                             if (FieldConstants.alliance.isPresent()
                                     && FieldConstants.alliance.get()
@@ -397,6 +402,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             isAutoOrienting = shouldAutoOrient.getAsBoolean();
 
                             double r = Math.hypot(xSpeed.getAsDouble(), ySpeed.getAsDouble());
+                            r = driverSpeedFactor * r;
                             double polarAngle =
                                     Math.atan2(ySpeed.getAsDouble(), xSpeed.getAsDouble());
                             double polarXSpeed = r * Math.cos(polarAngle);

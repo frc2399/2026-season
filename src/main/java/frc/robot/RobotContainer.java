@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants;
@@ -97,6 +98,7 @@ public class RobotContainer {
     private boolean isGyroConfigured = false;
     private boolean autonHasNoGyroAngle = false;
     private String autonGyroConfiguredFor = "";
+    private boolean enableDriverControls = false;
 
     public RobotContainer() {
         configureDefaultCommands();
@@ -156,7 +158,8 @@ public class RobotContainer {
                         true,
                         () ->
                                 (driverController.leftBumper().getAsBoolean()
-                                        || driverController.leftTrigger().getAsBoolean())));
+                                        || driverController.leftTrigger().getAsBoolean()),
+                        () -> enableDriverControls));
         intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
         spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
@@ -220,6 +223,10 @@ public class RobotContainer {
                                                 RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                         () -> drive.getPose()))));
         tuningController.povDown().onTrue(commandFactory.resetHeading(Degrees.of(180)));
+        tuningController
+                .povUp()
+                .onTrue(new InstantCommand(() -> enableDriverControls = true))
+                .onFalse(new InstantCommand(() -> enableDriverControls = false));
     }
 
     private void setUpAuton() {
