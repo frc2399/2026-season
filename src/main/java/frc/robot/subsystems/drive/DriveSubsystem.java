@@ -163,6 +163,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
     // Useful pose debugging
     private final StructPublisher<Pose2d> posePublisher;
 
+    private boolean inOutreachMode = false;
+
     /** Creates a new DriveSubsystem. */
     public DriveSubsystem(
             SwerveModule frontLeft,
@@ -384,12 +386,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             DoubleSupplier ySpeed,
             DoubleSupplier rotRate,
             Boolean fieldRelative,
-            BooleanSupplier shouldAutoOrient,
-            BooleanSupplier enableDriverControl) {
+            BooleanSupplier shouldAutoOrient) {
         return this.run(
                         () -> {
                             double driverSpeedFactor = 0;
-                            if (enableDriverControl.getAsBoolean()) {
+                            if (inOutreachMode) {
                                 driverSpeedFactor = 0.1;
                             }
                             double currentAngle = gyro.getYaw(false).in(Radians);
@@ -672,5 +673,13 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
         SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
+    }
+
+    public Command allowMovementInOutReachMode() {
+        return this.runOnce(() -> inOutreachMode = true);
+    }
+
+    public Command disallowMovement() {
+        return this.runOnce(() -> inOutreachMode = false);
     }
 }

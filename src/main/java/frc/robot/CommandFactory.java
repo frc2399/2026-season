@@ -88,4 +88,12 @@ public class CommandFactory {
         return Commands.sequence(
                 gyro.setYawCommand(yaw), Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
     }
+
+    public Command allowMovementInOutreachMode() {
+        return Commands.parallel(drive.disallowMovement());
+    }
+
+    public Command disallowMomvement() {
+        return Commands.parallel(drive.disallowMovement());
+    }
 }

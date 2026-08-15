@@ -177,10 +177,11 @@ public class SubsystemFactory {
                     new IntakeArmHardwareBetaAndComp(
                             RobotConstants.DeadbandConstants.BETA_INTAKE_ARM_DEADBAND));
         } else if (robotType == RobotType.COMP) {
-            return new IntakeSubsystem(
-                    new IntakeRollerHardware(),
-                    new IntakeArmHardwareBetaAndComp(
-                            RobotConstants.DeadbandConstants.COMP_INTAKE_ARM_DEADBAND));
+            // return new IntakeSubsystem(
+            //         new IntakeRollerHardware(),
+            //         new IntakeArmHardwareBetaAndComp(
+            //                 RobotConstants.DeadbandConstants.COMP_INTAKE_ARM_DEADBAND));
+            return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         } else {
             return new IntakeSubsystem(new IntakeRollerPlacebo(), new IntakeArmPlacebo());
         }
