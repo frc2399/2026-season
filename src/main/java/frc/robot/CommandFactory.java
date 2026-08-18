@@ -90,10 +90,10 @@ public class CommandFactory {
     }
 
     public Command allowMovementInOutreachMode() {
-        return Commands.parallel(drive.disallowMovement());
+        return Commands.parallel(drive.allowMovementInOutreachMode());
     }
 
-    public Command disallowMomvement() {
+    public Command disallowMovement() {
         return Commands.parallel(drive.disallowMovement());
     }
 }

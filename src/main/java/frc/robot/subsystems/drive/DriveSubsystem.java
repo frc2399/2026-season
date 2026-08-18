@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
@@ -389,9 +390,10 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             BooleanSupplier shouldAutoOrient) {
         return this.run(
                         () -> {
+                            System.out.println("outreach driving");
                             double driverSpeedFactor = 0;
                             if (inOutreachMode) {
-                                driverSpeedFactor = 0.1;
+                                driverSpeedFactor = 0;
                             }
                             double currentAngle = gyro.getYaw(false).in(Radians);
                             if (FieldConstants.alliance.isPresent()
@@ -417,7 +419,7 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                             double newRotRate =
                                     getRotRate(
                                             currentAngle,
-                                            Math.pow(rotRate.getAsDouble(), 3),
+                                            Math.pow(rotRate.getAsDouble(), 3 * driverSpeedFactor),
                                             polarXSpeed,
                                             polarYSpeed,
                                             shouldAutoOrient);
@@ -675,11 +677,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
     }
 
-    public Command allowMovementInOutReachMode() {
-        return this.runOnce(() -> inOutreachMode = true);
+    public Command allowMovementInOutreachMode() {
+        return Commands.runOnce(() -> inOutreachMode = true);
     }
 
     public Command disallowMovement() {
-        return this.runOnce(() -> inOutreachMode = false);
+        return Commands.runOnce(() -> inOutreachMode = false);
     }
 }
