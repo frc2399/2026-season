@@ -202,14 +202,14 @@ public class RobotContainer {
                                 () ->
                                         FieldCalculationHelpers.getAlignmentTargetType(
                                                 () -> drive.getPose())));
-        tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
-        tuningController.leftBumper().whileTrue(intakeSubsystem.stowArmSetpoint());
-        tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
-        tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
-        tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
-        tuningController.b().whileTrue(intakeSubsystem.runRoller());
-        tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
-        tuningController.povRight().whileTrue(intakeSubsystem.feedFuel());
+        // tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
+        // tuningController.leftBumper().whileTrue(intakeSubsystem.stowArmSetpoint());
+        // tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
+        // tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
+        // tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
+        // tuningController.b().whileTrue(intakeSubsystem.runRoller());
+        // tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
+        // tuningController.povRight().whileTrue(intakeSubsystem.feedFuel());
         tuningController
                 .povUp()
                 // .and(tuningController.a())
