@@ -102,6 +102,13 @@ public class SpindexerHardwareBetaAndComp implements SpindexerIO {
                 desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
     }
 
+    public void runSpindexerAtSpeed(AngularVelocity speed) {
+        desiredVelocity = speed; // empirical max speed
+
+        spindexerPidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
     public void runSpindexerBackwards() {
         desiredVelocity =
                 RadiansPerSecond.of(-0.10 * MotorConstants.VORTEX_FREE_SPEED.in(RadiansPerSecond))

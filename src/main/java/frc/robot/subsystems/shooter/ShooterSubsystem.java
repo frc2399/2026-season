@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CommandFactory.TargetZoneType;
+import frc.robot.constants.RobotConstants.OutreachConstants;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOState;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterSpeeds;
 import java.io.File;
@@ -75,6 +76,15 @@ public class ShooterSubsystem extends SubsystemBase {
         if (!csvFilepath.equals("")) {
             readCSV();
         }
+    }
+
+    public Command shootAtOutreachSpeed() {
+        return this.run(
+                        () ->
+                                io.runShooterWithSpeeds(
+                                        OutreachConstants.OUTREACH_SHOOTER_TOP_SPEED,
+                                        OutreachConstants.OUTREACH_SHOOTER_BOTTOM_SPEED))
+                .withName("shootAtOutreachSpeed");
     }
 
     public Command shoot(

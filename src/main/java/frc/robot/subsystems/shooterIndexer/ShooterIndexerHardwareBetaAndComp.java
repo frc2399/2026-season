@@ -99,6 +99,13 @@ public class ShooterIndexerHardwareBetaAndComp implements ShooterIndexerIO {
         }
     }
 
+    public void runShooterIndexerAtSpeed(AngularVelocity speed) {
+        desiredVelocity = speed; // empirical max speed
+
+        shooterIndexerPidController.setSetpoint(
+                desiredVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
     @Override
     public void runShooterIndexer() {
         desiredVelocity = RadiansPerSecond.of(215);

@@ -22,14 +22,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.RebuiltVisionUtil;
 import frc.robot.subsystems.drive.gyro.Gyro;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerSubsystem;
 import frc.robot.subsystems.spindexer.SpindexerSubsystem;
-import frc.robot.util.FieldCalculationHelpers;
-import frc.robot.util.GameState;
 import frc.robot.vision.VisionPoseEstimator;
 import java.util.Optional;
 
@@ -72,7 +69,7 @@ public class RobotContainer {
 
     private static final CommandXboxController driverController =
             new CommandXboxController(DriveControlConstants.DRIVER_CONTROLLER_PORT);
-    private static final CommandXboxController tuningController =
+    private static final CommandXboxController outreachController =
             new CommandXboxController(DriveControlConstants.TUNING_CONTROLLER_PORT);
 
     private final Alert driverDisconnected =
@@ -101,7 +98,8 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindingsDriver();
-        configureButtonBindingsTuningController();
+        // configureButtonBindingsoutreachController();
+        configureOutreachBindings();
         setUpAuton();
 
         SmartDashboard.putData("robot/driverController", driverController.getHID());
@@ -154,111 +152,35 @@ public class RobotContainer {
                                         driverController.getRightX(),
                                         DriveControlConstants.DRIVE_DEADBAND)),
                         true,
-                        () ->
-                                (driverController.leftBumper().getAsBoolean()
-                                        || driverController.leftTrigger().getAsBoolean())));
-        intakeSubsystem.setDefaultCommand(intakeSubsystem.defaultBehavior());
+                        // Outreach branch: auto-orient is disabled entirely. Previously this was
+                        // (leftBumper || leftTrigger), but the left trigger now runs the outreach
+                        // shooter combo, and auto-orient would command robot rotation (spinning the
+                        // swerve modules) even with zero translation. See
+                        // configureOutreachBindings.
+                        () -> false));
         shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultBehavior());
         spindexerSubsystem.setDefaultCommand(spindexerSubsystem.defaultBehavior());
         shooterIndexerSubsystem.setDefaultCommand(shooterIndexerSubsystem.defaultBehavior());
     }
 
     private void configureButtonBindingsDriver() {
-        Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
-
-        // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
-        driverController.a().whileTrue(intakeSubsystem.deployAndRunIntakeBackwards());
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
-        driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
-        driverController
-                .leftTrigger()
-                .whileTrue(
-                        commandFactory.runSpindexShooterIndexAndShooter(
-                                false,
-                                () ->
-                                        FieldCalculationHelpers.amInDangerZone(
-                                                () -> drive.getPose()))); // do not pass
-        driverController
-                .rightBumper()
-                .whileTrue(
-                        commandFactory.runSpindexShooterIndexAndShooter(
-                                true, () -> false)); // do pass
-        driverController.x().whileTrue(drive.setX());
-        driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
     }
 
-    private void configureButtonBindingsTuningController() {
-        tuningController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
-        tuningController
+    private void configureOutreachBindings() {
+        Trigger outreachEnabled = outreachController.a();
+
+        driverController
                 .leftTrigger()
-                .whileTrue(
-                        shooterSubsystem.shoot(
-                                () ->
-                                        RebuiltVisionUtil.getDistanceToAlignmentTarget(
-                                                () -> drive.getPose()),
-                                false,
-                                () -> false, // this is the tuning controller and we do not care
-                                // if it is in danger zone
-                                () ->
-                                        FieldCalculationHelpers.getAlignmentTargetType(
-                                                () -> drive.getPose())));
-        // tuningController.rightBumper().whileTrue(spindexerSubsystem.runSpindexer());
-        // tuningController.leftBumper().whileTrue(intakeSubsystem.stowArmSetpoint());
-        // tuningController.x().whileTrue(shooterIndexerSubsystem.runShooterIndexer());
-        // tuningController.y().whileTrue(intakeSubsystem.runIntakeArmInVelocity());
-        // tuningController.povLeft().whileTrue(intakeSubsystem.runIntakeArmOutVelocity());
-        // tuningController.b().whileTrue(intakeSubsystem.runRoller());
-        // tuningController.a().whileTrue(shooterSubsystem.tuningSetpoint());
-        // tuningController.povRight().whileTrue(intakeSubsystem.feedFuel());
-        tuningController
-                .povUp()
-                // .and(tuningController.a())
-                .onTrue(
-                        Commands.runOnce(
-                                () ->
-                                        shooterSubsystem.logShooterSpeedsToCSV(
-                                                RebuiltVisionUtil.getDistanceToAlignmentTarget(
-                                                        () -> drive.getPose()))));
-        tuningController.povDown().onTrue(commandFactory.resetHeading(Degrees.of(180)));
+                .and(outreachEnabled)
+                .whileTrue(commandFactory.runSpindexShooterIndexAndShooterOutreach());
+        outreachEnabled.onTrue(Commands.runOnce(() -> drive.inOutreachMode = true));
+        outreachEnabled.onFalse(Commands.runOnce(() -> drive.inOutreachMode = false));
     }
 
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption(
-                "depot side to neutral zone then back and shoot",
-                autonCommandFactory.depotSideNeutralZoneAndBackWithShooting());
-        autoChooser.addOption(
-                "outpost side to neutral zone then back and shoot",
-                autonCommandFactory.outpostSideNeutralZoneAndBackWithShooting());
-        autoChooser.addOption(
-                "center back up and shoot preload", autonCommandFactory.centerMoveAndShoot());
-        autoChooser.addOption(
-                "move from center to depot and shoot", autonCommandFactory.hubMoveToDepot());
-        autoChooser.addOption(
-                "SCOOP depot side neutral zone back and shoot",
-                autonCommandFactory.depotSideNeutralZoneScoop());
-        autoChooser.addOption(
-                "SCOOP outpost side neutral zone back and shoot",
-                autonCommandFactory.outpostSideNeutralZoneScoop());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
-        SmartDashboard.putData("Autos/Selector", autoChooser);
-        SmartDashboard.putData(
-                "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
-        SmartDashboard.putData("alliance/reset blue", resetAllianceBlue());
-        SmartDashboard.putData("alliance/reset red", resetAllianceRed());
-        delayChooser.addOption("0", 0.0);
-        delayChooser.addOption("1", 1.0);
-        delayChooser.addOption("2", 2.0);
-        delayChooser.addOption("3", 3.0);
-        delayChooser.addOption("4", 4.0);
-        delayChooser.addOption("5", 5.0);
-        delayChooser.addOption("6", 6.0);
-        delayChooser.addOption("7", 7.0);
-        delayChooser.addOption("8", 8.0);
-        delayChooser.addOption("9", 9.0);
-        delayChooser.addOption("10", 10.0);
-        delayChooser.setDefaultOption("0", 0.0);
-        SmartDashboard.putData("Autos/Delays", delayChooser);
     }
 
     public double getWait() {

@@ -400,10 +400,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
                                 currentAngle += Math.PI;
                             }
 
+                            SmartDashboard.putNumber("drive/driveSpeedFactor", driveSpeedFactor);
                             isAutoOrienting = shouldAutoOrient.getAsBoolean();
 
                             double r = Math.hypot(xSpeed.getAsDouble(), ySpeed.getAsDouble());
                             r = r * driveSpeedFactor;
+                            SmartDashboard.putNumber("drive/r", r);
                             double polarAngle =
                                     Math.atan2(ySpeed.getAsDouble(), xSpeed.getAsDouble());
                             double polarXSpeed = r * Math.cos(polarAngle);
@@ -673,5 +675,6 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
         SmartDashboard.putNumber("drive/Total Velocity(mps)", states.totalVelocity);
         SmartDashboard.putNumber("drive/Angular Velocity(deg per sec)", states.angularVelocity);
         SmartDashboard.putNumber("drive/Gyro Angle(deg)", states.gyroAngleDegrees);
+        SmartDashboard.putBoolean("drive/inOutreachMode", inOutreachMode);
     }
 }
