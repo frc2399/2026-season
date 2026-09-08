@@ -8,10 +8,10 @@ type: Feature
 
 ---
 
-##* *Overview:* *
+*Overview:*
 
-##* *Relevant Presentations:* *
+*Relevant Presentations:*
 
-##* *Necessary Steps:* *
+*Necessary Steps:*
 
-##* *Requirements:* *
+*Requirements:*
