@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer robotContainer;
-
+    private PowerDistribution pdh = new PowerDistribution();
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -78,8 +78,7 @@ public class Robot extends TimedRobot {
                 "robot/has stopped shooting",
                 robotContainer.autonCommandFactory.hasStoppedShooting());
         // Added code to log data about the PDH
-        PowerDistribution ph = new PowerDistribution();
-        SmartDashboard.putData("PH", ph);
+        SmartDashboard.putData("PDH", pdh);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
