@@ -13,6 +13,7 @@ Describe the steps taken to test your changes.
 *  [ ] My code follows the 2399 coding standards
 *  [ ] Merged in the main branch and fixed any merge conflicts
 *  [ ] Built code with no errors
+*  [ ] Make sure Problems Tab in VSCode does not have any items that should be fixed
 *  [ ] Tested code
 *  [ ] Formatted code with spotless ( ./gradlew spotlessApply )
 *  [ ] Added and committed all code changes
