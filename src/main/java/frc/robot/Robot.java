@@ -32,6 +32,8 @@ public class Robot extends TimedRobot {
 
     private final RobotContainer robotContainer;
 
+    private String key;
+
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -76,6 +78,15 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean(
                 "robot/has stopped shooting",
                 robotContainer.autonCommandFactory.hasStoppedShooting());
+        SmartDashboard.putNumber("can/bus off count", RobotController.getCANStatus().busOffCount);
+        SmartDashboard.putNumber(
+                "can/percentBusUtilization", RobotController.getCANStatus().percentBusUtilization);
+        System.out.println(RobotController.getCANStatus().percentBusUtilization);
+        SmartDashboard.putNumber(
+                "can/recieveErrorcount", RobotController.getCANStatus().receiveErrorCount);
+        SmartDashboard.putNumber(
+                "can/transmitErrorCount", RobotController.getCANStatus().transmitErrorCount);
+        SmartDashboard.putNumber("can/txFullCount", RobotController.getCANStatus().txFullCount);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
