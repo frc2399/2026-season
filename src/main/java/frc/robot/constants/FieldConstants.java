@@ -330,6 +330,30 @@ public final class FieldConstants {
                             new Pose2d(
                                     new Translation2d(Meters.of(7.7), Meters.of(1)),
                                     Rotation2d.k180deg));
+            public static final Pose FIRST_CORNER_SQUARE =
+                    new Pose(
+                            "first corner of the square",
+                            new Pose2d(
+                                    new Translation2d(Inches.of(90), Inches.of(240)),
+                                    new Rotation2d(Degrees.of(0))));
+            public static final Pose SECOND_CORNER_SQUARE =
+                    new Pose(
+                            "second corner of the square",
+                            new Pose2d(
+                                    new Translation2d(Inches.of(60), Inches.of(240)),
+                                    new Rotation2d(Degrees.of(0))));
+            public static final Pose THIRD_CORNER_SQUARE =
+                    new Pose(
+                            "third corner of the square",
+                            new Pose2d(
+                                    new Translation2d(Inches.of(60), Inches.of(210)),
+                                    new Rotation2d(Degrees.of(0))));
+            public static final Pose FINAL_CORNER_SQUARE =
+                    new Pose(
+                            "final corner of the square",
+                            new Pose2d(
+                                    new Translation2d(Inches.of(90), Inches.of(210)),
+                                    new Rotation2d(Degrees.of(0))));
         }
     }
 
@@ -339,7 +363,8 @@ public final class FieldConstants {
         public static final Distance BLUE_ZONE_BOUNDARY_X = Inches.of(181.56);
         public static final Distance BLUE_DRIVER_STATION_WALL_X = Meters.of(0);
         public static final Distance SCREEN_LINE =
-                Inches.of(204); // screen 17 ft from scoring table (measured by fta)
+                Inches.of(204); // screen 17 ft from scoring table (measured
+        // by fta)
         public static final Distance HORIZONTAL_CENTER_LINE = Meters.of(4.034663);
         public static final Distance SCREEN_RANGE = Meters.of(0);
     }
