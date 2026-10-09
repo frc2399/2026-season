@@ -166,7 +166,8 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
-        // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
+        // note! do not bind to the left bumper button; it is used in drive command for
+        // auto-orient!
         driverController.a().whileTrue(intakeSubsystem.deployAndRunIntakeBackwards());
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
@@ -197,7 +198,8 @@ public class RobotContainer {
                                         RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                 () -> drive.getPose()),
                                 false,
-                                () -> false, // this is the tuning controller and we do not care
+                                () -> false, // this is the tuning controller and we do
+                                // not care
                                 // if it is in danger zone
                                 () ->
                                         FieldCalculationHelpers.getAlignmentTargetType(
@@ -224,7 +226,8 @@ public class RobotContainer {
 
     private void setUpAuton() {
 
-        // adds the different auton programs to the list of options on the SmartDashboard
+        // adds the different auton programs to the list of options on the
+        // SmartDashboard
         autoChooser = new SendableChooser<>();
         autoChooser.addOption(
                 "depot side to neutral zone then back and shoot",
