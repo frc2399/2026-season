@@ -16,6 +16,15 @@ import edu.wpi.first.units.measure.Time;
 
 public final class RobotConstants {
 
+    public static final class OutreachConstants {
+        public static AngularVelocity OUTREACH_SHOOTER_TOP_SPEED =
+                RadiansPerSecond.of(170); // was 222
+        public static AngularVelocity OUTREACH_SHOOTER_BOTTOM_SPEED =
+                RadiansPerSecond.of(170); // 233
+        public static AngularVelocity OUTREACH_SPINDEXER_SPEED = RadiansPerSecond.of(14); // 75
+        public static AngularVelocity OUTREACH_INDEXER_SPEED = RadiansPerSecond.of(42); // 215
+    }
+
     public static class MotorIdConstants {
         public static final int FRONT_LEFT_DRIVING_CAN_ID = 11;
         public static final int REAR_LEFT_DRIVING_CAN_ID = 21;

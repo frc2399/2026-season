@@ -88,4 +88,14 @@ public class CommandFactory {
         return Commands.sequence(
                 gyro.setYawCommand(yaw), Commands.runOnce(() -> drive.resetOdometryAfterGyro()));
     }
+
+    public Command runSpindexShooterIndexAndShooterOutreach() {
+        return Commands.sequence(
+                shooter.shootAtOutreachSpeed().until(() -> shooter.isUpToSpeed()),
+                Commands.parallel(
+                                spindexer.runSpindexerAtOutreachSpeed(),
+                                shooterIndexer.runShooterIndexerAtOutreachSpeed())
+                        .withTimeout(2.0) // might not need this since not doing intake shake thing
+                );
+    }
 }

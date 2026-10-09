@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooterIndexer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.RobotConstants.OutreachConstants;
 import frc.robot.subsystems.shooterIndexer.ShooterIndexerIO.ShooterIndexerIOState;
 
 public class ShooterIndexerSubsystem extends SubsystemBase {
@@ -12,6 +13,11 @@ public class ShooterIndexerSubsystem extends SubsystemBase {
 
     public ShooterIndexerSubsystem(ShooterIndexerIO io) {
         this.io = io;
+    }
+
+    public Command runShooterIndexerAtOutreachSpeed() {
+        return this.run(
+                () -> io.runShooterIndexerAtSpeed(OutreachConstants.OUTREACH_INDEXER_SPEED));
     }
 
     public Command runShooterIndexer() {

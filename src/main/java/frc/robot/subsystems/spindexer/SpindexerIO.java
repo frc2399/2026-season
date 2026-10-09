@@ -1,6 +1,10 @@
 package frc.robot.subsystems.spindexer;
 
+import edu.wpi.first.units.measure.AngularVelocity;
+
 public interface SpindexerIO {
+
+    void runSpindexerAtSpeed(AngularVelocity speed);
 
     public void runSpindexer();
 
