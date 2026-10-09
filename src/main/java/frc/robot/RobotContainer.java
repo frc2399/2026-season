@@ -170,6 +170,9 @@ public class RobotContainer {
         driverController.a().whileTrue(intakeSubsystem.deployAndRunIntakeBackwards());
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
+        // autoshooting aligns the robot to the hub if we're in the alliance zone or to the 
+        // corner of our alliance zone if we're outside of the alliance zone (so the fuel
+        // get passed into our area).
         driverController
                 .leftTrigger()
                 .whileTrue(
@@ -177,12 +180,14 @@ public class RobotContainer {
                                 false,
                                 () ->
                                         FieldCalculationHelpers.amInDangerZone(
-                                                () -> drive.getPose()))); // do not pass
+                                                () -> drive.getPose())));
+        //manual shooting is a backup so we can still score if there's an issue 
+        // with the limelight or robot pose.
         driverController
                 .rightBumper()
                 .whileTrue(
                         commandFactory.runSpindexShooterIndexAndShooter(
-                                true, () -> false)); // do pass
+                                true, () -> false));
         driverController.x().whileTrue(drive.setX());
         driverController.y().whileTrue(spindexerSubsystem.runSpindexerBackwards());
     }
