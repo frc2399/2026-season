@@ -165,6 +165,14 @@ public class RobotContainer {
 
     private void configureButtonBindingsDriver() {
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
+        driverController
+                .x()
+                .whileTrue(
+                        Commands.sequence(
+                                intakeSubsystem.deployArm(),
+                                Commands.waitSeconds(2),
+                                intakeSubsystem.midArmSetpoint(),
+                                Commands.waitSeconds(2)));
     }
 
     private void configureOutreachBindings() {
