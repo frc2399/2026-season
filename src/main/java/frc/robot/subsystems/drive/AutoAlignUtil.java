@@ -150,8 +150,10 @@ public class AutoAlignUtil {
         // default: do not turn
         double desiredRotRate = 0;
         if (robotPose.get() == null) {
+            SmartDashboard.putString("vision/orient/RobotPose", "robotPoseisNull");
             return desiredRotRate;
         } else {
+            SmartDashboard.putString("vision/orient/RobotPose", "robotPoseisNotNull");
             Pose2d shooterPose = robotPose.get().transformBy(offsetTransform);
             Translation2d targetToRobotTranslation =
                     orientTargetPose.getTranslation().minus(shooterPose.getTranslation());

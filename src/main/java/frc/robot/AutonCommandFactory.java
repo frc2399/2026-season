@@ -48,10 +48,10 @@ public class AutonCommandFactory {
     private Trigger hasStoppedShootingTrigger;
 
     public final PathConstraints constraints =
-            new PathConstraints(3, 4, Units.degreesToRadians(720), Units.degreesToRadians(720));
+            new PathConstraints(1, 3, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints neutralConstraints =
-            new PathConstraints(3, 4, Units.degreesToRadians(720), Units.degreesToRadians(720));
+            new PathConstraints(1, 3, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints depotConstraints =
             new PathConstraints(
