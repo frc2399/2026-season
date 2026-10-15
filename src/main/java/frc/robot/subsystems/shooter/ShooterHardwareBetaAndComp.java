@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.REVLibError;
@@ -19,6 +20,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.MotorConstants;
 import frc.robot.util.TunableNumber;
@@ -216,6 +218,8 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
         state.bottomRollerAppliedVoltage =
                 shooterBottomSparkFlex.getBusVoltage() * shooterBottomSparkFlex.getAppliedOutput();
         state.isUpToSpeed = isUpToSpeed();
+        state.topRollerPositionRadians = shooterTopEncoder.getPosition();
+        state.bottomRollerPositionRadians = shooterBottomEncoder.getPosition();
     }
 
     public ShooterSpeeds getCurrentTopAndBottomSpeeds() {
@@ -233,5 +237,15 @@ public class ShooterHardwareBetaAndComp implements ShooterIO {
                 desiredBottomVelocity.in(RadiansPerSecond), ControlType.kVelocity);
         shooterTopPIDController.setSetpoint(
                 desiredTopVelocity.in(RadiansPerSecond), ControlType.kVelocity);
+    }
+
+    @Override
+    public void runTopRollerVolts(Voltage volts) {
+        shooterTopSparkFlex.setVoltage(volts.in(Volts));
+    }
+
+    @Override
+    public void runBottomRollerVolts(Voltage volts) {
+        shooterBottomSparkFlex.setVoltage(volts.in(Volts));
     }
 }
