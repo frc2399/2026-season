@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.RobotConstants.DriveControlConstants;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -220,6 +221,38 @@ public class RobotContainer {
                                                 RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                         () -> drive.getPose()))));
         tuningController.povDown().onTrue(commandFactory.resetHeading(Degrees.of(180)));
+        tuningController
+                .rightBumper()
+                .and(tuningController.y())
+                .whileTrue(shooterSubsystem.topRollerSysIdQuasistatic(Direction.kForward));
+        tuningController
+                .rightBumper()
+                .and(tuningController.a())
+                .whileTrue(shooterSubsystem.topRollerSysIdQuasistatic(Direction.kReverse));
+        tuningController
+                .rightBumper()
+                .and(tuningController.b())
+                .whileTrue(shooterSubsystem.topRollerSysIdDynamic(Direction.kForward));
+        tuningController
+                .rightBumper()
+                .and(tuningController.x())
+                .whileTrue(shooterSubsystem.topRollerSysIdDynamic(Direction.kReverse));
+        tuningController
+                .leftBumper()
+                .and(tuningController.y())
+                .whileTrue(shooterSubsystem.bottomRollerSysIdQuasistatic(Direction.kForward));
+        tuningController
+                .leftBumper()
+                .and(tuningController.a())
+                .whileTrue(shooterSubsystem.bottomRollerSysIdQuasistatic(Direction.kReverse));
+        tuningController
+                .leftBumper()
+                .and(tuningController.b())
+                .whileTrue(shooterSubsystem.bottomRollerSysIdDynamic(Direction.kForward));
+        tuningController
+                .leftBumper()
+                .and(tuningController.x())
+                .whileTrue(shooterSubsystem.bottomRollerSysIdDynamic(Direction.kReverse));
     }
 
     private void setUpAuton() {

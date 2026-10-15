@@ -2,7 +2,9 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -16,6 +18,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.CommandFactory.TargetZoneType;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOState;
 import frc.robot.subsystems.shooter.ShooterIO.ShooterSpeeds;
@@ -33,6 +36,43 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterIOState shooterStates = new ShooterIOState();
     private String csvFilepath;
     private boolean shouldInterpolate = false;
+
+    private final SysIdRoutine topRollerSysId =
+            new SysIdRoutine(
+                    new SysIdRoutine.Config(),
+                    new SysIdRoutine.Mechanism(
+                            voltage -> io.runTopRollerVolts(voltage),
+                            log ->
+                                    log.motor("shooter-top")
+                                            .voltage(
+                                                    Volts.of(shooterStates.topRollerAppliedVoltage))
+                                            .angularPosition(
+                                                    Radians.of(
+                                                            shooterStates.topRollerPositionRadians))
+                                            .angularVelocity(
+                                                    RadiansPerSecond.of(
+                                                            shooterStates.topRollerActualSpeed)),
+                            this));
+
+    private final SysIdRoutine bottomRollerSysId =
+            new SysIdRoutine(
+                    new SysIdRoutine.Config(),
+                    new SysIdRoutine.Mechanism(
+                            voltage -> io.runBottomRollerVolts(voltage),
+                            log ->
+                                    log.motor("shooter-bottom")
+                                            .voltage(
+                                                    Volts.of(
+                                                            shooterStates
+                                                                    .bottomRollerAppliedVoltage))
+                                            .angularPosition(
+                                                    Radians.of(
+                                                            shooterStates
+                                                                    .bottomRollerPositionRadians))
+                                            .angularVelocity(
+                                                    RadiansPerSecond.of(
+                                                            shooterStates.bottomRollerActualSpeed)),
+                            this));
 
     // for csv logging
     ZoneId LOGGING_TIMEZONE =
@@ -223,6 +263,22 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public boolean isErrorInCSVFile() {
         return !shouldInterpolate;
+    }
+
+    public Command topRollerSysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return topRollerSysId.quasistatic(direction);
+    }
+
+    public Command topRollerSysIdDynamic(SysIdRoutine.Direction direction) {
+        return topRollerSysId.dynamic(direction);
+    }
+
+    public Command bottomRollerSysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return bottomRollerSysId.quasistatic(direction);
+    }
+
+    public Command bottomRollerSysIdDynamic(SysIdRoutine.Direction direction) {
+        return bottomRollerSysId.dynamic(direction);
     }
 
     @Override
