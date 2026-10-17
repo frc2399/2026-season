@@ -176,8 +176,7 @@ public class RobotContainer {
                         commandFactory.runSpindexShooterIndexAndShooter(
                                 false,
                                 () ->
-                                        FieldCalculationHelpers.amInDangerZone(
-                                                () -> drive.getPose()))); // do not pass
+                                        false)); // do not pass
         driverController
                 .rightBumper()
                 .whileTrue(
