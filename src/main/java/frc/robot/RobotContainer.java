@@ -166,7 +166,8 @@ public class RobotContainer {
     private void configureButtonBindingsDriver() {
         Trigger canShootIntoHub = new Trigger(() -> GameState.isHubActive(0));
 
-        // note! do not bind to the left bumper button; it is used in drive command for auto-orient!
+        // note! do not bind to the left bumper button; it is used in drive command for
+        // auto-orient!
         driverController.a().whileTrue(intakeSubsystem.deployAndRunIntakeBackwards());
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
         driverController.rightTrigger().whileTrue(intakeSubsystem.deployAndRunIntake());
@@ -197,7 +198,8 @@ public class RobotContainer {
                                         RebuiltVisionUtil.getDistanceToAlignmentTarget(
                                                 () -> drive.getPose()),
                                 false,
-                                () -> false, // this is the tuning controller and we do not care
+                                () -> false, // this is the tuning controller and we do
+                                // not care
                                 // if it is in danger zone
                                 () ->
                                         FieldCalculationHelpers.getAlignmentTargetType(
@@ -223,6 +225,9 @@ public class RobotContainer {
     }
 
     private void setUpAuton() {
+
+        // adds the different auton programs to the list of options on the
+        // SmartDashboard
         autoChooser = new SendableChooser<>();
         autoChooser.addOption(
                 "depot side to neutral zone then back and shoot",
@@ -241,11 +246,8 @@ public class RobotContainer {
                 "SCOOP outpost side neutral zone back and shoot",
                 autonCommandFactory.outpostSideNeutralZoneScoop());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
-        SmartDashboard.putData("Autos/Selector", autoChooser);
-        SmartDashboard.putData(
-                "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
-        SmartDashboard.putData("alliance/reset blue", resetAllianceBlue());
-        SmartDashboard.putData("alliance/reset red", resetAllianceRed());
+
+        // adds the options for time delays before deploying the auton programs
         delayChooser.addOption("0", 0.0);
         delayChooser.addOption("1", 1.0);
         delayChooser.addOption("2", 2.0);
@@ -258,7 +260,13 @@ public class RobotContainer {
         delayChooser.addOption("9", 9.0);
         delayChooser.addOption("10", 10.0);
         delayChooser.setDefaultOption("0", 0.0);
+
         SmartDashboard.putData("Autos/Delays", delayChooser);
+        SmartDashboard.putData("Autos/Selector", autoChooser);
+        SmartDashboard.putData(
+                "Autos/configure gyro (CHOOSE AUTON THEN CLICK ME!)", resetGyroByAuton());
+        SmartDashboard.putData("alliance/reset blue", resetAllianceBlue());
+        SmartDashboard.putData("alliance/reset red", resetAllianceRed());
     }
 
     public double getWait() {
