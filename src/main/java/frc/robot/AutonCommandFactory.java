@@ -106,6 +106,8 @@ public class AutonCommandFactory {
         return finalPose;
     }
 
+    /* start on depot trench, move to depot side neutral and intake balls then return to depot shooting position
+    and shoot. Second cycle - move and intake up to outpost side neutral */
     public Command outpostSideNeutralZoneAndBackWithShooting() {
         return Commands.sequence(
                         // first cycle
@@ -154,6 +156,8 @@ public class AutonCommandFactory {
                 .withName("outpost side to neutral zone and then back and shoot");
     }
 
+    /*  start on outpost side trench, move into outpost side neutral to scoop balls then move back to
+    outpost side trench to shoot and repeat - two shooting cycles */
     public Command outpostSideNeutralZoneScoop() {
         return Commands.sequence(
                         // first cycle
@@ -228,6 +232,8 @@ public class AutonCommandFactory {
                 .withName("outpost side neutral zone back and shoot");
     }
 
+    /* start on depot side trench, move into depot side neutral to scoop balls then move back to
+    depot side trench to shoot and repeat - two shooting cycles */
     public Command depotSideNeutralZoneScoop() {
         return Commands.sequence(
                         // first cycle
@@ -300,6 +306,9 @@ public class AutonCommandFactory {
                 .withName("depot side neutral zone back and shoot");
     }
 
+    /* start on depot trench, move to depot side neutral and intake balls then return to depot shooting position
+    and shoot. Second cycle - move and intake up to outpost side neutral
+    */
     public Command depotSideNeutralZoneAndBackWithShooting() {
         return Commands.sequence(
                         // first cycle
@@ -348,6 +357,7 @@ public class AutonCommandFactory {
                 .withName("depot side to neutral zone then back and shoot");
     }
 
+    // robot backs up from infront of hub before shooting eight initial fuel pieces into hub
     public Command centerMoveAndShoot() {
         return Commands.sequence(
                         Commands.runOnce(
@@ -397,6 +407,8 @@ public class AutonCommandFactory {
     //     }
 
     // without wall (enters depot from wall side)
+
+    // moves from infront of hub to along depot edge to collect fuel before moving and shooting
     public Command hubMoveToDepot() {
         return Commands.sequence(
                         Commands.runOnce(
