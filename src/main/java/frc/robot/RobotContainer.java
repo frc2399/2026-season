@@ -241,7 +241,7 @@ public class RobotContainer {
                 "SCOOP outpost side neutral zone back and shoot",
                 autonCommandFactory.outpostSideNeutralZoneScoop());
         autoChooser.addOption(
-                "trace a square and shoot fuel", autonCommandFactory.makeASquareAndShoot());
+                "move in a square and shoot", autonCommandFactory.makeASquareAndShoot());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
         SmartDashboard.putData("Autos/Selector", autoChooser);
         SmartDashboard.putData(
