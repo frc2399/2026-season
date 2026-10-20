@@ -51,9 +51,9 @@ public final class FieldConstants {
         // from scoring
         // table.
         public static final Pose OUTPOST_STARTING_POSE =
-                Pose.of("blueOutpostStartingLine", (16.54 - 12.57), (8.07 - 7.71), -90);
+                Pose.of("blueOutpostStartingLine", (16.54 - 12.57), (8.07 - 7.71), 90);
         public static final Pose DEPOT_BORDER_FUEL_CENTER =
-                Pose.of("blueDepotBorderFuelCenter", 7, 7, 180);
+                Pose.of("blueDepotBorderFuelCenter", 7.74, 7, 180);
         public static final Pose DEPOT_PASS_2_START =
                 Pose.of("depot pass to start", 6.8, 6.78, 180);
         public static final Pose DEPOT_PASS_2_END = Pose.of("depot pass to end", 6.8, 1.22, 180);
@@ -61,11 +61,11 @@ public final class FieldConstants {
                 Pose.of("outpost pass to start", 6.8, 1.22, 0);
         public static final Pose OUTPOST_PASS_2_END = Pose.of("outpost pass to end", 6.8, 6.78, 0);
         public static final Pose BLUE_OUTPOST_BORDER_FUEL_CENTER =
-                Pose.of("blueOutpostBorderFuelCenter", 7, 1, 0);
+                Pose.of("blueOutpostBorderFuelCenter", 7.7, 1, 0);
         public static final Pose DEPOT_NEUTRAL_ZONE_CENTER =
-                Pose.of("depotNeutralZoneCenter", 7, 5.08, 0);
+                Pose.of("depotNeutralZoneCenter", 7.74, 5.08, 180);
         public static final Pose OUTPOST_NEUTRAL_ZONE_CENTER =
-                Pose.of("outpostNeutralZoneCenter", 7, 2.96, 0);
+                Pose.of("outpostNeutralZoneCenter", 7.74, 2.96, 0);
         public static final Pose DEPOT_SHOOTING_SPOT =
                 Pose.of("depotShootingSpot", 3.53, 7.35, -72);
         public static final Pose OUTPOST_SHOOTING_SPOT =
@@ -108,72 +108,31 @@ public final class FieldConstants {
         public static final Pose OUTPOST_CORNER_HUB_NEUTRAL_ZONE =
                 Pose.of("outpost corner hub neutral zone", 5.75, 2.5, 180);
         public static final Pose DEPOT_MIDDLE_HUB_NEUTRAL_ZONE =
-                Pose.of("depot middle hub neutral zone", 6.5, 4.5, -90);
+                Pose.of("depot middle hub neutral zone", 6.5, 4.5, 90);
         public static final Pose DEPOT_CORNER_HUB_NEUTRAL_ZONE =
                 Pose.of("depot corner hub neutral zone", 5.75, 5.75, 0);
 
-        // will make sure of the counterclockwise angles are correct in thursday meeting
         public static class SecondPassScoopPoseConstants {
             public static final Pose DEPOT_PAST_TRENCH_ROTATION_SCOOP_2 =
-                    new Pose(
-                            "depot past trench rotation scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(6), Meters.of(6.79)),
-                                    Rotation2d.k180deg));
+                    Pose.of("depot past trench rotation scoop 2",6,6.79,180);
             public static final Pose DEPOT_CORNER_HUB_SCOOP_2 =
-                    new Pose(
-                            "depot corner hub scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(5.75), Meters.of(5.75)),
-                                    Rotation2d.k180deg));
+                    Pose.of("depot corner hub scoop 2",5.75,5.75,180);
             public static final Pose DEPOT_MIDDLE_HUB_SCOOP_2 =
-                    new Pose(
-                            "depot middle hub scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(6.5), Meters.of(4.5)),
-                                    Rotation2d.kCW_90deg));
+                    Pose.of("depot middle hub scoop 2", 6.5, 4.5, -90);
             public static final Pose DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2 =
-                    new Pose(
-                            "depot neutral zone center scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(7), Meters.of(5.08)),
-                                    Rotation2d.kZero));
+                    Pose.of("depot neutral zone center scoop 2", 7.74, 5.08, 0);
             public static final Pose DEPOT_BORDER_FUEL_CENTER_SCOOP_2 =
-                    new Pose(
-                            "depot border fuel center scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(7), Meters.of(5.08)),
-                                    Rotation2d.kZero));
+                    Pose.of( "depot border fuel center scoop 2", 7.74, 5.08,0);
             public static final Pose OUTPOST_PAST_TRENCH_ROTATION_SCOOP_2 =
-                    new Pose(
-                            "outpost past trench rotation scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(6), Meters.of(1.35)),
-                                    Rotation2d.kZero));
+                    Pose.of( "outpost past trench rotation scoop 2", 6, 1.35, 0);
             public static final Pose OUTPOST_CORNER_HUB_SCOOP_2 =
-                    new Pose(
-                            "outpost corner hub scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(5.75), Meters.of(2.5)),
-                                    Rotation2d.kZero));
+                    Pose.of( "outpost corner hub scoop 2",5.75, 2.5,0);
             public static final Pose OUTPOST_MIDDLE_HUB_SCOOP_2 =
-                    new Pose(
-                            "outpost middle hub scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(6.5), Meters.of(3.25)),
-                                    Rotation2d.kCW_90deg));
+                    Pose.of( "outpost middle hub scoop 2",6.5,3.25,-90);
             public static final Pose OUTPOST_NEUTRAL_ZONE_CENTER_SCOOP_2 =
-                    new Pose(
-                            "outpost neutral zone center scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(7), Meters.of(2.96)),
-                                    Rotation2d.k180deg));
+                    Pose.of("outpost neutral zone center scoop 2",7.74,2.96,180);
             public static final Pose OUTPOST_BORDER_FUEL_CENTER_SCOOP_2 =
-                    new Pose(
-                            "outpost border fuel center scoop 2",
-                            new Pose2d(
-                                    new Translation2d(Meters.of(7), Meters.of(1)),
-                                    Rotation2d.k180deg));
+                    Pose.of("outpost border fuel center scoop 2",7.7,1,180);
         }
     }
 
