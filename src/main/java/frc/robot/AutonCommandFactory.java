@@ -425,7 +425,8 @@ public class AutonCommandFactory {
                                                                 .withTimeout(0.1)),
                                 commandFactory
                                                 .runSpindexShooterIndexAndShooter(false, () -> false)
-                                                .until(() -> hasStoppedShooting()));
+                                                .until(() -> hasStoppedShooting()))
+                                .withName("move in a square and shoot");
         }
 
         // wall sweep auton
