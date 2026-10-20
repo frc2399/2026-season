@@ -221,7 +221,6 @@ public class RobotContainer {
                                                         () -> drive.getPose()))));
         tuningController.povDown().onTrue(commandFactory.resetHeading(Degrees.of(180)));
     }
-
     private void setUpAuton() {
         autoChooser = new SendableChooser<>();
         autoChooser.addOption(
