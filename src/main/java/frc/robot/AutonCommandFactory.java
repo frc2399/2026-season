@@ -419,6 +419,7 @@ public class AutonCommandFactory {
                 .withName("move from center to depot and shoot");
     }
 
+    // robot moves around in a square and then shoots
     public Command makeASquareAndShoot() {
         return Commands.sequence(
                         Commands.runOnce(() -> resetOdometryFlipped(FIRST_CORNER_SQUARE.pose())),
