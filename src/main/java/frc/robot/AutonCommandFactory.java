@@ -48,7 +48,7 @@ public class AutonCommandFactory {
     private Trigger hasStoppedShootingTrigger;
 
     public final PathConstraints constraints =
-            new PathConstraints(3, 4, Units.degreesToRadians(720), Units.degreesToRadians(720));
+            new PathConstraints(0.5, 4, Units.degreesToRadians(720), Units.degreesToRadians(720));
 
     public final PathConstraints neutralConstraints =
             new PathConstraints(3, 4, Units.degreesToRadians(720), Units.degreesToRadians(720));
@@ -375,26 +375,26 @@ public class AutonCommandFactory {
     }
 
     // without wall (enters depot from tower side)
-    //     public Command hubMoveToDepot() {
-    //         return Commands.sequence(
-    //                         Commands.runOnce(
-    //                                 () ->
+    // public Command hubMoveToDepot() {
+    // return Commands.sequence(
+    // Commands.runOnce(
+    // () ->
     // resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
-    //                         intake.stowArmSetpoint(),
-    //                         buildPathDeferred(DEPOT_EDGE, constraints, 0),
-    //                         Commands.parallel(
-    //                                 intake.deployArm().withTimeout(0.1),
-    //                                 buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),
-    //                         Commands.parallel(
-    //                                 intake.deployAndRunIntake().withTimeout(0.1),
-    //                                 buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints,
+    // intake.stowArmSetpoint(),
+    // buildPathDeferred(DEPOT_EDGE, constraints, 0),
+    // Commands.parallel(
+    // intake.deployArm().withTimeout(0.1),
+    // buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),
+    // Commands.parallel(
+    // intake.deployAndRunIntake().withTimeout(0.1),
+    // buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints,
     // 0)),
-    //                         buildPathDeferred(CENTER_MOVE_TO_SHOOTING_SPOT, constraints, 0),
-    //                         buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
+    // buildPathDeferred(CENTER_MOVE_TO_SHOOTING_SPOT, constraints, 0),
+    // buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
     //
     // commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(7))
-    //                 .withName("move from center to depot and shoot");
-    //     }
+    // .withName("move from center to depot and shoot");
+    // }
 
     // without wall (enters depot from wall side)
     public Command hubMoveToDepot() {
@@ -419,50 +419,77 @@ public class AutonCommandFactory {
                 .withName("move from center to depot and shoot");
     }
 
+    // robot moves around in a square and then shoots
+    public Command makeASquareAndShoot() {
+        return Commands.sequence(
+                        Commands.runOnce(() -> resetOdometryFlipped(FIRST_CORNER_SQUARE.pose())),
+                        buildPathDeferred(FIRST_CORNER_SQUARE, constraints, 2),
+                        buildPathDeferred(SECOND_CORNER_SQUARE, constraints, 2),
+                        buildPathDeferred(THIRD_CORNER_SQUARE, constraints, 2),
+                        buildPathDeferred(FINAL_CORNER_SQUARE, constraints, 2),
+                        Commands.parallel(
+                                buildPathDeferred(FIRST_CORNER_SQUARE, constraints, 0),
+                                shooter.shoot(
+                                                () ->
+                                                        RebuiltVisionUtil
+                                                                .getDistanceToAlignmentTarget(
+                                                                        () ->
+                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
+                                                                                        FIRST_CORNER_SQUARE)),
+                                                false,
+                                                () -> false,
+                                                () -> TargetZoneType.HUB)
+                                        .withTimeout(0.1)),
+                        commandFactory
+                                .runSpindexShooterIndexAndShooter(false, () -> false)
+                                .until(() -> hasStoppedShooting()))
+                .withName("move in a square and shoot");
+    }
+
     // wall sweep auton
-    //     public Command hubMoveToDepot() {
-    //         return Commands.sequence(
-    //                         Commands.runOnce(
-    //                                 () ->
+    // public Command hubMoveToDepot() {
+    // return Commands.sequence(
+    // Commands.runOnce(
+    // () ->
     // resetOdometryFlipped(FieldConstants.FRONT_OF_BLUE_HUB)),
-    //                         Commands.parallel(
-    //                                 buildPathDeferred(DEPOT_EDGE, constraints, 0),
-    //                                 intake.stowArmSetpoint()),
-    //                         Commands.parallel(
-    //                                 intake.deployArm().withTimeout(0.1),
-    //                                 buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),
-    //                         // Commands.parallel(
-    //                         //         intake.deployHigherAndRunIntake().withTimeout(0.1),
-    //                         //         buildPathDeferred(DEPOT_MIDDLE, depotConstraints, 1)),
-    //                         // Commands.parallel(
-    //                         //         intake.deployAndRunIntake().withTimeout(0.1),
-    //                         //         buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints,
+    // Commands.parallel(
+    // buildPathDeferred(DEPOT_EDGE, constraints, 0),
+    // intake.stowArmSetpoint()),
+    // Commands.parallel(
+    // intake.deployArm().withTimeout(0.1),
+    // buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),
+    // // Commands.parallel(
+    // // intake.deployHigherAndRunIntake().withTimeout(0.1),
+    // // buildPathDeferred(DEPOT_MIDDLE, depotConstraints, 1)),
+    // // Commands.parallel(
+    // // intake.deployAndRunIntake().withTimeout(0.1),
+    // // buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints,
     // 0)),
-    //                         Commands.parallel(
-    //                                 intake.deployAndRunIntake().withTimeout(0.1),
-    //                                 buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints,
+    // Commands.parallel(
+    // intake.deployAndRunIntake().withTimeout(0.1),
+    // buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints,
     // 0)),
-    //                         drive.driveToPoseOnExecute(
-    //                                 () -> new Pose2d(0.7, 7, new Rotation2d(Degrees.of(-52)))),
-    //                         intake.defaultBehavior().withTimeout(0.01),
-    //                         buildPathDeferred(DEPOT_CORNER, constraints, 0),
-    //                         buildPathDeferred(DEPOT_WALL_INTAKE, constraints, 0),
-    //                         Commands.parallel(
-    //                                 intake.deployAndRunIntake().withTimeout(0.1),
-    //                                 buildPathDeferred(DEPOT_CORNER_WALL_INTAKE, depotConstraints,
+    // drive.driveToPoseOnExecute(
+    // () -> new Pose2d(0.7, 7, new Rotation2d(Degrees.of(-52)))),
+    // intake.defaultBehavior().withTimeout(0.01),
+    // buildPathDeferred(DEPOT_CORNER, constraints, 0),
+    // buildPathDeferred(DEPOT_WALL_INTAKE, constraints, 0),
+    // Commands.parallel(
+    // intake.deployAndRunIntake().withTimeout(0.1),
+    // buildPathDeferred(DEPOT_CORNER_WALL_INTAKE, depotConstraints,
     // 0)),
-    //                         // buildPathDeferred(DEPOT_CORNER_STRAIGHT, constraints, 0),
-    //                         // Commands.parallel(
-    //                         //         intake.deployAndRunIntake().withTimeout(0.1),
-    //                         //         buildPathDeferred(
-    //                         //                 DEPOT_CORNER_INTAKE_STRAIGHT, depotConstraints,
+    // // buildPathDeferred(DEPOT_CORNER_STRAIGHT, constraints, 0),
+    // // Commands.parallel(
+    // // intake.deployAndRunIntake().withTimeout(0.1),
+    // // buildPathDeferred(
+    // // DEPOT_CORNER_INTAKE_STRAIGHT, depotConstraints,
     // 0)),
-    //                         // buildPathDeferred(CENTER_MOVE_TO_SHOOTING_SPOT, constraints, 0),
-    //                         intake.defaultBehavior().withTimeout(0.01),
-    //                         buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
+    // // buildPathDeferred(CENTER_MOVE_TO_SHOOTING_SPOT, constraints, 0),
+    // intake.defaultBehavior().withTimeout(0.01),
+    // buildPathDeferred(CENTER_SHOOTING_SPOT, constraints, 0),
     //
     // commandFactory.runSpindexShooterIndexAndShooter(false).withTimeout(7))
-    //                 .withName("move from center to depot and shoot");
+    // .withName("move from center to depot and shoot");
     // }
 
     public Command hubMoveToDepotNoWallScrape() {
@@ -478,11 +505,11 @@ public class AutonCommandFactory {
                                 intake.deployArm().withTimeout(0.1),
                                 buildPathDeferred(DEPOT_SIDE_INTAKE, constraints, 0)),
                         // Commands.parallel(
-                        //         intake.deployHigherAndRunIntake().withTimeout(0.1),
-                        //         buildPathDeferred(DEPOT_MIDDLE, depotConstraints, 1)),
+                        // intake.deployHigherAndRunIntake().withTimeout(0.1),
+                        // buildPathDeferred(DEPOT_MIDDLE, depotConstraints, 1)),
                         // Commands.parallel(
-                        //         intake.deployAndRunIntake().withTimeout(0.1),
-                        //         buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints, 0)),
+                        // intake.deployAndRunIntake().withTimeout(0.1),
+                        // buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints, 0)),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(DEPOT_SIDE_INTAKE_END, depotConstraints, 0)),
