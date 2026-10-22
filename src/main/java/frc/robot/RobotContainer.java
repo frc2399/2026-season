@@ -174,9 +174,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(
                         commandFactory.runSpindexShooterIndexAndShooter(
-                                false,
-                                () ->
-                                        false)); // do not pass
+                                false, () -> false)); // do not pass
         driverController
                 .rightBumper()
                 .whileTrue(
