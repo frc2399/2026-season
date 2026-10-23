@@ -178,7 +178,7 @@ public class SubsystemFactory {
                             RobotConstants.DeadbandConstants.BETA_INTAKE_ARM_DEADBAND));
         } else if (robotType == RobotType.COMP) {
             return new IntakeSubsystem(
-                    new IntakeRollerHardware(),
+                    new IntakeRollerPlacebo(),
                     new IntakeArmHardwareBetaAndComp(
                             RobotConstants.DeadbandConstants.COMP_INTAKE_ARM_DEADBAND));
         } else {
