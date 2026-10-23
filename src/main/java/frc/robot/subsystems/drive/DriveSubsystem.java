@@ -128,6 +128,9 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     private Rotation2d lastAngle = new Rotation2d();
 
+    private final Alert isPigeonConnectedAlert =
+            new Alert("The pigeon is not connected!", AlertType.kWarning);
+
     // public static final RobotConfig CONFIG = new RobotConfig(ROBOT_MASS,
     // ROBOT_MOI, new
     // ModuleConfig(
@@ -257,6 +260,8 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
     @Override
     public void periodic() {
+        boolean isPigeonConnected = gyro.isConnected();
+        isPigeonConnectedAlert.set(!isPigeonConnected);
         SmartDashboard.putBoolean("/drive/atGoal", atGoal);
         SmartDashboard.putBoolean("/drive/isHubActive", GameState.isHubActive(0));
         // This will get the simulated sensor readings that we set

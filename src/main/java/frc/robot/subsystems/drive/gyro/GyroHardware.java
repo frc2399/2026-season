@@ -63,4 +63,8 @@ public class GyroHardware implements GyroIO {
     public boolean hasFault(boolean refresh) {
         return pigeon.getFault_Hardware(refresh).getValue();
     }
+
+    public boolean isConnected() {
+        return this.isConnected();
+    }
 }
