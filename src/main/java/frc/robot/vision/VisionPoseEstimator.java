@@ -19,6 +19,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.SubsystemFactory.RobotType;
 import frc.robot.subsystems.drive.DriveConfig;
@@ -41,6 +43,9 @@ public final class VisionPoseEstimator {
     private static Angle CAMERA_YAW_SECONDARY;
 
     private boolean isUsingVisionData = false;
+
+    private final Alert limelightIsNotConnected =
+            new Alert("Limelight is not connected!", AlertType.kWarning);
 
     /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
@@ -244,5 +249,7 @@ public final class VisionPoseEstimator {
                                             stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
                         });
         SmartDashboard.putBoolean("vision/is using vision data", isUsingVisionData);
+
+        limelightIsNotConnected.set(!isUsingVisionData);
     }
 }
