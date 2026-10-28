@@ -142,7 +142,7 @@ public class IntakeSubsystem extends SubsystemBase {
                                 () -> {
                                     System.out.println("#2 reached the robot wave command");
                                     armProfiledPidEnabled = true;
-                                    armIO.setSetpoint(IntakeArmSetpoint.FEED_FUEL_LOWER_BOUND);
+                                    armIO.setSetpoint(IntakeArmSetpoint.OUTREACH_FEED_LOWER_BOUND);
                                 })
                         .withTimeout(Seconds.of(0.75))
                         .andThen(
@@ -150,7 +150,7 @@ public class IntakeSubsystem extends SubsystemBase {
                                                 () -> {
                                                     armIO.setSetpoint(
                                                             IntakeArmSetpoint
-                                                                    .FEED_FUEL_UPPER_BOUND);
+                                                                    .OUTREACH_FEED_UPPER_BOUND);
                                                 })
                                         .withTimeout(Seconds.of(0.5)))
                         .repeatedly()

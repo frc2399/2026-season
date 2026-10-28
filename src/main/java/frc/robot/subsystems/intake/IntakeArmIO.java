@@ -21,7 +21,9 @@ public interface IntakeArmIO {
         FEED_FUEL,
         MID,
         FEED_FUEL_LOWER_BOUND,
-        FEED_FUEL_UPPER_BOUND
+        FEED_FUEL_UPPER_BOUND,
+        OUTREACH_FEED_LOWER_BOUND,
+        OUTREACH_FEED_UPPER_BOUND
     }
 
     public void updateState(IntakeArmIOState state);

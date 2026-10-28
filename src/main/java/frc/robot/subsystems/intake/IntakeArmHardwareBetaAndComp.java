@@ -49,7 +49,7 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
             RadiansPerSecond.of(2 * Math.PI / 60);
 
     // pid
-    private static final double INTAKE_ARM_P = .9;
+    private static final double INTAKE_ARM_P = .45;
     private static final double INTAKE_ARM_I = 0;
     private static final double INTAKE_ARM_D = 0;
 
@@ -165,6 +165,12 @@ public class IntakeArmHardwareBetaAndComp implements IntakeArmIO {
         } else if (setpoint == IntakeArmSetpoint.MID) {
             desiredAngle = Degrees.of(-16);
             goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
+        } else if (setpoint == IntakeArmSetpoint.OUTREACH_FEED_LOWER_BOUND) {
+            desiredAngle = Degrees.of(0);
+            goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 0);
+        } else if (setpoint == IntakeArmSetpoint.OUTREACH_FEED_UPPER_BOUND) {
+            desiredAngle = Degrees.of(45);
+            goalState = new TrapezoidProfile.State(desiredAngle.in(Radians), 9);
         }
     }
 
