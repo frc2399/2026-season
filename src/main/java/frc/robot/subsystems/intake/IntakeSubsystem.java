@@ -135,6 +135,30 @@ public class IntakeSubsystem extends SubsystemBase {
         return feedFuelCommand;
     }
 
+    public Command makeRobotWave() {
+        System.out.println("#1 check reached make robot wave");
+        Command makeRobotWaveCommand =
+                this.run(
+                                () -> {
+                                    System.out.println("#2 reached the robot wave command");
+                                    armProfiledPidEnabled = true;
+                                    armIO.setSetpoint(IntakeArmSetpoint.OUTREACH_FEED_LOWER_BOUND);
+                                })
+                        .withTimeout(Seconds.of(0.75))
+                        .andThen(
+                                this.run(
+                                                () -> {
+                                                    armIO.setSetpoint(
+                                                            IntakeArmSetpoint
+                                                                    .OUTREACH_FEED_UPPER_BOUND);
+                                                })
+                                        .withTimeout(Seconds.of(0.5)))
+                        .repeatedly()
+                        .withName("make robot wave");
+
+        return makeRobotWaveCommand;
+    }
+
     public boolean isArmBelowTrench() {
         return armIO.isArmBelowTrench();
     }

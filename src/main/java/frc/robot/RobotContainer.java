@@ -165,6 +165,7 @@ public class RobotContainer {
 
     private void configureButtonBindingsDriver() {
         driverController.b().onTrue(commandFactory.resetHeading(Degrees.of(0)));
+        driverController.x().whileTrue(intakeSubsystem.makeRobotWave());
     }
 
     private void configureOutreachBindings() {
