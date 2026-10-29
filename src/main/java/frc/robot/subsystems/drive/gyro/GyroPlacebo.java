@@ -24,4 +24,8 @@ public class GyroPlacebo implements GyroIO {
     public boolean isConnected() {
         return true;
     }
+
+    public boolean isZero() {
+        return false;
+    }
 }

@@ -20,4 +20,6 @@ public interface GyroIO {
     public boolean hasFault();
 
     public boolean isConnected();
+
+    public boolean isZero();
 }

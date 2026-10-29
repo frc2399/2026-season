@@ -75,4 +75,9 @@ public class GyroSim implements GyroIO {
     public boolean isConnected() {
         return true;
     }
+
+    @Override
+    public boolean isZero() {
+        return false;
+    }
 }

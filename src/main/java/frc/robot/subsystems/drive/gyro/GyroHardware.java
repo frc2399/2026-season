@@ -67,4 +67,9 @@ public class GyroHardware implements GyroIO {
     public boolean isConnected() {
         return this.isConnected();
     }
+
+    public boolean isZero() {
+        double yaw = getYaw(true).in(Degrees);
+        return yaw == 0.0;
+    }
 }
