@@ -511,6 +511,11 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
             double polarYSpeed,
             BooleanSupplier shouldAutoAlign) {
         if (shouldAutoAlign.getAsBoolean()) {
+            Pose2d targetPose = RebuiltVisionUtil.getAlignmentTargetPose(() -> robotPose);
+            SmartDashboard.putNumber("drive/orientTargetPose X", targetPose.getX());
+            SmartDashboard.putNumber("drive/orientTargetPose Y", targetPose.getY());
+            SmartDashboard.putNumber(
+                    "drive/orientTargetPose angle", targetPose.getRotation().getDegrees());
             return AutoAlignUtil.getAutoOrientRotRate(
                     () -> robotPose,
                     RebuiltVisionUtil.getAlignmentTargetPose(() -> robotPose),
