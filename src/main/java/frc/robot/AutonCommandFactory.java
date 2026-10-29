@@ -126,17 +126,7 @@ public class AutonCommandFactory {
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                                shooter.shoot(
-                                                () ->
-                                                        RebuiltVisionUtil
-                                                                .getDistanceToAlignmentTarget(
-                                                                        () ->
-                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                        OUTPOST_SHOOTING_SPOT)),
-                                                false,
-                                                () -> false,
-                                                () -> TargetZoneType.HUB)
-                                        .withTimeout(0.1)),
+                                shootWhileAiming(OUTPOST_SHOOTING_SPOT)),
                         commandFactory
                                 .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
@@ -178,17 +168,7 @@ public class AutonCommandFactory {
                         intake.defaultBehavior().withTimeout(0.01),
                         Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                                shooter.shoot(
-                                                () ->
-                                                        RebuiltVisionUtil
-                                                                .getDistanceToAlignmentTarget(
-                                                                        () ->
-                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                        OUTPOST_SHOOTING_SPOT)),
-                                                false,
-                                                () -> false,
-                                                () -> TargetZoneType.HUB)
-                                        .withTimeout(0.1)),
+                                shootWhileAiming(OUTPOST_SHOOTING_SPOT)),
                         commandFactory
                                 .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
@@ -210,18 +190,7 @@ public class AutonCommandFactory {
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 0.5),
                         Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
-                                intake.defaultBehavior().withTimeout(0.1),
-                                shooter.shoot(
-                                                () ->
-                                                        RebuiltVisionUtil
-                                                                .getDistanceToAlignmentTarget(
-                                                                        () ->
-                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                        OUTPOST_SHOOTING_SPOT)),
-                                                false,
-                                                () -> false,
-                                                () -> TargetZoneType.HUB)
-                                        .withTimeout(0.1)),
+                                shootWhileAiming(OUTPOST_SHOOTING_SPOT)),
                         commandFactory
                                 .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()))
@@ -252,17 +221,7 @@ public class AutonCommandFactory {
                         intake.defaultBehavior().withTimeout(0.01),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                                shooter.shoot(
-                                                () ->
-                                                        RebuiltVisionUtil
-                                                                .getDistanceToAlignmentTarget(
-                                                                        () ->
-                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                        DEPOT_SHOOTING_SPOT)),
-                                                false,
-                                                () -> false,
-                                                () -> TargetZoneType.HUB)
-                                        .withTimeout(0.1)),
+                                shootWhileAiming(DEPOT_SHOOTING_SPOT)),
                         commandFactory
                                 .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
@@ -282,18 +241,7 @@ public class AutonCommandFactory {
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 0.5),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                                intake.defaultBehavior().withTimeout(0.1),
-                                shooter.shoot(
-                                                () ->
-                                                        RebuiltVisionUtil
-                                                                .getDistanceToAlignmentTarget(
-                                                                        () ->
-                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                        DEPOT_SHOOTING_SPOT)),
-                                                false,
-                                                () -> false,
-                                                () -> TargetZoneType.HUB)
-                                        .withTimeout(0.1)),
+                                shootWhileAiming(DEPOT_SHOOTING_SPOT)),
                         commandFactory
                                 .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()))
@@ -320,17 +268,7 @@ public class AutonCommandFactory {
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
-                                shooter.shoot(
-                                                () ->
-                                                        RebuiltVisionUtil
-                                                                .getDistanceToAlignmentTarget(
-                                                                        () ->
-                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                        DEPOT_SHOOTING_SPOT)),
-                                                false,
-                                                () -> false,
-                                                () -> TargetZoneType.HUB)
-                                        .withTimeout(0.1)),
+                                shootWhileAiming(DEPOT_SHOOTING_SPOT)),
                         commandFactory
                                 .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()),
@@ -357,17 +295,7 @@ public class AutonCommandFactory {
                                 () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         Commands.parallel(
                                 buildPathDeferred(MIDDLE_SHOOT_POSE, constraints, 0),
-                                shooter.shoot(
-                                                () ->
-                                                        RebuiltVisionUtil
-                                                                .getDistanceToAlignmentTarget(
-                                                                        () ->
-                                                                                getTargetPoseIfNeedFlippedEarlyShooter(
-                                                                                        MIDDLE_SHOOT_POSE)),
-                                                false,
-                                                () -> false,
-                                                () -> TargetZoneType.HUB)
-                                        .withTimeout(0.1)),
+                                shootWhileAiming(MIDDLE_SHOOT_POSE)),
                         commandFactory
                                 .runSpindexShooterIndexAndShooter(false, () -> false)
                                 .until(() -> hasStoppedShooting()))
@@ -528,5 +456,17 @@ public class AutonCommandFactory {
         drive.resetOdometry(pose);
         gyro.setYaw(pose.getRotation().getMeasure());
         drive.resetOdometryAfterGyro();
+    }
+
+    /** Shoots while aiming at `pose`, flipping the target for alliance. Capped at 0.1s. */
+    private Command shootWhileAiming(Pose pose) {
+        return shooter.shoot(
+                        () ->
+                                RebuiltVisionUtil.getDistanceToAlignmentTarget(
+                                        () -> getTargetPoseIfNeedFlippedEarlyShooter(pose)),
+                        false,
+                        () -> false,
+                        () -> TargetZoneType.HUB)
+                .withTimeout(0.1);
     }
 }
