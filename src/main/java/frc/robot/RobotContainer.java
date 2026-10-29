@@ -245,6 +245,8 @@ public class RobotContainer {
         autoChooser.addOption(
                 "SCOOP outpost side neutral zone back and shoot",
                 autonCommandFactory.outpostSideNeutralZoneScoop());
+        autoChooser.addOption(
+                "move in a square and shoot", autonCommandFactory.makeASquareAndShoot());
         autoChooser.setDefaultOption("do nothing", defaultCommand);
 
         // adds the options for time delays before deploying the auton programs
@@ -314,6 +316,11 @@ public class RobotContainer {
                                     isCenterAuton = true;
                                     break;
                                 case "move from center to depot and shoot no wall scrape":
+                                    gyroAngle = Degrees.of(0);
+                                    autonHasNoGyroAngle = false;
+                                    isCenterAuton = true;
+                                    break;
+                                case "move in a square and shoot":
                                     gyroAngle = Degrees.of(0);
                                     autonHasNoGyroAngle = false;
                                     isCenterAuton = true;
