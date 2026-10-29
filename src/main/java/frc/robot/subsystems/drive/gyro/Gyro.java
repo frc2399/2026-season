@@ -48,4 +48,12 @@ public class Gyro {
     public boolean hasFault() {
         return io.hasFault();
     }
+
+    public boolean isConnected() {
+        return io.isConnected();
+    }
+
+    public boolean isZero() {
+        return io.isZero();
+    }
 }

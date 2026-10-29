@@ -70,4 +70,14 @@ public class GyroSim implements GyroIO {
     public boolean hasFault() {
         return false; // No faults in simulation
     }
+
+    @Override
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isZero() {
+        return false;
+    }
 }

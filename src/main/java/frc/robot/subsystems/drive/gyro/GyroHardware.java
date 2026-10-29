@@ -12,6 +12,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.constants.RobotConstants;
 
@@ -19,6 +20,8 @@ import frc.robot.constants.RobotConstants;
 public class GyroHardware implements GyroIO {
     private final Pigeon2 pigeon;
     private final CANBus canBus;
+
+    Debouncer debouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 
     public GyroHardware() {
         canBus = new CANBus("rio");
@@ -62,5 +65,14 @@ public class GyroHardware implements GyroIO {
 
     public boolean hasFault(boolean refresh) {
         return pigeon.getFault_Hardware(refresh).getValue();
+    }
+
+    public boolean isConnected() {
+        return pigeon.isConnected();
+    }
+
+    public boolean isZero() {
+        double yaw = getYaw(true).in(Degrees);
+        return debouncer.calculate(yaw == 0.0);
     }
 }
