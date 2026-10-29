@@ -25,7 +25,10 @@ public class Gyro {
     public GyroIO getIO() {
         return io;
     }
-
+    
+    // This code allows the gyro class to only ask the gyro what the current rotational angle of 
+    //the robot is once per periodic. We do this because when the gyro class asks what gyro angle  
+    //the robot is at, it blocks all other calls on the CAN network, slowing down operations.  
     public Angle getYaw(boolean refresh) {
         return io.getYaw(refresh);
     }
