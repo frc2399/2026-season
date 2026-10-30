@@ -82,6 +82,8 @@ public final class VisionPoseEstimator {
             limelightHostnameMain,
             limelightNameSecondary,
             limelightHostnameSecondary;
+    private double lastHeartbeatMain = -1;
+    private boolean limelightMainOnline = false;
 
     /**
      * Create a VisionPoseEstimator
@@ -198,13 +200,19 @@ public final class VisionPoseEstimator {
         }
 
         // Reject poses where we can see no tags or are at the "uh oh something went
-        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
+        // wrong" and reject if either x or y are 0 because then we are in a wall and
+        // that's not
         // possible
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
 
     /** Update the limelight's robot orientation */
     public void periodic() {
+        double hb = LimelightHelpers.getLimelightNTDouble(limelightNameMain, "hb");
+        limelightMainOnline = (hb != 0);
+        lastHeartbeatMain = hb;
+        SmartDashboard.putNumber("vision/hb", hb);
+        SmartDashboard.putBoolean("vision/limelightMainOnline", limelightMainOnline);
         isUsingVisionData = false;
         // Resist the temptation to rotate this depending on alliance - the coordinate
         // system here _has_ to match the WPILib coordinate system, where Yaw is CCW +
@@ -217,8 +225,10 @@ public final class VisionPoseEstimator {
                 .ifPresent(
                         (pe) -> {
                             mt2PublisherMain.set(pe.pose);
-                            // LimelightHelpers doesn't expose a helper method for these, layout is:
-                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
+                            // LimelightHelpers doesn't expose a helper method for these,
+                            // layout is:
+                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y,
+                            // MT2z,
                             // MT2roll,
                             // MT2pitch, MT2yaw]
                             var stddevs =
@@ -235,8 +245,10 @@ public final class VisionPoseEstimator {
                 .ifPresent(
                         (pe) -> {
                             mt2PublisherSecondary.set(pe.pose);
-                            // LimelightHelpers doesn't expose a helper method for these, layout is:
-                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
+                            // LimelightHelpers doesn't expose a helper method for these,
+                            // layout is:
+                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y,
+                            // MT2z,
                             // MT2roll,
                             // MT2pitch, MT2yaw]
                             var stddevs =
@@ -250,6 +262,6 @@ public final class VisionPoseEstimator {
                         });
         SmartDashboard.putBoolean("vision/is using vision data", isUsingVisionData);
 
-        limelightIsNotConnected.set(!isUsingVisionData);
+        limelightIsNotConnected.set(!limelightMainOnline);
     }
 }
