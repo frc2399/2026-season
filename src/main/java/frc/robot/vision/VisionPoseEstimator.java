@@ -77,6 +77,7 @@ public final class VisionPoseEstimator {
             limelightHostnameMain,
             limelightNameSecondary,
             limelightHostnameSecondary;
+    private double lastTimestamp;
 
     /**
      * Create a VisionPoseEstimator
@@ -180,7 +181,16 @@ public final class VisionPoseEstimator {
 
             var estimator = est.get();
             // Build a comma-separated string of tag IDs used in the pose estimate
+            if (estimator.timestampSeconds == lastTimestamp) {
+                SmartDashboard.putString("vision/poseStatus", "stale - no new frame");
+                return Optional.empty();
+            }
+            lastTimestamp = estimator.timestampSeconds;
             StringBuilder tagIDs = new StringBuilder();
+            if (tagIDs.length() < 1) {
+                SmartDashboard.putString("vision/poseStatus", "no tags seen");
+                return Optional.empty();
+            }
             if (estimator.rawFiducials != null) {
                 for (int i = 0; i < estimator.rawFiducials.length; i++) {
                     if (i > 0) tagIDs.append(", ");
@@ -193,7 +203,8 @@ public final class VisionPoseEstimator {
         }
 
         // Reject poses where we can see no tags or are at the "uh oh something went
-        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
+        // wrong" and reject if either x or y are 0 because then we are in a wall and
+        // that's not
         // possible
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
@@ -212,8 +223,10 @@ public final class VisionPoseEstimator {
                 .ifPresent(
                         (pe) -> {
                             mt2PublisherMain.set(pe.pose);
-                            // LimelightHelpers doesn't expose a helper method for these, layout is:
-                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
+                            // LimelightHelpers doesn't expose a helper method for these,
+                            // layout is:
+                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y,
+                            // MT2z,
                             // MT2roll,
                             // MT2pitch, MT2yaw]
                             var stddevs =
@@ -230,8 +243,10 @@ public final class VisionPoseEstimator {
                 .ifPresent(
                         (pe) -> {
                             mt2PublisherSecondary.set(pe.pose);
-                            // LimelightHelpers doesn't expose a helper method for these, layout is:
-                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
+                            // LimelightHelpers doesn't expose a helper method for these,
+                            // layout is:
+                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y,
+                            // MT2z,
                             // MT2roll,
                             // MT2pitch, MT2yaw]
                             var stddevs =
