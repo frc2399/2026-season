@@ -162,7 +162,6 @@ public class AutonCommandFactory {
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
                         new DeferredCommand(
                                 () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
-                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 2),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 buildPathDeferred(BLUE_OUTPOST_BORDER_FUEL_CENTER, constraints, 2),
