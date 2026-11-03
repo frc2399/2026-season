@@ -174,7 +174,6 @@ public class AutonCommandFactory {
                         buildPathDeferred(OUTPOST_MIDDLE_HUB_NEUTRAL_ZONE, neutralConstraints, 1),
                         buildPathDeferred(OUTPOST_CORNER_HUB_NEUTRAL_ZONE, neutralConstraints, 1),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, neutralConstraints, 1),
-                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 0.5),
                         intake.defaultBehavior().withTimeout(0.01),
                         Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
@@ -196,7 +195,6 @@ public class AutonCommandFactory {
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 2),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
@@ -207,7 +205,6 @@ public class AutonCommandFactory {
                         buildPathDeferred(
                                 OUTPOST_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH, constraints, 1),
-                        buildPathDeferred(OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 0.5),
                         Commands.parallel(
                                 buildPathDeferred(OUTPOST_SHOOTING_SPOT, constraints, 0),
                                 intake.defaultBehavior().withTimeout(0.1),
@@ -236,7 +233,6 @@ public class AutonCommandFactory {
                                 () -> Commands.waitSeconds(robotContainer.getWait()), Set.of()),
                         Commands.runOnce(() -> resetOdometryFlipped(DEPOT_STARTING_POSE.pose())),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 2),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_BORDER_FUEL_CENTER, constraints, 2),
@@ -248,7 +244,6 @@ public class AutonCommandFactory {
                         buildPathDeferred(DEPOT_MIDDLE_HUB_NEUTRAL_ZONE, neutralConstraints, 1),
                         buildPathDeferred(DEPOT_CORNER_HUB_NEUTRAL_ZONE, constraints, 1),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 0.5),
                         intake.defaultBehavior().withTimeout(0.01),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
@@ -270,7 +265,7 @@ public class AutonCommandFactory {
                         intake.defaultBehavior().withTimeout(0.01),
                         commandFactory.defaultSpindexerShooterIndexerAndShooter().withTimeout(0.01),
                         Commands.waitUntil(() -> intake.isArmBelowTrench()),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 2),
+                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 2),
                         Commands.parallel(
                                 intake.deployAndRunIntake().withTimeout(0.1),
                                 buildPathDeferred(
@@ -279,7 +274,6 @@ public class AutonCommandFactory {
                         buildPathDeferred(DEPOT_MIDDLE_HUB_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(DEPOT_NEUTRAL_ZONE_CENTER_SCOOP_2, neutralConstraints, 1),
                         buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH, constraints, 1),
-                        buildPathDeferred(DEPOT_OTHER_SIDE_OF_TRENCH_FIRST, constraints, 0.5),
                         Commands.parallel(
                                 buildPathDeferred(DEPOT_SHOOTING_SPOT, constraints, 0),
                                 intake.defaultBehavior().withTimeout(0.1),

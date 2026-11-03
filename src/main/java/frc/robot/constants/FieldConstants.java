@@ -129,18 +129,6 @@ public final class FieldConstants {
                         new Pose2d(
                                 new Translation2d(Meters.of(6), Meters.of(7.39)),
                                 new Rotation2d(Degrees.of(-90))));
-        public static final Pose DEPOT_OTHER_SIDE_OF_TRENCH_FIRST =
-                new Pose(
-                        "depot other side of trench first",
-                        new Pose2d(
-                                new Translation2d(Meters.of(6), Meters.of(7.25)),
-                                new Rotation2d(Degrees.of(-90))));
-        public static final Pose OUTPOST_OTHER_SIDE_OF_TRENCH_FIRST =
-                new Pose(
-                        "outpost other side of trench first",
-                        new Pose2d(
-                                new Translation2d(Meters.of(6), Meters.of(0.68)),
-                                new Rotation2d(Degrees.of(90))));
         public static final Pose DEPOT_EDGE =
                 new Pose(
                         "depot edge",
