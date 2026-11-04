@@ -82,7 +82,6 @@ public final class VisionPoseEstimator {
             limelightHostnameMain,
             limelightNameSecondary,
             limelightHostnameSecondary;
-    private double lastHeartbeatMain = -1;
     private boolean limelightMainOnline = false;
 
     /**
@@ -210,9 +209,9 @@ public final class VisionPoseEstimator {
     public void periodic() {
         double hb = LimelightHelpers.getLimelightNTDouble(limelightNameMain, "hb");
         limelightMainOnline = (hb != 0);
-        lastHeartbeatMain = hb;
-        SmartDashboard.putNumber("vision/hb", hb);
         SmartDashboard.putBoolean("vision/limelightMainOnline", limelightMainOnline);
+        limelightIsNotConnected.set(!limelightMainOnline);
+
         isUsingVisionData = false;
         // Resist the temptation to rotate this depending on alliance - the coordinate
         // system here _has_ to match the WPILib coordinate system, where Yaw is CCW +
@@ -261,7 +260,5 @@ public final class VisionPoseEstimator {
                                             stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
                         });
         SmartDashboard.putBoolean("vision/is using vision data", isUsingVisionData);
-
-        limelightIsNotConnected.set(!limelightMainOnline);
     }
 }
