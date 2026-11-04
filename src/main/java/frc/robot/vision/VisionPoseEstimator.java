@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Angle;
@@ -21,12 +22,17 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.SubsystemFactory.RobotType;
 import frc.robot.subsystems.drive.DriveConfig;
 import java.util.Optional;
 
 public final class VisionPoseEstimator {
+
+    private double lastHb = -1;
+    private double lastHbChangeTime = 0.0;
+    private static final double TIMEOUT_SECONDS = 0.5; // tune this
 
     private static Angle CAMERA_PITCH_MAIN; // 0 = horizontal, positive = leaning back
     private static Distance X_ROBOT_TO_CAMERA_OFFSET_MAIN; // positive = in front of robot center
@@ -207,8 +213,7 @@ public final class VisionPoseEstimator {
 
     /** Update the limelight's robot orientation */
     public void periodic() {
-        double hb = LimelightHelpers.getLimelightNTDouble(limelightNameMain, "hb");
-        limelightMainOnline = (hb != 0);
+        limelightMainOnline = isLimelightOnline(limelightNameMain);
         SmartDashboard.putBoolean("vision/limelightMainOnline", limelightMainOnline);
         limelightIsNotConnected.set(!limelightMainOnline);
 
@@ -260,5 +265,27 @@ public final class VisionPoseEstimator {
                                             stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
                         });
         SmartDashboard.putBoolean("vision/is using vision data", isUsingVisionData);
+    }
+
+    public boolean isLimelightOnline(String limelightName) {
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        // System.out.println("limelightName: " + limelightName);
+        if (!table.containsKey("hb")) {
+            return false; // topic gone: Limelight disconnected or never published
+        }
+
+        double hb = table.getEntry("hb").getDouble(-1);
+        if (hb < 0) {
+            System.out.println("no entry");
+            return false; // wrong type or invalid
+        }
+
+        double now = Timer.getFPGATimestamp();
+        if (hb != lastHb) { // != handles the wrap at 2 billion
+            lastHb = hb;
+            lastHbChangeTime = now;
+        }
+
+        return (now - lastHbChangeTime) < TIMEOUT_SECONDS;
     }
 }

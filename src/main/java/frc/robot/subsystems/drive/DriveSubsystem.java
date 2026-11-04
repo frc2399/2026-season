@@ -396,7 +396,12 @@ public class DriveSubsystem extends SubsystemBase implements DriveBase {
 
                             isAutoOrienting = shouldAutoOrient.getAsBoolean();
 
-                            double r = Math.hypot(xSpeed.getAsDouble(), ySpeed.getAsDouble());
+                            double r =
+                                    Math.pow(
+                                            Math.sqrt(
+                                                    Math.pow(xSpeed.getAsDouble(), 2)
+                                                            + Math.pow(ySpeed.getAsDouble(), 2)),
+                                            3);
                             double polarAngle =
                                     Math.atan2(ySpeed.getAsDouble(), xSpeed.getAsDouble());
                             double polarXSpeed = r * Math.cos(polarAngle);
