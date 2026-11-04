@@ -5,6 +5,8 @@ package frc.robot;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
+
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,9 +33,14 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer robotContainer;
+<<<<<<< Updated upstream
 
     private String key;
+=======
+>>>>>>> Stashed changes
 
+    private String key;
+private final LinearFilter canFilter = LinearFilter.movingAverage(50); // ~1 s at 20 ms
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -78,15 +85,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean(
                 "robot/has stopped shooting",
                 robotContainer.autonCommandFactory.hasStoppedShooting());
-        SmartDashboard.putNumber("can/bus off count", RobotController.getCANStatus().busOffCount);
-        SmartDashboard.putNumber(
-                "can/percentBusUtilization", RobotController.getCANStatus().percentBusUtilization);
-        System.out.println(RobotController.getCANStatus().percentBusUtilization);
-        SmartDashboard.putNumber(
-                "can/recieveErrorcount", RobotController.getCANStatus().receiveErrorCount);
-        SmartDashboard.putNumber(
-                "can/transmitErrorCount", RobotController.getCANStatus().transmitErrorCount);
-        SmartDashboard.putNumber("can/txFullCount", RobotController.getCANStatus().txFullCount);
+        double util = canFilter.calculate(RobotController.getCANStatus().percentBusUtilization);
+        SmartDashboard.putNumber("can/percentBusUtilization", util);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
