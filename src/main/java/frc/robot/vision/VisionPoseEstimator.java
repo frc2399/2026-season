@@ -13,18 +13,26 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.SubsystemFactory.RobotType;
 import frc.robot.subsystems.drive.DriveConfig;
 import java.util.Optional;
 
 public final class VisionPoseEstimator {
+
+    private double lastHb = -1;
+    private double lastHbChangeTime = 0.0;
+    private static final double TIMEOUT_SECONDS = 0.5; // tune this
 
     private static Angle CAMERA_PITCH_MAIN; // 0 = horizontal, positive = leaning back
     private static Distance X_ROBOT_TO_CAMERA_OFFSET_MAIN; // positive = in front of robot center
@@ -41,6 +49,9 @@ public final class VisionPoseEstimator {
     private static Angle CAMERA_YAW_SECONDARY;
 
     private boolean isUsingVisionData = false;
+
+    private final Alert limelightIsNotConnected =
+            new Alert("Limelight is not connected!", AlertType.kWarning);
 
     /** Provides the methods needed to do first-class pose estimation */
     public static interface DriveBase {
@@ -77,13 +88,13 @@ public final class VisionPoseEstimator {
             limelightHostnameMain,
             limelightNameSecondary,
             limelightHostnameSecondary;
+    private boolean limelightMainOnline = false;
 
     /**
      * Create a VisionPoseEstimator
      *
      * @param driveBase the robot drive base to estimate the pose of
-     * @param limelightName passed down to calls to LimelightHelpers, useful if you have more than
-     *     one Limelight on a robot
+     * @param robot robot type
      */
     public VisionPoseEstimator(DriveBase driveBase, RobotType robot) {
         this.driveBase = driveBase;
@@ -193,13 +204,18 @@ public final class VisionPoseEstimator {
         }
 
         // Reject poses where we can see no tags or are at the "uh oh something went
-        // wrong" and reject if either x or y are 0 because then we are in a wall and that's not
+        // wrong" and reject if either x or y are 0 because then we are in a wall and
+        // that's not
         // possible
         return est.filter((pe) -> pe.tagCount > 0 && (pe.pose.getX() != 0 && pe.pose.getY() != 0));
     }
 
     /** Update the limelight's robot orientation */
     public void periodic() {
+        limelightMainOnline = isLimelightOnline(limelightNameMain);
+        SmartDashboard.putBoolean("vision/limelightMainOnline", limelightMainOnline);
+        limelightIsNotConnected.set(!limelightMainOnline);
+
         isUsingVisionData = false;
         // Resist the temptation to rotate this depending on alliance - the coordinate
         // system here _has_ to match the WPILib coordinate system, where Yaw is CCW +
@@ -212,8 +228,10 @@ public final class VisionPoseEstimator {
                 .ifPresent(
                         (pe) -> {
                             mt2PublisherMain.set(pe.pose);
-                            // LimelightHelpers doesn't expose a helper method for these, layout is:
-                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
+                            // LimelightHelpers doesn't expose a helper method for these,
+                            // layout is:
+                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y,
+                            // MT2z,
                             // MT2roll,
                             // MT2pitch, MT2yaw]
                             var stddevs =
@@ -230,8 +248,10 @@ public final class VisionPoseEstimator {
                 .ifPresent(
                         (pe) -> {
                             mt2PublisherSecondary.set(pe.pose);
-                            // LimelightHelpers doesn't expose a helper method for these, layout is:
-                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z,
+                            // LimelightHelpers doesn't expose a helper method for these,
+                            // layout is:
+                            // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y,
+                            // MT2z,
                             // MT2roll,
                             // MT2pitch, MT2yaw]
                             var stddevs =
@@ -244,5 +264,27 @@ public final class VisionPoseEstimator {
                                             stddevs[6], stddevs[7], Double.POSITIVE_INFINITY));
                         });
         SmartDashboard.putBoolean("vision/is using vision data", isUsingVisionData);
+    }
+
+    public boolean isLimelightOnline(String limelightName) {
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        // System.out.println("limelightName: " + limelightName);
+        if (!table.containsKey("hb")) {
+            return false; // topic gone: Limelight disconnected or never published
+        }
+
+        double hb = table.getEntry("hb").getDouble(-1);
+        if (hb < 0) {
+            System.out.println("no entry");
+            return false; // wrong type or invalid
+        }
+
+        double now = Timer.getFPGATimestamp();
+        if (hb != lastHb) { // != handles the wrap at 2 billion
+            lastHb = hb;
+            lastHbChangeTime = now;
+        }
+
+        return (now - lastHbChangeTime) < TIMEOUT_SECONDS;
     }
 }
