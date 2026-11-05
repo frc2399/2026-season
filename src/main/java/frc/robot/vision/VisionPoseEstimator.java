@@ -94,8 +94,7 @@ public final class VisionPoseEstimator {
      * Create a VisionPoseEstimator
      *
      * @param driveBase the robot drive base to estimate the pose of
-     * @param limelightName passed down to calls to LimelightHelpers, useful if you have more than
-     *     one Limelight on a robot
+     * @param robot robot type
      */
     public VisionPoseEstimator(DriveBase driveBase, RobotType robot) {
         this.driveBase = driveBase;

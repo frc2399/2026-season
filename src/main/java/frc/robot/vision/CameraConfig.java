@@ -72,7 +72,7 @@ public class CameraConfig {
                 SECOND_Z_ROBOT_TO_CAMERA_OFFSET = Inches.of(0);
                 break;
             case COMP:
-                LIMELIGHT_NAME = "";
+                LIMELIGHT_NAME = "limelight";
                 CAMERA_PITCH = Degrees.of(32.794);
                 CAMERA_YAW = Degrees.of(9.937);
                 X_ROBOT_TO_CAMERA_OFFSET = Inches.of(12.479);
